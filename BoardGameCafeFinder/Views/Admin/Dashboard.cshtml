@@ -1,0 +1,184 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+    var recentCafes = ViewBag.RecentCafes as List<BoardGameCafeFinder.Models.Domain.Cafe> ?? new List<BoardGameCafeFinder.Models.Domain.Cafe>();
+    var topCities = ViewBag.TopCities as IEnumerable<dynamic> ?? new List<dynamic>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2"><i class="bi bi-speedometer2"></i> Dashboard</h1>
+    <span class="text-muted">Welcome back, @User.Identity?.Name</span>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Cafes</div>
+                        <div class="h3 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalCafes</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-shop fs-1 text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-success shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Board Games</div>
+                        <div class="h3 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalGames</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-dice-5 fs-1 text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-info shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Users</div>
+                        <div class="h3 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalUsers</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-people fs-1 text-info opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-warning shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Reviews</div>
+                        <div class="h3 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalReviews</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-chat-dots fs-1 text-warning opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Cafes -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-white">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-clock-history"></i> Recently Added Cafes
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (recentCafes.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var cafe in recentCafes)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                <div>
+                                    <strong>@cafe.Name</strong>
+                                    <br>
+                                    <small class="text-muted">@cafe.City, @cafe.State</small>
+                                </div>
+                                <small class="text-muted">@cafe.CreatedAt.ToString("MMM dd")</small>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No cafes added yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Cities -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-white">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-geo-alt"></i> Top Cities
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (topCities.Any())
+                {
+                    @foreach (var city in topCities)
+                    {
+                        var maxCount = ((IEnumerable<dynamic>)topCities).Max(c => (int)c.Count);
+                        var percentage = maxCount > 0 ? ((int)city.Count * 100 / maxCount) : 0;
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>@city.City</span>
+                                <span class="text-muted">@city.Count cafes</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: @percentage%"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-white">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-lightning"></i> Quick Actions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a asp-controller="Test" asp-action="CrawlManager" class="btn btn-primary w-100">
+                            <i class="bi bi-cloud-download"></i> Crawl Manager
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a asp-controller="Admin" asp-action="Index" class="btn btn-success w-100">
+                            <i class="bi bi-arrow-repeat"></i> BGG Sync
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a asp-controller="Test" asp-action="Cafes" class="btn btn-info w-100">
+                            <i class="bi bi-shop"></i> Manage Cafes
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="/" target="_blank" class="btn btn-secondary w-100">
+                            <i class="bi bi-box-arrow-up-right"></i> View Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

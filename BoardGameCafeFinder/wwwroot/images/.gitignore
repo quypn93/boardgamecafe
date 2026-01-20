@@ -1,0 +1,12 @@
+# Ignore all image files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.svg
+
+# But keep the directory structure
+!.gitignore
+!cafes/.gitkeep

@@ -1,0 +1,243 @@
+@{
+    ViewData["Title"] = "Test - API Endpoints";
+}
+
+<div class="container mt-4">
+    <h2>🔌 API Endpoint Testing</h2>
+    <p class="text-muted">Test API endpoints without needing the map interface</p>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        <strong>Info:</strong> These endpoints work without Google Maps API key!
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">POST /api/cafes/search</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Description:</strong> Search for cafés near a location</p>
+
+                    <h6>Request Body:</h6>
+                    <pre class="bg-light p-2"><code>{
+  "latitude": 47.6062,
+  "longitude": -122.3321,
+  "radius": 10000,
+  "openNow": false,
+  "hasGames": false,
+  "minRating": null,
+  "limit": 50
+}</code></pre>
+
+                    <button class="btn btn-primary" onclick="testSearchApi()">
+                        <i class="bi bi-play-fill"></i> Test This Endpoint
+                    </button>
+
+                    <div id="searchResult" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">GET /api/cafes/{id}</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Description:</strong> Get café details by ID</p>
+
+                    <div class="mb-3">
+                        <label class="form-label">Café ID:</label>
+                        <input type="number" id="cafeId" class="form-control" value="1" min="1">
+                    </div>
+
+                    <button class="btn btn-success" onclick="testGetCafe()">
+                        <i class="bi bi-play-fill"></i> Test This Endpoint
+                    </button>
+
+                    <div id="getCafeResult" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">GET /api/cities</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Description:</strong> Get list of cities with café counts</p>
+
+                    <button class="btn btn-info" onclick="testGetCities()">
+                        <i class="bi bi-play-fill"></i> Test This Endpoint
+                    </button>
+
+                    <div id="citiesResult" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Custom Search</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Test with your own parameters</strong></p>
+
+                    <div class="mb-2">
+                        <label class="form-label">Latitude:</label>
+                        <input type="number" id="customLat" class="form-control" value="47.6062" step="0.0001">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Longitude:</label>
+                        <input type="number" id="customLon" class="form-control" value="-122.3321" step="0.0001">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Radius (meters):</label>
+                        <input type="number" id="customRadius" class="form-control" value="50000" step="1000">
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="customOpenNow">
+                        <label class="form-check-label" for="customOpenNow">Open Now</label>
+                    </div>
+
+                    <button class="btn btn-warning" onclick="testCustomSearch()">
+                        <i class="bi bi-search"></i> Custom Search
+                    </button>
+
+                    <div id="customResult" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Quick Test Links</h5>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li><a href="/Test/Cafes">View All Cafés (No Map)</a></li>
+                <li><a href="/Test/Distance">Test Distance Calculations</a></li>
+                <li><a href="/Test/Database">Test Database Connection</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function testSearchApi() {
+            const resultDiv = document.getElementById('searchResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Loading...';
+
+            try {
+                const response = await fetch('/api/cafes/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        latitude: 47.6062,
+                        longitude: -122.3321,
+                        radius: 10000,
+                        openNow: false,
+                        hasGames: false,
+                        limit: 50
+                    })
+                });
+
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <strong>Success!</strong> Found ${data.count} cafés
+                    </div>
+                    <pre class="bg-light p-2" style="max-height: 300px; overflow-y: auto;"><code>${JSON.stringify(data, null, 2)}</code></pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${error.message}</div>`;
+            }
+        }
+
+        async function testGetCafe() {
+            const cafeId = document.getElementById('cafeId').value;
+            const resultDiv = document.getElementById('getCafeResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Loading...';
+
+            try {
+                const response = await fetch(`/api/cafes/${cafeId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Success!</strong> Found café: ${data.data.name}
+                        </div>
+                        <pre class="bg-light p-2" style="max-height: 300px; overflow-y: auto;"><code>${JSON.stringify(data, null, 2)}</code></pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-warning">${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${error.message}</div>`;
+            }
+        }
+
+        async function testGetCities() {
+            const resultDiv = document.getElementById('citiesResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Loading...';
+
+            try {
+                const response = await fetch('/api/cities');
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <strong>Success!</strong>
+                    </div>
+                    <pre class="bg-light p-2"><code>${JSON.stringify(data, null, 2)}</code></pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${error.message}</div>`;
+            }
+        }
+
+        async function testCustomSearch() {
+            const lat = parseFloat(document.getElementById('customLat').value);
+            const lon = parseFloat(document.getElementById('customLon').value);
+            const radius = parseInt(document.getElementById('customRadius').value);
+            const openNow = document.getElementById('customOpenNow').checked;
+
+            const resultDiv = document.getElementById('customResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Searching...';
+
+            try {
+                const response = await fetch('/api/cafes/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        latitude: lat,
+                        longitude: lon,
+                        radius: radius,
+                        openNow: openNow,
+                        hasGames: false,
+                        limit: 50
+                    })
+                });
+
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <strong>Found ${data.count} cafés</strong>
+                    </div>
+                    <pre class="bg-light p-2" style="max-height: 400px; overflow-y: auto;"><code>${JSON.stringify(data, null, 2)}</code></pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${error.message}</div>`;
+            }
+        }
+    </script>
+}

@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGameCafeFinder", "BoardGameCafeFinder\BoardGameCafeFinder.csproj", "{BE4C3E7C-80F7-46D3-A38C-B69DAF423C37}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE4C3E7C-80F7-46D3-A38C-B69DAF423C37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE4C3E7C-80F7-46D3-A38C-B69DAF423C37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE4C3E7C-80F7-46D3-A38C-B69DAF423C37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE4C3E7C-80F7-46D3-A38C-B69DAF423C37}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CFC34C4B-16E3-447C-9537-DCDB6AA14B95}
+	EndGlobalSection
+EndGlobal

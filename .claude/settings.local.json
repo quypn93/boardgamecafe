@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --version:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet tool install:*)",
+      "Bash(dotnet ef migrations:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet ef database:*)",
+      "Bash(dotnet add:*)",
+      "Bash(pwsh -Command \"& { dotnet build && ./bin/Debug/net8.0/playwright.ps1 install chromium }\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"./bin/Debug/net8.0/playwright.ps1\" install chromium:*)",
+      "Bash(dotnet run)",
+      "Bash(curl:*)"
+    ]
+  }
+}

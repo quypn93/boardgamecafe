@@ -1,0 +1,403 @@
+@model List<BoardGameCafeFinder.Models.Domain.Cafe>
+@{
+    ViewData["Title"] = "Board Game Cafes";
+    Layout = "_UserLayout";
+    var countries = ViewBag.Countries as List<string> ?? new List<string>();
+    var cities = ViewBag.Cities as List<string> ?? new List<string>();
+    var boardGames = ViewBag.BoardGames as IEnumerable<dynamic> ?? new List<dynamic>();
+    var selectedGameIds = ViewBag.SelectedGameIds as int[] ?? Array.Empty<int>();
+    var currentPage = (int)(ViewBag.CurrentPage ?? 1);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var totalItems = (int)(ViewBag.TotalItems ?? 0);
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-funnel"></i> Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="/" id="searchForm">
+                        <!-- Near Me Button -->
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-primary w-100" id="nearMeBtn">
+                                <i class="bi bi-geo-alt-fill"></i> Near Me
+                            </button>
+                        </div>
+
+                        <!-- Country Filter -->
+                        <div class="mb-3">
+                            <label for="country" class="form-label fw-bold">Country</label>
+                            <select class="form-select" id="country" name="country">
+                                <option value="">All Countries</option>
+                                @foreach (var c in countries)
+                                {
+                                    if (ViewBag.SelectedCountry == c)
+                                    {
+                                        <option value="@c" selected>@c</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@c">@c</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- City Filter -->
+                        <div class="mb-3">
+                            <label for="city" class="form-label fw-bold">City</label>
+                            <select class="form-select" id="city" name="city">
+                                <option value="">All Cities</option>
+                                @foreach (var c in cities)
+                                {
+                                    if (ViewBag.SelectedCity == c)
+                                    {
+                                        <option value="@c" selected>@c</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@c">@c</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Radius Filter -->
+                        <div class="mb-3">
+                            <label for="radius" class="form-label fw-bold">Radius (km)</label>
+                            <select class="form-select" id="radius" name="radius">
+                                @{
+                                    var radiusOptions = new[] { 10, 25, 50, 100, 500 };
+                                }
+                                @foreach (var r in radiusOptions)
+                                {
+                                    if (ViewBag.Radius == r)
+                                    {
+                                        <option value="@r" selected>@r km</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@r">@r km</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Board Games Filter -->
+                        @if (boardGames.Any())
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Board Games Available</label>
+                                <div class="border rounded p-2" style="max-height: 250px; overflow-y: auto;">
+                                    @foreach (var game in boardGames)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input game-checkbox" type="checkbox"
+                                                   name="gameIds" value="@game.GameId" id="game_@game.GameId"
+                                                   @(selectedGameIds.Contains((int)game.GameId) ? "checked" : "")>
+                                            <label class="form-check-label small" for="game_@game.GameId">
+                                                @game.Name <span class="badge bg-secondary">@game.CafeCount</span>
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <input type="hidden" id="lat" name="lat" value="@ViewBag.UserLat">
+                        <input type="hidden" id="lng" name="lng" value="@ViewBag.UserLng">
+                        <input type="hidden" id="page" name="page" value="1">
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-search"></i> Apply Filters
+                            </button>
+                            <a href="/" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Clear Filters
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="h3">
+                    <i class="bi bi-controller"></i> Board Game Cafes
+                    @if (ViewBag.UserLat != null)
+                    {
+                        <small class="text-muted fs-6">near your location</small>
+                    }
+                </h1>
+                <span class="badge bg-info fs-6">@totalItems cafes found</span>
+            </div>
+
+            <!-- Active Filters -->
+            @if (!string.IsNullOrEmpty(ViewBag.SelectedCountry as string) ||
+                 !string.IsNullOrEmpty(ViewBag.SelectedCity as string) ||
+                 selectedGameIds.Length > 0 ||
+                 ViewBag.UserLat != null)
+            {
+                <div class="mb-3">
+                    <span class="text-muted me-2">Active filters:</span>
+                    @if (!string.IsNullOrEmpty(ViewBag.SelectedCountry as string))
+                    {
+                        <span class="badge bg-primary me-1">Country: @ViewBag.SelectedCountry</span>
+                    }
+                    @if (!string.IsNullOrEmpty(ViewBag.SelectedCity as string))
+                    {
+                        <span class="badge bg-primary me-1">City: @ViewBag.SelectedCity</span>
+                    }
+                    @if (ViewBag.UserLat != null)
+                    {
+                        <span class="badge bg-success me-1">Near Me (@ViewBag.Radius km)</span>
+                    }
+                    @if (selectedGameIds.Length > 0)
+                    {
+                        <span class="badge bg-warning text-dark me-1">@selectedGameIds.Length games selected</span>
+                    }
+                </div>
+            }
+
+            <!-- Results -->
+            @if (Model != null && Model.Any())
+            {
+                <div class="row">
+                    @foreach (var cafe in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                @if (!string.IsNullOrEmpty(cafe.LocalImagePath))
+                                {
+                                    <a href="/cafe/@cafe.Slug">
+                                        <img src="@cafe.LocalImagePath" class="card-img-top" alt="@cafe.Name" style="height: 180px; object-fit: cover;">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="/cafe/@cafe.Slug" class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-decoration-none" style="height: 180px;">
+                                        <i class="bi bi-controller text-white" style="font-size: 3rem;"></i>
+                                    </a>
+                                }
+                                <div class="card-body p-3">
+                                    <h6 class="card-title mb-2">
+                                        <a href="/cafe/@cafe.Slug" class="text-decoration-none text-dark">@cafe.Name</a>
+                                    </h6>
+
+                                    <div class="d-flex align-items-center mb-2">
+                                        @if (cafe.AverageRating.HasValue)
+                                        {
+                                            <span class="badge bg-warning text-dark me-2">
+                                                <i class="bi bi-star-fill"></i> @cafe.AverageRating.Value.ToString("0.0")
+                                            </span>
+                                        }
+                                        @if (cafe.TotalReviews > 0)
+                                        {
+                                            <small class="text-muted">(@cafe.TotalReviews)</small>
+                                        }
+                                        @if (cafe.DistanceKm > 0)
+                                        {
+                                            <span class="badge bg-info ms-auto">@cafe.DistanceKm km</span>
+                                        }
+                                    </div>
+
+                                    <p class="card-text small text-muted mb-2">
+                                        <i class="bi bi-geo-alt"></i> @cafe.City, @cafe.State
+                                    </p>
+
+                                    @if (cafe.CafeGames != null && cafe.CafeGames.Any())
+                                    {
+                                        <div class="mb-2">
+                                            <small class="text-muted">
+                                                <i class="bi bi-dice-5"></i> @cafe.CafeGames.Count games available
+                                            </small>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="card-footer bg-transparent p-2">
+                                    <div class="d-flex justify-content-between">
+                                        <a href="/cafe/@cafe.Slug" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                        @if (!string.IsNullOrEmpty(cafe.GoogleMapsUrl))
+                                        {
+                                            <a href="@cafe.GoogleMapsUrl" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-map"></i> Map
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (totalPages > 1)
+                {
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" href="@BuildPageUrl(1)" aria-label="First">
+                                    <i class="bi bi-chevron-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" href="@BuildPageUrl(currentPage - 1)" aria-label="Previous">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            @{
+                                var startPage = Math.Max(1, currentPage - 2);
+                                var endPage = Math.Min(totalPages, currentPage + 2);
+
+                                if (startPage > 1)
+                                {
+                                    <li class="page-item"><a class="page-link" href="@BuildPageUrl(1)">1</a></li>
+                                    if (startPage > 2)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    }
+                                }
+
+                                for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(i == currentPage ? "active" : "")">
+                                        <a class="page-link" href="@BuildPageUrl(i)">@i</a>
+                                    </li>
+                                }
+
+                                if (endPage < totalPages)
+                                {
+                                    if (endPage < totalPages - 1)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    }
+                                    <li class="page-item"><a class="page-link" href="@BuildPageUrl(totalPages)">@totalPages</a></li>
+                                }
+                            }
+
+                            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                                <a class="page-link" href="@BuildPageUrl(currentPage + 1)" aria-label="Next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                                <a class="page-link" href="@BuildPageUrl(totalPages)" aria-label="Last">
+                                    <i class="bi bi-chevron-double-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <p class="text-center text-muted">
+                            Page @currentPage of @totalPages (@totalItems total cafes)
+                        </p>
+                    </nav>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <h4><i class="bi bi-exclamation-triangle"></i> No cafes found</h4>
+                    <p>Try adjusting your filters or <a href="/">clear all filters</a> to see all cafes.</p>
+                    <hr>
+                    <p class="mb-0">Admin: Go to <a href="/Test/CrawlManager">Crawl Manager</a> to add more cafes.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@functions {
+    string BuildPageUrl(int page)
+    {
+        var query = new List<string>();
+        query.Add($"page={page}");
+
+        if (!string.IsNullOrEmpty(ViewBag.SelectedCountry as string))
+            query.Add($"country={Uri.EscapeDataString(ViewBag.SelectedCountry)}");
+
+        if (!string.IsNullOrEmpty(ViewBag.SelectedCity as string))
+            query.Add($"city={Uri.EscapeDataString(ViewBag.SelectedCity)}");
+
+        if (ViewBag.UserLat != null)
+            query.Add($"lat={ViewBag.UserLat}");
+
+        if (ViewBag.UserLng != null)
+            query.Add($"lng={ViewBag.UserLng}");
+
+        query.Add($"radius={ViewBag.Radius}");
+
+        var selectedGameIds = ViewBag.SelectedGameIds as int[] ?? Array.Empty<int>();
+        foreach (var gameId in selectedGameIds)
+        {
+            query.Add($"gameIds={gameId}");
+        }
+
+        return "/?" + string.Join("&", query);
+    }
+}
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        // Near Me button
+        $('#nearMeBtn').on('click', function() {
+            if ("geolocation" in navigator) {
+                $(this).html('<span class="spinner-border spinner-border-sm"></span> Getting location...');
+                $(this).prop('disabled', true);
+
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    $('#lat').val(position.coords.latitude);
+                    $('#lng').val(position.coords.longitude);
+                    $('#country').val('');
+                    $('#city').val('');
+                    $('#page').val('1');
+                    $('#searchForm').submit();
+                }, function(error) {
+                    alert('Unable to get your location. Please allow location access or use filters.');
+                    $('#nearMeBtn').html('<i class="bi bi-geo-alt-fill"></i> Near Me');
+                    $('#nearMeBtn').prop('disabled', false);
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        });
+
+        // Country change - reload cities
+        $('#country').on('change', function() {
+            var country = $(this).val();
+            $('#city').html('<option value="">Loading...</option>');
+
+            $.get('/Home/GetCitiesByCountry', { country: country }, function(cities) {
+                var options = '<option value="">All Cities</option>';
+                cities.forEach(function(city) {
+                    options += '<option value="' + city + '">' + city + '</option>';
+                });
+                $('#city').html(options);
+            });
+
+            // Clear coordinates when using filters
+            $('#lat').val('');
+            $('#lng').val('');
+        });
+
+        // City change - clear coordinates
+        $('#city').on('change', function() {
+            $('#lat').val('');
+            $('#lng').val('');
+        });
+
+        // Reset page to 1 when filters change
+        $('#country, #city, #radius, .game-checkbox').on('change', function() {
+            $('#page').val('1');
+        });
+    });
+</script>
+}

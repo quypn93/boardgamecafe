@@ -1,0 +1,540 @@
+@{
+    ViewData["Title"] = "Crawl Manager";
+    Layout = "_AdminLayout";
+}
+
+<div class="mt-2">
+    <div class="row mb-3">
+        <div class="col-md-9">
+            <h2>Board Game Cafe Crawler</h2>
+            <p class="text-muted">Crawl board game cafes from Google Maps and save to database</p>
+        </div>
+        <div class="col-md-3 text-end">
+            <button id="cleanPhoneBtn" class="btn btn-warning me-2">
+                <i class="bi bi-telephone"></i> Clean Phone Numbers
+            </button>
+            <button id="clearAllBtn" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Clear All Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Crawl All Section -->
+    <div class="card mb-4 border-warning">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Batch Crawl</h5>
+            <small class="text-dark">With rate limiting to avoid blocking</small>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <label class="form-label">Delay between cities (seconds):</label>
+                    <input type="number" id="crawlDelay" class="form-control" value="30" min="10" max="120">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Max results per city:</label>
+                    <input type="number" id="crawlMaxPerCity" class="form-control" value="15" min="5" max="30">
+                </div>
+                <div class="col-md-3">
+                    <button id="crawlAllUSBtn" class="btn btn-warning w-100 mt-4">
+                        <i class="bi bi-collection"></i> Crawl All US Cities
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button id="stopCrawlBtn" class="btn btn-danger w-100 mt-4" style="display:none;">
+                        <i class="bi bi-stop-circle"></i> Stop Crawling
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div id="batchProgress" class="mt-4" style="display:none;">
+                <div class="progress mb-2" style="height: 25px;">
+                    <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">
+                        0%
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <small id="progressText">Preparing...</small>
+                    <small id="progressEta">ETA: calculating...</small>
+                </div>
+                <div id="batchLog" class="mt-3 bg-dark text-light p-3 rounded" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Major US Cities</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Seattle" data-max="20">
+                        <i class="bi bi-download"></i> Seattle
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Portland" data-max="20">
+                        <i class="bi bi-download"></i> Portland
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="San Francisco" data-max="20">
+                        <i class="bi bi-download"></i> San Francisco
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Los Angeles" data-max="20">
+                        <i class="bi bi-download"></i> Los Angeles
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Chicago" data-max="20">
+                        <i class="bi bi-download"></i> Chicago
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="New York" data-max="20">
+                        <i class="bi bi-download"></i> New York
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Boston" data-max="20">
+                        <i class="bi bi-download"></i> Boston
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Austin" data-max="20">
+                        <i class="bi bi-download"></i> Austin
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Denver" data-max="20">
+                        <i class="bi bi-download"></i> Denver
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Atlanta" data-max="20">
+                        <i class="bi bi-download"></i> Atlanta
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Miami" data-max="20">
+                        <i class="bi bi-download"></i> Miami
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Phoenix" data-max="20">
+                        <i class="bi bi-download"></i> Phoenix
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">International Cities</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Hanoi" data-max="15">
+                        <i class="bi bi-download"></i> Hanoi
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Ho Chi Minh" data-max="15">
+                        <i class="bi bi-download"></i> Ho Chi Minh
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Tokyo" data-max="20">
+                        <i class="bi bi-download"></i> Tokyo
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="London" data-max="20">
+                        <i class="bi bi-download"></i> London
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Toronto" data-max="20">
+                        <i class="bi bi-download"></i> Toronto
+                    </button>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Berlin" data-max="20">
+                        <i class="bi bi-download"></i> Berlin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Custom Location</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" id="customLocation" class="form-control" placeholder="Enter city name...">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" id="customMaxResults" class="form-control" value="20" min="1" max="50">
+                </div>
+                <div class="col-md-2">
+                    <button id="customCrawlBtn" class="btn btn-info w-100">
+                        <i class="bi bi-search"></i> Crawl
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="results" class="card" style="display:none;">
+        <div class="card-header">
+            <h5 class="mb-0">Results</h5>
+        </div>
+        <div class="card-body">
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <div id="loading" class="text-center" style="display:none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Crawling <span id="currentLocation"></span>...</p>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        // US Cities list for batch crawl
+        const usCities = [
+            'Seattle', 'Portland', 'San Francisco', 'Los Angeles', 'San Diego',
+            'Phoenix', 'Denver', 'Austin', 'Houston', 'Dallas',
+            'Chicago', 'Detroit', 'Minneapolis', 'St. Louis', 'Kansas City',
+            'New York', 'Boston', 'Philadelphia', 'Washington DC', 'Baltimore',
+            'Atlanta', 'Miami', 'Orlando', 'Charlotte', 'Nashville',
+            'Salt Lake City', 'Las Vegas', 'Sacramento', 'San Jose', 'Oakland'
+        ];
+
+        let isCrawling = false;
+        let shouldStop = false;
+        let totalStats = { added: 0, updated: 0, skipped: 0, errors: [] };
+
+        // Crawl All US Cities
+        $('#crawlAllUSBtn').on('click', async function() {
+            if (!confirm('This will crawl ' + usCities.length + ' US cities sequentially with delays to avoid being blocked by Google.\n\nEstimated time: ' + estimateTime() + '\n\nContinue?')) {
+                return;
+            }
+
+            isCrawling = true;
+            shouldStop = false;
+            totalStats = { added: 0, updated: 0, skipped: 0, errors: [] };
+
+            const delay = parseInt($('#crawlDelay').val()) || 30;
+            const maxPerCity = parseInt($('#crawlMaxPerCity').val()) || 15;
+
+            // UI Updates
+            $('#crawlAllUSBtn').hide();
+            $('#stopCrawlBtn').show();
+            $('#batchProgress').show();
+            $('#batchLog').html('');
+            $('.crawl-btn, #customCrawlBtn').prop('disabled', true);
+
+            const startTime = Date.now();
+
+            for (let i = 0; i < usCities.length; i++) {
+                if (shouldStop) {
+                    logMessage('⛔ Crawl stopped by user', 'warning');
+                    break;
+                }
+
+                const city = usCities[i];
+                const progress = ((i + 1) / usCities.length * 100).toFixed(1);
+
+                updateProgress(progress, `Crawling ${city} (${i + 1}/${usCities.length})`, startTime, i, usCities.length);
+                logMessage(`🔍 Starting crawl for ${city}...`, 'info');
+
+                try {
+                    const result = await crawlCity(city, maxPerCity);
+
+                    if (result.success !== false) {
+                        totalStats.added += result.added || 0;
+                        totalStats.updated += result.updated || 0;
+                        totalStats.skipped += result.skipped || 0;
+
+                        logMessage(`✅ ${city}: +${result.added} added, ${result.updated} updated, ${result.skipped} skipped`, 'success');
+                    } else {
+                        logMessage(`❌ ${city}: Error - ${result.message || 'Unknown error'}`, 'error');
+                        totalStats.errors.push(`${city}: ${result.message}`);
+                    }
+                } catch (error) {
+                    logMessage(`❌ ${city}: ${error}`, 'error');
+                    totalStats.errors.push(`${city}: ${error}`);
+                }
+
+                // Wait before next city (unless it's the last one)
+                if (i < usCities.length - 1 && !shouldStop) {
+                    logMessage(`⏳ Waiting ${delay} seconds before next city...`, 'info');
+                    await sleep(delay * 1000);
+                }
+            }
+
+            // Completed
+            isCrawling = false;
+            $('#crawlAllUSBtn').show();
+            $('#stopCrawlBtn').hide();
+            $('.crawl-btn, #customCrawlBtn').prop('disabled', false);
+
+            updateProgress(100, 'Completed!', startTime, usCities.length, usCities.length);
+            logMessage('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            logMessage(`📊 TOTAL: ${totalStats.added} added, ${totalStats.updated} updated, ${totalStats.skipped} skipped`, 'success');
+            if (totalStats.errors.length > 0) {
+                logMessage(`⚠️ ${totalStats.errors.length} cities had errors`, 'warning');
+            }
+
+            // Show summary
+            displayBatchResults();
+        });
+
+        // Stop button
+        $('#stopCrawlBtn').on('click', function() {
+            if (confirm('Are you sure you want to stop the crawl? Progress will be saved.')) {
+                shouldStop = true;
+                $(this).html('<span class="spinner-border spinner-border-sm"></span> Stopping...').prop('disabled', true);
+            }
+        });
+
+        function estimateTime() {
+            const delay = parseInt($('#crawlDelay').val()) || 30;
+            const crawlTime = 60; // Approximate time per city in seconds
+            const totalSeconds = usCities.length * (delay + crawlTime);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            return hours > 0 ? `${hours}h ${minutes}m` : `${minutes} minutes`;
+        }
+
+        function crawlCity(location, maxResults) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: '/Test/CrawlAndSave',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ location: location, maxResults: maxResults }),
+                    timeout: 300000, // 5 minute timeout per city
+                    success: resolve,
+                    error: function(xhr, status, error) {
+                        reject(error || status);
+                    }
+                });
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function updateProgress(percent, text, startTime, completed, total) {
+            $('#progressBar').css('width', percent + '%').text(Math.round(percent) + '%');
+            $('#progressText').text(text);
+
+            if (completed > 0 && completed < total) {
+                const elapsed = (Date.now() - startTime) / 1000;
+                const avgTime = elapsed / completed;
+                const remaining = (total - completed) * avgTime;
+                const mins = Math.floor(remaining / 60);
+                const secs = Math.floor(remaining % 60);
+                $('#progressEta').text(`ETA: ${mins}m ${secs}s remaining`);
+            } else if (completed >= total) {
+                $('#progressEta').text('Done!');
+            }
+        }
+
+        function logMessage(message, type) {
+            const timestamp = new Date().toLocaleTimeString();
+            let color = '#fff';
+            if (type === 'success') color = '#28a745';
+            if (type === 'error') color = '#dc3545';
+            if (type === 'warning') color = '#ffc107';
+
+            $('#batchLog').append(`<div style="color: ${color}">[${timestamp}] ${message}</div>`);
+            $('#batchLog').scrollTop($('#batchLog')[0].scrollHeight);
+        }
+
+        function displayBatchResults() {
+            let html = '<div class="alert alert-info mt-3">';
+            html += '<h5><i class="bi bi-bar-chart"></i> Batch Crawl Summary</h5>';
+            html += '<strong>Total Added:</strong> ' + totalStats.added + '<br>';
+            html += '<strong>Total Updated:</strong> ' + totalStats.updated + '<br>';
+            html += '<strong>Total Skipped:</strong> ' + totalStats.skipped + '<br>';
+            html += '<strong>Cities with Errors:</strong> ' + totalStats.errors.length;
+            html += '</div>';
+
+            $('#resultsContent').html(html);
+            $('#results').show();
+        }
+
+        $('.crawl-btn').on('click', function() {
+            const location = $(this).data('location');
+            const maxResults = $(this).data('max');
+            crawlAndSave(location, maxResults);
+        });
+
+        $('#customCrawlBtn').on('click', function() {
+            const location = $('#customLocation').val();
+            const maxResults = parseInt($('#customMaxResults').val()) || 20;
+
+            if (!location) {
+                alert('Please enter a location');
+                return;
+            }
+
+            crawlAndSave(location, maxResults);
+        });
+
+        $('#cleanPhoneBtn').on('click', function() {
+            if (!confirm('This will clean phone numbers in the database by removing special/control characters.\n\nContinue?')) {
+                return;
+            }
+
+            $('#cleanPhoneBtn').html('<span class="spinner-border spinner-border-sm"></span> Cleaning...').prop('disabled', true);
+
+            $.ajax({
+                url: '/Test/CleanPhoneNumbers',
+                type: 'POST',
+                success: function(response) {
+                    $('#cleanPhoneBtn').html('<i class="bi bi-telephone"></i> Clean Phone Numbers').prop('disabled', false);
+
+                    if (response.success) {
+                        let html = '<div class="alert alert-success">';
+                        html += '<h5>' + response.message + '</h5>';
+                        html += '<strong>Cafes Processed:</strong> ' + response.cafesProcessed + '<br>';
+                        html += '<strong>Phone Numbers Updated:</strong> ' + response.updated;
+                        html += '</div>';
+
+                        $('#resultsContent').html(html);
+                        $('#results').show();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#cleanPhoneBtn').html('<i class="bi bi-telephone"></i> Clean Phone Numbers').prop('disabled', false);
+                    alert('Error cleaning phone numbers: ' + error);
+                }
+            });
+        });
+
+        $('#clearAllBtn').on('click', function() {
+            if (!confirm('⚠️ WARNING: This will delete ALL cafe data and related records (reviews, photos, events, etc.) from the database.\n\nAre you absolutely sure you want to continue?')) {
+                return;
+            }
+
+            if (!confirm('This action CANNOT be undone. All data will be permanently deleted.\n\nClick OK to proceed with deletion.')) {
+                return;
+            }
+
+            $('#clearAllBtn').html('<span class="spinner-border spinner-border-sm"></span> Deleting...').prop('disabled', true);
+
+            $.ajax({
+                url: '/Test/ClearAllData',
+                type: 'POST',
+                success: function(response) {
+                    $('#clearAllBtn').html('<i class="bi bi-trash"></i> Clear All Data').prop('disabled', false);
+
+                    if (response.success) {
+                        let html = '<div class="alert alert-success">';
+                        html += '<h5>Data Cleared Successfully!</h5>';
+                        html += '<strong>Deleted:</strong><br>';
+                        html += 'Cafes: ' + response.deleted.cafes + '<br>';
+                        html += 'Reviews: ' + response.deleted.reviews + '<br>';
+                        html += 'Photos: ' + response.deleted.photos + '<br>';
+                        html += 'Events: ' + response.deleted.events + '<br>';
+                        html += 'Cafe-Games: ' + response.deleted.cafeGames + '<br>';
+                        html += 'Premium Listings: ' + response.deleted.premiumListings + '<br>';
+                        html += 'Image Files: ' + response.deleted.imageFiles;
+                        html += '</div>';
+
+                        $('#resultsContent').html(html);
+                        $('#results').show();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#clearAllBtn').html('<i class="bi bi-trash"></i> Clear All Data').prop('disabled', false);
+                    alert('Error clearing data: ' + error);
+                }
+            });
+        });
+
+        function crawlAndSave(location, maxResults) {
+            $('#loading').show();
+            $('#currentLocation').text(location);
+            $('#results').hide();
+            $('.crawl-btn').prop('disabled', true);
+            $('#customCrawlBtn').prop('disabled', true);
+
+            $.ajax({
+                url: '/Test/CrawlAndSave',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    location: location,
+                    maxResults: maxResults
+                }),
+                success: function(response) {
+                    $('#loading').hide();
+                    $('.crawl-btn').prop('disabled', false);
+                    $('#customCrawlBtn').prop('disabled', false);
+
+                    displayResults(response);
+                },
+                error: function(xhr, status, error) {
+                    $('#loading').hide();
+                    $('.crawl-btn').prop('disabled', false);
+                    $('#customCrawlBtn').prop('disabled', false);
+
+                    alert('Error: ' + error);
+                }
+            });
+        }
+
+        function displayResults(response) {
+            let html = '<div class="alert alert-success">';
+            html += '<h5>Crawl Complete!</h5>';
+            html += '<strong>Location:</strong> ' + response.location + '<br>';
+            html += '<strong>Total Crawled:</strong> ' + response.totalCrawled + '<br>';
+            html += '<strong>Added:</strong> ' + response.added + '<br>';
+            html += '<strong>Updated:</strong> ' + response.updated + '<br>';
+            html += '<strong>Skipped:</strong> ' + response.skipped + '<br>';
+
+            if (response.errors && response.errors.length > 0) {
+                html += '<hr><strong>Errors:</strong><ul>';
+                response.errors.forEach(function(error) {
+                    html += '<li>' + error + '</li>';
+                });
+                html += '</ul>';
+            }
+
+            html += '</div>';
+
+            $('#resultsContent').html(html);
+            $('#results').show();
+
+            // Scroll to results
+            $('html, body').animate({
+                scrollTop: $('#results').offset().top - 100
+            }, 500);
+        }
+    });
+</script>
+}

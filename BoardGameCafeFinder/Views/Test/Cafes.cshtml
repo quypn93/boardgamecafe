@@ -1,0 +1,142 @@
+@model List<BoardGameCafeFinder.Models.DTOs.CafeSearchResultDto>
+@{
+    ViewData["Title"] = "Test - All Cafés";
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-4">
+    <h2>📍 All Sample Cafés (No Map Required)</h2>
+    <p class="text-muted">Testing café data and search functionality without Google Maps API</p>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        <strong>Test Mode:</strong> Showing all sample cafés loaded from database.
+        This proves the backend is working correctly!
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Statistics</h5>
+                    <ul>
+                        <li><strong>Total Cafés:</strong> @Model.Count</li>
+                        <li><strong>Cities:</strong> @Model.Select(c => c.City).Distinct().Count()</li>
+                        <li><strong>Premium:</strong> @Model.Count(c => c.IsPremium)</li>
+                        <li><strong>Verified:</strong> @Model.Count(c => c.IsVerified)</li>
+                        <li><strong>With Games:</strong> @Model.Count(c => c.TotalGames > 0)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Other Test Pages</h5>
+                    <ul>
+                        <li><a href="/Test/Api">Test API Endpoints</a></li>
+                        <li><a href="/Test/Distance">Test Distance Calculations</a></li>
+                        <li><a href="/Test/Database">Test Database</a></li>
+                        <li><a href="/api/cafes/search" target="_blank">API: Search Endpoint (JSON)</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-4">Café List</h3>
+
+    <div class="row">
+        @foreach (var cafe in Model.OrderBy(c => c.City).ThenBy(c => c.Name))
+        {
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100 @(cafe.IsPremium ? "border-warning" : "")">
+                    @if (cafe.IsPremium)
+                    {
+                        <div class="card-header bg-warning text-dark">
+                            <i class="bi bi-star-fill"></i> Featured
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@cafe.Name</h5>
+
+                        <p class="text-muted small mb-2">
+                            <i class="bi bi-geo-alt"></i> @cafe.Address
+                            <br />
+                            @cafe.City, @cafe.State
+                        </p>
+
+                        <div class="mb-2">
+                            @if (cafe.AverageRating.HasValue)
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    @cafe.AverageRating.Value.ToString("F1") ⭐
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No ratings</span>
+                            }
+
+                            @if (cafe.TotalReviews > 0)
+                            {
+                                <span class="text-muted small">(@cafe.TotalReviews reviews)</span>
+                            }
+                        </div>
+
+                        <div class="mb-2">
+                            @if (cafe.IsOpenNow)
+                            {
+                                <span class="badge bg-success">Open Now</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Closed</span>
+                            }
+
+                            @if (cafe.IsVerified)
+                            {
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-check-circle"></i> Verified
+                                </span>
+                            }
+                        </div>
+
+                        @if (cafe.TotalGames > 0)
+                        {
+                            <p class="text-success small mb-2">
+                                <i class="bi bi-dice-5"></i> @cafe.TotalGames games available
+                            </p>
+                        }
+
+                        <p class="text-primary small mb-0">
+                            <i class="bi bi-pin-map"></i>
+                            Distance from Seattle: <strong>@cafe.DistanceDisplay</strong>
+                        </p>
+
+                        @if (!string.IsNullOrEmpty(cafe.Phone))
+                        {
+                            <p class="text-muted small mb-0">
+                                <i class="bi bi-telephone"></i> @cafe.Phone
+                            </p>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            Coordinates: @cafe.Latitude.ToString("F4"), @cafe.Longitude.ToString("F4")
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>No cafés found!</strong>
+            Make sure the sample data has been seeded. Check the console logs.
+        </div>
+    }
+</div>
