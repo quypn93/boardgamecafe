@@ -42,6 +42,7 @@ namespace BoardGameCafeFinder.Services
         public string? Country { get; set; }
         public List<CrawledReviewData> Reviews { get; set; } = new();
         public List<string> PhotoUrls { get; set; } = new();
+        public List<string> PhotoLocalPaths { get; set; } = new();
         public Dictionary<string, List<string>> Attributes { get; set; } = new();
         public string? BggUsername { get; set; }
     }
@@ -384,8 +385,10 @@ namespace BoardGameCafeFinder.Services
                     _logger.LogWarning(ex, "Error extracting image for {Name}", cafe.Name);
                 }
 
-                // Extract photos
-                cafe.PhotoUrls = await ExtractPhotosAsync(page, cafe.Name);
+                // Extract photos and download them locally
+                var (photoUrls, photoLocalPaths) = await ExtractPhotosAsync(page, cafe.Name);
+                cafe.PhotoUrls = photoUrls;
+                cafe.PhotoLocalPaths = photoLocalPaths;
 
                 // Extract reviews
                 cafe.Reviews = await ExtractReviewsAsync(page);
@@ -409,9 +412,10 @@ namespace BoardGameCafeFinder.Services
             }
         }
 
-        private async Task<List<string>> ExtractPhotosAsync(IPage page, string cafeName)
+        private async Task<(List<string> PhotoUrls, List<string> PhotoLocalPaths)> ExtractPhotosAsync(IPage page, string cafeName)
         {
             var photoUrls = new List<string>();
+            var photoLocalPaths = new List<string>();
             try
             {
                 // Look for Photos tab/button
@@ -423,7 +427,7 @@ namespace BoardGameCafeFinder.Services
 
                     // Wait for photos to load
                     var photoItems = page.Locator("a[data-photo-index] div.U39Pmb");
-                    
+
                     // Specific selector for photo grid items might vary, trying a few common ones
                     if (await photoItems.CountAsync() == 0)
                     {
@@ -433,9 +437,10 @@ namespace BoardGameCafeFinder.Services
                     var count = await photoItems.CountAsync();
                     _logger.LogInformation("Found {Count} potential photos for {Name}", count, cafeName);
 
+                    var extractedUrls = new List<string>();
                     for (int i = 0; i < Math.Min(count, 10); i++)
                     {
-                        try 
+                        try
                         {
                             var style = await photoItems.Nth(i).GetAttributeAsync("style");
                             if (!string.IsNullOrEmpty(style))
@@ -443,15 +448,43 @@ namespace BoardGameCafeFinder.Services
                                 var match = Regex.Match(style, @"url\(""(.*?)""\)");
                                 if (match.Success)
                                 {
-                                    photoUrls.Add(match.Groups[1].Value);
+                                    extractedUrls.Add(match.Groups[1].Value);
                                 }
                             }
                         }
-                        catch 
+                        catch
                         {
                             // Ignore individual photo failures
                         }
                     }
+
+                    // Download each photo locally, only keep successfully downloaded ones
+                    foreach (var url in extractedUrls)
+                    {
+                        try
+                        {
+                            _logger.LogInformation("Downloading photo for {Name}: {Url}", cafeName, url.Substring(0, Math.Min(80, url.Length)));
+                            var localPath = await _imageStorageService.DownloadAndSaveImageAsync(url, "photos");
+
+                            if (!string.IsNullOrEmpty(localPath))
+                            {
+                                photoUrls.Add(url);
+                                photoLocalPaths.Add(localPath);
+                                _logger.LogInformation("Photo saved locally at {Path}", localPath);
+                            }
+                            else
+                            {
+                                _logger.LogWarning("Failed to download photo for {Name}, skipping", cafeName);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Error downloading photo for {Name}, skipping", cafeName);
+                        }
+                    }
+
+                    _logger.LogInformation("Successfully downloaded {Count}/{Total} photos for {Name}",
+                        photoUrls.Count, extractedUrls.Count, cafeName);
 
                     // Go back to main details
                     var backButton = page.Locator("button[aria-label='Back']").First;
@@ -459,7 +492,7 @@ namespace BoardGameCafeFinder.Services
                     {
                         await backButton.ClickAsync();
                     }
-                    else 
+                    else
                     {
                         // Fallback: try clicking the "Overview" tab if available
                          var overviewTab = page.Locator("button[aria-label*='Overview']").First;
@@ -475,7 +508,7 @@ namespace BoardGameCafeFinder.Services
             {
                  _logger.LogWarning(ex, "Error extracting photos for {Name}", cafeName);
             }
-            return photoUrls;
+            return (photoUrls, photoLocalPaths);
         }
 
         private async Task<List<CrawledReviewData>> ExtractReviewsAsync(IPage page)

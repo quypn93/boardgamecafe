@@ -25,6 +25,9 @@ namespace BoardGameCafeFinder.Models.Domain
         [MaxLength(500)]
         public string? Caption { get; set; }
 
+        [MaxLength(500)]
+        public string? LocalPath { get; set; }
+
         public int DisplayOrder { get; set; } = 0;
 
         public bool IsApproved { get; set; } = false;

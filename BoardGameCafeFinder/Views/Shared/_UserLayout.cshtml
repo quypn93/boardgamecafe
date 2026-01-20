@@ -8,21 +8,25 @@
     <meta name="author" content="Board Game Cafe Finder" />
     <meta property="og:title" content="@(ViewData["Title"] ?? "Board Game Cafe Finder") - Board Game Cafe Finder" />
     <meta property="og:description" content="@(ViewData["MetaDescription"] ?? ViewData["Description"] ?? "Find the best board game cafes near you. Discover board game lounges with our interactive map.")" />
-    <meta property="og:image" content="~/favicon.ico" />
+    <meta property="og:image" content="/logo.svg" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#6f42c1" />
 
     <title>@(ViewData["Title"] ?? "Find Board Game Cafes") - Board Game Cafe Finder</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="~/favicon.ico" />
-    <link rel="apple-touch-icon" href="~/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BoardGameCafeFinder.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="canonical" href="@(ViewData["CanonicalUrl"] ?? $"{Request.Scheme}://{Request.Host}{Request.Path}")" />
+    @if (ViewData["CanonicalUrl"] != null)
+    {
+        <link rel="canonical" href="@ViewData["CanonicalUrl"]" />
+    }
     <style>
         .navbar-brand-logo {
             font-weight: bold;
@@ -50,7 +54,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
             <div class="container">
                 <a class="navbar-brand navbar-brand-logo" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-dice-5-fill"></i> BoardGame Cafe Finder
+                    <img src="~/logo.svg" alt="Logo" style="height: 40px; margin-right: 8px; display: inline-block;" />
+                    BoardGame Cafe Finder
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

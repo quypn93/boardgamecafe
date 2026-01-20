@@ -250,10 +250,10 @@ namespace BoardGameCafeFinder.Controllers
                             }
                         }
 
-                        // Save photos for existing cafe
-                        if (crawledCafe.PhotoUrls.Any())
+                        // Save photos for existing cafe (only those with local paths)
+                        if (crawledCafe.PhotoUrls.Any() && crawledCafe.PhotoLocalPaths.Any())
                         {
-                             await SaveCafePhotosAsync(existingCafe.CafeId, crawledCafe.PhotoUrls);
+                             await SaveCafePhotosAsync(existingCafe.CafeId, crawledCafe.PhotoUrls, crawledCafe.PhotoLocalPaths);
                         }
                     }
                     else
@@ -315,10 +315,10 @@ namespace BoardGameCafeFinder.Controllers
                             reviewsAdded += convertedReviews.Count;
                         }
 
-                        // Save photos for new cafe
-                        if (crawledCafe.PhotoUrls.Any())
+                        // Save photos for new cafe (only those with local paths)
+                        if (crawledCafe.PhotoUrls.Count > 0 && crawledCafe.PhotoLocalPaths.Count > 0)
                         {
-                             await SaveCafePhotosAsync(newCafe.CafeId, crawledCafe.PhotoUrls);
+                             await SaveCafePhotosAsync(newCafe.CafeId, crawledCafe.PhotoUrls, crawledCafe.PhotoLocalPaths);
                         }
                     }
                 }
@@ -576,34 +576,48 @@ namespace BoardGameCafeFinder.Controllers
                 .ToList();
         }
 
-        private async Task SaveCafePhotosAsync(int cafeId, List<string> photoUrls)
+        private async Task SaveCafePhotosAsync(int cafeId, List<string> photoUrls, List<string> photoLocalPaths)
         {
-            var existingUrls = await _context.Photos
-                .Where(p => p.CafeId == cafeId)
-                .Select(p => p.Url)
+            // Only save photos that have been successfully downloaded locally
+            if (photoUrls.Count != photoLocalPaths.Count)
+            {
+                _logger.LogWarning("Photo URLs and local paths count mismatch for cafe {CafeId}", cafeId);
+                return;
+            }
+
+            var existingLocalPaths = await _context.Photos
+                .Where(p => p.CafeId == cafeId && p.LocalPath != null)
+                .Select(p => p.LocalPath)
                 .ToListAsync();
 
             var newPhotos = new List<BoardGameCafeFinder.Models.Domain.Photo>();
-            int order = existingUrls.Count;
+            int order = await _context.Photos.Where(p => p.CafeId == cafeId).CountAsync();
 
-            foreach (var url in photoUrls)
+            for (int i = 0; i < photoUrls.Count; i++)
             {
-                if (!existingUrls.Contains(url))
+                var localPath = photoLocalPaths[i];
+
+                // Skip if already exists (by local path)
+                if (existingLocalPaths.Contains(localPath))
                 {
-                    newPhotos.Add(new BoardGameCafeFinder.Models.Domain.Photo
-                    {
-                        CafeId = cafeId,
-                        Url = url,
-                        UploadedAt = DateTime.UtcNow,
-                        IsApproved = true,
-                        DisplayOrder = order++
-                    });
+                    continue;
                 }
+
+                newPhotos.Add(new BoardGameCafeFinder.Models.Domain.Photo
+                {
+                    CafeId = cafeId,
+                    Url = photoUrls[i],
+                    LocalPath = localPath,
+                    UploadedAt = DateTime.UtcNow,
+                    IsApproved = true,
+                    DisplayOrder = order++
+                });
             }
 
-            if (newPhotos.Any())
+            if (newPhotos.Count > 0)
             {
                 _context.Photos.AddRange(newPhotos);
+                _logger.LogInformation("Added {Count} photos for cafe {CafeId}", newPhotos.Count, cafeId);
             }
         }
     }

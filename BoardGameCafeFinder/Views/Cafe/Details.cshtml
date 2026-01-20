@@ -23,7 +23,7 @@
                     <span class="badge bg-warning text-dark me-2">
                         <i class="bi bi-star-fill"></i> @Model.AverageRating.Value.ToString("0.0")
                     </span>
-                    <span class="text-muted">(@Model.TotalReviews reviews)</span>
+                    <span class="text-muted">(@Model.Reviews.Count reviews)</span>
                 }
                 @if (!string.IsNullOrEmpty(Model.PriceRange))
                 {
@@ -68,7 +68,7 @@
                 </div>
             }
             @{
-                var attributes = Model.GetAttributes();
+                @* var attributes = Model.GetAttributes();
                 if (attributes != null && attributes.Any())
                 {
                     <div class="mt-4">
@@ -88,7 +88,7 @@
                             }
                         </div>
                     </div>
-                }
+                } *@
             }
         </div>
     </div>
@@ -116,9 +116,10 @@
                                     var photos = Model.Photos.OrderBy(p => p.DisplayOrder).ToList();
                                     for (int i = 0; i < photos.Count; i++)
                                     {
+                                        var photoSrc = !string.IsNullOrEmpty(photos[i].LocalPath) ? photos[i].LocalPath : photos[i].Url;
                                         <div class="carousel-item @(i == 0 ? "active" : "")">
                                             <div class="ratio ratio-16x9">
-                                                <img src="@photos[i].Url" class="d-block w-100 object-fit-contain bg-dark" alt="Photo of @Model.Name">
+                                                <img src="@photoSrc" class="d-block w-100 object-fit-contain bg-dark" alt="Photo of @Model.Name">
                                             </div>
                                             @if (!string.IsNullOrEmpty(photos[i].Caption))
                                             {
@@ -164,36 +165,73 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
-                            @foreach (var cafeGame in Model.CafeGames.OrderBy(cg => cg.Game.Name))
-                            {
-                                <div class="col">
-                                    <div class="card h-100 border-0 shadow-sm text-center">
-                                        <div class="p-2">
-                                            @if (!string.IsNullOrEmpty(cafeGame.Game.ImageUrl))
-                                            {
-                                                <img src="@cafeGame.Game.ImageUrl" class="card-img-top rounded object-fit-contain" style="height: 100px;" alt="@cafeGame.Game.Name">
-                                            }
-                                            else
-                                            {
-                                                <div class="bg-secondary bg-opacity-10 rounded d-flex align-items-center justify-content-center" style="height: 100px;">
-                                                    <i class="bi bi-dice-5 text-secondary display-6"></i>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="card-body p-2 d-flex flex-column">
-                                            <h6 class="card-title small fw-bold mb-1 text-truncate" title="@cafeGame.Game.Name">@cafeGame.Game.Name</h6>
-                                            @if (cafeGame.Game.BGGId.HasValue)
-                                            {
-                                                <a href="https://boardgamegeek.com/boardgame/@cafeGame.Game.BGGId" target="_blank" class="mt-auto text-decoration-none extra-small-link">
-                                                    <i class="bi bi-box-arrow-up-right me-1"></i>BGG
-                                                </a>
-                                            }
+                        @{
+                            var totalGames = Model.CafeGames.Count;
+                            var gamesPerPage = 8;
+                            var totalGamePages = (int)Math.Ceiling((double)totalGames / gamesPerPage);
+                        }
+                        <!-- Games Navigation Tabs -->
+                        @if (totalGamePages > 1)
+                        {
+                            <div class="mb-3 d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-outline-secondary" id="prevGamesBtn" type="button">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <span class="text-muted small" id="gamesPageInfo">Page 1 of @totalGamePages</span>
+                                <button class="btn btn-sm btn-outline-secondary" id="nextGamesBtn" type="button">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        }
+                        <!-- Games Grid with Pagination -->
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3" id="gamesContainer">
+                            @{
+                                var sortedGames = Model.CafeGames.OrderBy(cg => cg.Game.Name).ToList();
+                                for (int i = 0; i < sortedGames.Count; i++)
+                                {
+                                    var cafeGame = sortedGames[i];
+                                    var pageNumber = (i / gamesPerPage) + 1;
+                                    <div class="col game-item" data-page="@pageNumber" style="display: @(pageNumber > 1 ? "none" : "block");">
+                                        <div class="card h-100 border-0 shadow-sm text-center">
+                                            <div class="p-2">
+                                                @if (!string.IsNullOrEmpty(cafeGame.Game.ImageUrl))
+                                                {
+                                                    <img src="@cafeGame.Game.ImageUrl" class="card-img-top rounded object-fit-contain" style="height: 100px;" alt="@cafeGame.Game.Name">
+                                                }
+                                                else
+                                                {
+                                                    <div class="bg-secondary bg-opacity-10 rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                                        <i class="bi bi-dice-5 text-secondary display-6"></i>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="card-body p-2 d-flex flex-column">
+                                                <h6 class="card-title small fw-bold mb-1 text-truncate" title="@cafeGame.Game.Name">@cafeGame.Game.Name</h6>
+                                                @if (cafeGame.Game.BGGId.HasValue)
+                                                {
+                                                    <a href="https://boardgamegeek.com/boardgame/@cafeGame.Game.BGGId" target="_blank" class="mt-auto text-decoration-none extra-small-link">
+                                                        <i class="bi bi-box-arrow-up-right me-1"></i>BGG
+                                                    </a>
+                                                }
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             }
                         </div>
+                        <!-- Games Pagination Bottom -->
+                        @if (totalGamePages > 1)
+                        {
+                            <div class="mt-3 d-flex align-items-center justify-content-center gap-2">
+                                <button class="btn btn-sm btn-outline-secondary" id="prevGamesBtnBottom" type="button">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <span class="text-muted small" id="gamesPageInfoBottom">Page 1 of @totalGamePages</span>
+                                <button class="btn btn-sm btn-outline-secondary" id="nextGamesBtnBottom" type="button">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        }
                     </div>
                 </div>
             }
@@ -202,15 +240,37 @@
             <div class="card mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Reviews</h4>
-                    <span class="badge bg-secondary">Total: @Model.TotalReviews</span>
+                    <span class="badge bg-secondary">Total: @Model.Reviews.Count</span>
                 </div>
                 <div class="card-body">
                     @if (Model.Reviews != null && Model.Reviews.Any())
                     {
-                        <div class="list-group list-group-flush">
-                            @foreach (var review in Model.Reviews.OrderByDescending(r => r.VisitDate).ThenByDescending(r => r.CreatedAt).Take(10))
+                        var allReviews = Model.Reviews.OrderByDescending(r => r.VisitDate).ThenByDescending(r => r.CreatedAt).ToList();
+                        var reviewsPerPage = 5;
+                        var totalReviewPages = (int)Math.Ceiling((double)allReviews.Count / reviewsPerPage);
+                        <!-- Reviews Navigation -->
+                        @if (totalReviewPages > 1)
+                        {
+                            <div class="mb-3 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-sm btn-outline-secondary" id="prevReviewsBtn" type="button">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </button>
+                                    <span class="text-muted small" id="reviewsPageInfo">Page 1 of @totalReviewPages</span>
+                                    <button class="btn btn-sm btn-outline-secondary" id="nextReviewsBtn" type="button">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <span class="text-muted small">Showing @reviewsPerPage per page</span>
+                            </div>
+                        }
+                        <!-- Reviews List -->
+                        <div class="list-group list-group-flush" id="reviewsContainer">
+                            @for (int i = 0; i < allReviews.Count; i++)
                             {
-                                <div class="list-group-item px-0 py-3">
+                                var review = allReviews[i];
+                                var pageNumber = (i / reviewsPerPage) + 1;
+                                <div class="list-group-item px-0 py-3 review-item" data-page="@pageNumber" @(pageNumber > 1 ? "style=\"display: none;\"" : "")>
                                     <div class="d-flex justify-content-between mb-2">
                                         <div>
                                             <h6 class="mb-0 fw-bold">
@@ -218,7 +278,7 @@
                                             </h6>
                                             <small class="text-muted">@review.GetTimeAgo()</small>
                                         </div>
-                                        <span class="badge bg-light text-warning border border-warning">
+                                        <span class="bg-light text-warning">
                                             @review.Rating <i class="bi bi-star-fill"></i>
                                         </span>
                                     </div>
@@ -226,6 +286,19 @@
                                 </div>
                             }
                         </div>
+                        <!-- Reviews Pagination Bottom -->
+                        @if (totalReviewPages > 1)
+                        {
+                            <div class="mt-3 d-flex align-items-center justify-content-center gap-2">
+                                <button class="btn btn-sm btn-outline-secondary" id="prevReviewsBtnBottom" type="button">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <span class="text-muted small" id="reviewsPageInfoBottom">Page 1 of @totalReviewPages</span>
+                                <button class="btn btn-sm btn-outline-secondary" id="nextReviewsBtnBottom" type="button">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        }
                     }
                     else
                     {
@@ -237,25 +310,6 @@
 
         <!-- Right Column: Map & Hours -->
         <div class="col-lg-4">
-                <div class="card-body p-0">
-                    <div id="cafeMap" style="height: 300px; width: 100%; border-radius: 4px 4px 0 0;"></div>
-                </div>
-                <div class="card-body">
-                    @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
-                    {
-                        <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-primary w-100">
-                            <i class="bi bi-map-fill"></i> Open in Google Maps
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="https://www.google.com/maps/search/?api=1&query=@Model.Latitude,@Model.Longitude" target="_blank" class="btn btn-primary w-100">
-                             <i class="bi bi-map-fill"></i> Open in Google Maps
-                        </a>
-                    }
-                </div>
-            </div>
-
             <!-- Opening Hours -->
             @if (!string.IsNullOrEmpty(Model.OpeningHours))
             {
@@ -268,6 +322,25 @@
                     </div>
                 </div>
             }
+            <div class="card-body p-0">
+                <div id="cafeMap" style="height: 300px; width: 100%; border-radius: 4px 4px 0 0;"></div>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
+                {
+                    <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-primary w-100">
+                        <i class="bi bi-map-fill"></i> Open in Google Maps
+                    </a>
+                }
+                else
+                {
+                    <a href="https://www.google.com/maps/search/?api=1&query=@Model.Latitude,@Model.Longitude"
+                        target="_blank" class="btn btn-primary w-100">
+                        <i class="bi bi-map-fill"></i> Open in Google Maps
+                    </a>
+                }
+            </div>
+        </div>
         </div>
     </div>
 </div>
@@ -290,6 +363,7 @@
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map
             var lat = @Model.Latitude;
             var lng = @Model.Longitude;
             var cafeName = "@Html.Raw(Model.Name.Replace("\"", "\\\""))";
@@ -303,6 +377,144 @@
             L.marker([lat, lng]).addTo(map)
                 .bindPopup('<b>' + cafeName + '</b>')
                 .openPopup();
+
+            // Games Pagination
+            var currentGamePage = 1;
+            var totalGamePages = @{
+                var totalGames = Model.CafeGames?.Count ?? 0;
+                var gamesPerPage = 8;
+                var gamePages = (int)Math.Ceiling((double)totalGames / gamesPerPage);
+                @gamePages
+            };
+
+            function updateGamePage() {
+                document.querySelectorAll('.game-item').forEach(item => {
+                    item.style.display = parseInt(item.dataset.page) === currentGamePage ? 'block' : 'none';
+                });
+                // Update top pagination
+                var topPageInfo = document.getElementById('gamesPageInfo');
+                var topPrevBtn = document.getElementById('prevGamesBtn');
+                var topNextBtn = document.getElementById('nextGamesBtn');
+                if (topPageInfo) topPageInfo.textContent = 'Page ' + currentGamePage + ' of ' + totalGamePages;
+                if (topPrevBtn) topPrevBtn.disabled = currentGamePage === 1;
+                if (topNextBtn) topNextBtn.disabled = currentGamePage === totalGamePages;
+
+                // Update bottom pagination
+                var bottomPageInfo = document.getElementById('gamesPageInfoBottom');
+                var bottomPrevBtn = document.getElementById('prevGamesBtnBottom');
+                var bottomNextBtn = document.getElementById('nextGamesBtnBottom');
+                if (bottomPageInfo) bottomPageInfo.textContent = 'Page ' + currentGamePage + ' of ' + totalGamePages;
+                if (bottomPrevBtn) bottomPrevBtn.disabled = currentGamePage === 1;
+                if (bottomNextBtn) bottomNextBtn.disabled = currentGamePage === totalGamePages;
+            }
+
+            if (totalGamePages > 1) {
+                // Top pagination buttons
+                document.getElementById('prevGamesBtn')?.addEventListener('click', function() {
+                    if (currentGamePage > 1) {
+                        currentGamePage--;
+                        updateGamePage();
+                    }
+                });
+
+                document.getElementById('nextGamesBtn')?.addEventListener('click', function() {
+                    if (currentGamePage < totalGamePages) {
+                        currentGamePage++;
+                        updateGamePage();
+                    }
+                });
+
+                // Bottom pagination buttons
+                document.getElementById('prevGamesBtnBottom')?.addEventListener('click', function() {
+                    if (currentGamePage > 1) {
+                        currentGamePage--;
+                        updateGamePage();
+                        // Scroll to top of games
+                        document.getElementById('gamesContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+
+                document.getElementById('nextGamesBtnBottom')?.addEventListener('click', function() {
+                    if (currentGamePage < totalGamePages) {
+                        currentGamePage++;
+                        updateGamePage();
+                        // Scroll to top of games
+                        document.getElementById('gamesContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+
+                // Initialize button states
+                updateGamePage();
+            }
+
+            // Reviews Pagination
+            var currentReviewPage = 1;
+            var totalReviewPages = @{
+                var totalReviews = Model.Reviews?.Count ?? 0;
+                var reviewsPerPage = 5;
+                var reviewPages = (int)Math.Ceiling((double)totalReviews / reviewsPerPage);
+                @reviewPages
+            };
+
+            function updateReviewPage() {
+                document.querySelectorAll('.review-item').forEach(item => {
+                    item.style.display = parseInt(item.dataset.page) === currentReviewPage ? 'block' : 'none';
+                });
+                // Update top pagination
+                var topPageInfo = document.getElementById('reviewsPageInfo');
+                var topPrevBtn = document.getElementById('prevReviewsBtn');
+                var topNextBtn = document.getElementById('nextReviewsBtn');
+                if (topPageInfo) topPageInfo.textContent = 'Page ' + currentReviewPage + ' of ' + totalReviewPages;
+                if (topPrevBtn) topPrevBtn.disabled = currentReviewPage === 1;
+                if (topNextBtn) topNextBtn.disabled = currentReviewPage === totalReviewPages;
+
+                // Update bottom pagination
+                var bottomPageInfo = document.getElementById('reviewsPageInfoBottom');
+                var bottomPrevBtn = document.getElementById('prevReviewsBtnBottom');
+                var bottomNextBtn = document.getElementById('nextReviewsBtnBottom');
+                if (bottomPageInfo) bottomPageInfo.textContent = 'Page ' + currentReviewPage + ' of ' + totalReviewPages;
+                if (bottomPrevBtn) bottomPrevBtn.disabled = currentReviewPage === 1;
+                if (bottomNextBtn) bottomNextBtn.disabled = currentReviewPage === totalReviewPages;
+            }
+
+            if (totalReviewPages > 1) {
+                // Top pagination buttons
+                document.getElementById('prevReviewsBtn')?.addEventListener('click', function() {
+                    if (currentReviewPage > 1) {
+                        currentReviewPage--;
+                        updateReviewPage();
+                    }
+                });
+
+                document.getElementById('nextReviewsBtn')?.addEventListener('click', function() {
+                    if (currentReviewPage < totalReviewPages) {
+                        currentReviewPage++;
+                        updateReviewPage();
+                    }
+                });
+
+                // Bottom pagination buttons
+                document.getElementById('prevReviewsBtnBottom')?.addEventListener('click', function() {
+                    if (currentReviewPage > 1) {
+                        currentReviewPage--;
+                        updateReviewPage();
+                        // Scroll to top of reviews
+                        document.getElementById('reviewsContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+
+                document.getElementById('nextReviewsBtnBottom')?.addEventListener('click', function() {
+                    if (currentReviewPage < totalReviewPages) {
+                        currentReviewPage++;
+                        updateReviewPage();
+                        // Scroll to top of reviews
+                        document.getElementById('reviewsContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+
+                // Initialize button states
+                updateReviewPage();
+            }
         });
     </script>
 }
