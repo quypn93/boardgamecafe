@@ -58,6 +58,26 @@ public class CafeController : Controller
             }
         }
 
+        // Set SEO metadata for cafe detail page
+        ViewData["Title"] = cafe.Name;
+
+        var description = $"{cafe.Name} - Board game cafe";
+        if (!string.IsNullOrEmpty(cafe.City))
+        {
+            description += $" in {cafe.City}";
+        }
+        if (cafe.AverageRating.HasValue && cafe.AverageRating > 0)
+        {
+            description += $" with {cafe.AverageRating:0.0} star rating";
+        }
+        if (!string.IsNullOrEmpty(cafe.Description))
+        {
+            description = $"{cafe.Name} - {cafe.Description}".Substring(0, Math.Min(160, $"{cafe.Name} - {cafe.Description}".Length));
+        }
+
+        ViewData["MetaDescription"] = description;
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/cafe/{cafe.Slug}";
+
         return View(cafe);
     }
 }

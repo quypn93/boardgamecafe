@@ -35,6 +35,23 @@ namespace BoardGameCafeFinder.Controllers
 
             _logger.LogInformation("Map page accessed with city: {City}, lat: {Lat}, lon: {Lon}", city, lat, lon);
 
+            // Set SEO metadata
+            var pageTitle = "Board Game Cafe Map";
+            var pageDescription = "Explore board game cafes on an interactive map. Find locations, reviews, and amenities near you.";
+
+            if (!string.IsNullOrEmpty(city))
+            {
+                pageTitle = $"Board Game Cafes in {city} - Map View";
+                pageDescription = $"Interactive map of board game cafes in {city}. Discover games, hours, and reviews for each location.";
+            }
+
+            ViewData["Title"] = pageTitle;
+            ViewData["MetaDescription"] = pageDescription;
+            var canonicalUrl = !string.IsNullOrEmpty(city)
+                ? $"{Request.Scheme}://{Request.Host}/Map?city={Uri.EscapeDataString(city)}"
+                : $"{Request.Scheme}://{Request.Host}/Map";
+            ViewData["CanonicalUrl"] = canonicalUrl;
+
             return View(model);
         }
 

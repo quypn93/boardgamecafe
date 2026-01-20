@@ -3,11 +3,26 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Board Game Cafe Finder</title>
+    <meta name="description" content="@(ViewData["MetaDescription"] ?? ViewData["Description"] ?? "Find the best board game cafes near you. Discover board game lounges with our interactive map and comprehensive cafe directory.")" />
+    <meta name="keywords" content="board game cafe, board game lounge, tabletop gaming, board games near me, cafe finder" />
+    <meta name="author" content="Board Game Cafe Finder" />
+    <meta property="og:title" content="@(ViewData["Title"] ?? "Board Game Cafe Finder") - Board Game Cafe Finder" />
+    <meta property="og:description" content="@(ViewData["MetaDescription"] ?? ViewData["Description"] ?? "Find the best board game cafes near you. Discover board game lounges with our interactive map.")" />
+    <meta property="og:image" content="~/favicon.ico" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#6f42c1" />
+
+    <title>@(ViewData["Title"] ?? "Find Board Game Cafes") - Board Game Cafe Finder</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="~/favicon.ico" />
+    <link rel="apple-touch-icon" href="~/apple-touch-icon.png" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BoardGameCafeFinder.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="canonical" href="@(ViewData["CanonicalUrl"] ?? $"{Request.Scheme}://{Request.Host}{Request.Path}")" />
     <style>
         .navbar-brand-logo {
             font-weight: bold;

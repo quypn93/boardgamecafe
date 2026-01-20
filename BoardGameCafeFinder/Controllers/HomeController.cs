@@ -39,6 +39,25 @@ public class HomeController : Controller
             country = "United States";
         }
 
+        // Set SEO metadata
+        var pageTitle = "Board Game Cafes";
+        var pageDescription = "Discover board game cafes near you. Find the best places to play modern board games with friends and family.";
+
+        if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(country))
+        {
+            pageTitle = $"Board Game Cafes in {city}, {country}";
+            pageDescription = $"Find the best board game cafes in {city}, {country}. Browse games, read reviews, and plan your visit.";
+        }
+        else if (!string.IsNullOrEmpty(country))
+        {
+            pageTitle = $"Board Game Cafes in {country}";
+            pageDescription = $"Explore board game cafes across {country}. Discover new games and connect with other board game enthusiasts.";
+        }
+
+        ViewData["Title"] = pageTitle;
+        ViewData["MetaDescription"] = pageDescription;
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/";
+
         var cafesQuery = _context.Cafes
             .Where(c => c.IsActive)
             .Include(c => c.CafeGames)
@@ -188,6 +207,9 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
+        ViewData["Title"] = "Privacy Policy";
+        ViewData["MetaDescription"] = "Read our privacy policy to understand how we collect and protect your data.";
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/Home/Privacy";
         return View();
     }
 

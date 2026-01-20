@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#6f42c1" stroke="#5a3aa8" stroke-width="2"/>
+
+  <!-- Dice -->
+  <g>
+    <!-- First die (top-left) -->
+    <rect x="30" y="40" width="50" height="50" fill="#ffffff" stroke="#333" stroke-width="2" rx="3"/>
+    <circle cx="45" cy="55" r="3" fill="#333"/>
+    <circle cx="65" cy="65" r="3" fill="#333"/>
+
+    <!-- Second die (bottom-right) -->
+    <rect x="120" y="110" width="50" height="50" fill="#ffffff" stroke="#333" stroke-width="2" rx="3"/>
+    <circle cx="135" cy="125" r="3" fill="#333"/>
+    <circle cx="155" cy="145" r="3" fill="#333"/>
+  </g>
+
+  <!-- Cafe cup -->
+  <g>
+    <rect x="75" y="85" width="50" height="40" fill="none" stroke="#FFD700" stroke-width="2" rx="2"/>
+    <path d="M 125 95 Q 135 95 135 105 Q 135 115 125 115" fill="none" stroke="#FFD700" stroke-width="2" rx="2"/>
+    <circle cx="100" cy="105" r="5" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+  </g>
+</svg>

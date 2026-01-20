@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Disallow crawling of admin and test pages
+Disallow: /Admin/
+Disallow: /Test/
+Disallow: /api/
+
+# Allow crawling of important pages
+Allow: /
+Allow: /cafe/
+Allow: /Map/
+
+# Sitemap location
+Sitemap: https://boardgamecafefinder.com/sitemap.xml
