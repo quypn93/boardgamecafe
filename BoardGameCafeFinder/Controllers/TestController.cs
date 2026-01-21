@@ -151,7 +151,7 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         /// <summary>
-        /// Find board games for a specific cafe by crawling its website
+        /// Find board games for a specific cafe - uses BGG sync if BggUsername exists, otherwise crawls website
         /// POST: /Test/FindGamesForCafe/{cafeId}
         /// </summary>
         [HttpPost("[action]/{cafeId}")]
@@ -166,13 +166,32 @@ namespace BoardGameCafeFinder.Controllers
                     return Json(new { success = false, message = "Cafe not found" });
                 }
 
-                // Check if cafe has a website
-                if (string.IsNullOrEmpty(cafe.Website))
+                // If cafe has BggUsername, use BGG sync instead of website crawling
+                if (!string.IsNullOrEmpty(cafe.BggUsername))
                 {
-                    return Json(new { success = false, message = "Cafe does not have a website URL" });
+                    _logger.LogInformation("Syncing games for cafe {CafeName} (ID: {CafeId}) from BGG username: {BggUsername}",
+                        cafe.Name, cafeId, cafe.BggUsername);
+
+                    var syncResult = await _bggSyncService.SyncCafeGamesAsync(cafeId);
+
+                    return Json(new
+                    {
+                        success = syncResult.Success,
+                        message = syncResult.Success
+                            ? $"Synced {syncResult.GamesAdded} games from BGG (updated: {syncResult.GamesUpdated})"
+                            : syncResult.Message,
+                        gamesFound = syncResult.GamesAdded + syncResult.GamesUpdated,
+                        source = "bgg"
+                    });
                 }
 
-                _logger.LogInformation("Finding games for cafe {CafeName} (ID: {CafeId}) from website: {Website}", 
+                // Check if cafe has a website for crawling
+                if (string.IsNullOrEmpty(cafe.Website))
+                {
+                    return Json(new { success = false, message = "Cafe has no BGG username or website URL" });
+                }
+
+                _logger.LogInformation("Finding games for cafe {CafeName} (ID: {CafeId}) from website: {Website}",
                     cafe.Name, cafeId, cafe.Website);
 
                 // Crawl website for games
@@ -215,15 +234,16 @@ namespace BoardGameCafeFinder.Controllers
                 // Save games to database
                 await SaveFoundGamesAsync(cafeId, crawledGames);
 
-                _logger.LogInformation("Successfully found and saved {Count} games for cafe {CafeName}", 
+                _logger.LogInformation("Successfully found and saved {Count} games for cafe {CafeName}",
                     crawledGames.Count, cafe.Name);
 
-                return Json(new 
-                { 
-                    success = true, 
-                    message = $"Found {crawledGames.Count} games", 
+                return Json(new
+                {
+                    success = true,
+                    message = $"Found {crawledGames.Count} games from website",
                     gamesFound = crawledGames.Count,
-                    games = crawledGames.Select(g => new { g.Name, g.BggId, g.Price }).ToList()
+                    games = crawledGames.Select(g => new { g.Name, g.BggId, g.Price }).ToList(),
+                    source = "website"
                 });
             }
             catch (Exception ex)
