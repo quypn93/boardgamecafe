@@ -233,9 +233,9 @@ namespace BoardGameCafeFinder.Services
             return results;
         }
 
-        public async Task<List<BoardGame>> SearchGamesAsync(string query)
+        public Task<List<BoardGame>> SearchGamesAsync(string query)
         {
-            return new List<BoardGame>();
+            return Task.FromResult(new List<BoardGame>());
         }
     }
 }

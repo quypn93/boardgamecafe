@@ -101,7 +101,11 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <span class="badge bg-secondary">@(cafe.CafeGames?.Count ?? 0)</span>
+                                    <a asp-action="CafeGames" asp-route-id="@cafe.CafeId"
+                                       class="badge bg-secondary text-decoration-none"
+                                       title="View games">
+                                        @(cafe.CafeGames?.Count ?? 0)
+                                    </a>
                                 </td>
                                 <td class="text-center">
                                     @if (!string.IsNullOrEmpty(cafe.BggUsername))

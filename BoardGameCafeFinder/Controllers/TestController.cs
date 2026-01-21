@@ -4,6 +4,7 @@ using BoardGameCafeFinder.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using BoardGameCafeFinder.Models.Domain;
 
 namespace BoardGameCafeFinder.Controllers
 {
@@ -18,12 +19,14 @@ namespace BoardGameCafeFinder.Controllers
     /// Test controller for testing features without Google Maps API key
     /// </summary>
     [Authorize(Roles = "Admin")]
+    [Route("Test")]
     public class TestController : Controller
     {
         private readonly ICafeService _cafeService;
         private readonly IGoogleMapsCrawlerService _crawlerService;
         private readonly IBggSyncService _bggSyncService;
         private readonly IBggXmlApiService _bggXmlApiService;
+        private readonly ICafeWebsiteCrawlerService _cafeWebsiteCrawlerService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<TestController> _logger;
         private readonly IWebHostEnvironment _environment;
@@ -33,6 +36,7 @@ namespace BoardGameCafeFinder.Controllers
             IGoogleMapsCrawlerService crawlerService,
             IBggSyncService bggSyncService,
             IBggXmlApiService bggXmlApiService,
+            ICafeWebsiteCrawlerService cafeWebsiteCrawlerService,
             ApplicationDbContext context,
             ILogger<TestController> logger,
             IWebHostEnvironment environment)
@@ -41,6 +45,7 @@ namespace BoardGameCafeFinder.Controllers
             _crawlerService = crawlerService;
             _bggSyncService = bggSyncService;
             _bggXmlApiService = bggXmlApiService;
+            _cafeWebsiteCrawlerService = cafeWebsiteCrawlerService;
             _context = context;
             _logger = logger;
             _environment = environment;
@@ -50,28 +55,190 @@ namespace BoardGameCafeFinder.Controllers
         /// Test page to see all cafés without map
         /// GET: /Test/Cafes
         /// </summary>
-        public async Task<IActionResult> Cafes()
+        [Route("Cafes")]
+        public async Task<IActionResult> Cafes(string? search, string? country, string? city, int page = 1, int pageSize = 50)
         {
-            // Get sample search results (Seattle coordinates)
-            var request = new CafeSearchRequest
+            // Get all cafes from database with filtering
+            var query = _context.Cafes
+                .Include(c => c.CafeGames)
+                .AsQueryable();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(search))
             {
-                Latitude = 47.6062,
-                Longitude = -122.3321,
-                Radius = 50000, // 50km - show all sample data
-                OpenNow = false,
-                HasGames = false,
-                Limit = 50
-            };
+                query = query.Where(c => c.Name.Contains(search) || (c.Address != null && c.Address.Contains(search)));
+            }
 
-            var cafes = await _cafeService.SearchNearbyAsync(request);
+            if (!string.IsNullOrEmpty(country))
+            {
+                query = query.Where(c => c.Country == country);
+            }
 
-            return View(cafes);
+            if (!string.IsNullOrEmpty(city))
+            {
+                query = query.Where(c => c.City == city);
+            }
+
+            // Get total count for pagination
+            var totalCount = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // Get paginated results
+            var cafes = await query
+                .OrderBy(c => c.City)
+                .ThenBy(c => c.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Convert to DTOs
+            var cafeDtos = cafes.Select(c => new CafeSearchResultDto
+            {
+                Id = c.CafeId,
+                Name = c.Name,
+                Address = c.Address ?? "",
+                City = c.City ?? "",
+                State = c.State ?? "",
+                Phone = c.Phone,
+                Latitude = c.Latitude,
+                Longitude = c.Longitude,
+                AverageRating = c.AverageRating,
+                TotalReviews = c.TotalReviews,
+                TotalGames = c.CafeGames?.Count ?? 0,
+                IsPremium = c.IsPremium,
+                IsVerified = c.IsVerified,
+                IsOpenNow = false,
+                Website = c.Website
+            }).ToList();
+
+            // Get filter options
+            var countries = await _context.Cafes
+                .Where(c => !string.IsNullOrEmpty(c.Country))
+                .Select(c => c.Country!)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            var cities = await _context.Cafes
+                .Where(c => !string.IsNullOrEmpty(c.City))
+                .Select(c => c.City!)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            // If country is selected, filter cities
+            if (!string.IsNullOrEmpty(country))
+            {
+                cities = await _context.Cafes
+                    .Where(c => c.Country == country && !string.IsNullOrEmpty(c.City))
+                    .Select(c => c.City!)
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToListAsync();
+            }
+
+            ViewBag.Countries = countries;
+            ViewBag.Cities = cities;
+            ViewBag.SelectedCountry = country;
+            ViewBag.SelectedCity = city;
+            ViewBag.Search = search;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.PageSize = pageSize;
+
+            return View(cafeDtos);
         }
+
+        /// <summary>
+        /// Find board games for a specific cafe by crawling its website
+        /// POST: /Test/FindGamesForCafe/{cafeId}
+        /// </summary>
+        [HttpPost("[action]/{cafeId}")]
+        public async Task<IActionResult> FindGamesForCafe(int cafeId)
+        {
+            try
+            {
+                // Get cafe from database
+                var cafe = await _context.Cafes.FindAsync(cafeId);
+                if (cafe == null)
+                {
+                    return Json(new { success = false, message = "Cafe not found" });
+                }
+
+                // Check if cafe has a website
+                if (string.IsNullOrEmpty(cafe.Website))
+                {
+                    return Json(new { success = false, message = "Cafe does not have a website URL" });
+                }
+
+                _logger.LogInformation("Finding games for cafe {CafeName} (ID: {CafeId}) from website: {Website}", 
+                    cafe.Name, cafeId, cafe.Website);
+
+                // Crawl website for games
+                var crawledGames = await _cafeWebsiteCrawlerService.CrawlCafeWebsiteForGamesAsync(cafe.Website);
+
+                if (crawledGames == null || !crawledGames.Any())
+                {
+                    return Json(new { success = false, message = "No games found on cafe website", gamesFound = 0 });
+                }
+
+                // Try to match with BGG and enrich data
+                foreach (var game in crawledGames)
+                {
+                    try
+                    {
+                        var searchResults = await _bggXmlApiService.SearchGamesAsync(game.Name);
+                        var match = searchResults.FirstOrDefault(r => r.Name.Equals(game.Name, StringComparison.OrdinalIgnoreCase));
+
+                        if (match != null)
+                        {
+                            game.BggId = match.BggId;
+
+                            var details = await _bggXmlApiService.GetGameDetailsAsync(match.BggId);
+                            if (details != null)
+                            {
+                                if (string.IsNullOrEmpty(game.ImageUrl)) game.ImageUrl = details.ThumbnailUrl ?? details.ImageUrl;
+                                if (string.IsNullOrEmpty(game.Description)) game.Description = details.Description;
+                                if (game.MinPlayers == null) game.MinPlayers = details.MinPlayers;
+                                if (game.MaxPlayers == null) game.MaxPlayers = details.MaxPlayers;
+                                if (game.PlaytimeMinutes == null) game.PlaytimeMinutes = details.PlayingTime;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Error matching game {GameName} with BGG", game.Name);
+                    }
+                }
+
+                // Save games to database
+                await SaveFoundGamesAsync(cafeId, crawledGames);
+
+                _logger.LogInformation("Successfully found and saved {Count} games for cafe {CafeName}", 
+                    crawledGames.Count, cafe.Name);
+
+                return Json(new 
+                { 
+                    success = true, 
+                    message = $"Found {crawledGames.Count} games", 
+                    gamesFound = crawledGames.Count,
+                    games = crawledGames.Select(g => new { g.Name, g.BggId, g.Price }).ToList()
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error finding games for cafe {CafeId}", cafeId);
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
 
         /// <summary>
         /// Test API endpoints directly
         /// GET: /Test/Api
         /// </summary>
+        [Route("Api")]
         public IActionResult Api()
         {
             return View();
@@ -81,6 +248,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Test geospatial distance calculations
         /// GET: /Test/Distance
         /// </summary>
+        [Route("Distance")]
         public IActionResult Distance()
         {
             var seattle = (lat: 47.6062, lon: -122.3321, name: "Seattle");
@@ -124,6 +292,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Test database and seeding
         /// GET: /Test/Database
         /// </summary>
+        [Route("Database")]
         public async Task<IActionResult> Database()
         {
             var allCafes = await _cafeService.GetByCityAsync("Seattle");
@@ -155,6 +324,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Crawl board game cafes from Google Maps
         /// GET: /Test/Crawl?location=Seattle&maxResults=10
         /// </summary>
+        [Route("Crawl")]
         public async Task<IActionResult> Crawl(string location = "Seattle", int maxResults = 10)
         {
             _logger.LogInformation("Starting crawl for location: {Location}, maxResults: {MaxResults}", location, maxResults);
@@ -191,6 +361,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Crawl and save board game cafes to database
         /// POST: /Test/CrawlAndSave
         /// </summary>
+        [Route("CrawlAndSave")]
         [HttpPost]
         public async Task<IActionResult> CrawlAndSave([FromBody] CrawlRequest request)
         {
@@ -274,6 +445,12 @@ namespace BoardGameCafeFinder.Controllers
                         {
                              await SaveCafePhotosAsync(existingCafe.CafeId, crawledCafe.PhotoUrls, crawledCafe.PhotoLocalPaths);
                         }
+
+                        // Save found games for existing cafe
+                        if (crawledCafe.FoundGames.Any())
+                        {
+                            await SaveFoundGamesAsync(existingCafe.CafeId, crawledCafe.FoundGames);
+                        }
                     }
                     else
                     {
@@ -339,6 +516,12 @@ namespace BoardGameCafeFinder.Controllers
                         {
                              await SaveCafePhotosAsync(newCafe.CafeId, crawledCafe.PhotoUrls, crawledCafe.PhotoLocalPaths);
                         }
+
+                        // Save found games for new cafe
+                        if (crawledCafe.FoundGames.Any())
+                        {
+                            await SaveFoundGamesAsync(newCafe.CafeId, crawledCafe.FoundGames);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -368,6 +551,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Sync games for a cafe from BGG
         /// GET: /Test/SyncBgg?cafeId=1
         /// </summary>
+        [Route("SyncBgg")]
         public async Task<IActionResult> SyncBgg(int cafeId)
         {
             var result = await _bggSyncService.SyncCafeGamesAsync(cafeId);
@@ -378,6 +562,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Sync games for a cafe from BGG using XML API (faster, no scraping)
         /// GET: /Test/SyncBggApi?cafeId=1
         /// </summary>
+        [Route("SyncBggApi")]
         public async Task<IActionResult> SyncBggApi(int cafeId)
         {
             var result = await _bggXmlApiService.SyncCafeGamesViaApiAsync(cafeId);
@@ -388,6 +573,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Get BGG user collection via XML API
         /// GET: /Test/BggCollection?username=moxboardinghouse
         /// </summary>
+        [Route("BggCollection")]
         public async Task<IActionResult> BggCollection(string username)
         {
             var games = await _bggXmlApiService.GetUserCollectionAsync(username);
@@ -413,6 +599,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Search for board games on BGG via XML API
         /// GET: /Test/BggSearch?query=Catan
         /// </summary>
+        [Route("BggSearch")]
         public async Task<IActionResult> BggSearch(string query)
         {
             var games = await _bggXmlApiService.SearchGamesAsync(query);
@@ -433,6 +620,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Get detailed game info from BGG via XML API
         /// GET: /Test/BggGame?bggId=13
         /// </summary>
+        [Route("BggGame")]
         public async Task<IActionResult> BggGame(int bggId)
         {
             var game = await _bggXmlApiService.GetGameDetailsAsync(bggId);
@@ -447,6 +635,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Link a BGG username to a cafe
         /// GET: /Test/LinkBgg?cafeId=1&bggUsername=moxboardinghouse
         /// </summary>
+        [Route("LinkBgg")]
         public async Task<IActionResult> LinkBgg(int cafeId, string bggUsername)
         {
             var cafe = await _context.Cafes.FindAsync(cafeId);
@@ -463,6 +652,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Auto-discover BGG username for a cafe and sync games
         /// GET: /Test/AutoDiscoverBgg?cafeId=1
         /// </summary>
+        [Route("AutoDiscoverBgg")]
         public async Task<IActionResult> AutoDiscoverBgg(int cafeId)
         {
             var result = await _bggXmlApiService.AutoDiscoverAndSyncAsync(cafeId);
@@ -480,6 +670,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Find possible BGG usernames for a cafe name (without saving)
         /// GET: /Test/FindBggUsernames?cafeName=Mox Boarding House
         /// </summary>
+        [Route("FindBggUsernames")]
         public async Task<IActionResult> FindBggUsernames(string cafeName)
         {
             var usernames = await _bggXmlApiService.FindPossibleBggUsernamesAsync(cafeName);
@@ -494,6 +685,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Sync all cafes with auto-discover for missing BGG usernames
         /// POST: /Test/SyncAllBgg
         /// </summary>
+        [Route("SyncAllBgg")]
         [HttpPost]
         public async Task<IActionResult> SyncAllBgg()
         {
@@ -522,6 +714,7 @@ namespace BoardGameCafeFinder.Controllers
         /// View with buttons to crawl major cities
         /// GET: /Test/CrawlManager
         /// </summary>
+        [Route("CrawlManager")]
         public IActionResult CrawlManager()
         {
             return View();
@@ -532,6 +725,7 @@ namespace BoardGameCafeFinder.Controllers
         /// POST: /Test/CleanPhoneNumbers
         /// </summary>
         [HttpPost]
+        [Route("CleanPhoneNumbers")]
         public async Task<IActionResult> CleanPhoneNumbers()
         {
             try
@@ -585,6 +779,7 @@ namespace BoardGameCafeFinder.Controllers
         /// Clear all cafe data from database
         /// POST: /Test/ClearAllData
         /// </summary>
+        [Route("ClearAllData")]
         [HttpPost]
         public async Task<IActionResult> ClearAllData()
         {
@@ -766,6 +961,94 @@ namespace BoardGameCafeFinder.Controllers
                 _context.Photos.AddRange(newPhotos);
                 _logger.LogInformation("Added {Count} photos for cafe {CafeId}", newPhotos.Count, cafeId);
             }
+        }
+
+        private async Task SaveFoundGamesAsync(int cafeId, List<CrawledGameData> foundGames)
+        {
+            if (foundGames == null || !foundGames.Any()) return;
+
+            // Filter out non-game items (gift cards, accessories, etc.)
+            var nonGameKeywords = new[] { "gift card", "gift certificate", "voucher", "coupon", "sleeve", "dice bag", "playmat", "card holder", "token", "accessory", "merchandise", "t-shirt", "shirt", "mug", "poster" };
+            foundGames = foundGames.Where(g => !nonGameKeywords.Any(k => g.Name.Contains(k, StringComparison.OrdinalIgnoreCase))).ToList();
+
+            int added = 0;
+            foreach (var gameData in foundGames)
+            {
+                try
+                {
+                    // Truncate description if too long (max 4000 chars)
+                    if (!string.IsNullOrEmpty(gameData.Description) && gameData.Description.Length > 4000)
+                    {
+                        gameData.Description = gameData.Description[..3997] + "...";
+                    }
+
+                    // 1. Find or Create BoardGame
+                    BoardGame? game = null;
+                    if (gameData.BggId.HasValue)
+                    {
+                        game = await _context.BoardGames.FirstOrDefaultAsync(g => g.BGGId == gameData.BggId);
+                    }
+
+                    if (game == null)
+                    {
+                        game = await _context.BoardGames.FirstOrDefaultAsync(g => g.Name == gameData.Name);
+                    }
+
+                    if (game == null)
+                    {
+                        game = new BoardGame
+                        {
+                            Name = gameData.Name,
+                            BGGId = gameData.BggId,
+                            SourceUrl = gameData.SourceUrl,
+                            ImageUrl = gameData.ImageUrl,
+                            Description = gameData.Description,
+                            MinPlayers = gameData.MinPlayers,
+                            MaxPlayers = gameData.MaxPlayers,
+                            PlaytimeMinutes = gameData.PlaytimeMinutes,
+                            Price = gameData.Price,
+                            CreatedAt = DateTime.UtcNow
+                        };
+                        _context.BoardGames.Add(game);
+                        await _context.SaveChangesAsync();
+                        added++;
+                    }
+                    else
+                    {
+                        // Update specific fields if they are missing/better
+                        bool changed = false;
+                        if (string.IsNullOrEmpty(game.SourceUrl) && !string.IsNullOrEmpty(gameData.SourceUrl)) { game.SourceUrl = gameData.SourceUrl; changed = true; }
+                        if (!game.BGGId.HasValue && gameData.BggId.HasValue) { game.BGGId = gameData.BggId; changed = true; }
+                        if (!game.Price.HasValue && gameData.Price.HasValue) { game.Price = gameData.Price; changed = true; }
+                        
+                        if (changed) await _context.SaveChangesAsync();
+                    }
+
+                    // 2. Link to Cafe
+                    var cafeGame = await _context.CafeGames.FirstOrDefaultAsync(x=>x.CafeId == cafeId && x.GameId == game.GameId);
+                    if (cafeGame == null)
+                    {
+                        _context.CafeGames.Add(new CafeGame
+                        {
+                            CafeId = cafeId,
+                            GameId = game.GameId,
+                            IsAvailable = true,
+                            LastVerified = DateTime.UtcNow,
+                            CreatedAt = DateTime.UtcNow
+                        });
+                    }
+                    else
+                    {
+                        cafeGame.LastVerified = DateTime.UtcNow;
+                        cafeGame.IsAvailable = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error saving found game {Name} for cafe {Id}", gameData.Name, cafeId);
+                }
+            }
+            if (added > 0) _logger.LogInformation("Added {Count} new games for cafe {Id}", added, cafeId);
         }
     }
 }

@@ -124,7 +124,7 @@ namespace BoardGameCafeFinder.Controllers
         /// </summary>
         [HttpGet("cities")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> GetCities()
+        public Task<IActionResult> GetCities()
         {
             try
             {
@@ -138,20 +138,20 @@ namespace BoardGameCafeFinder.Controllers
                     new { city = "Los Angeles", state = "CA", count = 20 }
                 };
 
-                return Ok(new
+                return Task.FromResult<IActionResult>(Ok(new
                 {
                     success = true,
                     data = cities
-                });
+                }));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting cities");
-                return StatusCode(500, new
+                return Task.FromResult<IActionResult>(StatusCode(500, new
                 {
                     success = false,
                     message = "An error occurred while retrieving cities"
-                });
+                }));
             }
         }
     }

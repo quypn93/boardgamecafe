@@ -46,19 +46,26 @@ namespace BoardGameCafeFinder.Services
         public List<string> PhotoLocalPaths { get; set; } = new();
         public Dictionary<string, List<string>> Attributes { get; set; } = new();
         public string? BggUsername { get; set; }
+        public List<CrawledGameData> FoundGames { get; set; } = new();
     }
 
     public class GoogleMapsCrawlerService : IGoogleMapsCrawlerService
     {
         private readonly ILogger<GoogleMapsCrawlerService> _logger;
         private readonly IImageStorageService _imageStorageService;
+        private readonly ICafeWebsiteCrawlerService _cafeWebsiteCrawlerService;
+        private readonly IBggXmlApiService _bggXmlApiService;
 
         public GoogleMapsCrawlerService(
             ILogger<GoogleMapsCrawlerService> logger,
-            IImageStorageService imageStorageService)
+            IImageStorageService imageStorageService,
+            ICafeWebsiteCrawlerService cafeWebsiteCrawlerService,
+            IBggXmlApiService bggXmlApiService)
         {
             _logger = logger;
             _imageStorageService = imageStorageService;
+            _cafeWebsiteCrawlerService = cafeWebsiteCrawlerService;
+            _bggXmlApiService = bggXmlApiService;
         }
 
         public async Task<List<CrawledCafeData>> CrawlBoardGameCafesAsync(string location, int maxResults = 20)
@@ -586,6 +593,45 @@ namespace BoardGameCafeFinder.Services
                 // Parse city, state, country from address
                 ParseAddressComponents(cafe);
 
+                // Crawl Website for Games
+                if (!string.IsNullOrEmpty(cafe.Website))
+                {
+                    try
+                    {
+                        _logger.LogInformation("Crawling website for games: {Url}", cafe.Website);
+                        var games = await _cafeWebsiteCrawlerService.CrawlCafeWebsiteForGamesAsync(cafe.Website);
+
+                        foreach (var g in games)
+                        {
+                            // Try to match with BGG
+                            var searchResults = await _bggXmlApiService.SearchGamesAsync(g.Name);
+                            var match = searchResults.FirstOrDefault(r => r.Name.Equals(g.Name, StringComparison.OrdinalIgnoreCase));
+
+                            if (match != null)
+                            {
+                                g.BggId = match.BggId;
+                                
+                                var details = await _bggXmlApiService.GetGameDetailsAsync(match.BggId);
+                                if (details != null)
+                                {
+                                    if (string.IsNullOrEmpty(g.ImageUrl)) g.ImageUrl = details.ThumbnailUrl ?? details.ImageUrl;
+                                    if (string.IsNullOrEmpty(g.Description)) g.Description = details.Description;
+                                    if (g.MinPlayers == null) g.MinPlayers = details.MinPlayers;
+                                    if (g.MaxPlayers == null) g.MaxPlayers = details.MaxPlayers;
+                                    if (g.PlaytimeMinutes == null) g.PlaytimeMinutes = details.PlayingTime;
+                                }
+                            }
+                        }
+
+                        cafe.FoundGames = games;
+                        _logger.LogInformation("Found {Count} games on website for {Name}", games.Count, cafe.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Error crawling website games for {Name}", cafe.Name);
+                    }
+                }
+
                 return cafe;
             }
             catch (Exception ex)
@@ -1049,11 +1095,12 @@ namespace BoardGameCafeFinder.Services
             return cafe;
         }
 
-        public async Task SaveCrawledReviewsAsync(int cafeId, List<CrawledReviewData> crawledReviews)
+        public Task SaveCrawledReviewsAsync(int cafeId, List<CrawledReviewData> crawledReviews)
         {
             // This method will be implemented in the service that has DB context access
             // For now, we'll just log
             _logger.LogInformation("Prepared {Count} reviews for cafe {CafeId}", crawledReviews.Count, cafeId);
+            return Task.CompletedTask;
         }
 
         public List<BoardGameCafeFinder.Models.Domain.Review> ConvertToReviews(int cafeId, List<CrawledReviewData> crawledReviews, int? systemUserId = null)

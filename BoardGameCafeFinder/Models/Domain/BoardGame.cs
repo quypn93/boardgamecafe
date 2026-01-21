@@ -12,7 +12,7 @@ namespace BoardGameCafeFinder.Models.Domain
         [MaxLength(200)]
         public string Name { get; set; } = string.Empty;
 
-        [MaxLength(2000)]
+        [MaxLength(4000)]
         public string? Description { get; set; }
 
         [MaxLength(200)]
@@ -39,6 +39,13 @@ namespace BoardGameCafeFinder.Models.Domain
         [MaxLength(1000)]
         [Url]
         public string? AmazonAffiliateUrl { get; set; }
+
+        [MaxLength(2000)]
+        [Url]
+        public string? SourceUrl { get; set; } // URL to the game on the cafe's website
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? Price { get; set; } // Local price at the cafe/shop
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

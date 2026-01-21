@@ -221,14 +221,20 @@
                                     }
                                 </div>
                                 <div class="card-footer bg-transparent p-2">
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex gap-1 flex-wrap">
                                         <a href="/cafe/@cafe.Slug" class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-eye"></i> Details
                                         </a>
+                                        @if (!string.IsNullOrEmpty(cafe.Website))
+                                        {
+                                            <a href="@cafe.Website" target="_blank" class="btn btn-sm btn-outline-success" title="Visit Website">
+                                                <i class="bi bi-globe"></i>
+                                            </a>
+                                        }
                                         @if (!string.IsNullOrEmpty(cafe.GoogleMapsUrl))
                                         {
-                                            <a href="@cafe.GoogleMapsUrl" target="_blank" class="btn btn-sm btn-outline-secondary">
-                                                <i class="bi bi-map"></i> Map
+                                            <a href="@cafe.GoogleMapsUrl" target="_blank" class="btn btn-sm btn-outline-secondary" title="Open in Maps">
+                                                <i class="bi bi-map"></i>
                                             </a>
                                         }
                                     </div>

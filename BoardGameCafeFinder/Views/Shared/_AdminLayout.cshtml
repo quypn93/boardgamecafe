@@ -109,7 +109,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CrawlManager" ? "active" : "")"
-                               asp-controller="Test" asp-action="CrawlManager">
+                               href="/Test/CrawlManager">
                                 <i class="bi bi-cloud-download"></i> Crawl Manager
                             </a>
                         </li>
@@ -124,7 +124,7 @@
                     <div class="sidebar-heading">Tools</div>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Test" asp-action="Index">
+                            <a class="nav-link" href="/Test/Api">
                                 <i class="bi bi-bug"></i> Test Endpoints
                             </a>
                         </li>

@@ -107,5 +107,110 @@ namespace BoardGameCafeFinder.Controllers
             TempData["SuccessMessage"] = $"Updated BGG Username for {cafe.Name}.";
             return RedirectToAction(nameof(Index));
         }
+
+        /// <summary>
+        /// View games for a specific cafe
+        /// </summary>
+        public async Task<IActionResult> CafeGames(int id)
+        {
+            var cafe = await _context.Cafes
+                .Include(c => c.CafeGames)
+                    .ThenInclude(cg => cg.Game)
+                .FirstOrDefaultAsync(c => c.CafeId == id);
+
+            if (cafe == null)
+                return NotFound();
+
+            return View(cafe);
+        }
+
+        /// <summary>
+        /// Delete a game from cafe. If no other cafes use it, delete the board game too.
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> DeleteCafeGame(int cafeId, int gameId)
+        {
+            var cafeGame = await _context.CafeGames
+                .FirstOrDefaultAsync(cg => cg.CafeId == cafeId && cg.GameId == gameId);
+
+            if (cafeGame == null)
+            {
+                TempData["ErrorMessage"] = "Game not found in this cafe.";
+                return RedirectToAction(nameof(CafeGames), new { id = cafeId });
+            }
+
+            // Remove the cafe-game link
+            _context.CafeGames.Remove(cafeGame);
+            await _context.SaveChangesAsync();
+
+            // Check if any other cafes use this board game
+            var otherCafesUsingGame = await _context.CafeGames
+                .AnyAsync(cg => cg.GameId == gameId);
+
+            if (!otherCafesUsingGame)
+            {
+                // No other cafes use this game, delete the board game
+                var boardGame = await _context.BoardGames.FindAsync(gameId);
+                if (boardGame != null)
+                {
+                    _context.BoardGames.Remove(boardGame);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = $"Removed game from cafe and deleted board game (no longer used).";
+                }
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Removed game from cafe.";
+            }
+
+            return RedirectToAction(nameof(CafeGames), new { id = cafeId });
+        }
+
+        /// <summary>
+        /// Delete all games from a cafe
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> DeleteAllCafeGames(int cafeId)
+        {
+            var cafeGames = await _context.CafeGames
+                .Where(cg => cg.CafeId == cafeId)
+                .ToListAsync();
+
+            if (!cafeGames.Any())
+            {
+                TempData["ErrorMessage"] = "No games found for this cafe.";
+                return RedirectToAction(nameof(CafeGames), new { id = cafeId });
+            }
+
+            var gameIds = cafeGames.Select(cg => cg.GameId).ToList();
+
+            // Remove all cafe-game links
+            _context.CafeGames.RemoveRange(cafeGames);
+            await _context.SaveChangesAsync();
+
+            // Check which board games are no longer used by any cafe
+            int deletedGames = 0;
+            foreach (var gameId in gameIds)
+            {
+                var isUsedByOtherCafe = await _context.CafeGames.AnyAsync(cg => cg.GameId == gameId);
+                if (!isUsedByOtherCafe)
+                {
+                    var boardGame = await _context.BoardGames.FindAsync(gameId);
+                    if (boardGame != null)
+                    {
+                        _context.BoardGames.Remove(boardGame);
+                        deletedGames++;
+                    }
+                }
+            }
+
+            if (deletedGames > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            TempData["SuccessMessage"] = $"Removed {cafeGames.Count} games from cafe. Deleted {deletedGames} board games no longer used.";
+            return RedirectToAction(nameof(CafeGames), new { id = cafeId });
+        }
     }
 }

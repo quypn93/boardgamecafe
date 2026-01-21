@@ -57,6 +57,7 @@ builder.Services.AddHttpClient<BoardGameCafeFinder.Services.IBggXmlApiService, B
 builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeService, BoardGameCafeFinder.Services.CafeService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IGoogleMapsCrawlerService, BoardGameCafeFinder.Services.GoogleMapsCrawlerService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IImageStorageService, BoardGameCafeFinder.Services.ImageStorageService>();
+builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeWebsiteCrawlerService, BoardGameCafeFinder.Services.CafeWebsiteCrawlerService>();
 
 // Add MVC Controllers and Views
 builder.Services.AddControllersWithViews();

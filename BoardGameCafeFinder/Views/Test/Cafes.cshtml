@@ -2,141 +2,408 @@
 @{
     ViewData["Title"] = "Test - All Cafés";
     Layout = "_AdminLayout";
+    var countries = ViewBag.Countries as List<string> ?? new List<string>();
+    var cities = ViewBag.Cities as List<string> ?? new List<string>();
+    var selectedCountry = ViewBag.SelectedCountry as string;
+    var selectedCity = ViewBag.SelectedCity as string;
+    var search = ViewBag.Search as string;
+    var currentPage = (int)(ViewBag.CurrentPage ?? 1);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var totalCount = (int)(ViewBag.TotalCount ?? 0);
 }
 
-<div class="container mt-4">
-    <h2>📍 All Sample Cafés (No Map Required)</h2>
-    <p class="text-muted">Testing café data and search functionality without Google Maps API</p>
-
-    <div class="alert alert-info">
-        <i class="bi bi-info-circle"></i>
-        <strong>Test Mode:</strong> Showing all sample cafés loaded from database.
-        This proves the backend is working correctly!
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2><i class="bi bi-geo-alt-fill"></i> All Cafés</h2>
+            <p class="text-muted mb-0">Manage and test café data</p>
+        </div>
+        <span class="badge bg-info fs-6">@totalCount cafés total</span>
     </div>
 
+    <!-- Filters -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" action="/Test/Cafes" class="row g-3 align-items-end">
+                <!-- Search -->
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Search</label>
+                    <input type="text" class="form-control" name="search" value="@search" placeholder="Search by name or address...">
+                </div>
+
+                <!-- Country Filter -->
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Country</label>
+                    <select class="form-select" name="country" id="countryFilter">
+                        <option value="">All Countries</option>
+                        @foreach (var c in countries)
+                        {
+                            <option value="@c" selected="@(selectedCountry == c)">@c</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- City Filter -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">City</label>
+                    <select class="form-select" name="city" id="cityFilter">
+                        <option value="">All Cities</option>
+                        @foreach (var c in cities)
+                        {
+                            <option value="@c" selected="@(selectedCity == c)">@c</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-md-3">
+                    <div class="btn-group w-100">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Filter
+                        </button>
+                        <a href="/Test/Cafes" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Active Filters -->
+    @if (!string.IsNullOrEmpty(search) || !string.IsNullOrEmpty(selectedCountry) || !string.IsNullOrEmpty(selectedCity))
+    {
+        <div class="mb-3">
+            <span class="text-muted me-2">Active filters:</span>
+            @if (!string.IsNullOrEmpty(search))
+            {
+                <span class="badge bg-primary me-1">Search: @search</span>
+            }
+            @if (!string.IsNullOrEmpty(selectedCountry))
+            {
+                <span class="badge bg-success me-1">Country: @selectedCountry</span>
+            }
+            @if (!string.IsNullOrEmpty(selectedCity))
+            {
+                <span class="badge bg-info me-1">City: @selectedCity</span>
+            }
+        </div>
+    }
+
+    <!-- Statistics Row -->
     <div class="row mb-3">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Statistics</h5>
-                    <ul>
-                        <li><strong>Total Cafés:</strong> @Model.Count</li>
-                        <li><strong>Cities:</strong> @Model.Select(c => c.City).Distinct().Count()</li>
-                        <li><strong>Premium:</strong> @Model.Count(c => c.IsPremium)</li>
-                        <li><strong>Verified:</strong> @Model.Count(c => c.IsVerified)</li>
-                        <li><strong>With Games:</strong> @Model.Count(c => c.TotalGames > 0)</li>
-                    </ul>
+                <div class="card-body py-2">
+                    <div class="row text-center">
+                        <div class="col">
+                            <div class="fw-bold text-primary">@Model.Count</div>
+                            <small class="text-muted">Showing</small>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold text-success">@Model.Select(c => c.City).Distinct().Count()</div>
+                            <small class="text-muted">Cities</small>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold text-warning">@Model.Count(c => c.IsPremium)</div>
+                            <small class="text-muted">Premium</small>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold text-info">@Model.Count(c => c.IsVerified)</div>
+                            <small class="text-muted">Verified</small>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold text-secondary">@Model.Count(c => c.TotalGames > 0)</div>
+                            <small class="text-muted">With Games</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Other Test Pages</h5>
-                    <ul>
-                        <li><a href="/Test/Api">Test API Endpoints</a></li>
-                        <li><a href="/Test/Distance">Test Distance Calculations</a></li>
-                        <li><a href="/Test/Database">Test Database</a></li>
-                        <li><a href="/api/cafes/search" target="_blank">API: Search Endpoint (JSON)</a></li>
-                    </ul>
+                <div class="card-body py-2">
+                    <div class="d-flex justify-content-around">
+                        <a href="/Test/CrawlManager" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-cloud-download"></i> Crawl
+                        </a>
+                        <a href="/Admin/Index" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-gear"></i> BGG Sync
+                        </a>
+                        <a href="/Test/Database" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-database"></i> DB
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <h3 class="mt-4">Café List</h3>
+    <!-- Café Cards -->
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var cafe in Model)
+            {
+                <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
+                    <div class="card h-100 @(cafe.IsPremium ? "border-warning" : "")">
+                        @if (cafe.IsPremium)
+                        {
+                            <div class="card-header bg-warning text-dark py-1">
+                                <small><i class="bi bi-star-fill"></i> Featured</small>
+                            </div>
+                        }
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1">@cafe.Name</h6>
 
-    <div class="row">
-        @foreach (var cafe in Model.OrderBy(c => c.City).ThenBy(c => c.Name))
+                            <p class="text-muted small mb-1">
+                                <i class="bi bi-geo-alt"></i> @cafe.City, @cafe.State
+                            </p>
+
+                            <div class="mb-1">
+                                @if (cafe.AverageRating.HasValue)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        @cafe.AverageRating.Value.ToString("F1") <i class="bi bi-star-fill"></i>
+                                    </span>
+                                }
+                                @if (cafe.IsVerified)
+                                {
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-check-circle"></i>
+                                    </span>
+                                }
+                                @if (cafe.TotalGames > 0)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-controller"></i> @cafe.TotalGames
+                                    </span>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(cafe.Website))
+                            {
+                                <a href="@cafe.Website" target="_blank" class="small text-truncate d-block">
+                                    <i class="bi bi-globe"></i> Website
+                                </a>
+                            }
+                        </div>
+                        <div class="card-footer py-1 px-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/Admin/CafeGames/@cafe.Id" class="text-decoration-none" title="Manage Games">
+                                    <span class="badge @(cafe.TotalGames > 0 ? "bg-success" : "bg-secondary")">
+                                        <i class="bi bi-controller"></i> @cafe.TotalGames games
+                                    </span>
+                                </a>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="/Admin/CafeGames/@cafe.Id" class="btn btn-outline-secondary btn-sm" title="Manage Games">
+                                        <i class="bi bi-list"></i>
+                                    </a>
+                                    <button class="btn btn-primary btn-sm find-games-btn"
+                                            data-cafe-id="@cafe.Id"
+                                            data-cafe-name="@cafe.Name"
+                                            title="Find Games from Website">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1)
         {
-            <div class="col-md-6 col-lg-4 mb-3">
-                <div class="card h-100 @(cafe.IsPremium ? "border-warning" : "")">
-                    @if (cafe.IsPremium)
-                    {
-                        <div class="card-header bg-warning text-dark">
-                            <i class="bi bi-star-fill"></i> Featured
-                        </div>
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@BuildPageUrl(1)">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@BuildPageUrl(currentPage - 1)">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    @{
+                        var startPage = Math.Max(1, currentPage - 2);
+                        var endPage = Math.Min(totalPages, currentPage + 2);
+
+                        if (startPage > 1)
+                        {
+                            <li class="page-item"><a class="page-link" href="@BuildPageUrl(1)">1</a></li>
+                            if (startPage > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                        }
+
+                        for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" href="@BuildPageUrl(i)">@i</a>
+                            </li>
+                        }
+
+                        if (endPage < totalPages)
+                        {
+                            if (endPage < totalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            <li class="page-item"><a class="page-link" href="@BuildPageUrl(totalPages)">@totalPages</a></li>
+                        }
                     }
-                    <div class="card-body">
-                        <h5 class="card-title">@cafe.Name</h5>
 
-                        <p class="text-muted small mb-2">
-                            <i class="bi bi-geo-alt"></i> @cafe.Address
-                            <br />
-                            @cafe.City, @cafe.State
-                        </p>
-
-                        <div class="mb-2">
-                            @if (cafe.AverageRating.HasValue)
-                            {
-                                <span class="badge bg-warning text-dark">
-                                    @cafe.AverageRating.Value.ToString("F1") ⭐
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">No ratings</span>
-                            }
-
-                            @if (cafe.TotalReviews > 0)
-                            {
-                                <span class="text-muted small">(@cafe.TotalReviews reviews)</span>
-                            }
-                        </div>
-
-                        <div class="mb-2">
-                            @if (cafe.IsOpenNow)
-                            {
-                                <span class="badge bg-success">Open Now</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">Closed</span>
-                            }
-
-                            @if (cafe.IsVerified)
-                            {
-                                <span class="badge bg-primary">
-                                    <i class="bi bi-check-circle"></i> Verified
-                                </span>
-                            }
-                        </div>
-
-                        @if (cafe.TotalGames > 0)
-                        {
-                            <p class="text-success small mb-2">
-                                <i class="bi bi-dice-5"></i> @cafe.TotalGames games available
-                            </p>
-                        }
-
-                        <p class="text-primary small mb-0">
-                            <i class="bi bi-pin-map"></i>
-                            Distance from Seattle: <strong>@cafe.DistanceDisplay</strong>
-                        </p>
-
-                        @if (!string.IsNullOrEmpty(cafe.Phone))
-                        {
-                            <p class="text-muted small mb-0">
-                                <i class="bi bi-telephone"></i> @cafe.Phone
-                            </p>
-                        }
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">
-                            Coordinates: @cafe.Latitude.ToString("F4"), @cafe.Longitude.ToString("F4")
-                        </small>
-                    </div>
-                </div>
-            </div>
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="@BuildPageUrl(currentPage + 1)">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="@BuildPageUrl(totalPages)">
+                            <i class="bi bi-chevron-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                <p class="text-center text-muted">
+                    Page @currentPage of @totalPages (@totalCount total cafés)
+                </p>
+            </nav>
         }
-    </div>
-
-    @if (Model.Count == 0)
+    }
+    else
     {
         <div class="alert alert-warning">
             <i class="bi bi-exclamation-triangle"></i>
             <strong>No cafés found!</strong>
-            Make sure the sample data has been seeded. Check the console logs.
+            @if (!string.IsNullOrEmpty(search) || !string.IsNullOrEmpty(selectedCountry) || !string.IsNullOrEmpty(selectedCity))
+            {
+                <span>Try adjusting your filters or <a href="/Test/Cafes">clear all filters</a>.</span>
+            }
+            else
+            {
+                <span>Go to <a href="/Test/CrawlManager">Crawl Manager</a> to add cafés.</span>
+            }
         </div>
     }
 </div>
+
+@functions {
+    string BuildPageUrl(int page)
+    {
+        var query = new List<string>();
+        query.Add($"page={page}");
+
+        var search = ViewBag.Search as string;
+        var selectedCountry = ViewBag.SelectedCountry as string;
+        var selectedCity = ViewBag.SelectedCity as string;
+
+        if (!string.IsNullOrEmpty(search))
+            query.Add($"search={Uri.EscapeDataString(search)}");
+
+        if (!string.IsNullOrEmpty(selectedCountry))
+            query.Add($"country={Uri.EscapeDataString(selectedCountry)}");
+
+        if (!string.IsNullOrEmpty(selectedCity))
+            query.Add($"city={Uri.EscapeDataString(selectedCity)}");
+
+        return "/Test/Cafes?" + string.Join("&", query);
+    }
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Country change - filter cities via AJAX
+            $('#countryFilter').on('change', function() {
+                var country = $(this).val();
+                var citySelect = $('#cityFilter');
+
+                if (!country) {
+                    // Reset to all cities
+                    location.href = '/Test/Cafes';
+                    return;
+                }
+
+                // Submit form to get filtered cities
+                $(this).closest('form').submit();
+            });
+
+            // Find games button
+            $('.find-games-btn').on('click', function() {
+                const btn = $(this);
+                const cafeId = btn.data('cafe-id');
+                const cafeName = btn.data('cafe-name');
+
+                btn.prop('disabled', true);
+                const originalHtml = btn.html();
+                btn.html('<span class="spinner-border spinner-border-sm"></span>');
+
+                $.ajax({
+                    url: `/Test/FindGamesForCafe/${cafeId}`,
+                    method: 'POST',
+                    success: function(response) {
+                        if (response.success) {
+                            btn.html('<i class="bi bi-check"></i>');
+                            btn.removeClass('btn-primary').addClass('btn-success');
+                            showToast('Success', `Found ${response.gamesFound} games for ${cafeName}!`, 'success');
+
+                            setTimeout(function() {
+                                btn.prop('disabled', false);
+                                btn.html(originalHtml);
+                                btn.removeClass('btn-success').addClass('btn-primary');
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            btn.html('<i class="bi bi-x"></i>');
+                            btn.removeClass('btn-primary').addClass('btn-danger');
+                            showToast('Error', response.message || 'Failed to find games', 'error');
+
+                            setTimeout(function() {
+                                btn.prop('disabled', false);
+                                btn.html(originalHtml);
+                                btn.removeClass('btn-danger').addClass('btn-primary');
+                            }, 2000);
+                        }
+                    },
+                    error: function() {
+                        btn.html('<i class="bi bi-x"></i>');
+                        btn.removeClass('btn-primary').addClass('btn-danger');
+                        showToast('Error', 'An error occurred', 'error');
+
+                        setTimeout(function() {
+                            btn.prop('disabled', false);
+                            btn.html(originalHtml);
+                            btn.removeClass('btn-danger').addClass('btn-primary');
+                        }, 2000);
+                    }
+                });
+            });
+        });
+
+        function showToast(title, message, type) {
+            const bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+            const toast = $(`
+                <div class="toast align-items-center text-white ${bgClass} border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body"><strong>${title}:</strong> ${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `);
+
+            if ($('#toast-container').length === 0) {
+                $('body').append('<div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 11"></div>');
+            }
+
+            $('#toast-container').append(toast);
+            new bootstrap.Toast(toast[0]).show();
+            toast.on('hidden.bs.toast', () => toast.remove());
+        }
+    </script>
+}
