@@ -53,6 +53,7 @@ builder.Services.AddSession(options =>
 // Register Application Services
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<BoardGameCafeFinder.Services.IBggSyncService, BoardGameCafeFinder.Services.BggSyncService>();
+builder.Services.AddHttpClient<BoardGameCafeFinder.Services.IBggXmlApiService, BoardGameCafeFinder.Services.BggXmlApiService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeService, BoardGameCafeFinder.Services.CafeService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IGoogleMapsCrawlerService, BoardGameCafeFinder.Services.GoogleMapsCrawlerService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IImageStorageService, BoardGameCafeFinder.Services.ImageStorageService>();

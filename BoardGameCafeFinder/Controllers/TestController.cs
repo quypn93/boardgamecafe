@@ -11,6 +11,8 @@ namespace BoardGameCafeFinder.Controllers
     {
         public string Location { get; set; } = string.Empty;
         public int MaxResults { get; set; } = 20;
+        public bool UseMultiQuery { get; set; } = false;
+        public string[]? Queries { get; set; }
     }
     /// <summary>
     /// Test controller for testing features without Google Maps API key
@@ -21,6 +23,7 @@ namespace BoardGameCafeFinder.Controllers
         private readonly ICafeService _cafeService;
         private readonly IGoogleMapsCrawlerService _crawlerService;
         private readonly IBggSyncService _bggSyncService;
+        private readonly IBggXmlApiService _bggXmlApiService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<TestController> _logger;
         private readonly IWebHostEnvironment _environment;
@@ -29,6 +32,7 @@ namespace BoardGameCafeFinder.Controllers
             ICafeService cafeService,
             IGoogleMapsCrawlerService crawlerService,
             IBggSyncService bggSyncService,
+            IBggXmlApiService bggXmlApiService,
             ApplicationDbContext context,
             ILogger<TestController> logger,
             IWebHostEnvironment environment)
@@ -36,6 +40,7 @@ namespace BoardGameCafeFinder.Controllers
             _cafeService = cafeService;
             _crawlerService = crawlerService;
             _bggSyncService = bggSyncService;
+            _bggXmlApiService = bggXmlApiService;
             _context = context;
             _logger = logger;
             _environment = environment;
@@ -189,9 +194,23 @@ namespace BoardGameCafeFinder.Controllers
         [HttpPost]
         public async Task<IActionResult> CrawlAndSave([FromBody] CrawlRequest request)
         {
-            _logger.LogInformation("Starting CrawlAndSave for location: {Location}", request.Location);
+            _logger.LogInformation("Starting CrawlAndSave for location: {Location}, UseMultiQuery: {UseMultiQuery}",
+                request.Location, request.UseMultiQuery);
 
-            var results = await _crawlerService.CrawlBoardGameCafesAsync(request.Location, request.MaxResults);
+            List<CrawledCafeData> results;
+
+            if (request.UseMultiQuery && request.Queries != null && request.Queries.Length > 0)
+            {
+                // Use multiple search queries for better coverage
+                results = await _crawlerService.CrawlWithMultipleQueriesAsync(
+                    request.Location,
+                    request.Queries,
+                    request.MaxResults / request.Queries.Length + 1);
+            }
+            else
+            {
+                results = await _crawlerService.CrawlBoardGameCafesAsync(request.Location, request.MaxResults);
+            }
 
             int added = 0;
             int updated = 0;
@@ -356,6 +375,75 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         /// <summary>
+        /// Sync games for a cafe from BGG using XML API (faster, no scraping)
+        /// GET: /Test/SyncBggApi?cafeId=1
+        /// </summary>
+        public async Task<IActionResult> SyncBggApi(int cafeId)
+        {
+            var result = await _bggXmlApiService.SyncCafeGamesViaApiAsync(cafeId);
+            return Json(result);
+        }
+
+        /// <summary>
+        /// Get BGG user collection via XML API
+        /// GET: /Test/BggCollection?username=moxboardinghouse
+        /// </summary>
+        public async Task<IActionResult> BggCollection(string username)
+        {
+            var games = await _bggXmlApiService.GetUserCollectionAsync(username);
+            return Json(new
+            {
+                Username = username,
+                TotalGames = games.Count,
+                Games = games.Take(50).Select(g => new
+                {
+                    g.BggId,
+                    g.Name,
+                    g.YearPublished,
+                    g.MinPlayers,
+                    g.MaxPlayers,
+                    g.PlayingTime,
+                    g.Rating,
+                    g.ThumbnailUrl
+                })
+            });
+        }
+
+        /// <summary>
+        /// Search for board games on BGG via XML API
+        /// GET: /Test/BggSearch?query=Catan
+        /// </summary>
+        public async Task<IActionResult> BggSearch(string query)
+        {
+            var games = await _bggXmlApiService.SearchGamesAsync(query);
+            return Json(new
+            {
+                Query = query,
+                TotalResults = games.Count,
+                Games = games.Take(20).Select(g => new
+                {
+                    g.BggId,
+                    g.Name,
+                    g.YearPublished
+                })
+            });
+        }
+
+        /// <summary>
+        /// Get detailed game info from BGG via XML API
+        /// GET: /Test/BggGame?bggId=13
+        /// </summary>
+        public async Task<IActionResult> BggGame(int bggId)
+        {
+            var game = await _bggXmlApiService.GetGameDetailsAsync(bggId);
+            if (game == null)
+            {
+                return NotFound("Game not found");
+            }
+            return Json(game);
+        }
+
+        /// <summary>
         /// Link a BGG username to a cafe
         /// GET: /Test/LinkBgg?cafeId=1&bggUsername=moxboardinghouse
         /// </summary>
@@ -369,6 +457,65 @@ namespace BoardGameCafeFinder.Controllers
             await _context.SaveChangesAsync();
 
             return Json(new { Success = true, Cafe = cafe.Name, BggUsername = bggUsername });
+        }
+
+        /// <summary>
+        /// Auto-discover BGG username for a cafe and sync games
+        /// GET: /Test/AutoDiscoverBgg?cafeId=1
+        /// </summary>
+        public async Task<IActionResult> AutoDiscoverBgg(int cafeId)
+        {
+            var result = await _bggXmlApiService.AutoDiscoverAndSyncAsync(cafeId);
+            var cafe = await _context.Cafes.FindAsync(cafeId);
+            return Json(new
+            {
+                CafeId = cafeId,
+                CafeName = cafe?.Name,
+                DiscoveredUsername = cafe?.BggUsername,
+                SyncResult = result
+            });
+        }
+
+        /// <summary>
+        /// Find possible BGG usernames for a cafe name (without saving)
+        /// GET: /Test/FindBggUsernames?cafeName=Mox Boarding House
+        /// </summary>
+        public async Task<IActionResult> FindBggUsernames(string cafeName)
+        {
+            var usernames = await _bggXmlApiService.FindPossibleBggUsernamesAsync(cafeName);
+            return Json(new
+            {
+                CafeName = cafeName,
+                PossibleUsernames = usernames
+            });
+        }
+
+        /// <summary>
+        /// Sync all cafes with auto-discover for missing BGG usernames
+        /// POST: /Test/SyncAllBgg
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> SyncAllBgg()
+        {
+            var results = await _bggXmlApiService.SyncAllCafesWithAutoDiscoverAsync();
+            return Json(new
+            {
+                TotalCafes = results.Count,
+                SuccessfulSyncs = results.Count(r => r.Result.Success),
+                FailedSyncs = results.Count(r => !r.Result.Success),
+                TotalGamesAdded = results.Sum(r => r.Result.GamesAdded),
+                TotalGamesUpdated = results.Sum(r => r.Result.GamesUpdated),
+                Results = results.Select(r => new
+                {
+                    r.CafeId,
+                    r.CafeName,
+                    r.Result.Success,
+                    r.Result.Message,
+                    r.Result.GamesAdded,
+                    r.Result.GamesUpdated,
+                    r.Result.GamesProcessed
+                })
+            });
         }
 
         /// <summary>
@@ -606,7 +753,7 @@ namespace BoardGameCafeFinder.Controllers
                 newPhotos.Add(new BoardGameCafeFinder.Models.Domain.Photo
                 {
                     CafeId = cafeId,
-                    Url = photoUrls[i],
+                    Url = localPath, // Use local path as the primary URL
                     LocalPath = localPath,
                     UploadedAt = DateTime.UtcNow,
                     IsApproved = true,

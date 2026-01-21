@@ -7,6 +7,7 @@ namespace BoardGameCafeFinder.Services
     public interface IGoogleMapsCrawlerService
     {
         Task<List<CrawledCafeData>> CrawlBoardGameCafesAsync(string location, int maxResults = 20);
+        Task<List<CrawledCafeData>> CrawlWithMultipleQueriesAsync(string location, string[] queries, int maxResultsPerQuery = 10);
         Task SaveCrawledReviewsAsync(int cafeId, List<CrawledReviewData> crawledReviews);
         List<BoardGameCafeFinder.Models.Domain.Review> ConvertToReviews(int cafeId, List<CrawledReviewData> crawledReviews, int? systemUserId = null);
     }
@@ -204,6 +205,188 @@ namespace BoardGameCafeFinder.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error crawling Google Maps");
+            }
+
+            return results;
+        }
+
+        public async Task<List<CrawledCafeData>> CrawlWithMultipleQueriesAsync(string location, string[] queries, int maxResultsPerQuery = 10)
+        {
+            var allResults = new List<CrawledCafeData>();
+            var seenPlaceIds = new HashSet<string>();
+            var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var query in queries)
+            {
+                try
+                {
+                    _logger.LogInformation("Crawling with query: '{Query}' for location: {Location}", query, location);
+
+                    var results = await CrawlWithCustomQueryAsync(location, query, maxResultsPerQuery);
+
+                    foreach (var cafe in results)
+                    {
+                        // Deduplicate by GooglePlaceId or Name
+                        var placeId = cafe.GooglePlaceId ?? "";
+                        var name = cafe.Name ?? "";
+
+                        if (!string.IsNullOrEmpty(placeId) && seenPlaceIds.Contains(placeId))
+                        {
+                            _logger.LogDebug("Skipping duplicate cafe by PlaceId: {Name}", name);
+                            continue;
+                        }
+
+                        if (!string.IsNullOrEmpty(name) && seenNames.Contains(name))
+                        {
+                            _logger.LogDebug("Skipping duplicate cafe by Name: {Name}", name);
+                            continue;
+                        }
+
+                        if (!string.IsNullOrEmpty(placeId))
+                            seenPlaceIds.Add(placeId);
+                        if (!string.IsNullOrEmpty(name))
+                            seenNames.Add(name);
+
+                        allResults.Add(cafe);
+                    }
+
+                    _logger.LogInformation("Query '{Query}' found {Count} unique cafes (total now: {Total})",
+                        query, results.Count, allResults.Count);
+
+                    // Small delay between queries
+                    await Task.Delay(3000);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error with query '{Query}' for {Location}", query, location);
+                }
+            }
+
+            _logger.LogInformation("Total unique cafes found for {Location}: {Count}", location, allResults.Count);
+            return allResults;
+        }
+
+        private async Task<List<CrawledCafeData>> CrawlWithCustomQueryAsync(string location, string searchTerm, int maxResults)
+        {
+            var results = new List<CrawledCafeData>();
+
+            try
+            {
+                using var playwright = await Playwright.CreateAsync();
+                await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = true
+                });
+
+                var context = await browser.NewContextAsync(new BrowserNewContextOptions
+                {
+                    UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    ViewportSize = new ViewportSize { Width = 1920, Height = 1080 },
+                    Locale = "en-US"
+                });
+
+                var page = await context.NewPageAsync();
+
+                var searchQuery = $"{searchTerm} {location}";
+                var searchUrl = $"https://www.google.com/maps/search/{Uri.EscapeDataString(searchQuery)}";
+
+                _logger.LogInformation("Navigating to: {Url}", searchUrl);
+                await page.GotoAsync(searchUrl, new PageGotoOptions
+                {
+                    WaitUntil = WaitUntilState.DOMContentLoaded,
+                    Timeout = 60000
+                });
+
+                await page.WaitForTimeoutAsync(5000);
+
+                // Check if single result
+                var nameElement = page.Locator("h1.DUwDvf").First;
+                var feedLocator = page.Locator("div[role='feed']");
+
+                if (await nameElement.CountAsync() > 0 && await nameElement.IsVisibleAsync() && await feedLocator.CountAsync() == 0)
+                {
+                    var cafeData = await ExtractCafeDataAsync(page);
+                    if (cafeData != null && !string.IsNullOrEmpty(cafeData.Name))
+                    {
+                        results.Add(cafeData);
+                    }
+                    await browser.CloseAsync();
+                    return results;
+                }
+
+                // Multiple results - iterate through list
+                var itemsSelector = "div[role='feed'] > div > div[jsaction]";
+
+                for (int i = 0; i < maxResults; i++)
+                {
+                    try
+                    {
+                        var itemLocator = page.Locator(itemsSelector).Nth(i);
+                        var retries = 0;
+                        while (await itemLocator.CountAsync() == 0 && retries < 3)
+                        {
+                            var feed = page.Locator("div[role='feed']");
+                            await feed.EvaluateAsync("el => el.scrollTop = el.scrollHeight");
+                            await page.WaitForTimeoutAsync(2000);
+                            retries++;
+                        }
+
+                        if (await itemLocator.CountAsync() == 0)
+                            break;
+
+                        try
+                        {
+                            await itemLocator.ScrollIntoViewIfNeededAsync();
+                        }
+                        catch
+                        {
+                            var feed = page.Locator("div[role='feed']");
+                            await feed.EvaluateAsync("el => el.scrollTop += 500");
+                        }
+
+                        await itemLocator.ClickAsync();
+                        await page.WaitForTimeoutAsync(2000);
+
+                        var cafeData = await ExtractCafeDataAsync(page);
+
+                        if (cafeData != null && !string.IsNullOrEmpty(cafeData.Name))
+                        {
+                            results.Add(cafeData);
+                        }
+
+                        var backToResults = page.Locator("button[aria-label='Back']").First;
+                        if (await backToResults.CountAsync() > 0 && await backToResults.IsVisibleAsync())
+                        {
+                            await backToResults.ClickAsync();
+                        }
+                        else
+                        {
+                            await page.GoBackAsync();
+                        }
+
+                        await page.WaitForTimeoutAsync(1500);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning("Failed to extract item {Index}: {Message}", i, ex.Message);
+                        try
+                        {
+                            var backToResults = page.Locator("button[aria-label='Back']").First;
+                            if (await backToResults.CountAsync() > 0 && await backToResults.IsVisibleAsync())
+                            {
+                                await backToResults.ClickAsync();
+                                await page.WaitForTimeoutAsync(1500);
+                            }
+                        }
+                        catch { }
+                    }
+                }
+
+                await browser.CloseAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error crawling with query '{Query}' for {Location}", searchTerm, location);
             }
 
             return results;
@@ -458,28 +641,35 @@ namespace BoardGameCafeFinder.Services
                         }
                     }
 
-                    // Download each photo locally, only keep successfully downloaded ones
-                    foreach (var url in extractedUrls)
+                    // Download photos in parallel for speed
+                    _logger.LogInformation("Downloading {Count} photos in parallel for {Name}", extractedUrls.Count, cafeName);
+
+                    var downloadTasks = extractedUrls.Select(async (url, index) =>
                     {
                         try
                         {
-                            _logger.LogInformation("Downloading photo for {Name}: {Url}", cafeName, url.Substring(0, Math.Min(80, url.Length)));
                             var localPath = await _imageStorageService.DownloadAndSaveImageAsync(url, "photos");
-
                             if (!string.IsNullOrEmpty(localPath))
                             {
-                                photoUrls.Add(url);
-                                photoLocalPaths.Add(localPath);
-                                _logger.LogInformation("Photo saved locally at {Path}", localPath);
-                            }
-                            else
-                            {
-                                _logger.LogWarning("Failed to download photo for {Name}, skipping", cafeName);
+                                return (Url: url, LocalPath: localPath, Index: index);
                             }
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogWarning(ex, "Error downloading photo for {Name}, skipping", cafeName);
+                            _logger.LogDebug(ex, "Error downloading photo {Index} for {Name}", index, cafeName);
+                        }
+                        return (Url: (string?)null, LocalPath: (string?)null, Index: index);
+                    }).ToList();
+
+                    var results = await Task.WhenAll(downloadTasks);
+
+                    // Add successful downloads in order
+                    foreach (var result in results.OrderBy(r => r.Index))
+                    {
+                        if (!string.IsNullOrEmpty(result.Url) && !string.IsNullOrEmpty(result.LocalPath))
+                        {
+                            photoUrls.Add(result.Url);
+                            photoLocalPaths.Add(result.LocalPath);
                         }
                     }
 

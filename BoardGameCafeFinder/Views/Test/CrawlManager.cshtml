@@ -26,22 +26,46 @@
             <small class="text-dark">With rate limiting to avoid blocking</small>
         </div>
         <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <label class="form-label">Delay between cities (seconds):</label>
+            <div class="row align-items-center mb-3">
+                <div class="col-md-2">
+                    <label class="form-label">Delay (sec):</label>
                     <input type="number" id="crawlDelay" class="form-control" value="30" min="10" max="120">
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Max results per city:</label>
+                <div class="col-md-2">
+                    <label class="form-label">Max per city:</label>
                     <input type="number" id="crawlMaxPerCity" class="form-control" value="15" min="5" max="30">
                 </div>
+                <div class="col-md-2">
+                    <label class="form-label">Max retries:</label>
+                    <input type="number" id="crawlMaxRetries" class="form-control" value="2" min="0" max="5">
+                </div>
                 <div class="col-md-3">
-                    <button id="crawlAllUSBtn" class="btn btn-warning w-100 mt-4">
+                    <label class="form-label d-block">&nbsp;</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="useMultiQuery" checked>
+                        <label class="form-check-label" for="useMultiQuery">
+                            Use multiple search queries
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3 text-end">
+                    <label class="form-label d-block">&nbsp;</label>
+                    <span class="badge bg-info" id="cityCount">~95 cities</span>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <button id="crawlAllUSBtn" class="btn btn-warning w-100">
                         <i class="bi bi-collection"></i> Crawl All US Cities
                     </button>
                 </div>
-                <div class="col-md-3">
-                    <button id="stopCrawlBtn" class="btn btn-danger w-100 mt-4" style="display:none;">
+                <div class="col-md-4">
+                    <button id="retryFailedBtn" class="btn btn-outline-warning w-100" style="display:none;">
+                        <i class="bi bi-arrow-repeat"></i> Retry Failed Cities (<span id="failedCount">0</span>)
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button id="stopCrawlBtn" class="btn btn-danger w-100" style="display:none;">
                         <i class="bi bi-stop-circle"></i> Stop Crawling
                     </button>
                 </div>
@@ -60,6 +84,61 @@
                 </div>
                 <div id="batchLog" class="mt-3 bg-dark text-light p-3 rounded" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px;">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BGG Sync Section -->
+    <div class="card mb-4 border-info">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-controller"></i> BoardGameGeek Sync</h5>
+            <small>Auto-discover BGG usernames and sync board games</small>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <button id="syncAllBggBtn" class="btn btn-info w-100">
+                        <i class="bi bi-arrow-repeat"></i> Sync All Cafes (Auto-discover)
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" id="testCafeName" class="form-control" placeholder="Enter cafe name to test...">
+                        <button id="testBggUsernameBtn" class="btn btn-outline-info">
+                            <i class="bi bi-search"></i> Find BGG Users
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" id="testBggUsername" class="form-control" placeholder="Enter BGG username...">
+                        <button id="testBggCollectionBtn" class="btn btn-outline-info">
+                            <i class="bi bi-list-ul"></i> View Collection
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BGG Progress Section -->
+            <div id="bggProgress" class="mt-3" style="display:none;">
+                <div class="progress mb-2" style="height: 25px;">
+                    <div id="bggProgressBar" class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">
+                        0%
+                    </div>
+                </div>
+                <small id="bggProgressText">Processing...</small>
+            </div>
+
+            <!-- BGG Results -->
+            <div id="bggResults" class="mt-3" style="display:none;">
+                <div class="alert alert-info">
+                    <h6 class="mb-2"><i class="bi bi-info-circle"></i> BGG Sync Results</h6>
+                    <div id="bggResultsContent"></div>
+                </div>
+            </div>
+
+            <!-- BGG Log -->
+            <div id="bggLog" class="mt-3 bg-dark text-light p-3 rounded" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; display:none;">
             </div>
         </div>
     </div>
@@ -215,75 +294,154 @@
 @section Scripts {
 <script>
     $(document).ready(function() {
-        // US Cities list for batch crawl
+        // Expanded US Cities list for batch crawl (100+ cities)
         const usCities = [
-            'Seattle', 'Portland', 'San Francisco', 'Los Angeles', 'San Diego',
-            'Phoenix', 'Denver', 'Austin', 'Houston', 'Dallas',
-            'Chicago', 'Detroit', 'Minneapolis', 'St. Louis', 'Kansas City',
-            'New York', 'Boston', 'Philadelphia', 'Washington DC', 'Baltimore',
-            'Atlanta', 'Miami', 'Orlando', 'Charlotte', 'Nashville',
-            'Salt Lake City', 'Las Vegas', 'Sacramento', 'San Jose', 'Oakland'
+            // West Coast
+            'Seattle, WA', 'Portland, OR', 'San Francisco, CA', 'Los Angeles, CA', 'San Diego, CA',
+            'Sacramento, CA', 'San Jose, CA', 'Oakland, CA', 'Fresno, CA', 'Long Beach, CA',
+            'Anaheim, CA', 'Irvine, CA', 'Santa Ana, CA', 'Riverside, CA', 'Pasadena, CA',
+            'Berkeley, CA', 'Santa Barbara, CA', 'Santa Cruz, CA', 'Tacoma, WA', 'Spokane, WA',
+            'Eugene, OR', 'Salem, OR', 'Boise, ID', 'Anchorage, AK', 'Honolulu, HI',
+            // Southwest
+            'Phoenix, AZ', 'Tucson, AZ', 'Mesa, AZ', 'Scottsdale, AZ', 'Las Vegas, NV',
+            'Reno, NV', 'Albuquerque, NM', 'Santa Fe, NM', 'El Paso, TX',
+            // Mountain
+            'Denver, CO', 'Colorado Springs, CO', 'Boulder, CO', 'Fort Collins, CO',
+            'Salt Lake City, UT', 'Provo, UT',
+            // Texas
+            'Austin, TX', 'Houston, TX', 'Dallas, TX', 'San Antonio, TX', 'Fort Worth, TX',
+            'Arlington, TX', 'Plano, TX', 'Irving, TX', 'Frisco, TX', 'McKinney, TX',
+            // Midwest
+            'Chicago, IL', 'Detroit, MI', 'Minneapolis, MN', 'St. Paul, MN', 'Milwaukee, WI',
+            'Madison, WI', 'Indianapolis, IN', 'Columbus, OH', 'Cleveland, OH', 'Cincinnati, OH',
+            'St. Louis, MO', 'Kansas City, MO', 'Omaha, NE', 'Des Moines, IA', 'Wichita, KS',
+            'Ann Arbor, MI', 'Grand Rapids, MI', 'Bloomington, IN', 'Champaign, IL',
+            // Northeast
+            'New York, NY', 'Brooklyn, NY', 'Queens, NY', 'Manhattan, NY', 'Boston, MA',
+            'Cambridge, MA', 'Philadelphia, PA', 'Pittsburgh, PA', 'Baltimore, MD',
+            'Washington, DC', 'Newark, NJ', 'Jersey City, NJ', 'Providence, RI', 'Hartford, CT',
+            'New Haven, CT', 'Buffalo, NY', 'Rochester, NY', 'Syracuse, NY', 'Albany, NY',
+            // Southeast
+            'Atlanta, GA', 'Miami, FL', 'Orlando, FL', 'Tampa, FL', 'Jacksonville, FL',
+            'Charlotte, NC', 'Raleigh, NC', 'Durham, NC', 'Nashville, TN', 'Memphis, TN',
+            'Knoxville, TN', 'Louisville, KY', 'Lexington, KY', 'New Orleans, LA', 'Baton Rouge, LA',
+            'Birmingham, AL', 'Charleston, SC', 'Savannah, GA', 'Richmond, VA', 'Virginia Beach, VA',
+            'Norfolk, VA', 'Asheville, NC', 'Greenville, SC', 'Columbia, SC',
+            // Additional metro areas
+            'Oklahoma City, OK', 'Tulsa, OK', 'Little Rock, AR', 'Fayetteville, AR',
+            'Portland, ME', 'Burlington, VT', 'Manchester, NH', 'Bozeman, MT', 'Missoula, MT'
+        ];
+
+        // Alternative search queries for more coverage
+        const searchQueries = [
+            'board game cafe',
+            'tabletop game cafe',
+            'gaming cafe board games',
+            'board game bar',
+            'tabletop gaming lounge'
         ];
 
         let isCrawling = false;
         let shouldStop = false;
         let totalStats = { added: 0, updated: 0, skipped: 0, errors: [] };
+        let failedCities = [];
 
         // Crawl All US Cities
         $('#crawlAllUSBtn').on('click', async function() {
             if (!confirm('This will crawl ' + usCities.length + ' US cities sequentially with delays to avoid being blocked by Google.\n\nEstimated time: ' + estimateTime() + '\n\nContinue?')) {
                 return;
             }
+            await startBatchCrawl(usCities);
+        });
 
+        // Retry Failed Cities
+        $('#retryFailedBtn').on('click', async function() {
+            if (failedCities.length === 0) {
+                alert('No failed cities to retry');
+                return;
+            }
+            if (!confirm(`Retry ${failedCities.length} failed cities?`)) {
+                return;
+            }
+            const citiesToRetry = [...failedCities];
+            failedCities = [];
+            await startBatchCrawl(citiesToRetry, true);
+        });
+
+        async function startBatchCrawl(cities, isRetry = false) {
             isCrawling = true;
             shouldStop = false;
-            totalStats = { added: 0, updated: 0, skipped: 0, errors: [] };
+            if (!isRetry) {
+                totalStats = { added: 0, updated: 0, skipped: 0, errors: [] };
+                failedCities = [];
+            }
 
             const delay = parseInt($('#crawlDelay').val()) || 30;
             const maxPerCity = parseInt($('#crawlMaxPerCity').val()) || 15;
+            const maxRetries = parseInt($('#crawlMaxRetries').val()) || 2;
+            const useMultiQuery = $('#useMultiQuery').is(':checked');
 
             // UI Updates
             $('#crawlAllUSBtn').hide();
+            $('#retryFailedBtn').hide();
             $('#stopCrawlBtn').show();
             $('#batchProgress').show();
-            $('#batchLog').html('');
+            if (!isRetry) $('#batchLog').html('');
             $('.crawl-btn, #customCrawlBtn').prop('disabled', true);
 
             const startTime = Date.now();
+            logMessage(`🚀 Starting crawl for ${cities.length} cities (multiQuery: ${useMultiQuery})`, 'info');
 
-            for (let i = 0; i < usCities.length; i++) {
+            for (let i = 0; i < cities.length; i++) {
                 if (shouldStop) {
                     logMessage('⛔ Crawl stopped by user', 'warning');
                     break;
                 }
 
-                const city = usCities[i];
-                const progress = ((i + 1) / usCities.length * 100).toFixed(1);
+                const city = cities[i];
+                const progress = ((i + 1) / cities.length * 100).toFixed(1);
 
-                updateProgress(progress, `Crawling ${city} (${i + 1}/${usCities.length})`, startTime, i, usCities.length);
+                updateProgress(progress, `Crawling ${city} (${i + 1}/${cities.length})`, startTime, i, cities.length);
                 logMessage(`🔍 Starting crawl for ${city}...`, 'info');
 
-                try {
-                    const result = await crawlCity(city, maxPerCity);
+                let success = false;
+                let lastError = '';
 
-                    if (result.success !== false) {
-                        totalStats.added += result.added || 0;
-                        totalStats.updated += result.updated || 0;
-                        totalStats.skipped += result.skipped || 0;
-
-                        logMessage(`✅ ${city}: +${result.added} added, ${result.updated} updated, ${result.skipped} skipped`, 'success');
-                    } else {
-                        logMessage(`❌ ${city}: Error - ${result.message || 'Unknown error'}`, 'error');
-                        totalStats.errors.push(`${city}: ${result.message}`);
+                for (let attempt = 0; attempt <= maxRetries && !success && !shouldStop; attempt++) {
+                    if (attempt > 0) {
+                        logMessage(`🔄 Retry ${attempt}/${maxRetries} for ${city}...`, 'warning');
+                        await sleep(5000);
                     }
-                } catch (error) {
-                    logMessage(`❌ ${city}: ${error}`, 'error');
-                    totalStats.errors.push(`${city}: ${error}`);
+
+                    try {
+                        const result = await crawlCity(city, maxPerCity, useMultiQuery);
+
+                        if (result.success !== false) {
+                            totalStats.added += result.added || 0;
+                            totalStats.updated += result.updated || 0;
+                            totalStats.skipped += result.skipped || 0;
+
+                            logMessage(`✅ ${city}: +${result.added} added, ${result.updated} updated, ${result.skipped} skipped (crawled: ${result.totalCrawled})`, 'success');
+                            success = true;
+                        } else {
+                            lastError = result.message || 'Unknown error';
+                            logMessage(`⚠️ ${city} attempt ${attempt + 1}: ${lastError}`, 'warning');
+                        }
+                    } catch (error) {
+                        lastError = error.toString();
+                        logMessage(`⚠️ ${city} attempt ${attempt + 1}: ${lastError}`, 'warning');
+                    }
                 }
 
-                // Wait before next city (unless it's the last one)
-                if (i < usCities.length - 1 && !shouldStop) {
-                    logMessage(`⏳ Waiting ${delay} seconds before next city...`, 'info');
+                if (!success) {
+                    logMessage(`❌ ${city}: Failed after ${maxRetries + 1} attempts - ${lastError}`, 'error');
+                    totalStats.errors.push(`${city}: ${lastError}`);
+                    failedCities.push(city);
+                }
+
+                // Wait before next city
+                if (i < cities.length - 1 && !shouldStop) {
+                    logMessage(`⏳ Waiting ${delay} seconds...`, 'info');
                     await sleep(delay * 1000);
                 }
             }
@@ -294,7 +452,12 @@
             $('#stopCrawlBtn').hide();
             $('.crawl-btn, #customCrawlBtn').prop('disabled', false);
 
-            updateProgress(100, 'Completed!', startTime, usCities.length, usCities.length);
+            if (failedCities.length > 0) {
+                $('#failedCount').text(failedCities.length);
+                $('#retryFailedBtn').show();
+            }
+
+            updateProgress(100, 'Completed!', startTime, cities.length, cities.length);
             logMessage('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
             logMessage(`📊 TOTAL: ${totalStats.added} added, ${totalStats.updated} updated, ${totalStats.skipped} skipped`, 'success');
             if (totalStats.errors.length > 0) {
@@ -303,7 +466,7 @@
 
             // Show summary
             displayBatchResults();
-        });
+        }
 
         // Stop button
         $('#stopCrawlBtn').on('click', function() {
@@ -322,14 +485,24 @@
             return hours > 0 ? `${hours}h ${minutes}m` : `${minutes} minutes`;
         }
 
-        function crawlCity(location, maxResults) {
+        function crawlCity(location, maxResults, useMultiQuery = false) {
             return new Promise((resolve, reject) => {
+                const payload = {
+                    location: location,
+                    maxResults: maxResults,
+                    useMultiQuery: useMultiQuery
+                };
+
+                if (useMultiQuery) {
+                    payload.queries = searchQueries;
+                }
+
                 $.ajax({
                     url: '/Test/CrawlAndSave',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ location: location, maxResults: maxResults }),
-                    timeout: 300000, // 5 minute timeout per city
+                    data: JSON.stringify(payload),
+                    timeout: 600000, // 10 minute timeout for multi-query
                     success: resolve,
                     error: function(xhr, status, error) {
                         reject(error || status);
@@ -475,6 +648,144 @@
                 }
             });
         });
+
+        // BGG Sync All Cafes
+        $('#syncAllBggBtn').on('click', async function() {
+            if (!confirm('This will attempt to auto-discover BGG usernames for all cafes and sync their board game collections.\n\nThis may take a while. Continue?')) {
+                return;
+            }
+
+            const $btn = $(this);
+            $btn.html('<span class="spinner-border spinner-border-sm"></span> Syncing...').prop('disabled', true);
+            $('#bggProgress').show();
+            $('#bggLog').show().html('');
+            $('#bggResults').hide();
+
+            bggLogMessage('Starting BGG sync for all cafes...', 'info');
+
+            try {
+                const response = await $.ajax({
+                    url: '/Test/SyncAllBgg',
+                    type: 'POST',
+                    timeout: 600000 // 10 minutes
+                });
+
+                bggLogMessage(`Completed! ${response.successfulSyncs}/${response.totalCafes} cafes synced successfully`, 'success');
+                bggLogMessage(`Total games added: ${response.totalGamesAdded}, updated: ${response.totalGamesUpdated}`, 'success');
+
+                // Show detailed results
+                let html = `<strong>Total Cafes:</strong> ${response.totalCafes}<br>`;
+                html += `<strong>Successful Syncs:</strong> ${response.successfulSyncs}<br>`;
+                html += `<strong>Failed Syncs:</strong> ${response.failedSyncs}<br>`;
+                html += `<strong>Total Games Added:</strong> ${response.totalGamesAdded}<br>`;
+                html += `<strong>Total Games Updated:</strong> ${response.totalGamesUpdated}<br>`;
+
+                if (response.results && response.results.length > 0) {
+                    html += '<hr><strong>Details:</strong><br>';
+                    response.results.forEach(r => {
+                        const icon = r.success ? '✅' : '❌';
+                        html += `${icon} ${r.cafeName}: ${r.message} (${r.gamesAdded} added)<br>`;
+                    });
+                }
+
+                $('#bggResultsContent').html(html);
+                $('#bggResults').show();
+
+            } catch (error) {
+                bggLogMessage(`Error: ${error}`, 'error');
+            } finally {
+                $btn.html('<i class="bi bi-arrow-repeat"></i> Sync All Cafes (Auto-discover)').prop('disabled', false);
+                $('#bggProgress').hide();
+            }
+        });
+
+        // Test Find BGG Usernames
+        $('#testBggUsernameBtn').on('click', async function() {
+            const cafeName = $('#testCafeName').val();
+            if (!cafeName) {
+                alert('Please enter a cafe name');
+                return;
+            }
+
+            const $btn = $(this);
+            $btn.html('<span class="spinner-border spinner-border-sm"></span>').prop('disabled', true);
+            $('#bggLog').show();
+
+            bggLogMessage(`Searching for BGG usernames matching: "${cafeName}"...`, 'info');
+
+            try {
+                const response = await $.ajax({
+                    url: '/Test/FindBggUsernames',
+                    data: { cafeName: cafeName },
+                    timeout: 60000
+                });
+
+                if (response.possibleUsernames && response.possibleUsernames.length > 0) {
+                    bggLogMessage(`Found ${response.possibleUsernames.length} possible username(s):`, 'success');
+                    response.possibleUsernames.forEach(u => {
+                        bggLogMessage(`  - ${u}`, 'success');
+                    });
+                } else {
+                    bggLogMessage('No matching BGG usernames found', 'warning');
+                }
+
+            } catch (error) {
+                bggLogMessage(`Error: ${error}`, 'error');
+            } finally {
+                $btn.html('<i class="bi bi-search"></i> Find BGG Users').prop('disabled', false);
+            }
+        });
+
+        // Test View BGG Collection
+        $('#testBggCollectionBtn').on('click', async function() {
+            const username = $('#testBggUsername').val();
+            if (!username) {
+                alert('Please enter a BGG username');
+                return;
+            }
+
+            const $btn = $(this);
+            $btn.html('<span class="spinner-border spinner-border-sm"></span>').prop('disabled', true);
+            $('#bggLog').show();
+
+            bggLogMessage(`Fetching collection for BGG user: "${username}"...`, 'info');
+
+            try {
+                const response = await $.ajax({
+                    url: '/Test/BggCollection',
+                    data: { username: username },
+                    timeout: 60000
+                });
+
+                bggLogMessage(`Found ${response.totalGames} games in collection`, 'success');
+
+                if (response.games && response.games.length > 0) {
+                    bggLogMessage('Sample games:', 'info');
+                    response.games.slice(0, 10).forEach(g => {
+                        bggLogMessage(`  - ${g.name} (${g.yearPublished || 'N/A'}) - ${g.minPlayers}-${g.maxPlayers} players`, 'success');
+                    });
+                    if (response.totalGames > 10) {
+                        bggLogMessage(`  ... and ${response.totalGames - 10} more`, 'info');
+                    }
+                }
+
+            } catch (error) {
+                bggLogMessage(`Error: ${error}`, 'error');
+            } finally {
+                $btn.html('<i class="bi bi-list-ul"></i> View Collection').prop('disabled', false);
+            }
+        });
+
+        function bggLogMessage(message, type) {
+            const timestamp = new Date().toLocaleTimeString();
+            let color = '#fff';
+            if (type === 'success') color = '#28a745';
+            if (type === 'error') color = '#dc3545';
+            if (type === 'warning') color = '#ffc107';
+
+            $('#bggLog').append(`<div style="color: ${color}">[${timestamp}] ${message}</div>`);
+            $('#bggLog').scrollTop($('#bggLog')[0].scrollHeight);
+        }
 
         function crawlAndSave(location, maxResults) {
             $('#loading').show();
