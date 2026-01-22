@@ -143,12 +143,122 @@
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Major US Cities</h5>
+    <!-- Board Games Whitelist Section -->
+    <div class="card mb-4 border-success">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-dice-5"></i> Board Games Whitelist</h5>
+            <span class="badge bg-light text-dark" id="boardGamesCountBadge">Loading...</span>
         </div>
         <div class="card-body">
-            <div class="row">
+            <p class="text-muted small mb-3">
+                Board games in the whitelist are used for matching when crawling cafe websites.
+                Games with BGG IDs are verified board games that will be matched during crawl.
+            </p>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center py-2">
+                            <h4 class="mb-0" id="totalGamesCount">-</h4>
+                            <small class="text-muted">Total Games</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center py-2">
+                            <h4 class="mb-0" id="gamesWithBggCount">-</h4>
+                            <small class="text-muted">With BGG ID</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input type="number" id="seedCount" class="form-control" value="200" min="50" max="500" placeholder="Count">
+                        <button id="seedBoardGamesBtn" class="btn btn-success">
+                            <i class="bi bi-cloud-download"></i> Seed from BGG
+                        </button>
+                    </div>
+                    <small class="text-muted">Import popular games from BoardGameGeek</small>
+                </div>
+                <div class="col-md-3">
+                    <button id="refreshBoardGamesCountBtn" class="btn btn-outline-success w-100">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh Count
+                    </button>
+                </div>
+            </div>
+
+            <!-- Seed Progress -->
+            <div id="seedProgress" class="mt-3" style="display:none;">
+                <div class="progress mb-2" style="height: 25px;">
+                    <div id="seedProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">
+                        Seeding...
+                    </div>
+                </div>
+                <small id="seedProgressText">Importing games from BGG...</small>
+            </div>
+
+            <!-- Seed Results -->
+            <div id="seedResults" class="mt-3" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- Multi-Select Cities Section -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-check2-square"></i> Select Cities to Crawl</h5>
+            <div>
+                <button type="button" class="btn btn-sm btn-light" id="selectAllCitiesBtn">Select All</button>
+                <button type="button" class="btn btn-sm btn-outline-light" id="deselectAllCitiesBtn">Deselect All</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Filter by Region</label>
+                    <select id="regionFilter" class="form-select form-select-sm">
+                        <option value="all">All Regions</option>
+                        <option value="us">US Cities</option>
+                        <option value="international">International</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Search Cities</label>
+                    <input type="text" id="citySearchInput" class="form-control form-control-sm" placeholder="Type to filter...">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold d-block">&nbsp;</label>
+                    <button id="crawlSelectedCitiesBtn" class="btn btn-success w-100" disabled>
+                        <i class="bi bi-play-fill"></i> Crawl Selected (<span id="selectedCityCount">0</span>)
+                    </button>
+                </div>
+            </div>
+
+            <div class="border rounded p-3" style="max-height: 350px; overflow-y: auto;">
+                <div class="mb-3">
+                    <h6 class="text-primary"><i class="bi bi-geo-alt-fill"></i> US Cities</h6>
+                    <div class="row" id="usCitiesCheckboxes">
+                        <!-- US cities will be populated by JavaScript -->
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <h6 class="text-success"><i class="bi bi-globe"></i> International Cities</h6>
+                    <div class="row" id="intlCitiesCheckboxes">
+                        <!-- International cities will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Quick Crawl - Single City</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted small mb-3">Click a city to crawl it immediately without selecting.</p>
+            <h6 class="text-primary">US Cities</h6>
+            <div class="row mb-3">
                 <div class="col-md-3 mb-2">
                     <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Seattle" data-max="20">
                         <i class="bi bi-download"></i> Seattle
@@ -210,14 +320,7 @@
                     </button>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">International Cities</h5>
-        </div>
-        <div class="card-body">
+            <h6 class="text-success">International Cities</h6>
             <div class="row">
                 <div class="col-md-3 mb-2">
                     <button class="btn btn-outline-success w-100 crawl-btn" data-location="Hanoi" data-max="15">
@@ -294,6 +397,113 @@
 @section Scripts {
 <script>
     $(document).ready(function() {
+        // Load board games count on page load
+        loadBoardGamesCount();
+
+        // Board Games Whitelist functions
+        function loadBoardGamesCount() {
+            $.get('/Test/BoardGamesCount', function(response) {
+                $('#totalGamesCount').text(response.total);
+                $('#gamesWithBggCount').text(response.withBggId);
+                $('#boardGamesCountBadge').text(response.total + ' games');
+            }).fail(function() {
+                $('#totalGamesCount').text('Error');
+                $('#gamesWithBggCount').text('Error');
+                $('#boardGamesCountBadge').text('Error');
+            });
+        }
+
+        $('#refreshBoardGamesCountBtn').on('click', function() {
+            const $btn = $(this);
+            $btn.html('<span class="spinner-border spinner-border-sm"></span>').prop('disabled', true);
+            loadBoardGamesCount();
+            setTimeout(function() {
+                $btn.html('<i class="bi bi-arrow-clockwise"></i> Refresh Count').prop('disabled', false);
+            }, 500);
+        });
+
+        $('#seedBoardGamesBtn').on('click', async function() {
+            const count = parseInt($('#seedCount').val()) || 200;
+
+            if (!confirm(`This will import up to ${count} popular board games from BoardGameGeek.\n\nThis may take several minutes due to BGG API rate limiting.\n\nContinue?`)) {
+                return;
+            }
+
+            const $btn = $(this);
+            $btn.html('<span class="spinner-border spinner-border-sm"></span> Seeding...').prop('disabled', true);
+            $('#seedProgress').show();
+            $('#seedResults').hide();
+            $('#seedProgressBar').css('width', '50%');
+            $('#seedProgressText').text('Importing games from BGG (this may take a while)...');
+
+            try {
+                const response = await $.ajax({
+                    url: '/Test/SeedBoardGames',
+                    type: 'POST',
+                    data: { count: count },
+                    timeout: 600000 // 10 minutes
+                });
+
+                $('#seedProgressBar').css('width', '100%').removeClass('progress-bar-animated');
+
+                if (response.success) {
+                    $('#seedResults').html(`
+                        <div class="alert alert-success">
+                            <h6><i class="bi bi-check-circle"></i> ${response.message}</h6>
+                            <strong>Before:</strong> ${response.existingBefore} games<br>
+                            <strong>Added:</strong> ${response.added} games<br>
+                            <strong>Total Now:</strong> ${response.totalNow} games
+                        </div>
+                    `).show();
+                    loadBoardGamesCount();
+                } else {
+                    $('#seedResults').html(`
+                        <div class="alert alert-danger">
+                            <h6><i class="bi bi-x-circle"></i> Seeding Failed</h6>
+                            ${response.message}
+                        </div>
+                    `).show();
+                }
+            } catch (error) {
+                $('#seedResults').html(`
+                    <div class="alert alert-danger">
+                        <h6><i class="bi bi-x-circle"></i> Error</h6>
+                        ${error.statusText || error}
+                    </div>
+                `).show();
+            } finally {
+                $btn.html('<i class="bi bi-cloud-download"></i> Seed from BGG').prop('disabled', false);
+                setTimeout(function() {
+                    $('#seedProgress').hide();
+                    $('#seedProgressBar').css('width', '0%').addClass('progress-bar-animated');
+                }, 2000);
+            }
+        });
+
+        // International cities for multi-select
+        const intlCities = [
+            { name: 'Hanoi', country: 'Vietnam', max: 15 },
+            { name: 'Ho Chi Minh', country: 'Vietnam', max: 15 },
+            { name: 'Da Nang', country: 'Vietnam', max: 15 },
+            { name: 'Tokyo', country: 'Japan', max: 20 },
+            { name: 'Osaka', country: 'Japan', max: 20 },
+            { name: 'London', country: 'UK', max: 20 },
+            { name: 'Toronto', country: 'Canada', max: 20 },
+            { name: 'Vancouver', country: 'Canada', max: 20 },
+            { name: 'Berlin', country: 'Germany', max: 20 },
+            { name: 'Munich', country: 'Germany', max: 20 },
+            { name: 'Paris', country: 'France', max: 20 },
+            { name: 'Sydney', country: 'Australia', max: 20 },
+            { name: 'Melbourne', country: 'Australia', max: 20 },
+            { name: 'Singapore', country: 'Singapore', max: 20 },
+            { name: 'Seoul', country: 'South Korea', max: 20 },
+            { name: 'Bangkok', country: 'Thailand', max: 15 },
+            { name: 'Amsterdam', country: 'Netherlands', max: 20 },
+            { name: 'Prague', country: 'Czech Republic', max: 20 },
+            { name: 'Barcelona', country: 'Spain', max: 20 },
+            { name: 'Madrid', country: 'Spain', max: 20 }
+        ];
+
         // Expanded US Cities list for batch crawl (100+ cities)
         const usCities = [
             // West Coast
@@ -345,6 +555,128 @@
         let shouldStop = false;
         let totalStats = { added: 0, updated: 0, skipped: 0, errors: [] };
         let failedCities = [];
+
+        // Populate multi-select checkboxes
+        function populateCityCheckboxes() {
+            // US Cities
+            let usHtml = '';
+            usCities.forEach((city, index) => {
+                usHtml += `
+                    <div class="col-md-3 col-sm-4 col-6 city-checkbox-item" data-region="us">
+                        <div class="form-check">
+                            <input class="form-check-input city-checkbox" type="checkbox"
+                                   value="${city}" id="usCity${index}" data-region="us" data-max="15">
+                            <label class="form-check-label small" for="usCity${index}">${city.split(',')[0]}</label>
+                        </div>
+                    </div>`;
+            });
+            $('#usCitiesCheckboxes').html(usHtml);
+
+            // International Cities
+            let intlHtml = '';
+            intlCities.forEach((city, index) => {
+                intlHtml += `
+                    <div class="col-md-3 col-sm-4 col-6 city-checkbox-item" data-region="international">
+                        <div class="form-check">
+                            <input class="form-check-input city-checkbox" type="checkbox"
+                                   value="${city.name}" id="intlCity${index}" data-region="international" data-max="${city.max}">
+                            <label class="form-check-label small" for="intlCity${index}">
+                                ${city.name} <small class="text-muted">(${city.country})</small>
+                            </label>
+                        </div>
+                    </div>`;
+            });
+            $('#intlCitiesCheckboxes').html(intlHtml);
+        }
+        populateCityCheckboxes();
+
+        // Update selected count
+        function updateSelectedCityCount() {
+            const count = $('.city-checkbox:checked').length;
+            $('#selectedCityCount').text(count);
+            $('#crawlSelectedCitiesBtn').prop('disabled', count === 0);
+        }
+
+        // Checkbox change event
+        $(document).on('change', '.city-checkbox', updateSelectedCityCount);
+
+        // Select All button
+        $('#selectAllCitiesBtn').on('click', function() {
+            const regionFilter = $('#regionFilter').val();
+            const searchTerm = $('#citySearchInput').val().toLowerCase();
+
+            $('.city-checkbox-item').each(function() {
+                const $item = $(this);
+                const $checkbox = $item.find('.city-checkbox');
+                const region = $item.data('region');
+                const isVisible = $item.is(':visible');
+
+                if (isVisible && (regionFilter === 'all' || regionFilter === region)) {
+                    $checkbox.prop('checked', true);
+                }
+            });
+            updateSelectedCityCount();
+        });
+
+        // Deselect All button
+        $('#deselectAllCitiesBtn').on('click', function() {
+            $('.city-checkbox').prop('checked', false);
+            updateSelectedCityCount();
+        });
+
+        // Region filter
+        $('#regionFilter').on('change', function() {
+            const region = $(this).val();
+            $('.city-checkbox-item').each(function() {
+                const $item = $(this);
+                const itemRegion = $item.data('region');
+                if (region === 'all' || region === itemRegion) {
+                    $item.show();
+                } else {
+                    $item.hide();
+                }
+            });
+        });
+
+        // Search filter
+        $('#citySearchInput').on('input', function() {
+            const searchTerm = $(this).val().toLowerCase();
+            const region = $('#regionFilter').val();
+
+            $('.city-checkbox-item').each(function() {
+                const $item = $(this);
+                const itemRegion = $item.data('region');
+                const cityName = $item.find('label').text().toLowerCase();
+
+                const matchesRegion = region === 'all' || region === itemRegion;
+                const matchesSearch = !searchTerm || cityName.includes(searchTerm);
+
+                if (matchesRegion && matchesSearch) {
+                    $item.show();
+                } else {
+                    $item.hide();
+                }
+            });
+        });
+
+        // Crawl selected cities button
+        $('#crawlSelectedCitiesBtn').on('click', async function() {
+            const selectedCities = [];
+            $('.city-checkbox:checked').each(function() {
+                selectedCities.push($(this).val());
+            });
+
+            if (selectedCities.length === 0) {
+                alert('Please select at least one city.');
+                return;
+            }
+
+            if (!confirm(`Crawl ${selectedCities.length} selected city/cities?\n\nThis will crawl them sequentially with delays to avoid being blocked.\n\nContinue?`)) {
+                return;
+            }
+
+            await startBatchCrawl(selectedCities);
+        });
 
         // Crawl All US Cities
         $('#crawlAllUSBtn').on('click', async function() {
@@ -607,11 +939,15 @@
         });
 
         $('#clearAllBtn').on('click', function() {
-            if (!confirm('⚠️ WARNING: This will delete ALL cafe data and related records (reviews, photos, events, etc.) from the database.\n\nAre you absolutely sure you want to continue?')) {
+            if (!confirm('⚠️ WARNING: This will delete ALL cafe data and related records (reviews, photos, events, etc.) from the database.\n\nBoard games whitelist will be PRESERVED by default.\n\nAre you absolutely sure you want to continue?')) {
                 return;
             }
 
-            if (!confirm('This action CANNOT be undone. All data will be permanently deleted.\n\nClick OK to proceed with deletion.')) {
+            // Ask about board games
+            const deleteBoardGames = confirm('Do you also want to DELETE all board games from the whitelist?\n\nClick OK to DELETE board games\nClick Cancel to PRESERVE board games (recommended)');
+            const preserveBoardGames = !deleteBoardGames;
+
+            if (!confirm(`This action CANNOT be undone.\n\nBoard games will be: ${preserveBoardGames ? 'PRESERVED' : 'DELETED'}\n\nClick OK to proceed with deletion.`)) {
                 return;
             }
 
@@ -620,12 +956,14 @@
             $.ajax({
                 url: '/Test/ClearAllData',
                 type: 'POST',
+                data: { preserveBoardGames: preserveBoardGames },
                 success: function(response) {
                     $('#clearAllBtn').html('<i class="bi bi-trash"></i> Clear All Data').prop('disabled', false);
 
                     if (response.success) {
                         let html = '<div class="alert alert-success">';
                         html += '<h5>Data Cleared Successfully!</h5>';
+                        html += '<p>' + response.message + '</p>';
                         html += '<strong>Deleted:</strong><br>';
                         html += 'Cafes: ' + response.deleted.cafes + '<br>';
                         html += 'Reviews: ' + response.deleted.reviews + '<br>';
@@ -633,11 +971,18 @@
                         html += 'Events: ' + response.deleted.events + '<br>';
                         html += 'Cafe-Games: ' + response.deleted.cafeGames + '<br>';
                         html += 'Premium Listings: ' + response.deleted.premiumListings + '<br>';
-                        html += 'Image Files: ' + response.deleted.imageFiles;
+                        html += 'Board Games: ' + response.deleted.boardGames + '<br>';
+                        html += 'Image Files: ' + response.deleted.imageFiles + '<br>';
+                        if (response.boardGamesPreserved > 0) {
+                            html += '<br><strong class="text-success">Board Games Preserved: ' + response.boardGamesPreserved + '</strong>';
+                        }
                         html += '</div>';
 
                         $('#resultsContent').html(html);
                         $('#results').show();
+
+                        // Refresh board games count
+                        loadBoardGamesCount();
                     } else {
                         alert('Error: ' + response.message);
                     }

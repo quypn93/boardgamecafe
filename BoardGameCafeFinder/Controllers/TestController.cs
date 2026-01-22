@@ -801,7 +801,7 @@ namespace BoardGameCafeFinder.Controllers
         /// </summary>
         [Route("ClearAllData")]
         [HttpPost]
-        public async Task<IActionResult> ClearAllData()
+        public async Task<IActionResult> ClearAllData(bool preserveBoardGames = true)
         {
             try
             {
@@ -812,6 +812,7 @@ namespace BoardGameCafeFinder.Controllers
                 var eventCount = await _context.Events.CountAsync();
                 var cafeGameCount = await _context.CafeGames.CountAsync();
                 var premiumListingCount = await _context.PremiumListings.CountAsync();
+                var boardGameCount = await _context.BoardGames.CountAsync();
 
                 // Delete in order (related tables first, then Cafes)
                 // Due to CASCADE delete, we only need to delete Cafes
@@ -824,6 +825,14 @@ namespace BoardGameCafeFinder.Controllers
                 _context.CafeGames.RemoveRange(_context.CafeGames);
                 _context.PremiumListings.RemoveRange(_context.PremiumListings);
                 _context.Cafes.RemoveRange(_context.Cafes);
+
+                // Optionally delete BoardGames (default: preserve them for whitelist matching)
+                int boardGamesDeleted = 0;
+                if (!preserveBoardGames)
+                {
+                    _context.BoardGames.RemoveRange(_context.BoardGames);
+                    boardGamesDeleted = boardGameCount;
+                }
 
                 await _context.SaveChangesAsync();
 
@@ -848,23 +857,27 @@ namespace BoardGameCafeFinder.Controllers
                     _logger.LogInformation("Deleted {Count} image files from {Path}", imagesDeleted, cafesImagePath);
                 }
 
-                _logger.LogInformation("Cleared all data: {CafeCount} cafes, {ReviewCount} reviews, {PhotoCount} photos, {EventCount} events, {CafeGameCount} cafe-games, {PremiumListingCount} premium listings, {ImagesDeleted} image files",
-                    cafeCount, reviewCount, photoCount, eventCount, cafeGameCount, premiumListingCount, imagesDeleted);
+                _logger.LogInformation("Cleared all data: {CafeCount} cafes, {ReviewCount} reviews, {PhotoCount} photos, {EventCount} events, {CafeGameCount} cafe-games, {PremiumListingCount} premium listings, {BoardGamesDeleted} board games, {ImagesDeleted} image files (preserveBoardGames: {PreserveBoardGames})",
+                    cafeCount, reviewCount, photoCount, eventCount, cafeGameCount, premiumListingCount, boardGamesDeleted, imagesDeleted, preserveBoardGames);
 
                 return Json(new
                 {
-                    Success = true,
-                    Message = "All data cleared successfully",
-                    Deleted = new
+                    success = true,
+                    message = preserveBoardGames
+                        ? $"All cafe data cleared. Board games preserved ({boardGameCount} games in whitelist)."
+                        : "All data cleared including board games.",
+                    deleted = new
                     {
-                        Cafes = cafeCount,
-                        Reviews = reviewCount,
-                        Photos = photoCount,
-                        Events = eventCount,
-                        CafeGames = cafeGameCount,
-                        PremiumListings = premiumListingCount,
-                        ImageFiles = imagesDeleted
-                    }
+                        cafes = cafeCount,
+                        reviews = reviewCount,
+                        photos = photoCount,
+                        events = eventCount,
+                        cafeGames = cafeGameCount,
+                        premiumListings = premiumListingCount,
+                        boardGames = boardGamesDeleted,
+                        imageFiles = imagesDeleted
+                    },
+                    boardGamesPreserved = preserveBoardGames ? boardGameCount : 0
                 });
             }
             catch (Exception ex)
@@ -872,10 +885,66 @@ namespace BoardGameCafeFinder.Controllers
                 _logger.LogError(ex, "Error clearing all data");
                 return Json(new
                 {
-                    Success = false,
-                    Message = $"Error: {ex.Message}"
+                    success = false,
+                    message = $"Error: {ex.Message}"
                 });
             }
+        }
+
+        /// <summary>
+        /// POST: /Test/SeedBoardGames
+        /// Seed board games from BGG for whitelist matching
+        /// </summary>
+        [Route("SeedBoardGames")]
+        [HttpPost]
+        public async Task<IActionResult> SeedBoardGames(int count = 200)
+        {
+            try
+            {
+                var existingCount = await _context.BoardGames.CountAsync();
+                _logger.LogInformation("Starting board game seeding. Existing: {Existing}, Target: {Target}", existingCount, count);
+
+                var added = await _bggXmlApiService.SeedBoardGamesFromBggAsync(count);
+
+                var totalCount = await _context.BoardGames.CountAsync();
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Board game seeding completed. Added {added} new games.",
+                    existingBefore = existingCount,
+                    added = added,
+                    totalNow = totalCount
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error seeding board games");
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
+        /// GET: /Test/BoardGamesCount
+        /// Get current board games count in database
+        /// </summary>
+        [Route("BoardGamesCount")]
+        [HttpGet]
+        public async Task<IActionResult> BoardGamesCount()
+        {
+            var total = await _context.BoardGames.CountAsync();
+            var withBggId = await _context.BoardGames.CountAsync(g => g.BGGId.HasValue);
+
+            return Json(new
+            {
+                total = total,
+                withBggId = withBggId,
+                withoutBggId = total - withBggId
+            });
         }
 
         private async Task<string> GenerateUniqueSlugAsync(string name, HashSet<string>? usedSlugs = null)

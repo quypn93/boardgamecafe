@@ -223,54 +223,236 @@ namespace BoardGameCafeFinder.Services
             var seenPlaceIds = new HashSet<string>();
             var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var query in queries)
+            // Reuse single browser instance across all queries to avoid repeated startup overhead
+            // and reduce chance of being blocked by Google
+            IPlaywright? playwright = null;
+            IBrowser? browser = null;
+
+            try
             {
-                try
+                playwright = await Playwright.CreateAsync();
+                browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
                 {
-                    _logger.LogInformation("Crawling with query: '{Query}' for location: {Location}", query, location);
+                    Headless = true,
+                    Timeout = 60000 // 60 second timeout for browser launch
+                });
 
-                    var results = await CrawlWithCustomQueryAsync(location, query, maxResultsPerQuery);
+                _logger.LogInformation("Browser started for multi-query crawl: {Location} with {QueryCount} queries",
+                    location, queries.Length);
 
-                    foreach (var cafe in results)
+                foreach (var query in queries)
+                {
+                    try
                     {
-                        // Deduplicate by GooglePlaceId or Name
-                        var placeId = cafe.GooglePlaceId ?? "";
-                        var name = cafe.Name ?? "";
+                        _logger.LogInformation("Crawling with query: '{Query}' for location: {Location}", query, location);
 
-                        if (!string.IsNullOrEmpty(placeId) && seenPlaceIds.Contains(placeId))
+                        // Use shared browser instance
+                        var results = await CrawlWithCustomQueryUsingBrowserAsync(browser, location, query, maxResultsPerQuery);
+
+                        foreach (var cafe in results)
                         {
-                            _logger.LogDebug("Skipping duplicate cafe by PlaceId: {Name}", name);
-                            continue;
+                            // Deduplicate by GooglePlaceId or Name
+                            var placeId = cafe.GooglePlaceId ?? "";
+                            var name = cafe.Name ?? "";
+
+                            if (!string.IsNullOrEmpty(placeId) && seenPlaceIds.Contains(placeId))
+                            {
+                                _logger.LogDebug("Skipping duplicate cafe by PlaceId: {Name}", name);
+                                continue;
+                            }
+
+                            if (!string.IsNullOrEmpty(name) && seenNames.Contains(name))
+                            {
+                                _logger.LogDebug("Skipping duplicate cafe by Name: {Name}", name);
+                                continue;
+                            }
+
+                            if (!string.IsNullOrEmpty(placeId))
+                                seenPlaceIds.Add(placeId);
+                            if (!string.IsNullOrEmpty(name))
+                                seenNames.Add(name);
+
+                            allResults.Add(cafe);
                         }
 
-                        if (!string.IsNullOrEmpty(name) && seenNames.Contains(name))
-                        {
-                            _logger.LogDebug("Skipping duplicate cafe by Name: {Name}", name);
-                            continue;
-                        }
+                        _logger.LogInformation("Query '{Query}' found {Count} unique cafes (total now: {Total})",
+                            query, results.Count, allResults.Count);
 
-                        if (!string.IsNullOrEmpty(placeId))
-                            seenPlaceIds.Add(placeId);
-                        if (!string.IsNullOrEmpty(name))
-                            seenNames.Add(name);
-
-                        allResults.Add(cafe);
+                        // Delay between queries to avoid rate limiting
+                        await Task.Delay(2000);
                     }
-
-                    _logger.LogInformation("Query '{Query}' found {Count} unique cafes (total now: {Total})",
-                        query, results.Count, allResults.Count);
-
-                    // Small delay between queries
-                    await Task.Delay(3000);
+                    catch (TimeoutException tex)
+                    {
+                        _logger.LogWarning("Timeout with query '{Query}' for {Location}: {Message}", query, location, tex.Message);
+                        // Continue to next query instead of failing completely
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Error with query '{Query}' for {Location}", query, location);
+                        // Continue to next query
+                    }
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fatal error in multi-query crawl for {Location}", location);
+            }
+            finally
+            {
+                // Cleanup
+                if (browser != null)
                 {
-                    _logger.LogWarning(ex, "Error with query '{Query}' for {Location}", query, location);
+                    try { await browser.CloseAsync(); } catch { }
                 }
+                playwright?.Dispose();
             }
 
             _logger.LogInformation("Total unique cafes found for {Location}: {Count}", location, allResults.Count);
             return allResults;
+        }
+
+        /// <summary>
+        /// Crawl using an existing browser instance (for multi-query efficiency)
+        /// </summary>
+        private async Task<List<CrawledCafeData>> CrawlWithCustomQueryUsingBrowserAsync(IBrowser browser, string location, string searchTerm, int maxResults)
+        {
+            var results = new List<CrawledCafeData>();
+            IBrowserContext? context = null;
+            IPage? page = null;
+
+            try
+            {
+                context = await browser.NewContextAsync(new BrowserNewContextOptions
+                {
+                    UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    ViewportSize = new ViewportSize { Width = 1920, Height = 1080 },
+                    Locale = "en-US"
+                });
+
+                // Set default timeout for all operations
+                context.SetDefaultTimeout(30000); // 30 seconds
+
+                page = await context.NewPageAsync();
+
+                var searchQuery = $"{searchTerm} {location}";
+                var searchUrl = $"https://www.google.com/maps/search/{Uri.EscapeDataString(searchQuery)}";
+
+                _logger.LogDebug("Navigating to: {Url}", searchUrl);
+                await page.GotoAsync(searchUrl, new PageGotoOptions
+                {
+                    WaitUntil = WaitUntilState.DOMContentLoaded,
+                    Timeout = 45000 // 45 second timeout for page load
+                });
+
+                await page.WaitForTimeoutAsync(3000);
+
+                // Check if single result
+                var nameElement = page.Locator("h1.DUwDvf").First;
+                var feedLocator = page.Locator("div[role='feed']");
+
+                if (await nameElement.CountAsync() > 0 && await nameElement.IsVisibleAsync() && await feedLocator.CountAsync() == 0)
+                {
+                    var cafeData = await ExtractCafeDataAsync(page);
+                    if (cafeData != null && !string.IsNullOrEmpty(cafeData.Name))
+                    {
+                        results.Add(cafeData);
+                    }
+                    return results;
+                }
+
+                // Multiple results - iterate through list
+                var itemsSelector = "div[role='feed'] > div > div[jsaction]";
+
+                for (int i = 0; i < maxResults; i++)
+                {
+                    try
+                    {
+                        var itemLocator = page.Locator(itemsSelector).Nth(i);
+                        var retries = 0;
+                        while (await itemLocator.CountAsync() == 0 && retries < 3)
+                        {
+                            var feed = page.Locator("div[role='feed']");
+                            await feed.EvaluateAsync("el => el.scrollTop = el.scrollHeight");
+                            await page.WaitForTimeoutAsync(1500);
+                            retries++;
+                        }
+
+                        if (await itemLocator.CountAsync() == 0)
+                            break;
+
+                        try
+                        {
+                            await itemLocator.ScrollIntoViewIfNeededAsync();
+                        }
+                        catch
+                        {
+                            var feed = page.Locator("div[role='feed']");
+                            await feed.EvaluateAsync("el => el.scrollTop += 500");
+                        }
+
+                        await itemLocator.ClickAsync(new LocatorClickOptions { Timeout = 10000 });
+                        await page.WaitForTimeoutAsync(1500);
+
+                        var cafeData = await ExtractCafeDataAsync(page);
+
+                        if (cafeData != null && !string.IsNullOrEmpty(cafeData.Name))
+                        {
+                            results.Add(cafeData);
+                        }
+
+                        var backToResults = page.Locator("button[aria-label='Back']").First;
+                        if (await backToResults.CountAsync() > 0 && await backToResults.IsVisibleAsync())
+                        {
+                            await backToResults.ClickAsync(new LocatorClickOptions { Timeout = 5000 });
+                        }
+                        else
+                        {
+                            await page.GoBackAsync(new PageGoBackOptions { Timeout = 10000 });
+                        }
+
+                        await page.WaitForTimeoutAsync(1000);
+                    }
+                    catch (TimeoutException)
+                    {
+                        _logger.LogDebug("Timeout extracting item {Index} for query '{Query}'", i, searchTerm);
+                        // Try to recover
+                        try
+                        {
+                            var backToResults = page.Locator("button[aria-label='Back']").First;
+                            if (await backToResults.CountAsync() > 0)
+                            {
+                                await backToResults.ClickAsync(new LocatorClickOptions { Timeout = 5000 });
+                                await page.WaitForTimeoutAsync(1000);
+                            }
+                        }
+                        catch { }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogDebug("Error extracting item {Index}: {Message}", i, ex.Message);
+                        try
+                        {
+                            var backToResults = page.Locator("button[aria-label='Back']").First;
+                            if (await backToResults.CountAsync() > 0)
+                            {
+                                await backToResults.ClickAsync(new LocatorClickOptions { Timeout = 5000 });
+                                await page.WaitForTimeoutAsync(1000);
+                            }
+                        }
+                        catch { }
+                    }
+                }
+            }
+            finally
+            {
+                // Always close context (but not browser - it's shared)
+                if (context != null)
+                {
+                    try { await context.CloseAsync(); } catch { }
+                }
+            }
+
+            return results;
         }
 
         private async Task<List<CrawledCafeData>> CrawlWithCustomQueryAsync(string location, string searchTerm, int maxResults)

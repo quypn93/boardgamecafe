@@ -15,6 +15,8 @@ namespace BoardGameCafeFinder.Services
         Task<List<string>> FindPossibleBggUsernamesAsync(string cafeName);
         Task<BggSyncResult> AutoDiscoverAndSyncAsync(int cafeId);
         Task<List<BggBatchSyncResult>> SyncAllCafesWithAutoDiscoverAsync();
+        Task<List<BggGameInfo>> GetHotGamesAsync();
+        Task<int> SeedBoardGamesFromBggAsync(int count = 500);
     }
 
     public class BggGameInfo
@@ -553,6 +555,468 @@ namespace BoardGameCafeFinder.Services
             }
 
             return results;
+        }
+
+        /// <summary>
+        /// Get multiple game details from BGG in a single API call (batch request)
+        /// BGG API supports up to ~20 IDs per request
+        /// </summary>
+        public async Task<List<BggGameInfo>> GetMultipleGameDetailsAsync(IEnumerable<int> bggIds)
+        {
+            var games = new List<BggGameInfo>();
+            var idList = bggIds.ToList();
+
+            if (idList.Count == 0)
+                return games;
+
+            try
+            {
+                // BGG API: /thing?id=1,2,3,4,5&stats=1
+                var idsParam = string.Join(",", idList);
+                var url = $"{BggApiBaseUrl}/thing?id={idsParam}&stats=1";
+
+                _logger.LogDebug("Fetching {Count} games from BGG: {Url}", idList.Count, url);
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning("BGG API returned {StatusCode} for batch request", response.StatusCode);
+                    return games;
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                var doc = XDocument.Parse(content);
+
+                var items = doc.Descendants("item");
+                foreach (var item in items)
+                {
+                    var idAttr = item.Attribute("id")?.Value;
+                    if (!int.TryParse(idAttr, out var bggId)) continue;
+
+                    var gameInfo = new BggGameInfo
+                    {
+                        BggId = bggId,
+                        Name = item.Elements("name").FirstOrDefault(n => n.Attribute("type")?.Value == "primary")?.Attribute("value")?.Value ?? "Unknown",
+                        ThumbnailUrl = item.Element("thumbnail")?.Value,
+                        ImageUrl = item.Element("image")?.Value,
+                        YearPublished = int.TryParse(item.Element("yearpublished")?.Attribute("value")?.Value, out var year) ? year : null,
+                        MinPlayers = int.TryParse(item.Element("minplayers")?.Attribute("value")?.Value, out var min) ? min : null,
+                        MaxPlayers = int.TryParse(item.Element("maxplayers")?.Attribute("value")?.Value, out var max) ? max : null,
+                        PlayingTime = int.TryParse(item.Element("playingtime")?.Attribute("value")?.Value, out var time) ? time : null,
+                        Description = item.Element("description")?.Value
+                    };
+
+                    // Get rating
+                    var rating = item.Element("statistics")?.Element("ratings")?.Element("average")?.Attribute("value")?.Value;
+                    if (decimal.TryParse(rating, out var ratingValue))
+                    {
+                        gameInfo.Rating = ratingValue;
+                    }
+
+                    games.Add(gameInfo);
+                }
+
+                _logger.LogDebug("Successfully fetched {Count} games from BGG batch request", games.Count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching batch game details from BGG");
+            }
+
+            return games;
+        }
+
+        /// <summary>
+        /// Get hot/trending games from BGG
+        /// </summary>
+        public async Task<List<BggGameInfo>> GetHotGamesAsync()
+        {
+            var games = new List<BggGameInfo>();
+
+            try
+            {
+                var url = $"{BggApiBaseUrl}/hot?type=boardgame";
+                var response = await _httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning("BGG API hot games returned {StatusCode}", response.StatusCode);
+                    return games;
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                var doc = XDocument.Parse(content);
+
+                var items = doc.Descendants("item");
+                foreach (var item in items)
+                {
+                    var id = item.Attribute("id")?.Value;
+                    if (!int.TryParse(id, out var bggId)) continue;
+
+                    var gameInfo = new BggGameInfo
+                    {
+                        BggId = bggId,
+                        Name = item.Element("name")?.Attribute("value")?.Value ?? "Unknown",
+                        ThumbnailUrl = item.Element("thumbnail")?.Attribute("value")?.Value,
+                        YearPublished = int.TryParse(item.Element("yearpublished")?.Attribute("value")?.Value, out var year) ? year : null
+                    };
+
+                    games.Add(gameInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching BGG hot games");
+            }
+
+            return games;
+        }
+
+        /// <summary>
+        /// Seed board games database from BGG top games
+        /// Uses a curated list of popular board game BGG IDs plus hot games
+        /// </summary>
+        public async Task<int> SeedBoardGamesFromBggAsync(int count = 500)
+        {
+            int added = 0;
+
+            // Curated list of popular board game BGG IDs (top ranked games on BGG)
+            var popularBggIds = new List<int>
+            {
+                // Top 100 ranked games (approximate)
+                174430, // Gloomhaven
+                161936, // Pandemic Legacy: Season 1
+                224517, // Brass: Birmingham
+                167791, // Terraforming Mars
+                187645, // Star Wars: Rebellion
+                182028, // Through the Ages: A New Story of Civilization
+                169786, // Scythe
+                173346, // 7 Wonders Duel
+                120677, // Terra Mystica
+                193738, // Great Western Trail
+                28720,  // Brass: Lancashire
+                162886, // Spirit Island
+                205637, // Arkham Horror: The Card Game
+                233078, // Twilight Imperium (Fourth Edition)
+                12333,  // Twilight Struggle
+                84876,  // The Castles of Burgundy
+                31260,  // Agricola
+                3076,   // Puerto Rico
+                822,    // Carcassonne
+                13,     // Catan
+                36218,  // Dominion
+                68448,  // 7 Wonders
+                9209,   // Ticket to Ride
+                30549,  // Pandemic
+                2651,   // Power Grid
+                521,    // Crokinole
+                39463,  // Cosmic Encounter
+                63888,  // Innovation
+                70323,  // King of Tokyo
+                72125,  // Eclipse
+                102794, // Caverna: The Cave Farmers
+                124742, // Android: Netrunner
+                110327, // Lords of Waterdeep
+                148228, // Splendor
+                150376, // Dead of Winter
+                164153, // Star Wars: Imperial Assault
+                155821, // Inis
+                157354, // Five Tribes
+                171623, // The Voyages of Marco Polo
+                175914, // Food Chain Magnate
+                180263, // The 7th Continent
+                183394, // Viticulture Essential Edition
+                192135, // Too Many Bones
+                194594, // Concordia Venus
+                199792, // Everdell
+                220308, // Gaia Project
+                224037, // Architects of the West Kingdom
+                230802, // Azul
+                233867, // Concordia
+                237182, // Root
+                244521, // The Quacks of Quedlinburg
+                246900, // Eclipse: Second Dawn for the Galaxy
+                251247, // Barrage
+                256916, // Pax Pamir (Second Edition)
+                266192, // Wingspan
+                271320, // It's a Wonderful World
+                276025, // Maracaibo
+                283155, // Calico
+                284083, // The Crew: The Quest for Planet Nine
+                291457, // Gloomhaven: Jaws of the Lion
+                295770, // Paleo
+                312484, // Lost Ruins of Arnak
+                316554, // Dune: Imperium
+                324856, // The Search for Planet X
+                329839, // So Clover!
+                342942, // Ark Nova
+                359871, // Earth
+                366013, // Heat: Pedal to the Metal
+
+                // Classic/Popular Games
+                2453,   // Blokus
+                9217,   // Saboteur
+                14996,  // Ticket to Ride: Europe
+                21790,  // Thurn and Taxis
+                27225,  // Battlestar Galactica
+                34635,  // Stone Age
+                35497,  // Dixit
+                37111,  // Battlestar Galactica
+                40692,  // Small World
+                41114,  // The Resistance
+                43015,  // Forbidden Island
+                62219,  // Dominant Species
+                66356,  // Quarriors!
+                72991,  // Mage Knight Board Game
+                96848,  // Mage Wars Arena
+                98778,  // Hanabi
+                102548, // Coup
+                113924, // Codenames
+                126163, // Tzolk'in: The Mayan Calendar
+                131835, // Forbidden Desert
+                144733, // Russian Railroads
+                161533, // Lisboa
+                164928, // Orléans
+                167355, // Nemesis
+                170042, // Raiders of the North Sea
+                172818, // Clank!
+                175640, // Keyflower
+                177736, // A Feast for Odin
+                178900, // Codenames: Duet
+                182874, // Grand Austria Hotel
+                184267, // On Mars
+                185343, // Anachrony
+                191189, // Aeon's End
+                199561, // Sagrada
+                203993, // Lorenzo il Magnifico
+                209010, // Mechs vs. Minions
+                215312, // Clank! In! Space!
+                218603, // Photosynthesis
+                220877, // Coimbra
+                225694, // Decrypto
+                226255, // The Mind
+                228341, // Charterstone
+                229853, // Teotihuacan
+                230085, // Champion of the Wild
+                231398, // Welcome To...
+                233371, // Pandemic Legacy: Season 2
+                236457, // Architects of the West Kingdom
+                239188, // Roll Player
+                240980, // Blood Rage
+                244522, // Underwater Cities
+                245638, // Tiny Towns
+                247367, // Res Arcana
+                250458, // Clans of Caledonia
+                253344, // Taverns of Tiefenthal
+                254640, // Just One
+                260605, // Wingspan
+                262211, // Era: Medieval Age
+                262712, // Res Arcana
+                264220, // Tainted Grail
+                266507, // Cartographers
+                269207, // Tapestry
+                271896, // Parks
+                276498, // On Tour
+                281946, // Fort
+                285774, // Marvel Champions
+                286096, // Tapestry
+                291859, // Roll Camera!
+                295947, // Cascadia
+                300531, // Cubitos
+                302260, // Carnegie
+                306735, // Crystal Palace
+                308765, // Furnace
+                312959, // Marvel United
+                314491, // Mech. vs. Minions
+                317985, // Beyond the Sun
+                320725, // Forgotten Waters
+                325494, // The Isle of Cats
+                327831, // Dorfromantik
+                328479, // My City
+                329784, // Living Forest
+                330592, // Stardew Valley
+                332290, // Radlands
+                336986, // Flamecraft
+                342905, // Verdant
+                347048, // Turing Machine
+                354568, // Revive
+                356123, // Skymines
+                359438, // Oathsworn
+                362452, // Weather Machine
+                366161, // Splendor Duel
+                369898, // Voidfall
+                372321, // Hegemony
+                374173, // Lacrimosa
+                381898, // Boonlake
+
+                // Party & Family Games
+                111,    // Scrabble
+                171,    // Chess
+                1406,   // Monopoly
+                2083,   // Clue
+                2389,   // Backgammon
+                2397,   // Boggle
+                2453,   // Blokus
+                10630,  // Memoir '44
+                14105,  // Citadels
+                25669,  // Cube Quest
+                34219,  // Jamaica
+                38453,  // Space Alert
+                40628,  // Summoner Wars
+                40834,  // Dixit Odyssey
+                43443,  // Telestrations
+                54043,  // Cosmic Encounter
+                66589,  // Risk Legacy
+                68425,  // Escape: The Curse of the Temple
+                92828,  // Space Cadets
+                103343, // Tokaido
+                115703, // One Night Ultimate Werewolf
+                123260, // Camel Up
+                129622, // Love Letter
+                133848, // Sheriff of Nottingham
+                140620, // Time Stories
+                155426, // Broom Service
+                156129, // Deception: Murder in Hong Kong
+                161970, // Imhotep
+                163412, // Patchwork
+                176494, // Isle of Skye
+                178870, // Santorini
+                181304, // Mysterium
+                188920, // Captain Sonar
+                191004, // Jaipur
+                192291, // Sushi Go Party!
+                194655, // Santorini
+                203417, // Colt Express
+                206941, // Kingdomino
+                209418, // Ethnos
+                215311, // Century: Spice Road
+                217372, // Bunny Kingdom
+                221965, // Unstable Unicorns
+                225883, // Villainous
+                234691, // Between Two Castles of Mad King Ludwig
+                244711, // Brass: Birmingham
+                247030, // Crypt
+                250337, // Sagrada
+                253883, // Quacks of Quedlinburg
+                254928, // Chronicles of Crime
+                262543, // Blue Lagoon
+                263918, // Cryptid
+                266524, // PARKS
+                266830, // Carcassonne: Hunters and Gatherers
+                271896, // Parks
+                279537, // Oriflamme
+                280132, // Wavelength
+                283435, // Dog Park
+                295486, // My City
+                300877, // Dune Imperium
+                303954, // Scout
+                326494, // That's Pretty Clever
+            };
+
+            _logger.LogInformation("Starting board game seeding from BGG. Target: {Count} games", count);
+
+            // First, get hot games to include current trending games
+            var hotGames = await GetHotGamesAsync();
+            foreach (var hot in hotGames)
+            {
+                if (!popularBggIds.Contains(hot.BggId))
+                    popularBggIds.Add(hot.BggId);
+            }
+
+            // Get existing BGG IDs from database to skip
+            var existingBggIds = await _context.BoardGames
+                .Where(g => g.BGGId.HasValue)
+                .Select(g => g.BGGId!.Value)
+                .ToListAsync();
+            var existingBggIdSet = new HashSet<int>(existingBggIds);
+
+            // Filter out already existing games and take requested count
+            var idsToFetch = popularBggIds
+                .Where(id => !existingBggIdSet.Contains(id))
+                .Distinct()
+                .Take(count)
+                .ToList();
+
+            _logger.LogInformation("Found {Existing} existing games. Will fetch {ToFetch} new games from BGG",
+                existingBggIds.Count, idsToFetch.Count);
+
+            if (idsToFetch.Count == 0)
+            {
+                _logger.LogInformation("No new games to fetch - all games already exist in database");
+                return 0;
+            }
+
+            // Batch size for BGG API (recommended max ~20 per request)
+            const int batchSize = 20;
+            var batches = idsToFetch
+                .Select((id, index) => new { id, index })
+                .GroupBy(x => x.index / batchSize)
+                .Select(g => g.Select(x => x.id).ToList())
+                .ToList();
+
+            _logger.LogInformation("Fetching games in {BatchCount} batches of up to {BatchSize} games each",
+                batches.Count, batchSize);
+
+            int batchNumber = 0;
+            foreach (var batch in batches)
+            {
+                batchNumber++;
+                try
+                {
+                    _logger.LogDebug("Processing batch {Batch}/{Total} ({Count} games)",
+                        batchNumber, batches.Count, batch.Count);
+
+                    // Fetch multiple games in one API call
+                    var gamesInfo = await GetMultipleGameDetailsAsync(batch);
+
+                    foreach (var gameInfo in gamesInfo)
+                    {
+                        try
+                        {
+                            var boardGame = new BoardGame
+                            {
+                                Name = gameInfo.Name,
+                                BGGId = gameInfo.BggId,
+                                Description = gameInfo.Description?.Length > 4000
+                                    ? gameInfo.Description.Substring(0, 4000)
+                                    : gameInfo.Description,
+                                ImageUrl = gameInfo.ThumbnailUrl ?? gameInfo.ImageUrl,
+                                MinPlayers = gameInfo.MinPlayers,
+                                MaxPlayers = gameInfo.MaxPlayers,
+                                PlaytimeMinutes = gameInfo.PlayingTime,
+                                CreatedAt = DateTime.UtcNow
+                            };
+
+                            _context.BoardGames.Add(boardGame);
+                            added++;
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Error creating board game: {Name} (BGG ID: {BggId})",
+                                gameInfo.Name, gameInfo.BggId);
+                        }
+                    }
+
+                    // Save batch to database
+                    await _context.SaveChangesAsync();
+                    _logger.LogDebug("Saved batch {Batch}: {Count} games added", batchNumber, gamesInfo.Count);
+
+                    // Rate limiting between batches - be nice to BGG API
+                    if (batchNumber < batches.Count)
+                    {
+                        await Task.Delay(1000);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error processing batch {Batch}", batchNumber);
+                }
+            }
+
+            _logger.LogInformation("Board game seeding completed. Added {Count} games in {Batches} API calls (instead of {Individual} individual calls)",
+                added, batches.Count, idsToFetch.Count);
+            return added;
         }
     }
 }

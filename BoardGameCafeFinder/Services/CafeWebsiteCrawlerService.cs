@@ -1,4 +1,5 @@
-using BoardGameCafeFinder.Models.Domain;
+using BoardGameCafeFinder.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Playwright;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -35,11 +36,18 @@ namespace BoardGameCafeFinder.Services
     public class CafeWebsiteCrawlerService : ICafeWebsiteCrawlerService
     {
         private readonly ILogger<CafeWebsiteCrawlerService> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly IBggXmlApiService _bggApiService;
         private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
-        public CafeWebsiteCrawlerService(ILogger<CafeWebsiteCrawlerService> logger)
+        public CafeWebsiteCrawlerService(
+            ILogger<CafeWebsiteCrawlerService> logger,
+            ApplicationDbContext context,
+            IBggXmlApiService bggApiService)
         {
             _logger = logger;
+            _context = context;
+            _bggApiService = bggApiService;
         }
 
         public async Task<List<CrawledGameData>> CrawlCafeWebsiteForGamesAsync(string websiteUrl)
@@ -51,6 +59,19 @@ namespace BoardGameCafeFinder.Services
 
             try
             {
+                // Get known board game names from database (games with BGGId are verified board games)
+                var knownGames = await _context.BoardGames
+                    .Where(g => g.BGGId.HasValue)
+                    .Select(g => new { g.Name, g.BGGId })
+                    .ToListAsync();
+
+                // Create a dictionary for fast lookup (case-insensitive)
+                var knownGameDict = knownGames
+                    .GroupBy(g => g.Name.ToLowerInvariant())
+                    .ToDictionary(g => g.Key, g => g.First().BGGId);
+
+                _logger.LogInformation("Loaded {Count} known board games from database for matching", knownGameDict.Count);
+
                 using var playwright = await Playwright.CreateAsync();
                 await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
                 var page = await browser.NewPageAsync();
@@ -224,25 +245,74 @@ namespace BoardGameCafeFinder.Services
                             if (string.IsNullOrEmpty(item.Name))
                                 continue;
 
-                            // Skip if not a valid board game name
-                            if (!IsLikelyBoardGameName(item.Name))
+                            // Skip items without images - board games should have product images
+                            if (string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                _logger.LogDebug("Skipping '{Name}' - no image", item.Name);
                                 continue;
-
-                            var crawledData = new CrawledGameData
-                            {
-                                Name = item.Name,
-                                ImageUrl = item.ImageUrl,
-                                SourceUrl = item.SourceUrl
-                            };
-
-                            // Parse Price
-                            if (!string.IsNullOrEmpty(item.PriceStr))
-                            {
-                                if (decimal.TryParse(item.PriceStr, out decimal p))
-                                    crawledData.Price = p;
                             }
 
-                            results.Add(crawledData);
+                            var itemNameLower = item.Name.Trim().ToLowerInvariant();
+
+                            // Strategy 1: Check if exact match exists in known games database
+                            if (knownGameDict.TryGetValue(itemNameLower, out var bggId))
+                            {
+                                _logger.LogDebug("Matched '{Name}' with known game (BGGId: {BggId})", item.Name, bggId);
+
+                                var crawledData = new CrawledGameData
+                                {
+                                    Name = item.Name.Trim(),
+                                    ImageUrl = item.ImageUrl,
+                                    SourceUrl = item.SourceUrl,
+                                    BggId = bggId
+                                };
+
+                                // Parse Price
+                                if (!string.IsNullOrEmpty(item.PriceStr) && decimal.TryParse(item.PriceStr, out decimal p))
+                                    crawledData.Price = p;
+
+                                results.Add(crawledData);
+                                continue;
+                            }
+
+                            // Strategy 2: Try to search on BGG API for unknown names
+                            // Only search if it passes basic validation (not food/drink, UI text, etc.)
+                            if (IsLikelyBoardGameName(item.Name))
+                            {
+                                try
+                                {
+                                    var searchResults = await _bggApiService.SearchGamesAsync(item.Name.Trim());
+                                    var match = searchResults.FirstOrDefault(r =>
+                                        r.Name.Equals(item.Name.Trim(), StringComparison.OrdinalIgnoreCase));
+
+                                    if (match != null)
+                                    {
+                                        _logger.LogDebug("Found '{Name}' on BGG (BGGId: {BggId})", item.Name, match.BggId);
+
+                                        var crawledData = new CrawledGameData
+                                        {
+                                            Name = item.Name.Trim(),
+                                            ImageUrl = item.ImageUrl,
+                                            SourceUrl = item.SourceUrl,
+                                            BggId = match.BggId
+                                        };
+
+                                        // Parse Price
+                                        if (!string.IsNullOrEmpty(item.PriceStr) && decimal.TryParse(item.PriceStr, out decimal p))
+                                            crawledData.Price = p;
+
+                                        results.Add(crawledData);
+                                    }
+                                    else
+                                    {
+                                        _logger.LogDebug("'{Name}' not found on BGG - skipping", item.Name);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogWarning(ex, "Error searching BGG for '{Name}'", item.Name);
+                                }
+                            }
                         }
                     }
                 }
@@ -300,7 +370,20 @@ namespace BoardGameCafeFinder.Services
                 "chính sách", "điều khoản", "bảo mật", "hỗ trợ", "câu hỏi",
                 "giá", "khuyến mãi", "giảm giá", "freeship", "miễn phí",
                 "mua ngay", "thêm vào giỏ", "đặt hàng", "mua hàng",
-                "bảng giá", "menu đồ uống", "thực đơn"
+                "bảng giá", "menu đồ uống", "thực đơn",
+                // Food & Drinks - English
+                "coffee", "tea", "latte", "cappuccino", "espresso", "americano", "mocha",
+                "smoothie", "juice", "soda", "water", "beer", "wine", "cocktail",
+                "sandwich", "burger", "pizza", "pasta", "salad", "soup", "fries",
+                "cake", "cookie", "brownie", "muffin", "croissant", "donut", "ice cream",
+                "breakfast", "lunch", "dinner", "brunch", "appetizer", "entree", "dessert",
+                // Food & Drinks - Vietnamese
+                "cà phê", "cafe", "trà", "trà sữa", "sinh tố", "nước ép", "nước ngọt",
+                "bánh mì", "bánh ngọt", "bánh kem", "kem", "bánh quy", "bánh flan",
+                "phở", "bún", "mì", "cơm", "xôi", "chè", "sữa chua",
+                "nước suối", "nước khoáng", "bia", "rượu", "cocktail",
+                "đồ ăn", "đồ uống", "thức ăn", "thức uống", "món ăn", "món uống",
+                "topping", "size", "đá", "nóng", "lạnh", "ít đường", "không đường"
             };
 
             if (excludeExact.Contains(trimmed))
@@ -332,7 +415,18 @@ namespace BoardGameCafeFinder.Services
                 // Website section patterns
                 "our location", "find us", "get directions", "hours of operation",
                 "opening hours", "business hours", "we are open", "we are closed",
-                "reservation", "book a table", "book now", "make a reservation"
+                "reservation", "book a table", "book now", "make a reservation",
+                // Food & Drink patterns - English
+                "iced coffee", "hot coffee", "cold brew", "matcha latte", "green tea",
+                "french fries", "onion rings", "chicken wings", "fish and chips",
+                "grilled cheese", "club sandwich", "caesar salad", "tomato soup",
+                "chocolate cake", "cheesecake", "apple pie", "vanilla ice",
+                // Food & Drink patterns - Vietnamese
+                "trà đào", "trà vải", "trà chanh", "trà xanh", "hồng trà",
+                "cà phê sữa", "cà phê đen", "bạc xỉu", "cà phê đá",
+                "bánh tráng", "bánh cuốn", "bánh bao", "bánh xèo",
+                "gà rán", "cánh gà", "khoai tây chiên", "xúc xích",
+                "combo ", " combo", "set ", " set", "phần ", " phần"
             };
 
             var lowerName = trimmed.ToLowerInvariant();

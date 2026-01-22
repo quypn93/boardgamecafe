@@ -7,7 +7,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-2">
+        <a href="/Test/Cafes" class="btn btn-outline-secondary btn-sm mb-2">
             <i class="bi bi-arrow-left me-1"></i> Back to List
         </a>
         <h2><i class="bi bi-controller me-2"></i>@Model.Name - Board Games</h2>
@@ -19,9 +19,13 @@
             }
         </p>
     </div>
-    <div>
+    <div class="d-flex gap-2">
         @if (games.Any())
         {
+            <button type="button" class="btn btn-warning" id="deleteSelectedBtn" style="display: none;"
+                    onclick="deleteSelectedGames()">
+                <i class="bi bi-trash me-1"></i> Delete Selected (<span id="selectedCount">0</span>)
+            </button>
             <form asp-action="DeleteAllCafeGames" method="post" class="d-inline"
                   onsubmit="return confirm('Delete ALL @(games.Count) games from this cafe? This cannot be undone.');">
                 <input type="hidden" name="cafeId" value="@Model.CafeId" />
@@ -73,6 +77,9 @@
                 <table class="table table-hover align-middle mb-0" id="gamesTable">
                     <thead class="table-light">
                         <tr>
+                            <th style="width: 40px;">
+                                <input type="checkbox" class="form-check-input" id="selectAllCheckbox" title="Select All">
+                            </th>
                             <th style="width: 60px;"></th>
                             <th>Game Name</th>
                             <th>BGG ID</th>
@@ -88,6 +95,10 @@
                             var game = cg.Game;
                             if (game == null) continue;
                             <tr class="game-row">
+                                <td>
+                                    <input type="checkbox" class="form-check-input game-checkbox"
+                                           value="@game.GameId" data-game-name="@game.Name">
+                                </td>
                                 <td>
                                     @if (!string.IsNullOrEmpty(game.ImageUrl))
                                     {
@@ -197,5 +208,85 @@
             }
         });
     });
+
+    // Select All checkbox
+    document.getElementById('selectAllCheckbox')?.addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.game-checkbox');
+        checkboxes.forEach(cb => {
+            // Only toggle visible checkboxes
+            const row = cb.closest('.game-row');
+            if (row && row.style.display !== 'none') {
+                cb.checked = this.checked;
+            }
+        });
+        updateSelectedCount();
+    });
+
+    // Individual checkbox change
+    document.querySelectorAll('.game-checkbox').forEach(cb => {
+        cb.addEventListener('change', function() {
+            updateSelectedCount();
+            // Update select all checkbox state
+            const allCheckboxes = document.querySelectorAll('.game-checkbox');
+            const checkedCount = document.querySelectorAll('.game-checkbox:checked').length;
+            const selectAll = document.getElementById('selectAllCheckbox');
+            if (selectAll) {
+                selectAll.checked = checkedCount === allCheckboxes.length;
+                selectAll.indeterminate = checkedCount > 0 && checkedCount < allCheckboxes.length;
+            }
+        });
+    });
+
+    function updateSelectedCount() {
+        const count = document.querySelectorAll('.game-checkbox:checked').length;
+        const btn = document.getElementById('deleteSelectedBtn');
+        const countSpan = document.getElementById('selectedCount');
+        if (btn && countSpan) {
+            countSpan.textContent = count;
+            btn.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    function deleteSelectedGames() {
+        const checkboxes = document.querySelectorAll('.game-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('No games selected.');
+            return;
+        }
+
+        const gameNames = Array.from(checkboxes).map(cb => cb.dataset.gameName).slice(0, 5);
+        let message = `Delete ${checkboxes.length} selected game(s)?\n\n`;
+        message += gameNames.join('\n');
+        if (checkboxes.length > 5) {
+            message += `\n... and ${checkboxes.length - 5} more`;
+        }
+        message += '\n\nThis cannot be undone.';
+
+        if (!confirm(message)) {
+            return;
+        }
+
+        // Create form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/Admin/DeleteSelectedCafeGames';
+
+        const cafeIdInput = document.createElement('input');
+        cafeIdInput.type = 'hidden';
+        cafeIdInput.name = 'cafeId';
+        cafeIdInput.value = '@Model.CafeId';
+        form.appendChild(cafeIdInput);
+
+        checkboxes.forEach(cb => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'gameIds';
+            input.value = cb.value;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
 </script>
 }
