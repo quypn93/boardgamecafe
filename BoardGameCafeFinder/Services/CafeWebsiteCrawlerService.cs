@@ -37,17 +37,14 @@ namespace BoardGameCafeFinder.Services
     {
         private readonly ILogger<CafeWebsiteCrawlerService> _logger;
         private readonly ApplicationDbContext _context;
-        private readonly IBggXmlApiService _bggApiService;
         private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
         public CafeWebsiteCrawlerService(
             ILogger<CafeWebsiteCrawlerService> logger,
-            ApplicationDbContext context,
-            IBggXmlApiService bggApiService)
+            ApplicationDbContext context)
         {
             _logger = logger;
             _context = context;
-            _bggApiService = bggApiService;
         }
 
         public async Task<List<CrawledGameData>> CrawlCafeWebsiteForGamesAsync(string websiteUrl)
@@ -282,41 +279,10 @@ namespace BoardGameCafeFinder.Services
                                 continue;
                             }
 
-                            // Strategy 2: Try to search on BGG API for unknown names
-                            // (already validated by IsLikelyBoardGameName above)
-                            try
-                            {
-                                var searchResults = await _bggApiService.SearchGamesAsync(item.Name.Trim());
-                                var match = searchResults.FirstOrDefault(r =>
-                                    r.Name.Equals(item.Name.Trim(), StringComparison.OrdinalIgnoreCase));
-
-                                if (match != null)
-                                {
-                                    _logger.LogDebug("Found '{Name}' on BGG (BGGId: {BggId})", item.Name, match.BggId);
-
-                                    var crawledData = new CrawledGameData
-                                    {
-                                        Name = item.Name.Trim(),
-                                        ImageUrl = item.ImageUrl,
-                                        SourceUrl = item.SourceUrl,
-                                        BggId = match.BggId
-                                    };
-
-                                    // Parse Price
-                                    if (!string.IsNullOrEmpty(item.PriceStr) && decimal.TryParse(item.PriceStr, out decimal p))
-                                        crawledData.Price = p;
-
-                                    results.Add(crawledData);
-                                }
-                                else
-                                {
-                                    _logger.LogDebug("'{Name}' not found on BGG - skipping", item.Name);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.LogWarning(ex, "Error searching BGG for '{Name}'", item.Name);
-                            }
+                            // Strategy 2: Skip BGG API search for unknown games to reduce API calls
+                            // Only games matched in whitelist (Strategy 1) are included
+                            // Unknown games can be added to whitelist via BGG sync later
+                            _logger.LogDebug("'{Name}' not in whitelist - skipping (use BGG sync to add new games)", item.Name);
                         }
                     }
                 }

@@ -585,6 +585,14 @@ namespace BoardGameCafeFinder.Services
         {
             try
             {
+                // Check if permanently closed - skip these
+                var closedIndicator = page.Locator("span:has-text('Permanently closed')").First;
+                if (await closedIndicator.CountAsync() > 0)
+                {
+                    _logger.LogInformation("Skipping permanently closed place");
+                    return null;
+                }
+
                 var cafe = new CrawledCafeData();
 
                 // Extract name from URL (most reliable)
@@ -696,10 +704,52 @@ namespace BoardGameCafeFinder.Services
                 var coordMatch = Regex.Match(currentUrl, @"@(-?\d+\.\d+),(-?\d+\.\d+)");
                 if (coordMatch.Success)
                 {
-                    if (double.TryParse(coordMatch.Groups[1].Value, out var lat))
+                    if (double.TryParse(coordMatch.Groups[1].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lat))
                         cafe.Latitude = lat;
-                    if (double.TryParse(coordMatch.Groups[2].Value, out var lng))
+                    if (double.TryParse(coordMatch.Groups[2].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lng))
                         cafe.Longitude = lng;
+                }
+
+                // Fallback: Extract coordinates from page script/metadata if URL didn't have them
+                if (!cafe.Latitude.HasValue || !cafe.Longitude.HasValue)
+                {
+                    try
+                    {
+                        var coords = await page.EvaluateAsync<dynamic>(@"() => {
+                            // Try to find coordinates in various places
+                            const scripts = Array.from(document.querySelectorAll('script'));
+                            for (const script of scripts) {
+                                const content = script.textContent || '';
+                                // Pattern: [null,null,lat,lng] or similar coordinate arrays
+                                const match = content.match(/\[null,null,(-?\d+\.\d+),(-?\d+\.\d+)\]/);
+                                if (match) {
+                                    return { lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
+                                }
+                                // Pattern: ""lat"":123.456,""lng"":789.012
+                                const match2 = content.match(/""lat""\s*:\s*(-?\d+\.\d+).*""lng""\s*:\s*(-?\d+\.\d+)/);
+                                if (match2) {
+                                    return { lat: parseFloat(match2[1]), lng: parseFloat(match2[2]) };
+                                }
+                            }
+                            return null;
+                        }");
+
+                        if (coords != null)
+                        {
+                            double? lat = coords.lat;
+                            double? lng = coords.lng;
+                            if (lat.HasValue && lng.HasValue)
+                            {
+                                cafe.Latitude = lat.Value;
+                                cafe.Longitude = lng.Value;
+                                _logger.LogInformation("Extracted coordinates from page script for {Name}: {Lat}, {Lng}", cafe.Name, cafe.Latitude, cafe.Longitude);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogDebug("Failed to extract coordinates from script for {Name}: {Message}", cafe.Name, ex.Message);
+                    }
                 }
 
                 cafe.GoogleMapsUrl = currentUrl;
@@ -783,28 +833,8 @@ namespace BoardGameCafeFinder.Services
                         _logger.LogInformation("Crawling website for games: {Url}", cafe.Website);
                         var games = await _cafeWebsiteCrawlerService.CrawlCafeWebsiteForGamesAsync(cafe.Website);
 
-                        foreach (var g in games)
-                        {
-                            // Try to match with BGG
-                            var searchResults = await _bggXmlApiService.SearchGamesAsync(g.Name);
-                            var match = searchResults.FirstOrDefault(r => r.Name.Equals(g.Name, StringComparison.OrdinalIgnoreCase));
-
-                            if (match != null)
-                            {
-                                g.BggId = match.BggId;
-
-                                var details = await _bggXmlApiService.GetGameDetailsAsync(match.BggId);
-                                if (details != null)
-                                {
-                                    if (string.IsNullOrEmpty(g.ImageUrl)) g.ImageUrl = details.ThumbnailUrl ?? details.ImageUrl;
-                                    if (string.IsNullOrEmpty(g.Description)) g.Description = details.Description;
-                                    if (g.MinPlayers == null) g.MinPlayers = details.MinPlayers;
-                                    if (g.MaxPlayers == null) g.MaxPlayers = details.MaxPlayers;
-                                    if (g.PlaytimeMinutes == null) g.PlaytimeMinutes = details.PlayingTime;
-                                }
-                            }
-                        }
-
+                        // CafeWebsiteCrawlerService already matches games with whitelist and BGG API
+                        // Only games that have BggId are returned, so no need to call BGG API again
                         cafe.FoundGames = games;
                         _logger.LogInformation("Found {Count} games on website for {Name}", games.Count, cafe.Name);
                     }
@@ -1371,7 +1401,7 @@ namespace BoardGameCafeFinder.Services
             cafe.Address = cleanAddress;
 
             // Try to parse US address format: "City, State ZIP, Country"
-            var parts = cleanAddress.Split(',').Select(p => p.Trim()).ToList();
+            var parts = cleanAddress.Split(',').Select(p => p.Trim()).Where(p => !string.IsNullOrEmpty(p)).ToList();
 
             if (parts.Count >= 2)
             {
@@ -1393,13 +1423,42 @@ namespace BoardGameCafeFinder.Services
                         cafe.State = stateZipPart;
                     }
 
-                    // City is third from last
-                    cafe.City = parts[^3];
+                    // City is third from last (if exists)
+                    if (parts.Count >= 4)
+                    {
+                        cafe.City = parts[^3];
+                    }
+                    else
+                    {
+                        // If only 3 parts: "Street, City State ZIP, Country" - extract city from stateZipPart
+                        var cityFromState = Regex.Match(stateZipPart, @"^(.+?)\s+[A-Z]{2}\s+\d");
+                        if (cityFromState.Success)
+                        {
+                            cafe.City = cityFromState.Groups[1].Value.Trim();
+                        }
+                        else
+                        {
+                            // Use second to last as city fallback
+                            cafe.City = stateZipPart;
+                        }
+                    }
                 }
                 else
                 {
+                    // Only 2 parts: "City, Country"
                     cafe.City = parts[^2];
                 }
+            }
+            else if (parts.Count == 1)
+            {
+                // Single part - use as city
+                cafe.City = parts[0];
+            }
+
+            // Clean up city name (remove ZIP codes and extra whitespace)
+            if (!string.IsNullOrEmpty(cafe.City))
+            {
+                cafe.City = Regex.Replace(cafe.City, @"\s+\d{5}(-\d{4})?$", "").Trim();
             }
         }
         private async Task<string?> DiscoverBggUsernameAsync(IPage googleMapsPage, string? websiteUrl, string cafeName)
