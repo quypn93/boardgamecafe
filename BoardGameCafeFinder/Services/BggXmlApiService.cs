@@ -17,6 +17,7 @@ namespace BoardGameCafeFinder.Services
         Task<List<BggBatchSyncResult>> SyncAllCafesWithAutoDiscoverAsync();
         Task<List<BggGameInfo>> GetHotGamesAsync();
         Task<int> SeedBoardGamesFromBggAsync(int count = 500);
+        Task<int> UpdateBoardGameCategoriesAsync();
     }
 
     public class BggGameInfo
@@ -31,6 +32,8 @@ namespace BoardGameCafeFinder.Services
         public int? PlayingTime { get; set; }
         public decimal? Rating { get; set; }
         public string? Description { get; set; }
+        public List<string> Categories { get; set; } = new List<string>();
+        public List<string> Mechanics { get; set; } = new List<string>();
     }
 
     public class BggXmlApiService : IBggXmlApiService
@@ -614,6 +617,22 @@ namespace BoardGameCafeFinder.Services
                         gameInfo.Rating = ratingValue;
                     }
 
+                    // Parse categories from <link type="boardgamecategory">
+                    var categories = item.Elements("link")
+                        .Where(l => l.Attribute("type")?.Value == "boardgamecategory")
+                        .Select(l => l.Attribute("value")?.Value)
+                        .Where(v => !string.IsNullOrEmpty(v))
+                        .ToList();
+                    gameInfo.Categories = categories!;
+
+                    // Parse mechanics from <link type="boardgamemechanic">
+                    var mechanics = item.Elements("link")
+                        .Where(l => l.Attribute("type")?.Value == "boardgamemechanic")
+                        .Select(l => l.Attribute("value")?.Value)
+                        .Where(v => !string.IsNullOrEmpty(v))
+                        .ToList();
+                    gameInfo.Mechanics = mechanics!;
+
                     games.Add(gameInfo);
                 }
 
@@ -625,6 +644,73 @@ namespace BoardGameCafeFinder.Services
             }
 
             return games;
+        }
+
+        /// <summary>
+        /// Determine the primary category for a board game based on BGG categories
+        /// Maps BGG categories to simplified categories for filtering
+        /// </summary>
+        public static string DeterminePrimaryCategory(List<string> bggCategories)
+        {
+            if (bggCategories == null || bggCategories.Count == 0)
+                return "Other";
+
+            // Priority-based category mapping
+            // Check for Party games first (high priority)
+            if (bggCategories.Any(c => c.Contains("Party", StringComparison.OrdinalIgnoreCase)))
+                return "Party";
+
+            // Check for Family games
+            if (bggCategories.Any(c => c.Contains("Children", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Family", StringComparison.OrdinalIgnoreCase)))
+                return "Family";
+
+            // Check for Thematic/Adventure games
+            if (bggCategories.Any(c => c.Contains("Adventure", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Horror", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Science Fiction", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Fantasy", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Zombies", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Fighting", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Miniatures", StringComparison.OrdinalIgnoreCase)))
+                return "Thematic";
+
+            // Check for Strategy games
+            if (bggCategories.Any(c => c.Contains("Economic", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Civilization", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("City Building", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Industry", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Farming", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Territory Building", StringComparison.OrdinalIgnoreCase)))
+                return "Strategy";
+
+            // Check for War games
+            if (bggCategories.Any(c => c.Contains("Wargame", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("War", StringComparison.OrdinalIgnoreCase) && !c.Contains("Card", StringComparison.OrdinalIgnoreCase)))
+                return "War";
+
+            // Check for Abstract games
+            if (bggCategories.Any(c => c.Contains("Abstract", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Puzzle", StringComparison.OrdinalIgnoreCase)))
+                return "Abstract";
+
+            // Check for Card games
+            if (bggCategories.Any(c => c.Contains("Card Game", StringComparison.OrdinalIgnoreCase)))
+                return "Card";
+
+            // Check for Trivia/Word games
+            if (bggCategories.Any(c => c.Contains("Trivia", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Word Game", StringComparison.OrdinalIgnoreCase)))
+                return "Word/Trivia";
+
+            // Check for Deduction games
+            if (bggCategories.Any(c => c.Contains("Deduction", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Murder", StringComparison.OrdinalIgnoreCase) ||
+                                       c.Contains("Spies", StringComparison.OrdinalIgnoreCase)))
+                return "Deduction";
+
+            // Default fallback
+            return "Other";
         }
 
         /// <summary>
@@ -985,6 +1071,7 @@ namespace BoardGameCafeFinder.Services
                                 MinPlayers = gameInfo.MinPlayers,
                                 MaxPlayers = gameInfo.MaxPlayers,
                                 PlaytimeMinutes = gameInfo.PlayingTime,
+                                Category = DeterminePrimaryCategory(gameInfo.Categories),
                                 CreatedAt = DateTime.UtcNow
                             };
 
@@ -1017,6 +1104,70 @@ namespace BoardGameCafeFinder.Services
             _logger.LogInformation("Board game seeding completed. Added {Count} games in {Batches} API calls (instead of {Individual} individual calls)",
                 added, batches.Count, idsToFetch.Count);
             return added;
+        }
+
+        /// <summary>
+        /// Update Category field for existing board games that have BGGId but no Category
+        /// </summary>
+        public async Task<int> UpdateBoardGameCategoriesAsync()
+        {
+            // Get all games with BGGId but no Category
+            var gamesToUpdate = await _context.BoardGames
+                .Where(g => g.BGGId.HasValue && string.IsNullOrEmpty(g.Category))
+                .ToListAsync();
+
+            if (gamesToUpdate.Count == 0)
+            {
+                _logger.LogInformation("No games need category update");
+                return 0;
+            }
+
+            _logger.LogInformation("Found {Count} games that need category update", gamesToUpdate.Count);
+
+            var updated = 0;
+            const int batchSize = 20;
+            var batches = gamesToUpdate
+                .Select((game, index) => new { game, index })
+                .GroupBy(x => x.index / batchSize)
+                .Select(g => g.Select(x => x.game).ToList())
+                .ToList();
+
+            var batchNumber = 0;
+            foreach (var batch in batches)
+            {
+                batchNumber++;
+                try
+                {
+                    var bggIds = batch.Select(g => g.BGGId!.Value).ToList();
+                    var gamesInfo = await GetMultipleGameDetailsAsync(bggIds);
+
+                    foreach (var game in batch)
+                    {
+                        var gameInfo = gamesInfo.FirstOrDefault(g => g.BggId == game.BGGId);
+                        if (gameInfo != null)
+                        {
+                            game.Category = DeterminePrimaryCategory(gameInfo.Categories);
+                            updated++;
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                    _logger.LogDebug("Updated batch {Batch}/{Total}: {Count} games", batchNumber, batches.Count, batch.Count);
+
+                    // Rate limiting
+                    if (batchNumber < batches.Count)
+                    {
+                        await Task.Delay(1000);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error updating categories for batch {Batch}", batchNumber);
+                }
+            }
+
+            _logger.LogInformation("Category update completed. Updated {Count} games", updated);
+            return updated;
         }
     }
 }

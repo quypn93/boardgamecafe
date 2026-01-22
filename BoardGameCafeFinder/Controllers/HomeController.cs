@@ -23,6 +23,7 @@ public class HomeController : Controller
         string? country,
         string? city,
         int[]? gameIds,
+        string? category,
         double? lat,
         double? lng,
         int radius = 50,
@@ -82,6 +83,12 @@ public class HomeController : Controller
             cafesQuery = cafesQuery.Where(c => c.CafeGames.Any(cg => gameIds.Contains(cg.GameId)));
         }
 
+        // Filter by category
+        if (!string.IsNullOrEmpty(category))
+        {
+            cafesQuery = cafesQuery.Where(c => c.CafeGames.Any(cg => cg.Game != null && cg.Game.Category == category));
+        }
+
         // Get total count for pagination
         var totalItems = await cafesQuery.CountAsync();
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -135,20 +142,38 @@ public class HomeController : Controller
             .OrderBy(c => c)
             .ToListAsync();
 
-        var boardGames = await _context.BoardGames
-            .Where(g => g.CafeGames.Any())
+        // Get board games filtered by category if selected
+        var boardGamesQuery = _context.BoardGames
+            .Where(g => g.CafeGames.Any());
+
+        if (!string.IsNullOrEmpty(category))
+        {
+            boardGamesQuery = boardGamesQuery.Where(g => g.Category == category);
+        }
+
+        var boardGames = await boardGamesQuery
             .OrderByDescending(g => g.CafeGames.Count)
             .ThenBy(g => g.Name)
             .Take(50)
-            .Select(g => new { g.GameId, g.Name, CafeCount = g.CafeGames.Count })
+            .Select(g => new { g.GameId, g.Name, g.Category, CafeCount = g.CafeGames.Count })
+            .ToListAsync();
+
+        // Get available categories
+        var categories = await _context.BoardGames
+            .Where(g => g.CafeGames.Any() && !string.IsNullOrEmpty(g.Category))
+            .Select(g => g.Category)
+            .Distinct()
+            .OrderBy(c => c)
             .ToListAsync();
 
         // ViewBag for filter values
         ViewBag.Countries = countries;
         ViewBag.Cities = cities;
         ViewBag.BoardGames = boardGames;
+        ViewBag.Categories = categories;
         ViewBag.SelectedCountry = country;
         ViewBag.SelectedCity = city;
+        ViewBag.SelectedCategory = category;
         ViewBag.SelectedGameIds = gameIds ?? Array.Empty<int>();
         ViewBag.UserLat = lat;
         ViewBag.UserLng = lng;
@@ -210,6 +235,14 @@ public class HomeController : Controller
         ViewData["Title"] = "Privacy Policy";
         ViewData["MetaDescription"] = "Read our privacy policy to understand how we collect and protect your data.";
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/Home/Privacy";
+        return View();
+    }
+
+    public IActionResult Terms()
+    {
+        ViewData["Title"] = "Terms of Service";
+        ViewData["MetaDescription"] = "Read the Terms of Service for Board Game Cafe Finder.";
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/Home/Terms";
         return View();
     }
 

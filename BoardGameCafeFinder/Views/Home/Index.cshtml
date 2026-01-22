@@ -5,13 +5,45 @@
     var countries = ViewBag.Countries as List<string> ?? new List<string>();
     var cities = ViewBag.Cities as List<string> ?? new List<string>();
     var boardGames = ViewBag.BoardGames as IEnumerable<dynamic> ?? new List<dynamic>();
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
     var selectedGameIds = ViewBag.SelectedGameIds as int[] ?? Array.Empty<int>();
+    var selectedCategory = ViewBag.SelectedCategory as string ?? "";
     var currentPage = (int)(ViewBag.CurrentPage ?? 1);
     var totalPages = (int)(ViewBag.TotalPages ?? 1);
     var totalItems = (int)(ViewBag.TotalItems ?? 0);
+    var isFirstPage = currentPage == 1 && string.IsNullOrEmpty(ViewBag.SelectedCity as string) && selectedGameIds.Length == 0;
 }
 
-<div class="container-fluid mt-4">
+<!-- Hero Section (only on first page without specific filters) -->
+@if (isFirstPage)
+{
+    <div class="hero-section py-5 mb-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold mb-3">Find Your Perfect Board Game Cafe</h1>
+                    <p class="lead mb-4">
+                        Discover amazing board game cafes near you. Browse thousands of games,
+                        read reviews, and find the perfect spot for your next gaming session with friends and family.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#cafes" class="btn btn-light btn-lg">
+                            <i class="bi bi-search me-2"></i>Browse Cafes
+                        </a>
+                        <a asp-controller="Map" asp-action="Index" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-map me-2"></i>View Map
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 d-none d-lg-block text-center">
+                    <i class="bi bi-dice-5 display-1 opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container-fluid mt-4" id="cafes">
     <div class="row">
         <!-- Sidebar Filters -->
         <div class="col-lg-3 col-md-4 mb-4">
@@ -87,20 +119,47 @@
                             </select>
                         </div>
 
+                        <!-- Game Category Filter -->
+                        @if (categories.Any())
+                        {
+                            <div class="mb-3">
+                                <label for="category" class="form-label fw-bold">Game Category</label>
+                                <select class="form-select" id="category" name="category">
+                                    <option value="">All Categories</option>
+                                    @foreach (var cat in categories)
+                                    {
+                                        if (selectedCategory == cat)
+                                        {
+                                            <option value="@cat" selected>@cat</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@cat">@cat</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        }
+
                         <!-- Board Games Filter -->
                         @if (boardGames.Any())
                         {
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Board Games Available</label>
-                                <div class="border rounded p-2" style="max-height: 250px; overflow-y: auto;">
+                                <div class="border rounded p-2" style="max-height: 300px; overflow-y: auto;">
                                     @foreach (var game in boardGames)
                                     {
-                                        <div class="form-check">
+                                        <div class="form-check py-1">
                                             <input class="form-check-input game-checkbox" type="checkbox"
                                                    name="gameIds" value="@game.GameId" id="game_@game.GameId"
                                                    @(selectedGameIds.Contains((int)game.GameId) ? "checked" : "")>
-                                            <label class="form-check-label small" for="game_@game.GameId">
-                                                @game.Name <span class="badge bg-secondary">@game.CafeCount</span>
+                                            <label class="form-check-label" for="game_@game.GameId" style="font-size: 0.95rem;">
+                                                @game.Name
+                                                <span class="badge bg-secondary ms-1">@game.CafeCount</span>
+                                                @if (!string.IsNullOrEmpty((string)game.Category))
+                                                {
+                                                    <span class="badge bg-info ms-1" style="font-size: 0.7rem;">@game.Category</span>
+                                                }
                                             </label>
                                         </div>
                                     }
@@ -111,6 +170,7 @@
                         <input type="hidden" id="lat" name="lat" value="@ViewBag.UserLat">
                         <input type="hidden" id="lng" name="lng" value="@ViewBag.UserLng">
                         <input type="hidden" id="page" name="page" value="1">
+                        <input type="hidden" id="categoryHidden" value="@selectedCategory">
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success">
@@ -141,6 +201,7 @@
             <!-- Active Filters -->
             @if (!string.IsNullOrEmpty(ViewBag.SelectedCountry as string) ||
                  !string.IsNullOrEmpty(ViewBag.SelectedCity as string) ||
+                 !string.IsNullOrEmpty(selectedCategory) ||
                  selectedGameIds.Length > 0 ||
                  ViewBag.UserLat != null)
             {
@@ -153,6 +214,10 @@
                     @if (!string.IsNullOrEmpty(ViewBag.SelectedCity as string))
                     {
                         <span class="badge bg-primary me-1">City: @ViewBag.SelectedCity</span>
+                    }
+                    @if (!string.IsNullOrEmpty(selectedCategory))
+                    {
+                        <span class="badge bg-info me-1">Category: @selectedCategory</span>
                     }
                     @if (ViewBag.UserLat != null)
                     {
@@ -309,16 +374,105 @@
             }
             else
             {
-                <div class="alert alert-warning">
-                    <h4><i class="bi bi-exclamation-triangle"></i> No cafes found</h4>
-                    <p>Try adjusting your filters or <a href="/">clear all filters</a> to see all cafes.</p>
-                    <hr>
-                    <p class="mb-0">Admin: Go to <a href="/Test/CrawlManager">Crawl Manager</a> to add more cafes.</p>
+                <div class="alert alert-info">
+                    <h5><i class="bi bi-info-circle me-2"></i>No cafes found</h5>
+                    <p class="mb-0">Try adjusting your filters or <a href="/">clear all filters</a> to see all cafes.</p>
                 </div>
             }
         </div>
     </div>
 </div>
+
+<!-- Why Board Game Cafes Section -->
+@if (isFirstPage)
+{
+    <div class="bg-light py-5 mt-4">
+        <div class="container">
+            <h2 class="text-center mb-4">Why Visit a Board Game Cafe?</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-collection text-primary fs-1"></i>
+                            </div>
+                            <h5 class="card-title">Huge Game Libraries</h5>
+                            <p class="card-text text-muted">
+                                Access hundreds or even thousands of board games without having to buy them.
+                                Try new games before you purchase, or play classics you've always wanted to try.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-people text-success fs-1"></i>
+                            </div>
+                            <h5 class="card-title">Social Experience</h5>
+                            <p class="card-text text-muted">
+                                Meet fellow board game enthusiasts, join game nights, or bring your friends
+                                for a unique social experience away from screens.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-lightbulb text-warning fs-1"></i>
+                            </div>
+                            <h5 class="card-title">Expert Guidance</h5>
+                            <p class="card-text text-muted">
+                                Staff at board game cafes can teach you rules, recommend games based on your
+                                preferences, and help you find the perfect game for your group.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">How to Find Your Perfect Cafe</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-3 text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                        <span class="fw-bold">1</span>
+                    </div>
+                    <h6>Search by Location</h6>
+                    <p class="text-muted small">Use the "Near Me" button or select your country and city to find nearby cafes.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                        <span class="fw-bold">2</span>
+                    </div>
+                    <h6>Filter by Games</h6>
+                    <p class="text-muted small">Looking for a specific game? Filter cafes by the board games they have available.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                        <span class="fw-bold">3</span>
+                    </div>
+                    <h6>Read Reviews</h6>
+                    <p class="text-muted small">Check out reviews from other visitors to find the best cafes in your area.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                        <span class="fw-bold">4</span>
+                    </div>
+                    <h6>Plan Your Visit</h6>
+                    <p class="text-muted small">Get directions, check opening hours, and visit the cafe's website to plan your trip.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @functions {
     string BuildPageUrl(int page)
@@ -331,6 +485,9 @@
 
         if (!string.IsNullOrEmpty(ViewBag.SelectedCity as string))
             query.Add($"city={Uri.EscapeDataString(ViewBag.SelectedCity)}");
+
+        if (!string.IsNullOrEmpty(ViewBag.SelectedCategory as string))
+            query.Add($"category={Uri.EscapeDataString(ViewBag.SelectedCategory)}");
 
         if (ViewBag.UserLat != null)
             query.Add($"lat={ViewBag.UserLat}");
@@ -401,8 +558,14 @@
         });
 
         // Reset page to 1 when filters change
-        $('#country, #city, #radius, .game-checkbox').on('change', function() {
+        $('#country, #city, #radius, #category, .game-checkbox').on('change', function() {
             $('#page').val('1');
+        });
+
+        // Category change - reload games list
+        $('#category').on('change', function() {
+            // Clear game selections when category changes
+            $('.game-checkbox').prop('checked', false);
         });
     });
 </script>

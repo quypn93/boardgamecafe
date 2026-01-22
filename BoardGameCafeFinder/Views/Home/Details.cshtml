@@ -1,7 +1,15 @@
 @model BoardGameCafeFinder.Models.Domain.Cafe
 @{
-    ViewData["Title"] = Model.Name;
+    ViewData["Title"] = $"{Model.Name} - Board Game Cafe in {Model.City}";
+    ViewData["MetaDescription"] = !string.IsNullOrEmpty(Model.Description)
+        ? (Model.Description.Length > 160 ? Model.Description.Substring(0, 157) + "..." : Model.Description)
+        : $"Visit {Model.Name} in {Model.City}, {Model.State}. Explore their board game library with {Model.CafeGames?.Count ?? 0}+ games. Check hours, reviews, and directions.";
+    ViewData["CanonicalUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}/Home/Details/{Model.CafeId}";
     Layout = "_UserLayout";
+
+    var gameCount = Model.CafeGames?.Count ?? 0;
+    var hasGames = gameCount > 0;
+    var reviewCount = Model.TotalReviews;
 }
 
 <div class="container mt-4">
@@ -241,10 +249,103 @@
                     }
                 </div>
             </div>
+
+            <!-- Tips for Visitors -->
+            <div class="card mb-4 border-0 bg-light">
+                <div class="card-header bg-transparent border-0 pt-3">
+                    <h4 class="mb-0"><i class="bi bi-lightbulb me-2 text-warning"></i>Tips for Visiting</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-calendar-check text-primary me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="mb-1">Make a Reservation</h6>
+                                    <p class="text-muted small mb-0">Board game cafes can get busy, especially on weekends. Call ahead to reserve a table.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-clock text-primary me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="mb-1">Plan Your Time</h6>
+                                    <p class="text-muted small mb-0">Most games take 1-3 hours. Allow extra time to browse the library and learn new games.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-people text-primary me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="mb-1">Bring Friends</h6>
+                                    <p class="text-muted small mb-0">Many games are best with 3-5 players. Gather your group for the best experience.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-question-circle text-primary me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="mb-1">Ask for Recommendations</h6>
+                                    <p class="text-muted small mb-0">Staff are usually board game enthusiasts who can suggest games based on your preferences.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Right Column: Map & Hours -->
         <div class="col-lg-4">
+            <!-- Quick Info Card -->
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Quick Info</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        @if (hasGames)
+                        {
+                            <li class="mb-3 d-flex align-items-center">
+                                <i class="bi bi-controller text-primary me-3 fs-5"></i>
+                                <div>
+                                    <strong>@gameCount</strong> <span class="text-muted">Board Games</span>
+                                </div>
+                            </li>
+                        }
+                        @if (Model.AverageRating > 0)
+                        {
+                            <li class="mb-3 d-flex align-items-center">
+                                <i class="bi bi-star-fill text-warning me-3 fs-5"></i>
+                                <div>
+                                    <strong>@Model.AverageRating.Value.ToString("0.0")</strong> <span class="text-muted">Rating (@reviewCount reviews)</span>
+                                </div>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PriceRange))
+                        {
+                            <li class="mb-3 d-flex align-items-center">
+                                <i class="bi bi-currency-dollar text-success me-3 fs-5"></i>
+                                <div>
+                                    <strong>@Model.PriceRange</strong> <span class="text-muted">Price Range</span>
+                                </div>
+                            </li>
+                        }
+                        <li class="d-flex align-items-center">
+                            <i class="bi bi-geo-alt text-danger me-3 fs-5"></i>
+                            <div>
+                                <span class="text-muted">@Model.City, @Model.Country</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Map Card -->
+            <div class="card mb-4 shadow-sm">
                 <div class="card-body p-0">
                     <div id="cafeMap" style="height: 300px; width: 100%; border-radius: 4px 4px 0 0;"></div>
                 </div>
@@ -267,15 +368,50 @@
             <!-- Opening Hours -->
             @if (!string.IsNullOrEmpty(Model.OpeningHours))
             {
-                <div class="card mb-4">
+                <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Opening Hours</h5>
+                        <h5 class="mb-0"><i class="bi bi-clock me-2"></i>Opening Hours</h5>
                     </div>
                     <div class="card-body">
                         <p class="card-text" style="white-space: pre-line;">@Model.OpeningHours.Replace(";", "\n")</p>
                     </div>
                 </div>
             }
+
+            <!-- Share This Cafe -->
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-share me-2"></i>Share This Cafe</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="text-muted small mb-3">Know someone who would love this place? Share it!</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=@Uri.EscapeDataString($"{Context.Request.Scheme}://{Context.Request.Host}/Home/Details/{Model.CafeId}")"
+                           target="_blank" class="btn btn-outline-primary btn-sm" title="Share on Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url=@Uri.EscapeDataString($"{Context.Request.Scheme}://{Context.Request.Host}/Home/Details/{Model.CafeId}")&text=@Uri.EscapeDataString($"Check out {Model.Name} - a board game cafe in {Model.City}!")"
+                           target="_blank" class="btn btn-outline-dark btn-sm" title="Share on X">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+                        <a href="mailto:?subject=@Uri.EscapeDataString($"Check out {Model.Name}")&body=@Uri.EscapeDataString($"I found this great board game cafe: {Model.Name} in {Model.City}. Check it out: {Context.Request.Scheme}://{Context.Request.Host}/Home/Details/{Model.CafeId}")"
+                           class="btn btn-outline-secondary btn-sm" title="Share via Email">
+                            <i class="bi bi-envelope"></i>
+                        </a>
+                        <button type="button" class="btn btn-outline-success btn-sm" onclick="copyToClipboard()" title="Copy Link">
+                            <i class="bi bi-link-45deg"></i>
+                        </button>
+                    </div>
+                    <div id="copyAlert" class="alert alert-success py-1 px-2 mt-2 small d-none">Link copied!</div>
+                </div>
+            </div>
+
+            <!-- Back to Browse -->
+            <div class="d-grid gap-2 mb-4">
+                <a href="/" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Browse Cafes
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -312,5 +448,16 @@
                 .bindPopup('<b>' + cafeName + '</b>')
                 .openPopup();
         });
+
+        function copyToClipboard() {
+            var url = window.location.href;
+            navigator.clipboard.writeText(url).then(function() {
+                var alert = document.getElementById('copyAlert');
+                alert.classList.remove('d-none');
+                setTimeout(function() {
+                    alert.classList.add('d-none');
+                }, 2000);
+            });
+        }
     </script>
 }

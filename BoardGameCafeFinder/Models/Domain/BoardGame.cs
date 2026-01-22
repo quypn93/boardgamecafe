@@ -36,6 +36,9 @@ namespace BoardGameCafeFinder.Models.Domain
         [Url]
         public string? ImageUrl { get; set; }
 
+        [MaxLength(100)]
+        public string? Category { get; set; } // e.g., "Strategy", "Party", "Family", "Thematic", "Abstract"
+
         [MaxLength(1000)]
         [Url]
         public string? AmazonAffiliateUrl { get; set; }
