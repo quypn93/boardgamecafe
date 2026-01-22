@@ -6,6 +6,7 @@
     var cities = ViewBag.Cities as List<string> ?? new List<string>();
     var selectedCountry = ViewBag.SelectedCountry as string;
     var selectedCity = ViewBag.SelectedCity as string;
+    var hasGames = ViewBag.HasGames as string;
     var search = ViewBag.Search as string;
     var currentPage = (int)(ViewBag.CurrentPage ?? 1);
     var totalPages = (int)(ViewBag.TotalPages ?? 1);
@@ -44,7 +45,7 @@
                 </div>
 
                 <!-- City Filter -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label fw-bold">City</label>
                     <select class="form-select" name="city" id="cityFilter">
                         <option value="">All Cities</option>
@@ -55,8 +56,18 @@
                     </select>
                 </div>
 
+                <!-- Has Games Filter -->
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Has Games</label>
+                    <select class="form-select" name="hasGames">
+                        <option value="">All</option>
+                        <option value="yes" selected="@(hasGames == "yes")">Yes</option>
+                        <option value="no" selected="@(hasGames == "no")">No</option>
+                    </select>
+                </div>
+
                 <!-- Buttons -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="btn-group w-100">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> Filter
@@ -71,7 +82,7 @@
     </div>
 
     <!-- Active Filters -->
-    @if (!string.IsNullOrEmpty(search) || !string.IsNullOrEmpty(selectedCountry) || !string.IsNullOrEmpty(selectedCity))
+    @if (!string.IsNullOrEmpty(search) || !string.IsNullOrEmpty(selectedCountry) || !string.IsNullOrEmpty(selectedCity) || !string.IsNullOrEmpty(hasGames))
     {
         <div class="mb-3">
             <span class="text-muted me-2">Active filters:</span>
@@ -86,6 +97,10 @@
             @if (!string.IsNullOrEmpty(selectedCity))
             {
                 <span class="badge bg-info me-1">City: @selectedCity</span>
+            }
+            @if (!string.IsNullOrEmpty(hasGames))
+            {
+                <span class="badge bg-warning text-dark me-1">Has Games: @(hasGames == "yes" ? "Yes" : "No")</span>
             }
         </div>
     }

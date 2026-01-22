@@ -54,7 +54,7 @@ namespace BoardGameCafeFinder.Controllers
         /// GET: /Test/Cafes
         /// </summary>
         [Route("Cafes")]
-        public async Task<IActionResult> Cafes(string? search, string? country, string? city, int page = 1, int pageSize = 50)
+        public async Task<IActionResult> Cafes(string? search, string? country, string? city, string? hasGames, int page = 1, int pageSize = 50)
         {
             // Get all cafes from database with filtering
             var query = _context.Cafes
@@ -75,6 +75,16 @@ namespace BoardGameCafeFinder.Controllers
             if (!string.IsNullOrEmpty(city))
             {
                 query = query.Where(c => c.City == city);
+            }
+
+            // Filter by has games or not
+            if (hasGames == "yes")
+            {
+                query = query.Where(c => c.CafeGames != null && c.CafeGames.Any());
+            }
+            else if (hasGames == "no")
+            {
+                query = query.Where(c => c.CafeGames == null || !c.CafeGames.Any());
             }
 
             // Get total count for pagination
@@ -139,6 +149,7 @@ namespace BoardGameCafeFinder.Controllers
             ViewBag.Cities = cities;
             ViewBag.SelectedCountry = country;
             ViewBag.SelectedCity = city;
+            ViewBag.HasGames = hasGames;
             ViewBag.Search = search;
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
@@ -904,6 +915,78 @@ namespace BoardGameCafeFinder.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error seeding board games");
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
+        /// POST: /Test/CleanFalsePositiveGames
+        /// Remove false positive board games from database (Sweet Spot, Wings, etc.)
+        /// </summary>
+        [Route("CleanFalsePositiveGames")]
+        [HttpPost]
+        public async Task<IActionResult> CleanFalsePositiveGames()
+        {
+            try
+            {
+                // List of false positive game names to remove
+                var falsePositiveNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    "Sweet Spot", "Wings", "BLT", "Pickles", "Sandwiches", "Sides",
+                    "Fried Rice", "Matcha", "Caesar", "California", "Margherita", "Newport", "Spaghetti",
+                    "Coffee", "Tea", "Latte", "Espresso",
+                    "Cappuccino", "Mocha", "Americano", "Macchiato",
+                    "Burger", "Pizza", "Pasta", "Salad", "Soup", "Fries",
+                    "Nachos", "Tacos", "Burrito", "Quesadilla",
+                    "Beer", "Wine", "Cocktail", "Soda", "Juice", "Water",
+                    "Brownie", "Cookie", "Cake", "Pie", "Ice Cream", "Dessert"
+                };
+
+                var deletedGames = new List<string>();
+                var deletedCafeGames = 0;
+
+                // Find games with these names (case-insensitive comparison)
+                // Load all games and filter in memory since EF Core can't translate HashSet.Contains with StringComparer
+                var allGames = await _context.BoardGames.ToListAsync();
+                var gamesToDelete = allGames
+                    .Where(g => falsePositiveNames.Contains(g.Name))
+                    .ToList();
+
+                foreach (var game in gamesToDelete)
+                {
+                    // First delete CafeGame relationships
+                    var cafeGames = await _context.CafeGames
+                        .Where(cg => cg.GameId == game.GameId)
+                        .ToListAsync();
+
+                    deletedCafeGames += cafeGames.Count;
+                    _context.CafeGames.RemoveRange(cafeGames);
+
+                    // Then delete the game itself
+                    deletedGames.Add(game.Name);
+                    _context.BoardGames.Remove(game);
+                }
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Cleaned {Count} false positive games: {Games}",
+                    deletedGames.Count, string.Join(", ", deletedGames));
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Removed {deletedGames.Count} false positive games and {deletedCafeGames} cafe-game links",
+                    deletedGames = deletedGames,
+                    deletedCafeGameLinks = deletedCafeGames
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cleaning false positive games");
                 return Json(new
                 {
                     success = false,

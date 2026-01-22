@@ -348,7 +348,7 @@ namespace BoardGameCafeFinder.Services
             {
                 // False positive board game names - common words that match BGG but aren't actually board games
                 "Sweet Spot", "Wings", "BLT", "Pickles", "Sandwiches", "Sides",
-                "Fried Rice", "Matcha",
+                "Fried Rice", "Matcha", "Caesar", "California", "Margherita", "Newport", "Spaghetti",
 
                 "menu", "home", "contact", "about", "cart", "search", "login", "logout", "register",
                 "shop", "store", "buy", "sell", "view", "more", "read more", "learn more", "view all",

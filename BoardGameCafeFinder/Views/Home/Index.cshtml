@@ -594,11 +594,12 @@
             allowClear: true,
             closeOnSelect: false
         });
-        // Near Me button
-        $('#nearMeBtn').on('click', function() {
+
+        // Function to trigger geolocation
+        function triggerNearMe() {
             if ("geolocation" in navigator) {
-                $(this).html('<span class="spinner-border spinner-border-sm"></span> Getting location...');
-                $(this).prop('disabled', true);
+                $('#nearMeBtn').html('<span class="spinner-border spinner-border-sm"></span> Getting location...');
+                $('#nearMeBtn').prop('disabled', true);
 
                 navigator.geolocation.getCurrentPosition(function(position) {
                     $('#lat').val(position.coords.latitude);
@@ -608,13 +609,24 @@
                     $('#page').val('1');
                     $('#searchForm').submit();
                 }, function(error) {
-                    alert('Unable to get your location. Please allow location access or use filters.');
+                    // On error, just reset button - don't alert on auto-trigger
                     $('#nearMeBtn').html('<i class="bi bi-geo-alt-fill"></i> Near Me');
                     $('#nearMeBtn').prop('disabled', false);
                 });
-            } else {
-                alert('Geolocation is not supported by your browser.');
             }
+        }
+
+        // Auto-trigger Near Me on first visit
+        @if (ViewBag.IsFirstVisit == true)
+        {
+            <text>
+            triggerNearMe();
+            </text>
+        }
+
+        // Near Me button click
+        $('#nearMeBtn').on('click', function() {
+            triggerNearMe();
         });
 
         // Country change - reload cities

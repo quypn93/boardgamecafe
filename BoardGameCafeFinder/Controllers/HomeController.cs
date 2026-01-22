@@ -30,15 +30,10 @@ public class HomeController : Controller
         int page = 1,
         int pageSize = 12)
     {
-        // Default country to US if no filters are applied
+        // Check if this is a first visit with no filters
         var isFirstVisit = string.IsNullOrEmpty(country) && string.IsNullOrEmpty(city)
                            && (gameIds == null || gameIds.Length == 0)
                            && !lat.HasValue && !lng.HasValue;
-
-        if (isFirstVisit)
-        {
-            country = "United States";
-        }
 
         // Set SEO metadata
         var pageTitle = "Board Game Cafes";
@@ -184,6 +179,7 @@ public class HomeController : Controller
         ViewBag.TotalPages = totalPages;
         ViewBag.TotalItems = totalItems;
         ViewBag.PageSize = pageSize;
+        ViewBag.IsFirstVisit = isFirstVisit;
 
         return View(cafes);
     }
