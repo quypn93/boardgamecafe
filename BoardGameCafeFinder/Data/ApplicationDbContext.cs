@@ -21,6 +21,7 @@ namespace BoardGameCafeFinder.Data
         public DbSet<EventBooking> EventBookings { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<PremiumListing> PremiumListings { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -213,6 +214,23 @@ namespace BoardGameCafeFinder.Data
                 entity.Property(e => e.TotalBookings).HasDefaultValue(0);
                 entity.Property(e => e.ReputationScore).HasDefaultValue(0);
                 entity.Property(e => e.IsCafeOwner).HasDefaultValue(false);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // BlogPost Configuration
+            modelBuilder.Entity<BlogPost>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasIndex(e => e.Slug).IsUnique();
+                entity.HasIndex(e => e.IsPublished);
+                entity.HasIndex(e => e.Category);
+                entity.HasIndex(e => e.PublishedAt);
+                entity.HasIndex(e => e.RelatedCity);
+
+                entity.Property(e => e.Title).IsRequired();
+                entity.Property(e => e.Slug).IsRequired();
+                entity.Property(e => e.Content).IsRequired();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             });
         }

@@ -38,7 +38,7 @@ dotnet run
 
 Open your browser and go to:
 
-#### Main Test Page - All Cafés List
+#### Main Test Page - All Cafe List
 ```
 https://localhost:7xxx/Test/Cafes
 ```
@@ -195,10 +195,10 @@ dotnet run
 
 ### /Test/Cafes Page:
 ```
-📍 All Sample Cafés (No Map Required)
+📍 All Sample Cafe (No Map Required)
 
 Statistics:
-• Total Cafés: 10
+• Total Cafe: 10
 • Cities: 7
 • Premium: 3
 • Verified: 9
@@ -243,7 +243,7 @@ Go to `/Test/Api` → Custom Search and try:
 
 **2. Filter by Status:**
 - Check "Open Now"
-- **Expected**: Cafés that are currently open
+- **Expected**: Cafe that are currently open
 
 **3. Different Cities:**
 ```javascript

@@ -1,0 +1,182 @@
+@model BoardGameCafeFinder.Models.Domain.BlogPost
+@{
+    ViewData["Title"] = "Create Blog Post";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="bi bi-plus-lg me-2"></i>Create Blog Post</h1>
+            <p class="text-muted mb-0">Write a new blog post</p>
+        </div>
+        <a asp-action="BlogPosts" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Posts
+        </a>
+    </div>
+
+    <form asp-action="CreateBlogPost" method="post">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Post Content</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">Title <span class="text-danger">*</span></label>
+                            <input asp-for="Title" class="form-control form-control-lg" placeholder="Enter post title..." />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Slug" class="form-label">Slug</label>
+                            <div class="input-group">
+                                <span class="input-group-text">/blog/</span>
+                                <input asp-for="Slug" class="form-control" placeholder="auto-generated-from-title" />
+                            </div>
+                            <small class="text-muted">Leave empty to auto-generate from title</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Summary" class="form-label">Summary</label>
+                            <textarea asp-for="Summary" class="form-control" rows="2" placeholder="Brief summary of the post..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label">Content <span class="text-danger">*</span></label>
+                            <textarea asp-for="Content" class="form-control" rows="15" placeholder="Write your post content here... (HTML supported)"></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                            <small class="text-muted">HTML formatting is supported</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-search me-2"></i>SEO Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="MetaTitle" class="form-label">Meta Title</label>
+                            <input asp-for="MetaTitle" class="form-control" placeholder="SEO title (leave empty to use post title)" />
+                            <small class="text-muted">Recommended: 50-60 characters</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MetaDescription" class="form-label">Meta Description</label>
+                            <textarea asp-for="MetaDescription" class="form-control" rows="2" placeholder="Description for search engines..."></textarea>
+                            <small class="text-muted">Recommended: 150-160 characters</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Publish Settings -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Publish</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check form-switch mb-3">
+                            <input asp-for="IsPublished" class="form-check-input" type="checkbox" />
+                            <label asp-for="IsPublished" class="form-check-label">Publish immediately</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Save Post
+                            </button>
+                            <a asp-action="BlogPosts" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category & Tags -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Organization</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Category" class="form-label">Category</label>
+                            <select asp-for="Category" class="form-select">
+                                <option value="">-- Select Category --</option>
+                                <option value="Top Games">Top Games</option>
+                                <option value="City Guide">City Guide</option>
+                                <option value="Tips & Tricks">Tips & Tricks</option>
+                                <option value="Game Reviews">Game Reviews</option>
+                                <option value="News">News</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Tags" class="form-label">Tags</label>
+                            <input asp-for="Tags" class="form-control" placeholder="tag1, tag2, tag3" />
+                            <small class="text-muted">Separate tags with commas</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Author" class="form-label">Author</label>
+                            <input asp-for="Author" class="form-control" placeholder="Author name" value="Board Game Cafe Finder" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Location -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Related Location</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="RelatedCity" class="form-label">City</label>
+                            <input asp-for="RelatedCity" class="form-control" placeholder="e.g., New York" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="RelatedCountry" class="form-label">Country</label>
+                            <input asp-for="RelatedCountry" class="form-control" placeholder="e.g., United States" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Image -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Featured Image</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="FeaturedImage" class="form-label">Image URL</label>
+                            <input asp-for="FeaturedImage" class="form-control" placeholder="https://..." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-generate slug from title
+        document.getElementById('Title').addEventListener('blur', function() {
+            const slugInput = document.getElementById('Slug');
+            if (!slugInput.value) {
+                const title = this.value;
+                const slug = title.toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .trim('-');
+                slugInput.value = slug.substring(0, 100);
+            }
+        });
+    </script>
+}

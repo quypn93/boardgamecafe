@@ -13,17 +13,28 @@ namespace BoardGameCafeFinder.Services
     {
         private readonly ILogger<ImageStorageService> _logger;
         private readonly IWebHostEnvironment _environment;
+        private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly string _cafeImagesPath;
 
         public ImageStorageService(
             ILogger<ImageStorageService> logger,
             IWebHostEnvironment environment,
+            IConfiguration configuration,
             IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _environment = environment;
+            _configuration = configuration;
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(30);
+
+            // Get cafe images path from config, default to wwwroot/images if not configured
+            _cafeImagesPath = _configuration["ImageStorage:CafeImagesPath"] ?? "";
+            if (string.IsNullOrEmpty(_cafeImagesPath))
+            {
+                _cafeImagesPath = Path.Combine(_environment.WebRootPath, "images");
+            }
         }
 
         public async Task<string?> DownloadAndSaveImageAsync(string imageUrl, string category = "cafes")
@@ -38,14 +49,29 @@ namespace BoardGameCafeFinder.Services
 
                 // Generate unique filename based on URL hash
                 var filename = GenerateFilename(imageUrl);
-                var categoryPath = Path.Combine("images", category);
-                var fullCategoryPath = Path.Combine(_environment.WebRootPath, categoryPath);
+
+                // Use configured path or default to wwwroot/images
+                string fullCategoryPath;
+                string relativePath;
+
+                if (!string.IsNullOrEmpty(_configuration["ImageStorage:CafeImagesPath"]))
+                {
+                    // Custom configured path
+                    fullCategoryPath = Path.Combine(_cafeImagesPath, category);
+                    relativePath = $"/images/{category}/{filename}"; // Still serve from /images URL
+                }
+                else
+                {
+                    // Default: wwwroot/images
+                    var categoryPath = Path.Combine("images", category);
+                    fullCategoryPath = Path.Combine(_environment.WebRootPath, categoryPath);
+                    relativePath = $"/{categoryPath.Replace("\\", "/")}/{filename}";
+                }
 
                 // Create directory if not exists
                 Directory.CreateDirectory(fullCategoryPath);
 
                 var filePath = Path.Combine(fullCategoryPath, filename);
-                var relativePath = $"/{categoryPath.Replace("\\", "/")}/{filename}";
 
                 // Skip if file already exists
                 if (File.Exists(filePath))

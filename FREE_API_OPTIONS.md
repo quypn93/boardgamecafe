@@ -50,7 +50,7 @@ Dưới đây là danh sách các API hoàn toàn miễn phí hoặc có free ti
 - ✅ Không cần đăng ký
 - ⚠️ Rate limit: Đừng spam requests
 
-**Cách Dùng Cho Board Game Cafés**:
+**Cách Dùng Cho Board Game Cafe**:
 ```javascript
 // Query tìm board game cafés ở Seattle
 const query = `

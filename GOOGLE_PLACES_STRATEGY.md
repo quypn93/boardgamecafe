@@ -375,7 +375,7 @@ private bool IsOpenNow(Cafe cafe, DateTime currentTime)
 ## Phase 3: Periodic Refresh (Background Jobs)
 
 ### Why Refresh?
-- Cafés change hours
+- Cafe change hours
 - New cafés open
 - Some cafés close
 - Photos get updated
@@ -470,7 +470,7 @@ public class CafeRefreshService : BackgroundService
 
 ### Estimated Cost for Weekly Refresh
 
-| Cafés in DB | API Calls/Week | Cost per 1K | Weekly Cost | Monthly Cost |
+| Cafe in DB | API Calls/Week | Cost per 1K | Weekly Cost | Monthly Cost |
 |-------------|----------------|-------------|-------------|--------------|
 | 500 | 500 | $17 | $8.50 | $34 |
 | 1,000 | 1,000 | $17 | $17 | $68 |
@@ -480,7 +480,7 @@ public class CafeRefreshService : BackgroundService
 
 ---
 
-## Phase 4: User-Contributed Cafés
+## Phase 4: User-Contributed Cafe
 
 ### User Submission Flow
 
@@ -540,7 +540,7 @@ public async Task<IActionResult> SubmitCafe([FromBody] CafeSubmissionDto submiss
 
 ---
 
-## Alternative: Discover New Cafés Automatically
+## Alternative: Discover New Cafe Automatically
 
 Run monthly job to discover new cafés in existing cities:
 

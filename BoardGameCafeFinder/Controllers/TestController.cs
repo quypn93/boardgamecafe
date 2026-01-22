@@ -12,8 +12,6 @@ namespace BoardGameCafeFinder.Controllers
     {
         public string Location { get; set; } = string.Empty;
         public int MaxResults { get; set; } = 20;
-        public bool UseMultiQuery { get; set; } = false;
-        public string[]? Queries { get; set; }
     }
     /// <summary>
     /// Test controller for testing features without Google Maps API key
@@ -385,23 +383,9 @@ namespace BoardGameCafeFinder.Controllers
         [HttpPost]
         public async Task<IActionResult> CrawlAndSave([FromBody] CrawlRequest request)
         {
-            _logger.LogInformation("Starting CrawlAndSave for location: {Location}, UseMultiQuery: {UseMultiQuery}",
-                request.Location, request.UseMultiQuery);
+            _logger.LogInformation("Starting CrawlAndSave for location: {Location}", request.Location);
 
-            List<CrawledCafeData> results;
-
-            if (request.UseMultiQuery && request.Queries != null && request.Queries.Length > 0)
-            {
-                // Use multiple search queries for better coverage
-                results = await _crawlerService.CrawlWithMultipleQueriesAsync(
-                    request.Location,
-                    request.Queries,
-                    request.MaxResults / request.Queries.Length + 1);
-            }
-            else
-            {
-                results = await _crawlerService.CrawlBoardGameCafesAsync(request.Location, request.MaxResults);
-            }
+            List<CrawledCafeData> results = await _crawlerService.CrawlBoardGameCafesAsync(request.Location, request.MaxResults);
 
             int added = 0;
             int updated = 0;
@@ -938,13 +922,52 @@ namespace BoardGameCafeFinder.Controllers
         {
             var total = await _context.BoardGames.CountAsync();
             var withBggId = await _context.BoardGames.CountAsync(g => g.BGGId.HasValue);
+            var withCategory = await _context.BoardGames.CountAsync(g => !string.IsNullOrEmpty(g.Category));
 
             return Json(new
             {
                 total = total,
                 withBggId = withBggId,
-                withoutBggId = total - withBggId
+                withoutBggId = total - withBggId,
+                withCategory = withCategory,
+                withoutCategory = total - withCategory
             });
+        }
+
+        /// <summary>
+        /// POST: /Test/UpdateBoardGameCategories
+        /// Update Category field for existing board games from BGG
+        /// </summary>
+        [Route("UpdateBoardGameCategories")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateBoardGameCategories()
+        {
+            try
+            {
+                var beforeCount = await _context.BoardGames.CountAsync(g => !string.IsNullOrEmpty(g.Category));
+
+                var updated = await _bggXmlApiService.UpdateBoardGameCategoriesAsync();
+
+                var afterCount = await _context.BoardGames.CountAsync(g => !string.IsNullOrEmpty(g.Category));
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Updated {updated} games with categories",
+                    beforeCount = beforeCount,
+                    afterCount = afterCount,
+                    updated = updated
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating board game categories");
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                });
+            }
         }
 
         private async Task<string> GenerateUniqueSlugAsync(string name, HashSet<string>? usedSlugs = null)

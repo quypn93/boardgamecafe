@@ -8,6 +8,7 @@ namespace BoardGameCafeFinder.Services
     public interface ICafeService
     {
         Task<List<CafeSearchResultDto>> SearchNearbyAsync(CafeSearchRequest request);
+        Task<List<CafeSearchResultDto>> FilterCafesAsync(string? country, string? city, bool openNow, bool hasGames, double? minRating, List<string>? categories = null);
         Task<Cafe?> GetByIdAsync(int id);
         Task<Cafe?> GetBySlugAsync(string slug);
         Task<Cafe> CreateAsync(Cafe cafe);
@@ -39,17 +40,12 @@ namespace BoardGameCafeFinder.Services
                 var latDelta = radiusKm / 111.0; // 1 degree latitude ≈ 111 km
                 var lonDelta = radiusKm / (111.0 * Math.Cos(request.Latitude * Math.PI / 180.0));
 
-                // Query database with bounding box filter
+                // Query database with bounding box filter - OPTIMIZED: only select needed fields
                 var query = _context.Cafes
+                    .AsNoTracking() // Performance: no change tracking needed
                     .Where(c => c.IsActive)
                     .Where(c => c.Latitude >= request.Latitude - latDelta && c.Latitude <= request.Latitude + latDelta)
-                    .Where(c => c.Longitude >= request.Longitude - lonDelta && c.Longitude <= request.Longitude + lonDelta)
-                    .Include(c => c.CafeGames)
-                    .Include(c => c.CafeGames)
-                    .Include(c => c.Photos)
-                    .Include(c => c.Reviews)
-                        .ThenInclude(r => r.User)
-                    .AsQueryable();
+                    .Where(c => c.Longitude >= request.Longitude - lonDelta && c.Longitude <= request.Longitude + lonDelta);
 
                 // Apply filters
                 if (request.HasGames)
@@ -62,10 +58,33 @@ namespace BoardGameCafeFinder.Services
                     query = query.Where(c => c.AverageRating >= request.MinRating.Value);
                 }
 
-                var cafes = await query.ToListAsync();
+                // Project to DTO directly in SQL - much faster than loading full entities
+                var cafeDtos = await query
+                    .Select(c => new
+                    {
+                        c.CafeId,
+                        c.Name,
+                        c.Address,
+                        c.City,
+                        c.State,
+                        c.Latitude,
+                        c.Longitude,
+                        c.AverageRating,
+                        c.TotalReviews,
+                        c.IsPremium,
+                        c.IsVerified,
+                        c.Phone,
+                        c.Website,
+                        c.Slug,
+                        c.PriceRange,
+                        c.OpeningHours,
+                        TotalGames = c.CafeGames.Count,
+                        ThumbnailUrl = c.Photos.OrderBy(p => p.DisplayOrder).Select(p => p.ThumbnailUrl).FirstOrDefault()
+                    })
+                    .ToListAsync();
 
                 // Calculate exact distance using Haversine formula and filter by radius
-                var results = cafes
+                var results = cafeDtos
                     .Select(c => new
                     {
                         Cafe = c,
@@ -74,7 +93,28 @@ namespace BoardGameCafeFinder.Services
                     .Where(x => x.Distance <= request.Radius)
                     .OrderBy(x => x.Distance)
                     .Take(request.Limit)
-                    .Select(x => MapToCafeSearchResultDto(x.Cafe, x.Distance))
+                    .Select(x => new CafeSearchResultDto
+                    {
+                        Id = x.Cafe.CafeId,
+                        Name = x.Cafe.Name,
+                        Address = x.Cafe.Address,
+                        City = x.Cafe.City,
+                        State = x.Cafe.State,
+                        Latitude = x.Cafe.Latitude,
+                        Longitude = x.Cafe.Longitude,
+                        Distance = x.Distance,
+                        AverageRating = x.Cafe.AverageRating,
+                        TotalReviews = x.Cafe.TotalReviews,
+                        IsOpenNow = IsOpenNow(x.Cafe.OpeningHours),
+                        IsPremium = x.Cafe.IsPremium,
+                        IsVerified = x.Cafe.IsVerified,
+                        TotalGames = x.Cafe.TotalGames,
+                        Phone = x.Cafe.Phone,
+                        Website = x.Cafe.Website,
+                        Slug = x.Cafe.Slug,
+                        ThumbnailUrl = x.Cafe.ThumbnailUrl,
+                        PriceRange = x.Cafe.PriceRange
+                    })
                     .ToList();
 
                 // Filter by open now if requested
@@ -92,6 +132,45 @@ namespace BoardGameCafeFinder.Services
                 _logger.LogError(ex, "Error searching for cafés");
                 throw;
             }
+        }
+
+        // Helper method to check if cafe is open now based on opening hours string
+        private bool IsOpenNow(string? openingHours)
+        {
+            if (string.IsNullOrEmpty(openingHours)) return false;
+
+            try
+            {
+                var now = DateTime.Now;
+                var dayOfWeek = now.DayOfWeek.ToString().ToLower();
+                var currentTime = now.TimeOfDay;
+
+                // Parse opening hours (format: "Mon: 9:00-22:00, Tue: 9:00-22:00, ...")
+                var days = openingHours.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var day in days)
+                {
+                    var parts = day.Split(':', 2);
+                    if (parts.Length < 2) continue;
+
+                    var dayName = parts[0].Trim().ToLower();
+                    if (!dayName.StartsWith(dayOfWeek.Substring(0, 3))) continue;
+
+                    var timeParts = parts[1].Trim().Split('-');
+                    if (timeParts.Length < 2) continue;
+
+                    if (TimeSpan.TryParse(timeParts[0].Trim(), out var openTime) &&
+                        TimeSpan.TryParse(timeParts[1].Trim(), out var closeTime))
+                    {
+                        return currentTime >= openTime && currentTime <= closeTime;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore parsing errors
+            }
+
+            return false;
         }
 
         public async Task<Cafe?> GetByIdAsync(int id)
@@ -222,6 +301,97 @@ namespace BoardGameCafeFinder.Services
         public async Task<bool> CafeExistsAsync(string slug)
         {
             return await _context.Cafes.AnyAsync(c => c.Slug == slug);
+        }
+
+        public async Task<List<CafeSearchResultDto>> FilterCafesAsync(string? country, string? city, bool openNow, bool hasGames, double? minRating, List<string>? categories = null)
+        {
+            try
+            {
+                var query = _context.Cafes
+                    .AsNoTracking() // Performance: no change tracking
+                    .Where(c => c.IsActive);
+
+                // Filter by country
+                if (!string.IsNullOrEmpty(country))
+                {
+                    query = query.Where(c => c.Country == country);
+                }
+
+                // Filter by city
+                if (!string.IsNullOrEmpty(city))
+                {
+                    query = query.Where(c => c.City == city);
+                }
+
+                // Filter by has games
+                if (hasGames)
+                {
+                    query = query.Where(c => c.CafeGames.Any());
+                }
+
+                // Filter by game categories (multiselect - any match)
+                if (categories != null && categories.Any())
+                {
+                    query = query.Where(c => c.CafeGames.Any(cg => cg.Game != null && categories.Contains(cg.Game.Category)));
+                }
+
+                // Filter by minimum rating
+                if (minRating.HasValue)
+                {
+                    var minRatingDecimal = (decimal)minRating.Value;
+                    query = query.Where(c => c.AverageRating >= minRatingDecimal);
+                }
+
+                // Project to DTO directly in SQL - much faster than loading full entities
+                var results = await query
+                    .OrderByDescending(c => c.AverageRating)
+                    .Take(100)
+                    .Select(c => new CafeSearchResultDto
+                    {
+                        Id = c.CafeId,
+                        Name = c.Name,
+                        Address = c.Address,
+                        City = c.City,
+                        State = c.State,
+                        Latitude = c.Latitude,
+                        Longitude = c.Longitude,
+                        Distance = 0,
+                        AverageRating = c.AverageRating,
+                        TotalReviews = c.TotalReviews,
+                        IsOpenNow = false, // Will be calculated after
+                        IsPremium = c.IsPremium,
+                        IsVerified = c.IsVerified,
+                        TotalGames = c.CafeGames.Count,
+                        Phone = c.Phone,
+                        Website = c.Website,
+                        Slug = c.Slug,
+                        ThumbnailUrl = c.Photos.OrderBy(p => p.DisplayOrder).Select(p => p.ThumbnailUrl).FirstOrDefault(),
+                        PriceRange = c.PriceRange,
+                        OpeningHoursRaw = c.OpeningHours // Temp field for IsOpenNow calculation
+                    })
+                    .ToListAsync();
+
+                // Calculate IsOpenNow in memory
+                foreach (var result in results)
+                {
+                    result.IsOpenNow = IsOpenNow(result.OpeningHoursRaw);
+                }
+
+                // Filter by open now if requested (must be done in memory)
+                if (openNow)
+                {
+                    results = results.Where(r => r.IsOpenNow).ToList();
+                }
+
+                _logger.LogInformation($"Found {results.Count} cafés for filter: Country={country}, City={city}");
+
+                return results;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error filtering cafés");
+                throw;
+            }
         }
 
         #region Helper Methods

@@ -200,7 +200,7 @@ Stop any running instances:
 
 ## ✨ Quick Demo Scenarios
 
-### Scenario 1: Find Cafés in Seattle
+### Scenario 1: Find Cafe in Seattle
 1. Go to https://localhost:7xxx/Map?city=seattle
 2. Map centers on Seattle
 3. Shows 2 cafés: Mox Boarding House, Raygun Lounge

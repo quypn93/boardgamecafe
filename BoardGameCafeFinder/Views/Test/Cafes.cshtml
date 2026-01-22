@@ -1,6 +1,6 @@
 @model List<BoardGameCafeFinder.Models.DTOs.CafeSearchResultDto>
 @{
-    ViewData["Title"] = "Test - All Cafés";
+    ViewData["Title"] = "Test - All Cafe";
     Layout = "_AdminLayout";
     var countries = ViewBag.Countries as List<string> ?? new List<string>();
     var cities = ViewBag.Cities as List<string> ?? new List<string>();
@@ -15,7 +15,7 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h2><i class="bi bi-geo-alt-fill"></i> All Cafés</h2>
+            <h2><i class="bi bi-geo-alt-fill"></i> All Cafe</h2>
             <p class="text-muted mb-0">Manage and test café data</p>
         </div>
         <span class="badge bg-info fs-6">@totalCount cafés total</span>

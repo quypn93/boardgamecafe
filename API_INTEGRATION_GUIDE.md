@@ -394,7 +394,7 @@ public async Task<YelpBusiness> GetBusinessDetails(string yelpBusinessId)
    - Yelp only for review aggregation
    - Update Yelp data weekly, not real-time
 
-2. **Prioritize High-Value Cafés**
+2. **Prioritize High-Value Cafe**
    - Only fetch Yelp data for cafés with >10 views/month
    - Skip Yelp integration for low-traffic cafés
 

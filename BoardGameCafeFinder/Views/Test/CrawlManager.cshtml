@@ -40,13 +40,6 @@
                     <input type="number" id="crawlMaxRetries" class="form-control" value="2" min="0" max="5">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label d-block">&nbsp;</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="useMultiQuery" checked>
-                        <label class="form-check-label" for="useMultiQuery">
-                            Use multiple search queries
-                        </label>
-                    </div>
                 </div>
                 <div class="col-md-3 text-end">
                     <label class="form-label d-block">&nbsp;</label>
@@ -155,7 +148,7 @@
                 Games with BGG IDs are verified board games that will be matched during crawl.
             </p>
             <div class="row mb-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="card bg-light">
                         <div class="card-body text-center py-2">
                             <h4 class="mb-0" id="totalGamesCount">-</h4>
@@ -163,11 +156,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="card bg-light">
                         <div class="card-body text-center py-2">
                             <h4 class="mb-0" id="gamesWithBggCount">-</h4>
                             <small class="text-muted">With BGG ID</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card bg-light">
+                        <div class="card-body text-center py-2">
+                            <h4 class="mb-0" id="gamesWithCategoryCount">-</h4>
+                            <small class="text-muted">With Category</small>
                         </div>
                     </div>
                 </div>
@@ -181,6 +182,9 @@
                     <small class="text-muted">Import popular games from BoardGameGeek</small>
                 </div>
                 <div class="col-md-3">
+                    <button id="updateCategoriesBtn" class="btn btn-info w-100 mb-1">
+                        <i class="bi bi-tags"></i> Update Categories
+                    </button>
                     <button id="refreshBoardGamesCountBtn" class="btn btn-outline-success w-100">
                         <i class="bi bi-arrow-clockwise"></i> Refresh Count
                     </button>
@@ -405,10 +409,12 @@
             $.get('/Test/BoardGamesCount', function(response) {
                 $('#totalGamesCount').text(response.total);
                 $('#gamesWithBggCount').text(response.withBggId);
+                $('#gamesWithCategoryCount').text(response.withCategory);
                 $('#boardGamesCountBadge').text(response.total + ' games');
             }).fail(function() {
                 $('#totalGamesCount').text('Error');
                 $('#gamesWithBggCount').text('Error');
+                $('#gamesWithCategoryCount').text('Error');
                 $('#boardGamesCountBadge').text('Error');
             });
         }
@@ -420,6 +426,61 @@
             setTimeout(function() {
                 $btn.html('<i class="bi bi-arrow-clockwise"></i> Refresh Count').prop('disabled', false);
             }, 500);
+        });
+
+        $('#updateCategoriesBtn').on('click', async function() {
+            if (!confirm('This will update categories for all board games that have a BGG ID but no category.\n\nThis may take a while due to BGG API rate limiting.\n\nContinue?')) {
+                return;
+            }
+
+            const $btn = $(this);
+            $btn.html('<span class="spinner-border spinner-border-sm"></span> Updating...').prop('disabled', true);
+            $('#seedProgress').show();
+            $('#seedResults').hide();
+            $('#seedProgressBar').css('width', '50%');
+            $('#seedProgressText').text('Updating categories from BGG (this may take a while)...');
+
+            try {
+                const response = await $.ajax({
+                    url: '/Test/UpdateBoardGameCategories',
+                    type: 'POST',
+                    timeout: 600000 // 10 minutes
+                });
+
+                $('#seedProgressBar').css('width', '100%').removeClass('progress-bar-animated');
+
+                if (response.success) {
+                    $('#seedResults').html(`
+                        <div class="alert alert-success">
+                            <h6><i class="bi bi-check-circle"></i> ${response.message}</h6>
+                            <strong>Before:</strong> ${response.beforeCount} games with category<br>
+                            <strong>Updated:</strong> ${response.updated} games<br>
+                            <strong>Total Now:</strong> ${response.afterCount} games with category
+                        </div>
+                    `).show();
+                    loadBoardGamesCount();
+                } else {
+                    $('#seedResults').html(`
+                        <div class="alert alert-danger">
+                            <h6><i class="bi bi-x-circle"></i> Update Failed</h6>
+                            ${response.message}
+                        </div>
+                    `).show();
+                }
+            } catch (error) {
+                $('#seedResults').html(`
+                    <div class="alert alert-danger">
+                        <h6><i class="bi bi-x-circle"></i> Error</h6>
+                        ${error.statusText || error}
+                    </div>
+                `).show();
+            } finally {
+                $btn.html('<i class="bi bi-tags"></i> Update Categories').prop('disabled', false);
+                setTimeout(function() {
+                    $('#seedProgress').hide();
+                    $('#seedProgressBar').css('width', '0%').addClass('progress-bar-animated');
+                }, 2000);
+            }
         });
 
         $('#seedBoardGamesBtn').on('click', async function() {
@@ -711,7 +772,6 @@
             const delay = parseInt($('#crawlDelay').val()) || 30;
             const maxPerCity = parseInt($('#crawlMaxPerCity').val()) || 15;
             const maxRetries = parseInt($('#crawlMaxRetries').val()) || 2;
-            const useMultiQuery = $('#useMultiQuery').is(':checked');
 
             // UI Updates
             $('#crawlAllUSBtn').hide();
@@ -722,7 +782,7 @@
             $('.crawl-btn, #customCrawlBtn').prop('disabled', true);
 
             const startTime = Date.now();
-            logMessage(`🚀 Starting crawl for ${cities.length} cities (multiQuery: ${useMultiQuery})`, 'info');
+            logMessage(`🚀 Starting crawl for ${cities.length} cities`, 'info');
 
             for (let i = 0; i < cities.length; i++) {
                 if (shouldStop) {
@@ -746,7 +806,7 @@
                     }
 
                     try {
-                        const result = await crawlCity(city, maxPerCity, useMultiQuery);
+                        const result = await crawlCity(city, maxPerCity);
 
                         if (result.success !== false) {
                             totalStats.added += result.added || 0;
@@ -817,24 +877,19 @@
             return hours > 0 ? `${hours}h ${minutes}m` : `${minutes} minutes`;
         }
 
-        function crawlCity(location, maxResults, useMultiQuery = false) {
+        function crawlCity(location, maxResults) {
             return new Promise((resolve, reject) => {
                 const payload = {
                     location: location,
-                    maxResults: maxResults,
-                    useMultiQuery: useMultiQuery
+                    maxResults: maxResults
                 };
-
-                if (useMultiQuery) {
-                    payload.queries = searchQueries;
-                }
 
                 $.ajax({
                     url: '/Test/CrawlAndSave',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(payload),
-                    timeout: 600000, // 10 minute timeout for multi-query
+                    timeout: 600000, // 10 minute timeout
                     success: resolve,
                     error: function(xhr, status, error) {
                         reject(error || status);
@@ -1147,6 +1202,7 @@
                     location: location,
                     maxResults: maxResults
                 }),
+                timeout: 600000, // 10 minute timeout
                 success: function(response) {
                     $('#loading').hide();
                     $('.crawl-btn').prop('disabled', false);

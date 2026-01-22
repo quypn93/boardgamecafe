@@ -23,7 +23,7 @@ public class HomeController : Controller
         string? country,
         string? city,
         int[]? gameIds,
-        string? category,
+        string[]? categories,
         double? lat,
         double? lng,
         int radius = 50,
@@ -83,10 +83,10 @@ public class HomeController : Controller
             cafesQuery = cafesQuery.Where(c => c.CafeGames.Any(cg => gameIds.Contains(cg.GameId)));
         }
 
-        // Filter by category
-        if (!string.IsNullOrEmpty(category))
+        // Filter by categories (multiselect)
+        if (categories != null && categories.Length > 0)
         {
-            cafesQuery = cafesQuery.Where(c => c.CafeGames.Any(cg => cg.Game != null && cg.Game.Category == category));
+            cafesQuery = cafesQuery.Where(c => c.CafeGames.Any(cg => cg.Game != null && categories.Contains(cg.Game.Category)));
         }
 
         // Get total count for pagination
@@ -142,13 +142,13 @@ public class HomeController : Controller
             .OrderBy(c => c)
             .ToListAsync();
 
-        // Get board games filtered by category if selected
+        // Get board games filtered by categories if selected
         var boardGamesQuery = _context.BoardGames
             .Where(g => g.CafeGames.Any());
 
-        if (!string.IsNullOrEmpty(category))
+        if (categories != null && categories.Length > 0)
         {
-            boardGamesQuery = boardGamesQuery.Where(g => g.Category == category);
+            boardGamesQuery = boardGamesQuery.Where(g => categories.Contains(g.Category));
         }
 
         var boardGames = await boardGamesQuery
@@ -159,7 +159,7 @@ public class HomeController : Controller
             .ToListAsync();
 
         // Get available categories
-        var categories = await _context.BoardGames
+        var availableCategories = await _context.BoardGames
             .Where(g => g.CafeGames.Any() && !string.IsNullOrEmpty(g.Category))
             .Select(g => g.Category)
             .Distinct()
@@ -170,10 +170,10 @@ public class HomeController : Controller
         ViewBag.Countries = countries;
         ViewBag.Cities = cities;
         ViewBag.BoardGames = boardGames;
-        ViewBag.Categories = categories;
+        ViewBag.Categories = availableCategories;
         ViewBag.SelectedCountry = country;
         ViewBag.SelectedCity = city;
-        ViewBag.SelectedCategory = category;
+        ViewBag.SelectedCategories = categories?.ToList() ?? new List<string>();
         ViewBag.SelectedGameIds = gameIds ?? Array.Empty<int>();
         ViewBag.UserLat = lat;
         ViewBag.UserLng = lng;

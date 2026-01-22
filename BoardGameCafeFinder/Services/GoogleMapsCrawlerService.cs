@@ -101,7 +101,7 @@ namespace BoardGameCafeFinder.Services
                 });
 
                 // Wait for results to load
-                await page.WaitForTimeoutAsync(5000);
+                await page.WaitForTimeoutAsync(3000);
 
                 // Check if we already landed on a details page (single result)
                 // Single results don't have a 'feed' but have the name header visible
@@ -158,7 +158,7 @@ namespace BoardGameCafeFinder.Services
                         
                         // 3. Click and Extract
                         await itemLocator.ClickAsync();
-                        await page.WaitForTimeoutAsync(2000);
+                        await page.WaitForTimeoutAsync(1500);
 
                         var cafeData = await ExtractCafeDataAsync(page);
 
@@ -178,8 +178,8 @@ namespace BoardGameCafeFinder.Services
                         {
                             await page.GoBackAsync();
                         }
-                        
-                        await page.WaitForTimeoutAsync(2000);
+
+                        await page.WaitForTimeoutAsync(1500);
                         
                         // 5. Re-focus/Re-align list state
                          var resultsPanel = page.Locator("div[role='feed']");
@@ -792,7 +792,7 @@ namespace BoardGameCafeFinder.Services
                             if (match != null)
                             {
                                 g.BggId = match.BggId;
-                                
+
                                 var details = await _bggXmlApiService.GetGameDetailsAsync(match.BggId);
                                 if (details != null)
                                 {

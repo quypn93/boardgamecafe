@@ -51,7 +51,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">
-                    <i class="bi bi-dice-5-fill"></i> BGC Finder
+                    <i class="bi bi-person-fill"></i> BGC Finder
                 </a>
                 <span class="badge bg-danger me-3">ADMIN</span>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
@@ -105,6 +105,12 @@
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Test" && ViewContext.RouteData.Values["action"]?.ToString() == "Cafes" ? "active" : "")"
                                asp-controller="Test" asp-action="Cafes">
                                 <i class="bi bi-shop"></i> Manage Cafes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "BlogPosts" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateBlogPost" || ViewContext.RouteData.Values["action"]?.ToString() == "EditBlogPost" ? "active" : "")"
+                               asp-controller="Admin" asp-action="BlogPosts">
+                                <i class="bi bi-newspaper"></i> Blog Posts
                             </a>
                         </li>
                         <li class="nav-item">

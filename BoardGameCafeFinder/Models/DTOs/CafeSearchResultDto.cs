@@ -41,6 +41,10 @@ namespace BoardGameCafeFinder.Models.DTOs
 
         public List<ReviewSummaryDto> LatestReviews { get; set; } = new List<ReviewSummaryDto>();
 
+        // Internal: for IsOpenNow calculation (not serialized to JSON)
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string? OpeningHoursRaw { get; set; }
+
         // Helper properties
         public string DistanceDisplay => GetDistanceDisplay();
         public string RatingDisplay => AverageRating.HasValue ? $"{AverageRating:F1} ⭐" : "No ratings";

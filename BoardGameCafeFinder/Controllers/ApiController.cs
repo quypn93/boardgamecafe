@@ -120,6 +120,50 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         /// <summary>
+        /// Filter cafés by country/city/categories
+        /// </summary>
+        [HttpGet("cafes/filter")]
+        [ProducesResponseType(typeof(List<CafeSearchResultDto>), 200)]
+        public async Task<IActionResult> FilterCafes(
+            [FromQuery] string? country = null,
+            [FromQuery] string? city = null,
+            [FromQuery] bool openNow = false,
+            [FromQuery] bool hasGames = false,
+            [FromQuery] double? minRating = null,
+            [FromQuery] string? categories = null)
+        {
+            try
+            {
+                // Parse categories from comma-separated string
+                var categoryList = string.IsNullOrEmpty(categories)
+                    ? null
+                    : categories.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim()).ToList();
+
+                _logger.LogInformation(
+                    "Café filter request: Country={Country}, City={City}, OpenNow={OpenNow}, HasGames={HasGames}, Categories={Categories}",
+                    country, city, openNow, hasGames, categories);
+
+                var results = await _cafeService.FilterCafesAsync(country, city, openNow, hasGames, minRating, categoryList);
+
+                return Ok(new
+                {
+                    success = true,
+                    count = results.Count,
+                    data = results
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while filtering cafés");
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "An error occurred while filtering cafés. Please try again later."
+                });
+            }
+        }
+
+        /// <summary>
         /// Get popular cities with café counts
         /// </summary>
         [HttpGet("cities")]

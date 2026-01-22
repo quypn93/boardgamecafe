@@ -1,4 +1,4 @@
-# Overpass API Queries - Board Game Cafés Seattle 🎲
+# Overpass API Queries - Board Game Cafe Seattle 🎲
 
 ## 🧪 Test Queries for Overpass Turbo
 
@@ -6,7 +6,7 @@ Mở [https://overpass-turbo.eu/](https://overpass-turbo.eu/) và paste các que
 
 ---
 
-## Query 1: Tìm Cafés Có "Game" Trong Tên (Broad Search) ⭐
+## Query 1: Tìm Cafe Có "Game" Trong Tên (Broad Search) ⭐
 
 **Mục đích**: Tìm bất kỳ địa điểm nào có "game" trong tên ở Seattle area
 
@@ -32,7 +32,7 @@ out skel qt;
 
 ---
 
-## Query 2: Tất Cả Cafés Ở Seattle (General Search) ⭐⭐
+## Query 2: Tất Cả Cafe Ở Seattle (General Search) ⭐⭐
 
 **Mục đích**: Lấy TẤT CẢ cafés, sau đó manual filter
 
@@ -52,14 +52,14 @@ out skel qt;
 
 ---
 
-## Query 3: Cafés + Bars + Pubs (Broad Entertainment) ⭐⭐⭐
+## Query 3: Cafe + Bars + Pubs (Broad Entertainment) ⭐⭐⭐
 
 **Mục đích**: Nhiều board game venues là bars/pubs, không chỉ cafés
 
 ```
 [out:json][timeout:25];
 (
-  // Cafés
+  // Cafe
   node["amenity"="cafe"](47.5,-122.4,47.7,-122.2);
   way["amenity"="cafe"](47.5,-122.4,47.7,-122.2);
 
@@ -85,7 +85,7 @@ out skel qt;
 ```
 [out:json][timeout:25];
 (
-  // Cafés, bars, pubs
+  // Cafe, bars, pubs
   node["amenity"~"cafe|bar|pub"](47.5,-122.4,47.7,-122.2);
   way["amenity"~"cafe|bar|pub"](47.5,-122.4,47.7,-122.2);
 
@@ -104,7 +104,7 @@ out skel qt;
 
 ---
 
-## Query 5: Search By Specific Names (Known Cafés)
+## Query 5: Search By Specific Names (Known Cafe)
 
 **Mục đích**: Tìm cafés cụ thể mà bạn biết tên
 
@@ -394,9 +394,9 @@ public async Task<string> GetAddressFromOSM(double lat, double lon)
 
 ## 📈 Realistic Expectations
 
-### OSM Coverage for Board Game Cafés:
+### OSM Coverage for Board Game Cafe:
 
-| City | Total Cafés (Est.) | Board Game Cafés (Real) | OSM Has | Coverage % |
+| City | Total Cafe (Est.) | Board Game Cafe (Real) | OSM Has | Coverage % |
 |------|-------------------|------------------------|---------|------------|
 | Seattle | 500+ | 5-8 | 0-2 | 0-25% |
 | Portland | 400+ | 4-6 | 0-1 | 0-17% |

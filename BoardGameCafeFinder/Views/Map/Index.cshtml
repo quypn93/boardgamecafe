@@ -1,98 +1,204 @@
 @model BoardGameCafeFinder.Models.DTOs.MapViewModel
 @{
     ViewData["Title"] = "Find Board Game Cafés Near You";
+    ViewData["MetaDescription"] = "Discover board game cafes near you with our interactive map. Find locations, check opening hours, browse game libraries, and get directions.";
     Layout = "_UserLayout";
 }
 
-<div class="map-container">
-    <div class="row g-0">
-        <!-- Sidebar with Search & Filters -->
-        <div class="col-lg-4 col-md-5 sidebar-panel">
-            <div class="search-panel p-3">
-                <h4 class="mb-3"><i class="bi bi-map"></i> Find Board Game Cafés</h4>
-
-                <!-- Location Search -->
-                <div class="mb-3">
-                    <label for="locationInput" class="form-label">Location</label>
-                    <div class="input-group">
-                        <input type="text"
-                               id="locationInput"
-                               class="form-control"
-                               placeholder="Enter city or address">
-                        <button class="btn btn-outline-secondary" type="button" id="searchLocationBtn">
-                            <i class="bi bi-search"></i>
-                        </button>
+<div class="map-page">
+    <!-- Header Banner -->
+    <div class="map-header bg-gradient-primary text-white py-3">
+        <div class="container-fluid px-4 py-2">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="h4 mb-1"><i class="bi bi-map me-2"></i>Board Game Café Map</h1>
+                    <p class="mb-0 opacity-75 small">Discover board game cafes near you</p>
+                </div>
+                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                    <div class="d-inline-flex align-items-center bg-white bg-opacity-10 rounded-pill px-3 py-1">
+                        <span class="badge bg-success me-2" id="cafesCountBadge">0</span>
+                        <span class="small">Cafés Found</span>
                     </div>
-                    <small class="text-muted">Or click "Use My Location" below</small>
-                </div>
-
-                <!-- Search Radius -->
-                <div class="mb-3">
-                    <label for="radiusSelect" class="form-label">Search Radius</label>
-                    <select id="radiusSelect" class="form-select">
-                        <option value="5000">5 km</option>
-                        <option value="10000" selected>10 km</option>
-                        <option value="25000">25 km</option>
-                        <option value="50000">50 km</option>
-                    </select>
-                </div>
-
-                <!-- Filters -->
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="openNowFilter">
-                        <label class="form-check-label" for="openNowFilter">
-                            Open Now
-                        </label>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="hasGamesFilter">
-                        <label class="form-check-label" for="hasGamesFilter">
-                            Has Game Library
-                        </label>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="minRatingSelect" class="form-label">Minimum Rating</label>
-                    <select id="minRatingSelect" class="form-select">
-                        <option value="">Any Rating</option>
-                        <option value="4.5">4.5+</option>
-                        <option value="4.0">4.0+</option>
-                        <option value="3.5">3.5+</option>
-                        <option value="3.0">3.0+</option>
-                    </select>
-                </div>
-
-                <button id="searchBtn" class="btn btn-primary w-100 mb-2">
-                    <i class="bi bi-search"></i> Search Cafés
-                </button>
-
-                <button id="useLocationBtn" class="btn btn-outline-secondary w-100">
-                    <i class="bi bi-geo-alt"></i> Use My Location
-                </button>
-            </div>
-
-            <!-- Results List -->
-            <div id="resultsContainer" class="results-list">
-                <div class="text-center p-4 text-muted">
-                    <i class="bi bi-geo-alt" style="font-size: 2rem;"></i>
-                    <p class="mt-2">Search for cafés or use your location to see results</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Leaflet Map -->
-        <div class="col-lg-8 col-md-7 map-panel">
-            <div id="map" style="height: 100vh;"></div>
+    <div class="map-container">
+        <div class="row g-0">
+            <!-- Sidebar with Search & Filters -->
+            <div class="col-lg-4 col-xl-3 sidebar-panel">
+                <!-- Search Panel -->
+                <div class="search-panel">
+                    <div class="p-3 border-bottom">
+                        <!-- Location Search -->
+                        <div class="mb-3">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text"
+                                       id="locationInput"
+                                       class="form-control border-start-0 ps-0"
+                                       placeholder="Search city or address...">
+                                <button class="btn btn-primary" type="button" id="searchLocationBtn">
+                                    Go
+                                </button>
+                            </div>
+                        </div>
 
-            <!-- Loading Overlay -->
-            <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                        <!-- Quick Actions -->
+                        <div class="d-flex gap-2 mb-3">
+                            <button id="useLocationBtn" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                <i class="bi bi-crosshair"></i> Use My Location
+                            </button>
+                        </div>
+
+                        <!-- Filters (Always Visible) -->
+                        <div class="filters-panel">
+                            <h6 class="text-muted mb-2"><i class="bi bi-funnel me-1"></i> Filters</h6>
+
+                            <!-- Country & City -->
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Country</label>
+                                    <select id="countrySelect" class="form-select form-select-sm">
+                                        <option value="">All Countries</option>
+                                        @if (ViewBag.Countries != null)
+                                        {
+                                            foreach (var country in (List<string>)ViewBag.Countries)
+                                            {
+                                                <option value="@country">@country</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">City</label>
+                                    <select id="citySelect" class="form-select form-select-sm">
+                                        <option value="">All Cities</option>
+                                        @if (ViewBag.Cities != null)
+                                        {
+                                            foreach (var city in (List<string>)ViewBag.Cities)
+                                            {
+                                                <option value="@city">@city</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Radius & Rating -->
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Radius</label>
+                                    <select id="radiusSelect" class="form-select form-select-sm">
+                                        <option value="5000">5 km</option>
+                                        <option value="10000" selected>10 km</option>
+                                        <option value="25000">25 km</option>
+                                        <option value="50000">50 km</option>
+                                        <option value="100000">100 km</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Min Rating</label>
+                                    <select id="minRatingSelect" class="form-select form-select-sm">
+                                        <option value="">Any</option>
+                                        <option value="4.5">4.5+ ★</option>
+                                        <option value="4.0">4.0+ ★</option>
+                                        <option value="3.5">3.5+ ★</option>
+                                        <option value="3.0">3.0+ ★</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Game Categories (Select2 Multiselect) -->
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Game Categories</label>
+                                <select id="categoriesSelect" class="form-select form-select-sm" multiple>
+                                    @if (ViewBag.GameCategories != null)
+                                    {
+                                        foreach (var category in (List<string>)ViewBag.GameCategories)
+                                        {
+                                            <option value="@category">@category</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Checkboxes (Hidden for now) -->
+                            <div class="d-flex gap-3 mb-3" style="display: none !important;">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="openNowFilter">
+                                    <label class="form-check-label small" for="openNowFilter">
+                                        <i class="bi bi-clock text-success"></i> Open
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="hasGamesFilter">
+                                    <label class="form-check-label small" for="hasGamesFilter">
+                                        <i class="bi bi-controller text-primary"></i> Has Games
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button id="searchBtn" class="btn btn-primary btn-sm w-100">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results List -->
+                <div id="resultsContainer" class="results-list">
+                    <div class="empty-state text-center p-5">
+                        <div class="empty-icon mb-3">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <h5 class="text-muted">Find Board Game Cafés</h5>
+                        <p class="text-muted small mb-3">Enter a location or use your current position to discover cafés nearby</p>
+                        <button id="emptyStateLocationBtn" class="btn btn-primary btn-sm">
+                            <i class="bi bi-crosshair me-1"></i> Use My Location
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaflet Map -->
+            <div class="col-lg-8 col-xl-9 map-panel">
+                <div id="map"></div>
+
+                <!-- Map Controls Overlay -->
+                <div class="map-controls">
+                    <button id="zoomInBtn" class="map-control-btn" title="Zoom In">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <button id="zoomOutBtn" class="map-control-btn" title="Zoom Out">
+                        <i class="bi bi-dash-lg"></i>
+                    </button>
+                    <button id="centerMapBtn" class="map-control-btn" title="Center on Location">
+                        <i class="bi bi-crosshair2"></i>
+                    </button>
+                </div>
+
+                <!-- Map Legend -->
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <span class="legend-marker" style="background: #667eea;"></span>
+                        <span class="small">Café</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-marker" style="background: #4285F4;"></span>
+                        <span class="small">Your Location</span>
+                    </div>
+                </div>
+
+                <!-- Loading Overlay -->
+                <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                    <div class="loading-content">
+                        <div class="spinner-border text-primary mb-2" role="status"></div>
+                        <p class="mb-0 small text-muted">Searching for cafés...</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -104,105 +210,379 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin="" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <style>
+        /* Select2 customization */
+        .select2-container--bootstrap-5 .select2-selection--multiple {
+            min-height: 31px;
+            font-size: 0.875rem;
+        }
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+            background-color: #667eea;
+            border-color: #667eea;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 0.1rem 0.4rem;
+        }
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+            color: #fff;
+        }
+        .select2-container--bootstrap-5 .select2-dropdown {
+            font-size: 0.875rem;
+        }
+        .map-page {
+            margin-top: -1rem;
+        }
+
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .map-header {
+            position: relative;
+            z-index: 10;
+        }
+
         .map-container {
-            margin-top: -20px;
-            padding: 2rem 0;
+            height: calc(100vh - 130px);
         }
 
         .sidebar-panel {
-            height: 100vh;
-            overflow-y: auto;
-            background: #f8f9fa;
-            border-right: 1px solid #dee2e6;
+            height: calc(100vh - 130px);
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-right: 1px solid #e9ecef;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            z-index: 5;
         }
 
         .search-panel {
-            background: white;
-            border-bottom: 1px solid #dee2e6;
+            flex-shrink: 0;
+            background: #fff;
         }
 
         .results-list {
-            background: white;
+            flex: 1;
+            overflow-y: auto;
+            background: #f8f9fa;
         }
 
-        .result-item {
+        .empty-state {
+            color: #6c757d;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-icon i {
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        /* Result Cards */
+        .result-card {
+            background: #fff;
+            border-radius: 12px;
+            margin: 0.75rem;
             padding: 1rem;
-            border-bottom: 1px solid #dee2e6;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        .result-item:hover {
-            background-color: #f8f9fa;
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #667eea;
         }
 
-        .result-item.active {
-            background-color: #e7f3ff;
-            border-left: 3px solid #0d6efd;
+        .result-card.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
 
-        .result-item h6 {
-            margin-bottom: 0.5rem;
+        .result-card .card-number {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .result-card .cafe-name {
+            font-weight: 600;
             color: #212529;
+            margin-bottom: 0.25rem;
         }
 
-        .result-item .text-muted {
-            font-size: 0.875rem;
+        .result-card .cafe-address {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
         }
 
-        .result-item .badge {
-            font-size: 0.75rem;
+        .result-card .cafe-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.8rem;
         }
 
+        .result-card .rating {
+            color: #ffc107;
+            font-weight: 600;
+        }
+
+        .result-card .games-count {
+            color: #667eea;
+        }
+
+        .result-card .distance {
+            color: #6c757d;
+            margin-left: auto;
+        }
+
+        .result-card .status-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+        }
+
+        /* Map Panel */
         .map-panel {
             position: relative;
+            height: calc(100vh - 130px);
         }
 
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+        .map-control-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .map-control-btn:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+        }
+
+        .map-control-btn i {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        /* Map Legend */
+        .map-legend {
+            position: absolute;
+            left: 1rem;
+            bottom: 2rem;
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* Loading Overlay */
         .loading-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 1001;
         }
 
-        /* Leaflet popup styling */
+        .loading-content {
+            text-align: center;
+        }
+
+        /* Leaflet Popup Styling */
         .leaflet-popup-content-wrapper {
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
 
         .leaflet-popup-content {
-            margin: 12px;
+            margin: 0;
+            padding: 0;
         }
 
-        .cafe-popup h5 {
-            margin-bottom: 0.5rem;
-            color: #333;
+        .cafe-popup {
+            padding: 1rem;
+            min-width: 260px;
         }
 
-        .cafe-popup .badge {
-            font-size: 0.75rem;
+        .cafe-popup .popup-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
         }
 
-        /* Responsive adjustments */
-        @@media (max-width: 768px) {
+        .cafe-popup .popup-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .cafe-popup .popup-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #212529;
+        }
+
+        .cafe-popup .popup-address {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .cafe-popup .popup-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cafe-popup .popup-meta-item {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .cafe-popup .popup-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .cafe-popup .popup-actions .btn {
+            flex: 1;
+            font-size: 0.8rem;
+        }
+
+        /* Results Header */
+        .results-header {
+            padding: 0.75rem 1rem;
+            background: #fff;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        /* Hide default Leaflet zoom control */
+        .leaflet-control-zoom {
+            display: none;
+        }
+
+        /* Responsive */
+        @@media (max-width: 991px) {
+            .map-container {
+                height: auto;
+                flex-direction: column;
+            }
+
             .sidebar-panel {
                 height: auto;
-                max-height: 50vh;
+                max-height: 40vh;
+                order: 2;
             }
 
             .map-panel {
                 height: 50vh;
+                order: 1;
             }
 
-            #map {
-                height: 50vh !important;
+            .map-header {
+                display: none;
+            }
+
+            .map-page {
+                margin-top: 0;
+            }
+
+            .map-container {
+                height: 100vh;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .map-legend {
+                bottom: 1rem;
+                left: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            .map-controls {
+                right: 0.5rem;
+                top: 0.5rem;
             }
         }
     </style>
@@ -213,6 +593,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         // Pass model data to JavaScript
@@ -226,5 +608,24 @@
     </script>
 
     <!-- Map functionality -->
-    <script src="~/js/map.js"></script>
+    <script src="~/js/map.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2 for categories
+            $('#categoriesSelect').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select categories...',
+                allowClear: true,
+                closeOnSelect: false
+            });
+
+            // Trigger search when categories change
+            $('#categoriesSelect').on('change', function() {
+                if (typeof searchByFilter === 'function') {
+                    searchByFilter();
+                }
+            });
+        });
+    </script>
 }

@@ -137,8 +137,8 @@ Comprehensive documentation is available in the following files:
 
 ## 🗺️ Using the Map Feature
 
-### Search for Cafés
-1. Click "Find Cafés" in the navigation bar
+### Search for Cafe
+1. Click "Find Cafe" in the navigation bar
 2. Allow location access or enter a city name
 3. Adjust filters (radius, open now, ratings)
 4. Click "Search"

@@ -1,5 +1,7 @@
+using BoardGameCafeFinder.Data;
 using BoardGameCafeFinder.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BoardGameCafeFinder.Controllers
 {
@@ -7,14 +9,16 @@ namespace BoardGameCafeFinder.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<MapController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public MapController(IConfiguration configuration, ILogger<MapController> logger)
+        public MapController(IConfiguration configuration, ILogger<MapController> logger, ApplicationDbContext context)
         {
             _configuration = configuration;
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index(string? city, double? lat, double? lon)
+        public async Task<IActionResult> Index(string? city, string? country, double? lat, double? lon)
         {
             var model = new MapViewModel
             {
@@ -51,6 +55,29 @@ namespace BoardGameCafeFinder.Controllers
                 ? $"{Request.Scheme}://{Request.Host}/Map?city={Uri.EscapeDataString(city)}"
                 : $"{Request.Scheme}://{Request.Host}/Map";
             ViewData["CanonicalUrl"] = canonicalUrl;
+
+            // Get countries and cities for filter dropdowns
+            ViewBag.Countries = await _context.Cafes
+                .Where(c => c.IsActive && !string.IsNullOrEmpty(c.Country))
+                .Select(c => c.Country)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            ViewBag.Cities = await _context.Cafes
+                .Where(c => c.IsActive && !string.IsNullOrEmpty(c.City))
+                .Select(c => c.City)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            // Get game categories for filter
+            ViewBag.GameCategories = await _context.BoardGames
+                .Where(g => !string.IsNullOrEmpty(g.Category))
+                .Select(g => g.Category)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
 
             return View(model);
         }

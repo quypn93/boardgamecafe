@@ -20,7 +20,7 @@ Now listening on: https://localhost:7xxx
 
 Click any of these URLs (or copy to browser):
 
-#### Main Test Page - See All 10 Cafés
+#### Main Test Page - See All 10 Cafe
 ```
 https://localhost:7xxx/Test/Cafes
 ```
@@ -76,12 +76,12 @@ Even without Google Maps API key, you can verify:
 ### At /Test/Cafes you should see:
 
 **Statistics:**
-- Total Cafés: 10
+- Total Cafe: 10
 - Cities: 7
 - Premium: 3
 - Verified: 9
 
-**Cafés by City:**
+**Cafe by City:**
 - **Seattle** (2): Mox Boarding House, Raygun Lounge
 - **Portland** (2): Ground Kontrol, Guardian Games
 - **Chicago** (2): Dice Dojo, Gamers' Lodge
@@ -102,7 +102,7 @@ Each café card shows:
 
 ## Quick Tests to Try
 
-### Test 1: View All Cafés (30 seconds)
+### Test 1: View All Cafe (30 seconds)
 1. Go to `/Test/Cafes`
 2. **Expected**: See 10 beautiful café cards
 3. **Verify**: All 7 cities represented

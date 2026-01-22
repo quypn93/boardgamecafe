@@ -77,6 +77,11 @@
                                 <i class="bi bi-map"></i> Map View
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(controller == "Blog" ? "active" : "")" asp-controller="Blog" asp-action="Index">
+                                <i class="bi bi-newspaper"></i> Blog
+                            </a>
+                        </li>
                     </ul>
                     <ul class="navbar-nav">
                         @if (User.Identity?.IsAuthenticated == true)
@@ -138,7 +143,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-3">
-                    <h5><i class="bi bi-dice-5-fill me-2"></i>Board Game Cafe Finder</h5>
+                    <h5><i class="bi bi-person-fill me-2"></i>Board Game Cafe Finder</h5>
                     <p class="text-muted">
                         Discover the best board game cafes near you. Browse extensive game libraries,
                         read reviews, and find your next gaming destination.
@@ -154,6 +159,7 @@
                     <ul class="list-unstyled">
                         <li class="mb-1"><a href="/" class="text-muted text-decoration-none">Home</a></li>
                         <li class="mb-1"><a asp-controller="Map" asp-action="Index" class="text-muted text-decoration-none">Map View</a></li>
+                        <li class="mb-1"><a asp-controller="Blog" asp-action="Index" class="text-muted text-decoration-none">Blog</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-3 col-6 mb-3">

@@ -11,11 +11,13 @@ namespace BoardGameCafeFinder.Controllers
     {
         private readonly IBggSyncService _bggSyncService;
         private readonly ApplicationDbContext _context;
+        private readonly IBlogService _blogService;
 
-        public AdminController(IBggSyncService bggSyncService, ApplicationDbContext context)
+        public AdminController(IBggSyncService bggSyncService, ApplicationDbContext context, IBlogService blogService)
         {
             _bggSyncService = bggSyncService;
             _context = context;
+            _blogService = blogService;
         }
 
         public async Task<IActionResult> Dashboard()
@@ -265,5 +267,192 @@ namespace BoardGameCafeFinder.Controllers
             TempData["SuccessMessage"] = $"Removed {cafeGames.Count} games from cafe. Deleted {deletedGames} board games no longer used.";
             return RedirectToAction(nameof(CafeGames), new { id = cafeId });
         }
+
+        #region Blog Management
+
+        /// <summary>
+        /// List all blog posts
+        /// </summary>
+        public async Task<IActionResult> BlogPosts()
+        {
+            var posts = await _blogService.GetAllPostsAsync(includeUnpublished: true);
+
+            // Get cities with cafes for the generate form
+            var cities = await _context.Cafes
+                .Where(c => c.IsActive && !string.IsNullOrEmpty(c.City))
+                .GroupBy(c => c.City)
+                .Select(g => new { City = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(50)
+                .ToListAsync();
+
+            ViewBag.Cities = cities;
+
+            return View(posts);
+        }
+
+        /// <summary>
+        /// Create new blog post form
+        /// </summary>
+        public IActionResult CreateBlogPost()
+        {
+            return View(new Models.Domain.BlogPost());
+        }
+
+        /// <summary>
+        /// Create new blog post
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateBlogPost(Models.Domain.BlogPost post)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(post);
+            }
+
+            await _blogService.CreatePostAsync(post);
+            TempData["SuccessMessage"] = "Blog post created successfully.";
+            return RedirectToAction(nameof(BlogPosts));
+        }
+
+        /// <summary>
+        /// Edit blog post form
+        /// </summary>
+        public async Task<IActionResult> EditBlogPost(int id)
+        {
+            var post = await _blogService.GetPostByIdAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
+
+        /// <summary>
+        /// Update blog post
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBlogPost(Models.Domain.BlogPost post)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(post);
+            }
+
+            await _blogService.UpdatePostAsync(post);
+            TempData["SuccessMessage"] = "Blog post updated successfully.";
+            return RedirectToAction(nameof(BlogPosts));
+        }
+
+        /// <summary>
+        /// Delete blog post
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> DeleteBlogPost(int id)
+        {
+            var result = await _blogService.DeletePostAsync(id);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Blog post deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Blog post not found.";
+            }
+            return RedirectToAction(nameof(BlogPosts));
+        }
+
+        /// <summary>
+        /// Toggle publish status
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ToggleBlogPostPublish(int id)
+        {
+            var post = await _blogService.GetPostByIdAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.IsPublished = !post.IsPublished;
+            if (post.IsPublished && !post.PublishedAt.HasValue)
+            {
+                post.PublishedAt = DateTime.UtcNow;
+            }
+
+            await _blogService.UpdatePostAsync(post);
+
+            TempData["SuccessMessage"] = post.IsPublished
+                ? "Blog post published."
+                : "Blog post unpublished.";
+
+            return RedirectToAction(nameof(BlogPosts));
+        }
+
+        /// <summary>
+        /// Generate top games post for selected cities
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> GenerateTopGamesPosts([FromBody] GeneratePostsRequest request)
+        {
+            if (request.Cities == null || !request.Cities.Any())
+            {
+                return Json(new { success = false, message = "No cities selected." });
+            }
+
+            try
+            {
+                var posts = await _blogService.GenerateTopGamesPostsForCitiesAsync(request.Cities);
+                return Json(new {
+                    success = true,
+                    message = $"Generated {posts.Count} posts successfully.",
+                    count = posts.Count
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Generate city guide post
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> GenerateCityGuidePost([FromBody] GenerateCityGuideRequest request)
+        {
+            if (string.IsNullOrEmpty(request.City))
+            {
+                return Json(new { success = false, message = "City is required." });
+            }
+
+            try
+            {
+                var post = await _blogService.GenerateCityGuidePostAsync(request.City);
+                return Json(new {
+                    success = true,
+                    message = $"Generated city guide for {request.City}.",
+                    postId = post.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
+    }
+
+    public class GeneratePostsRequest
+    {
+        public List<string> Cities { get; set; } = new();
+    }
+
+    public class GenerateCityGuideRequest
+    {
+        public string City { get; set; } = string.Empty;
     }
 }

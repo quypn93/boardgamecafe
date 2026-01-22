@@ -207,7 +207,7 @@ Board Game Wikia là một database/wiki về board games, tập trung vào **ga
 
 | Feature | BGG | Wikia | Café Near Me | **Our Project** |
 |---------|-----|-------|--------------|-----------------|
-| **Focus** | Games | Games | Cafés | **Cafés + Games** |
+| **Focus** | Games | Games | Cafe | **Cafe + Games** |
 | **Map Search** | ❌ | ❌ | ❌ | **✅ Interactive** |
 | **Reviews** | ✅ (games) | ❌ | ❌ | **✅ (cafés)** |
 | **Events** | ✅ (conventions) | ❌ | ❌ | **✅ (café events)** |
@@ -233,7 +233,7 @@ Board Game Wikia là một database/wiki về board games, tập trung vào **ga
    - Atmosphere: Family-friendly, Adults-only, Tournament-focused
    - Amenities: Food, Drinks, Private rooms
 3. **Multi-language**: English + Vietnamese (nếu target VN market)
-4. **Curated sections**: "Top Trending Cafés", "New Cafés", "Best in City"
+4. **Curated sections**: "Top Trending Cafe", "New Cafe", "Best in City"
 5. **Clean UI**: Grid layout, good spacing
 
 ❌ **What NOT to do**:
@@ -281,7 +281,7 @@ Board Game Wikia là một database/wiki về board games, tập trung vào **ga
    - Real-time "open now" filtering
    - → **No competitor has this!**
 
-2. **Game Inventory at Cafés**
+2. **Game Inventory at Cafe**
    - See what games are available BEFORE visiting
    - Filter cafés by specific games
    - Crowdsourced + café-owner verified

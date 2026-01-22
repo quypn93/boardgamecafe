@@ -355,7 +355,7 @@ BoardGameCafesFinder/
         <!-- Sidebar with Search & Filters -->
         <div class="col-md-4 sidebar-panel">
             <div class="search-container p-3">
-                <h4>Find Board Game Cafés</h4>
+                <h4>Find Board Game Cafe</h4>
 
                 <!-- Location Search -->
                 <div class="mb-3">
@@ -1073,7 +1073,7 @@ public class YelpService
 
 ### Content Marketing
 1. **City Guides**:
-   - "Best Board Game Cafés in [City]"
+   - "Best Board Game Cafe in [City]"
    - Auto-generated from database
 
 2. **Blog**:
@@ -1300,7 +1300,7 @@ public class YelpService
 1. **API Costs**: Google Maps can be expensive
    - **Mitigation**: Aggressive caching, consider Mapbox alternative
 
-2. **Data Accuracy**: Cafés close/relocate
+2. **Data Accuracy**: Cafe close/relocate
    - **Mitigation**: Crowdsourced updates, quarterly verification
 
 3. **Competition**: Existing players improve
@@ -1309,7 +1309,7 @@ public class YelpService
 4. **Chicken-Egg Problem**: Need cafés and users
    - **Mitigation**: Seed 200+ cafés before launch, partner with cafés
 
-5. **Monetization**: Cafés may not pay
+5. **Monetization**: Cafe may not pay
    - **Mitigation**: Freemium model, prove value with analytics
 
 ---

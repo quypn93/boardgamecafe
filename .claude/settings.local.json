@@ -13,7 +13,12 @@
       "Bash(dotnet run)",
       "Bash(curl:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd comprehensive SEO implementation\n\n- Create dynamic sitemap generation from database cafes\n- Add favicon and apple-touch-icon serving with fallbacks\n- Create robots.txt to guide search engine crawling\n- Add SEO meta descriptions and canonical URLs to all pages\n- Update HomeController with dynamic page titles for filtered views\n- Update MapController with location-specific SEO metadata\n- Update CafeController with cafe-specific descriptions\n- Create SVG logo for branding\n- Update layout to use MetaDescription ViewData\n\nImplements full SEO foundation including technical SEO \\(robots.txt, sitemap, favicon\\) and content SEO \\(meta descriptions, canonical URLs\\) for better search engine visibility and social media sharing.\n\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd comprehensive SEO implementation\n\n- Create dynamic sitemap generation from database cafes\n- Add favicon and apple-touch-icon serving with fallbacks\n- Create robots.txt to guide search engine crawling\n- Add SEO meta descriptions and canonical URLs to all pages\n- Update HomeController with dynamic page titles for filtered views\n- Update MapController with location-specific SEO metadata\n- Update CafeController with cafe-specific descriptions\n- Create SVG logo for branding\n- Update layout to use MetaDescription ViewData\n\nImplements full SEO foundation including technical SEO \\(robots.txt, sitemap, favicon\\) and content SEO \\(meta descriptions, canonical URLs\\) for better search engine visibility and social media sharing.\n\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(where:*)",
+      "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\BoardGameCafeFinder\\\\wwwroot && dir favicon*\")",
+      "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\GenerateFavicon && dotnet restore && dotnet run -- D:\\\\Task\\\\BoardGameCFFinder\\\\BoardGameCafeFinder\\\\wwwroot\\\\favicon.ico\")",
+      "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\GenerateFavicon && dotnet restore 2>&1\")",
+      "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\GenerateFavicon && dotnet build 2>&1 && dotnet run -- D:\\\\Task\\\\BoardGameCFFinder\\\\BoardGameCafeFinder\\\\wwwroot\\\\favicon.ico 2>&1\")"
     ]
   }
 }

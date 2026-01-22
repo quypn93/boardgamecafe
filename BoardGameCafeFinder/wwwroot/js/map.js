@@ -24,12 +24,14 @@ function initMap() {
     const defaultZoom = config.defaultZoom || 4;
 
     // Create map with OpenStreetMap tiles
-    map = L.map('map').setView(defaultCenter, defaultZoom);
+    map = L.map('map', {
+        zoomControl: false // We'll use custom controls
+    }).setView(defaultCenter, defaultZoom);
 
-    // Add OpenStreetMap tile layer
+    // Add OpenStreetMap tile layer with better styling
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
     // Create marker group for easy management
@@ -75,14 +77,30 @@ function addUserLocationMarker(location) {
 
     const userIcon = L.divIcon({
         className: 'user-location-icon',
-        html: '<div style="background-color: #4285F4; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
-        iconSize: [16, 16],
-        iconAnchor: [8, 8]
+        html: `<div style="
+            background-color: #4285F4;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.5);
+            animation: pulse 2s infinite;
+        "></div>
+        <style>
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+                70% { box-shadow: 0 0 0 15px rgba(66, 133, 244, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+            }
+        </style>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
     });
 
     userLocationMarker = L.marker([location.lat, location.lng], {
         icon: userIcon,
-        title: 'Your Location'
+        title: 'Your Location',
+        zIndexOffset: 1000
     }).addTo(map);
 
     userLocationMarker.bindPopup('<strong>Your Location</strong>');
@@ -101,6 +119,12 @@ function setupEventListeners() {
 
     document.getElementById('useLocationBtn').addEventListener('click', useMyLocation);
 
+    // Empty state location button
+    const emptyStateBtn = document.getElementById('emptyStateLocationBtn');
+    if (emptyStateBtn) {
+        emptyStateBtn.addEventListener('click', useMyLocation);
+    }
+
     // Location search button
     document.getElementById('searchLocationBtn').addEventListener('click', searchLocation);
 
@@ -110,6 +134,25 @@ function setupEventListeners() {
             searchLocation();
         }
     });
+
+    // Custom map controls
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const centerMapBtn = document.getElementById('centerMapBtn');
+
+    if (zoomInBtn) {
+        zoomInBtn.addEventListener('click', () => map.zoomIn());
+    }
+    if (zoomOutBtn) {
+        zoomOutBtn.addEventListener('click', () => map.zoomOut());
+    }
+    if (centerMapBtn) {
+        centerMapBtn.addEventListener('click', () => {
+            if (currentLocation) {
+                map.setView([currentLocation.lat, currentLocation.lng], 13);
+            }
+        });
+    }
 
     // Filters - auto-search on change
     document.getElementById('radiusSelect').addEventListener('change', () => {
@@ -124,6 +167,101 @@ function setupEventListeners() {
     document.getElementById('minRatingSelect').addEventListener('change', () => {
         if (map.getCenter()) searchNearby();
     });
+
+    // Country/City filters
+    const countrySelect = document.getElementById('countrySelect');
+    const citySelect = document.getElementById('citySelect');
+
+    if (countrySelect) {
+        countrySelect.addEventListener('change', () => {
+            // When country changes, filter cities or search
+            searchByFilter();
+        });
+    }
+
+    if (citySelect) {
+        citySelect.addEventListener('change', () => {
+            searchByFilter();
+        });
+    }
+
+    // Note: Category Select2 change event is handled in the view
+}
+
+// Get selected categories from Select2
+function getSelectedCategories() {
+    const categoriesSelect = document.getElementById('categoriesSelect');
+    if (categoriesSelect && typeof $ !== 'undefined' && $(categoriesSelect).data('select2')) {
+        return $(categoriesSelect).val() || [];
+    }
+    // Fallback for non-Select2
+    if (categoriesSelect) {
+        return Array.from(categoriesSelect.selectedOptions).map(opt => opt.value);
+    }
+    return [];
+}
+
+// Search by country/city/category filter (without requiring location)
+async function searchByFilter() {
+    const country = document.getElementById('countrySelect')?.value || '';
+    const city = document.getElementById('citySelect')?.value || '';
+
+    // Get selected categories from Select2
+    const selectedCategories = getSelectedCategories();
+
+    // If all filters are empty, do nothing special
+    if (!country && !city && selectedCategories.length === 0) {
+        return;
+    }
+
+    showLoading(true);
+
+    try {
+        // Build query string
+        let queryParams = new URLSearchParams();
+        if (country) queryParams.append('country', country);
+        if (city) queryParams.append('city', city);
+
+        const openNow = document.getElementById('openNowFilter').checked;
+        const hasGames = document.getElementById('hasGamesFilter').checked;
+        const minRating = document.getElementById('minRatingSelect').value;
+
+        if (openNow) queryParams.append('openNow', 'true');
+        if (hasGames) queryParams.append('hasGames', 'true');
+        if (minRating) queryParams.append('minRating', minRating);
+
+        // Add categories as comma-separated string
+        if (selectedCategories.length > 0) {
+            queryParams.append('categories', selectedCategories.join(','));
+        }
+
+        const response = await fetch(`/api/cafes/filter?${queryParams.toString()}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Filter results:', result);
+
+        if (result.success) {
+            displayResults(result.data);
+
+            // Center map on first result if available
+            if (result.data && result.data.length > 0) {
+                const firstCafe = result.data[0];
+                map.setView([firstCafe.latitude, firstCafe.longitude], 10);
+            }
+        } else {
+            console.error('Filter failed:', result.message);
+            displayError('Filter failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error filtering cafés:', error);
+        displayError('An error occurred while filtering. Please try again.');
+    } finally {
+        showLoading(false);
+    }
 }
 
 // Search for a location using Nominatim (OpenStreetMap geocoding)
@@ -261,43 +399,35 @@ function displayResults(cafes) {
     // Clear existing markers
     clearMarkers();
 
+    // Update counter badge
+    const countBadge = document.getElementById('cafesCountBadge');
+    if (countBadge) {
+        countBadge.textContent = cafes.length;
+    }
+
     // Update results container
     const container = document.getElementById('resultsContainer');
 
     if (cafes.length === 0) {
-        container.innerHTML = '<div class="text-center p-4 text-muted"><p>No cafés found in this area</p></div>';
+        container.innerHTML = `
+            <div class="empty-state text-center p-5">
+                <div class="empty-icon mb-3">
+                    <i class="bi bi-search"></i>
+                </div>
+                <h5 class="text-muted">No Cafés Found</h5>
+                <p class="text-muted small mb-3">Try expanding your search radius or adjusting filters</p>
+            </div>
+        `;
         return;
     }
 
-    // Create result items HTML
-    container.innerHTML = cafes.map((cafe, index) => `
-        <div class="result-item" data-cafe-id="${cafe.id}" data-index="${index}">
-            <h6>${cafe.name}</h6>
-            <p class="text-muted small mb-1">
-                <i class="bi bi-geo-alt"></i> ${cafe.address}
-                ${cafe.city ? `<br/>${cafe.city}${cafe.state ? ', ' + cafe.state : ''}` : ''}
-            </p>
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="small">
-                    ${cafe.averageRating ? `${cafe.averageRating.toFixed(1)} ★` : 'No ratings'}
-                    ${cafe.totalReviews > 0 ? `(${cafe.totalReviews})` : ''}
-                </span>
-                ${cafe.isOpenNow
-                    ? '<span class="badge bg-success">Open Now</span>'
-                    // : '<span class="badge bg-secondary">Closed</span>'}
-                    : ''}
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="text-primary small">
-                    <i class="bi bi-arrow-right-circle"></i> ${cafe.distanceDisplay || ''}
-                </span>
-                ${cafe.totalGames > 0
-                    ? `<span class="text-success small">${cafe.totalGames} games</span>`
-                    : ''}
-            </div>
-            ${cafe.isPremium ? '<span class="badge bg-warning text-dark mt-1">Featured</span>' : ''}
+    // Create result cards HTML
+    container.innerHTML = `
+        <div class="results-header">
+            <i class="bi bi-list-ul me-2"></i>${cafes.length} café${cafes.length !== 1 ? 's' : ''} found
         </div>
-    `).join('');
+        ${cafes.map((cafe, index) => createResultCardHTML(cafe, index)).join('')}
+    `;
 
     // Add markers to map
     cafes.forEach((cafe, index) => {
@@ -305,11 +435,10 @@ function displayResults(cafes) {
         markers.push({ marker, cafe, index });
     });
 
-    // Add click listeners to result items
-    document.querySelectorAll('.result-item').forEach(item => {
+    // Add click listeners to result cards
+    document.querySelectorAll('.result-card').forEach(item => {
         item.addEventListener('click', function () {
             const cafeId = parseInt(this.dataset.cafeId);
-            const index = parseInt(this.dataset.index);
             const markerData = markers.find(m => m.cafe.id === cafeId);
 
             if (markerData) {
@@ -326,6 +455,46 @@ function displayResults(cafes) {
     }
 }
 
+// Create HTML for a result card
+function createResultCardHTML(cafe, index) {
+    const ratingHtml = cafe.averageRating
+        ? `<span class="rating"><i class="bi bi-star-fill"></i> ${cafe.averageRating.toFixed(1)}</span>`
+        : '';
+
+    const gamesHtml = cafe.totalGames > 0
+        ? `<span class="games-count"><i class="bi bi-controller"></i> ${cafe.totalGames}</span>`
+        : '';
+
+    const statusHtml = cafe.isOpenNow
+        ? '<span class="status-badge bg-success text-white">Open</span>'
+        : '';
+
+    return `
+        <div class="result-card" data-cafe-id="${cafe.id}" data-index="${index}">
+            <div class="d-flex align-items-start gap-3">
+                <div class="card-number">${index + 1}</div>
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="cafe-name">${cafe.name}</div>
+                        ${statusHtml}
+                    </div>
+                    <div class="cafe-address">
+                        <i class="bi bi-geo-alt-fill text-danger"></i>
+                        ${cafe.address || ''}${cafe.city ? `, ${cafe.city}` : ''}
+                    </div>
+                    <div class="cafe-meta">
+                        ${ratingHtml}
+                        ${gamesHtml}
+                        <span class="distance">
+                            <i class="bi bi-signpost-2"></i> ${cafe.distanceDisplay || ''}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // Create a marker for a café
 function createCafeMarker(cafe, index) {
     // Determine marker color based on café properties
@@ -338,10 +507,24 @@ function createCafeMarker(cafe, index) {
 
     const cafeIcon = L.divIcon({
         className: 'cafe-marker-icon',
-        html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">${index + 1}</div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-        popupAnchor: [0, -12]
+        html: `<div style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        " onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">${index + 1}</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -16]
     });
 
     const marker = L.marker([cafe.latitude, cafe.longitude], {
@@ -349,30 +532,12 @@ function createCafeMarker(cafe, index) {
         title: cafe.name
     }).addTo(markerGroup);
 
-    // Create popup content
-    const popupContent = `
-        <div class="cafe-popup" style="min-width: 200px;">
-            <h5>${cafe.name}</h5>
-            ${cafe.isPremium ? '<span class="badge bg-warning text-dark mb-2">Featured</span>' : ''}
-            <p class="text-muted mb-2" style="font-size: 0.875rem;">${cafe.address}</p>
-            ${cafe.isOpenNow
-                ? '<span class="badge bg-success mb-2">Open Now</span>'
-                : '<span class="badge bg-danger mb-2">Closed</span>'}
-            <div class="mt-2" style="font-size: 0.875rem;">
-                <strong>Rating:</strong> ${cafe.averageRating ? cafe.averageRating.toFixed(1) + ' ★' : 'No ratings'}
-                ${cafe.totalReviews > 0 ? `(${cafe.totalReviews} reviews)` : ''}
-            </div>
-            ${cafe.totalGames > 0 ? `<div class="mt-1" style="font-size: 0.875rem;"><strong>${cafe.totalGames}</strong> games available</div>` : ''}
-            ${cafe.phone ? `<div class="mt-1" style="font-size: 0.875rem;"><i class="bi bi-telephone"></i> ${cafe.phone}</div>` : ''}
-            <div class="mt-3">
-                <a href="/cafe/${cafe.slug}" class="btn btn-sm btn-primary" target="_blank">View Details</a>
-                <a href="https://www.openstreetmap.org/directions?from=&to=${cafe.latitude},${cafe.longitude}"
-                   target="_blank" class="btn btn-sm btn-outline-primary">Directions</a>
-            </div>
-        </div>
-    `;
-
-    marker.bindPopup(popupContent);
+    // Create enhanced popup content
+    const popupContent = createPopupHTML(cafe);
+    marker.bindPopup(popupContent, {
+        maxWidth: 300,
+        className: 'cafe-popup-container'
+    });
 
     // Highlight list item when marker is clicked
     marker.on('click', () => {
@@ -382,13 +547,50 @@ function createCafeMarker(cafe, index) {
     return marker;
 }
 
+// Create HTML for popup
+function createPopupHTML(cafe) {
+    const ratingHtml = cafe.averageRating
+        ? `<span class="popup-meta-item"><i class="bi bi-star-fill text-warning"></i> ${cafe.averageRating.toFixed(1)} (${cafe.totalReviews || 0})</span>`
+        : '';
+
+    const gamesHtml = cafe.totalGames > 0
+        ? `<span class="popup-meta-item"><i class="bi bi-controller text-primary"></i> ${cafe.totalGames} games</span>`
+        : '';
+
+    const statusHtml = cafe.isOpenNow
+        ? '<span class="badge bg-success">Open Now</span>'
+        : '<span class="badge bg-secondary">Closed</span>';
+
+    return `
+        <div class="cafe-popup">
+            <div class="popup-title">${cafe.name}</div>
+            <div class="popup-address">${cafe.address || ''}${cafe.city ? `, ${cafe.city}` : ''}</div>
+            <div class="popup-meta mt-2">
+                ${statusHtml}
+                ${ratingHtml}
+                ${gamesHtml}
+            </div>
+            ${cafe.phone ? `<div class="mt-2" style="font-size: 0.85rem;"><i class="bi bi-telephone"></i> ${cafe.phone}</div>` : ''}
+            <div class="popup-actions mt-3">
+                <a href="/cafe/${cafe.slug}" class="btn btn-primary btn-sm text-white">
+                    <i class="bi bi-eye"></i> View
+                </a>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${cafe.latitude},${cafe.longitude}"
+                   target="_blank" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-signpost-2"></i> Directions
+                </a>
+            </div>
+        </div>
+    `;
+}
+
 // Highlight selected item in results list
 function highlightListItem(cafeId) {
-    document.querySelectorAll('.result-item').forEach(item => {
+    document.querySelectorAll('.result-card').forEach(item => {
         item.classList.remove('active');
     });
 
-    const selectedItem = document.querySelector(`.result-item[data-cafe-id="${cafeId}"]`);
+    const selectedItem = document.querySelector(`.result-card[data-cafe-id="${cafeId}"]`);
     if (selectedItem) {
         selectedItem.classList.add('active');
         selectedItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -424,8 +626,15 @@ function showLoading(show) {
 function displayError(message) {
     const container = document.getElementById('resultsContainer');
     container.innerHTML = `
-        <div class="alert alert-danger m-3" role="alert">
-            <i class="bi bi-exclamation-triangle"></i> ${message}
+        <div class="empty-state text-center p-5">
+            <div class="empty-icon mb-3" style="background: #fee2e2;">
+                <i class="bi bi-exclamation-triangle" style="color: #dc3545;"></i>
+            </div>
+            <h5 class="text-muted">Something went wrong</h5>
+            <p class="text-muted small mb-3">${message}</p>
+            <button class="btn btn-primary btn-sm" onclick="searchNearby()">
+                <i class="bi bi-arrow-clockwise me-1"></i> Try Again
+            </button>
         </div>
     `;
 }

@@ -184,7 +184,7 @@
 ### 7. Sample Data Seeder ✅
 **Location**: `Data/SampleDataSeeder.cs`
 
-#### Sample Cafés (10 total):
+#### Sample Cafe (10 total):
 **Seattle** (2):
 - Mox Boarding House
 - Raygun Lounge
@@ -367,7 +367,7 @@ Port number may vary - check console output.
 
 ## 📊 Sample Data Overview
 
-| City | # Cafés | Premium | Verified |
+| City | # Cafe | Premium | Verified |
 |------|---------|---------|----------|
 | Seattle | 2 | 0 | 2 |
 | Portland | 2 | 1 | 2 |

@@ -56,7 +56,7 @@
 - Fixed layout issues (Styles section error)
 - Added Bootstrap Icons CDN
 - Created full-width layout for map page
-- Added "Find Cafés" navigation link
+- Added "Find Cafe" navigation link
 - Conditional footer (hidden on map page)
 
 ### 6. Documentation ✅
