@@ -405,6 +405,11 @@ function displayResults(cafes) {
         countBadge.textContent = cafes.length;
     }
 
+    // Update mobile results count (for mobile toggle button)
+    if (typeof window.updateMobileResultsCount === 'function') {
+        window.updateMobileResultsCount(cafes.length);
+    }
+
     // Update results container
     const container = document.getElementById('resultsContainer');
 

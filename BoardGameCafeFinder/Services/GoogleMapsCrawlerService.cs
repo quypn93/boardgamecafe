@@ -859,7 +859,9 @@ namespace BoardGameCafeFinder.Services
                                 var match = Regex.Match(style, @"url\(""(.*?)""\)");
                                 if (match.Success)
                                 {
-                                    extractedUrls.Add(match.Groups[1].Value);
+                                    // Get the URL and upgrade to high resolution
+                                    var photoUrl = UpgradeGooglePhotoUrl(match.Groups[1].Value);
+                                    extractedUrls.Add(photoUrl);
                                 }
                             }
                         }
@@ -927,6 +929,46 @@ namespace BoardGameCafeFinder.Services
                  _logger.LogWarning(ex, "Error extracting photos for {Name}", cafeName);
             }
             return (photoUrls, photoLocalPaths);
+        }
+
+        /// <summary>
+        /// Upgrades Google Photos URL to higher resolution by modifying size parameters.
+        /// Google Photos URLs often contain size parameters like =w100-h100 or =s100.
+        /// This method replaces them with larger dimensions for better quality images.
+        /// </summary>
+        private string UpgradeGooglePhotoUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return url;
+
+            // Pattern 1: =w{width}-h{height} format (e.g., =w100-h100)
+            var whPattern = Regex.Match(url, @"=w\d+-h\d+");
+            if (whPattern.Success)
+            {
+                return url.Replace(whPattern.Value, "=w800-h600");
+            }
+
+            // Pattern 2: =s{size} format (e.g., =s100)
+            var sPattern = Regex.Match(url, @"=s\d+");
+            if (sPattern.Success)
+            {
+                return url.Replace(sPattern.Value, "=s800");
+            }
+
+            // Pattern 3: URL ends with size suffix like -w100-h100 or similar
+            var suffixPattern = Regex.Match(url, @"-w\d+-h\d+(?=\.[a-zA-Z]+$)");
+            if (suffixPattern.Success)
+            {
+                return url.Replace(suffixPattern.Value, "-w800-h600");
+            }
+
+            // If no size parameter found, try to append one if it's a googleusercontent URL
+            if (url.Contains("googleusercontent.com") && !url.Contains("="))
+            {
+                return url + "=w800-h600";
+            }
+
+            return url;
         }
 
         private async Task<List<CrawledReviewData>> ExtractReviewsAsync(IPage page)

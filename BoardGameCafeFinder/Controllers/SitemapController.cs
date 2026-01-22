@@ -33,6 +33,7 @@ namespace BoardGameCafeFinder.Controllers
                 // Static pages
                 sitemapXml += CreateSitemapEntry($"{baseUrl}/", "2026-01-20", "daily", "1.0");
                 sitemapXml += CreateSitemapEntry($"{baseUrl}/Map", "2026-01-20", "daily", "0.9");
+                sitemapXml += CreateSitemapEntry($"{baseUrl}/blog", "2026-01-20", "daily", "0.9");
                 sitemapXml += CreateSitemapEntry($"{baseUrl}/Home/Privacy", "2026-01-20", "monthly", "0.5");
 
                 // Dynamic cafe pages
@@ -46,6 +47,19 @@ namespace BoardGameCafeFinder.Controllers
                 {
                     var lastMod = cafe.UpdatedAt.ToString("yyyy-MM-dd");
                     sitemapXml += CreateSitemapEntry($"{baseUrl}/cafe/{cafe.Slug}", lastMod, "weekly", "0.8");
+                }
+
+                // Dynamic blog post pages
+                var blogPosts = await _context.BlogPosts
+                    .Where(p => p.IsPublished && !string.IsNullOrEmpty(p.Slug))
+                    .Select(p => new { p.Slug, p.UpdatedAt, p.PublishedAt })
+                    .OrderByDescending(p => p.PublishedAt)
+                    .ToListAsync();
+
+                foreach (var post in blogPosts)
+                {
+                    var lastMod = (post.UpdatedAt ?? post.PublishedAt ?? DateTime.Now).ToString("yyyy-MM-dd");
+                    sitemapXml += CreateSitemapEntry($"{baseUrl}/blog/{post.Slug}", lastMod, "weekly", "0.7");
                 }
 
                 sitemapXml += "</urlset>";

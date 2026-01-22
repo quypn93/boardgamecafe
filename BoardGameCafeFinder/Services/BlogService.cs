@@ -254,6 +254,7 @@ namespace BoardGameCafeFinder.Services
             // Get cafes in this city
             var cafesQuery = _context.Cafes
                 .Include(c => c.CafeGames)
+                .Include(c => c.Photos)
                 .Where(c => c.IsActive && c.City.ToLower() == city.ToLower());
 
             if (!string.IsNullOrEmpty(country))
@@ -315,7 +316,22 @@ namespace BoardGameCafeFinder.Services
                 var game = games.FirstOrDefault(g => g.GameId == topGame.GameId);
                 if (game == null) continue;
 
-                sb.AppendLine($"<div class=\"game-card mb-4\">");
+                sb.AppendLine($"<div class=\"game-card mb-4 p-3 border rounded\">");
+                sb.AppendLine("<div class=\"row\">");
+
+                // Show game image if available
+                if (!string.IsNullOrEmpty(game.ImageUrl))
+                {
+                    sb.AppendLine("<div class=\"col-md-3 col-sm-4 mb-3 mb-md-0 text-center\">");
+                    sb.AppendLine($"<img src=\"{game.ImageUrl}\" alt=\"{game.Name}\" class=\"img-fluid rounded\" style=\"max-height: 150px; object-fit: contain;\">");
+                    sb.AppendLine("</div>");
+                    sb.AppendLine("<div class=\"col-md-9 col-sm-8\">");
+                }
+                else
+                {
+                    sb.AppendLine("<div class=\"col-12\">");
+                }
+
                 sb.AppendLine($"<h3>{rank}. {game.Name}</h3>");
 
                 if (!string.IsNullOrEmpty(game.Description))
@@ -342,7 +358,10 @@ namespace BoardGameCafeFinder.Services
                 sb.AppendLine("</div>");
 
                 sb.AppendLine($"<p class=\"text-muted mt-2\"><small>Available at {topGame.CafeCount} cafes in {city}</small></p>");
-                sb.AppendLine("</div>");
+
+                sb.AppendLine("</div>"); // Close content column
+                sb.AppendLine("</div>"); // Close row
+                sb.AppendLine("</div>"); // Close game-card
 
                 rank++;
             }
@@ -366,7 +385,27 @@ namespace BoardGameCafeFinder.Services
 
             foreach (var cafe in cafes.Take(5))
             {
-                sb.AppendLine("<div class=\"cafe-card mb-4\">");
+                sb.AppendLine("<div class=\"cafe-card mb-4 p-3 border rounded\">");
+                sb.AppendLine("<div class=\"row\">");
+
+                // Get first photo for this cafe
+                var photo = cafe.Photos?.OrderBy(p => p.DisplayOrder).FirstOrDefault();
+                var imageUrl = photo?.Url ?? photo?.LocalPath ?? cafe.LocalImagePath;
+
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    sb.AppendLine("<div class=\"col-md-4 mb-3 mb-md-0\">");
+                    sb.AppendLine($"<a href=\"/cafe/{cafe.Slug}\">");
+                    sb.AppendLine($"<img src=\"{imageUrl}\" alt=\"{cafe.Name}\" class=\"img-fluid rounded\" style=\"width: 100%; height: 200px; object-fit: cover;\">");
+                    sb.AppendLine("</a>");
+                    sb.AppendLine("</div>");
+                    sb.AppendLine("<div class=\"col-md-8\">");
+                }
+                else
+                {
+                    sb.AppendLine("<div class=\"col-12\">");
+                }
+
                 sb.AppendLine($"<h3><a href=\"/cafe/{cafe.Slug}\">{cafe.Name}</a></h3>");
 
                 if (cafe.AverageRating.HasValue)
@@ -393,7 +432,9 @@ namespace BoardGameCafeFinder.Services
                     sb.AppendLine($"<p>{shortDesc}</p>");
                 }
 
-                sb.AppendLine("</div>");
+                sb.AppendLine("</div>"); // Close content column
+                sb.AppendLine("</div>"); // Close row
+                sb.AppendLine("</div>"); // Close cafe-card
             }
 
             sb.AppendLine("<h2>Tips for Visiting</h2>");

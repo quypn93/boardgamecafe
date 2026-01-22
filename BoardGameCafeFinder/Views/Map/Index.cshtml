@@ -27,7 +27,14 @@
     <div class="map-container">
         <div class="row g-0">
             <!-- Sidebar with Search & Filters -->
-            <div class="col-lg-4 col-xl-3 sidebar-panel">
+            <div class="col-lg-4 col-xl-3 sidebar-panel" id="sidebarPanel">
+                <!-- Mobile Toggle Button -->
+                <button class="mobile-results-toggle" id="mobileResultsToggle">
+                    <i class="bi bi-chevron-up toggle-icon"></i>
+                    <span id="toggleText">Show Results</span>
+                    <span class="badge bg-white text-primary ms-2" id="mobileResultsCount">0</span>
+                </button>
+
                 <!-- Search Panel -->
                 <div class="search-panel">
                     <div class="p-3 border-bottom">
@@ -541,40 +548,114 @@
             display: none;
         }
 
-        /* Responsive */
+        /* Mobile toggle button - hidden on desktop */
+        .mobile-results-toggle {
+            display: none;
+        }
+
+        /* Responsive - Mobile Layout */
         @@media (max-width: 991px) {
+            .map-page {
+                margin-top: 0;
+            }
+
             .map-container {
-                height: auto;
-                flex-direction: column;
+                height: calc(100vh - 56px);
+            }
+
+            .map-container > .row {
+                height: 100%;
             }
 
             .sidebar-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
                 height: auto;
-                max-height: 40vh;
-                order: 2;
+                max-height: 55vh;
+                z-index: 1000;
+                border-right: none;
+                border-top: 1px solid #e9ecef;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+                border-radius: 16px 16px 0 0;
+                transform: translateY(calc(100% - 50px));
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar-panel.expanded {
+                transform: translateY(0);
             }
 
             .map-panel {
-                height: 50vh;
-                order: 1;
+                height: calc(100vh - 56px);
+                width: 100%;
+            }
+
+            .map-panel .col-lg-8 {
+                max-width: 100%;
+                flex: 0 0 100%;
             }
 
             .map-header {
                 display: none;
             }
 
-            .map-page {
-                margin-top: 0;
+            /* Mobile toggle button */
+            .mobile-results-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.75rem 1rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                width: 100%;
+                cursor: pointer;
+                font-weight: 500;
+                gap: 0.5rem;
+                border-radius: 16px 16px 0 0;
             }
 
-            .map-container {
-                height: 100vh;
+            .mobile-results-toggle:hover {
+                opacity: 0.95;
+            }
+
+            .mobile-results-toggle .toggle-icon {
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar-panel.expanded .mobile-results-toggle .toggle-icon {
+                transform: rotate(180deg);
+            }
+
+            /* Handle bar for dragging */
+            .mobile-results-toggle::before {
+                content: '';
+                position: absolute;
+                top: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 4px;
+                background: rgba(255,255,255,0.5);
+                border-radius: 2px;
+            }
+
+            .search-panel {
+                max-height: 200px;
+                overflow-y: auto;
+            }
+
+            .results-list {
+                max-height: calc(55vh - 200px);
+                overflow-y: auto;
             }
         }
 
         @@media (max-width: 576px) {
             .map-legend {
-                bottom: 1rem;
+                bottom: 60px;
                 left: 0.5rem;
                 padding: 0.5rem 0.75rem;
                 font-size: 0.75rem;
@@ -583,6 +664,14 @@
             .map-controls {
                 right: 0.5rem;
                 top: 0.5rem;
+            }
+
+            .sidebar-panel {
+                max-height: 65vh;
+            }
+
+            .results-list {
+                max-height: calc(65vh - 200px);
             }
         }
     </style>
@@ -626,6 +715,36 @@
                     searchByFilter();
                 }
             });
+
+            // Mobile results toggle
+            $('#mobileResultsToggle').on('click', function() {
+                var sidebar = $('#sidebarPanel');
+                var isExpanded = sidebar.hasClass('expanded');
+
+                if (isExpanded) {
+                    sidebar.removeClass('expanded');
+                    $('#toggleText').text('Show Results');
+                } else {
+                    sidebar.addClass('expanded');
+                    $('#toggleText').text('Hide Results');
+                }
+            });
+
+            // Update mobile results count when cafes are found
+            window.updateMobileResultsCount = function(count) {
+                $('#mobileResultsCount').text(count);
+                if (count > 0) {
+                    $('#toggleText').text('Show ' + count + ' Results');
+                }
+            };
+
+            // Close sidebar when clicking on map (mobile only)
+            if (window.innerWidth <= 991) {
+                $('#map').on('click', function() {
+                    $('#sidebarPanel').removeClass('expanded');
+                    $('#toggleText').text('Show Results');
+                });
+            }
         });
     </script>
 }

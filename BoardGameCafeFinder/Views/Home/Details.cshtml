@@ -14,100 +14,114 @@
 
 <div class="container mt-4">
     <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
-        </ol>
-    </nav>
+    <div class="breadcrumb-wrapper">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door me-1"></i>Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+            </ol>
+        </nav>
+    </div>
 
-    <!-- Header Info -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="display-4">@Model.Name</h1>
-            <div class="mb-2">
-                @if (Model.AverageRating > 0)
-                {
-                    <span class="badge bg-warning text-dark me-2">
-                        <i class="bi bi-star-fill"></i> @Model.AverageRating.Value.ToString("0.0")
-                    </span>
-                    <span class="text-muted">(@Model.TotalReviews reviews)</span>
-                }
-                @if (!string.IsNullOrEmpty(Model.PriceRange))
-                {
-                    <span class="badge bg-secondary ms-2">@Model.PriceRange</span>
-                }
-                @* @if (Model.IsOpenNow())
-                {
-                    <span class="badge bg-success ms-2">Open Now</span>
-                }
-                else
-                {
-                    <span class="badge bg-danger ms-2">Closed</span>
-                } *@
-            </div>
-            <p class="lead">
-                <i class="bi bi-geo-alt"></i> @Model.Address, @Model.City, @Model.State
-            </p>
-            @if (!string.IsNullOrEmpty(Model.Phone))
-            {
-                // Remove all non-ASCII and control characters
-                var cleanPhone = System.Text.RegularExpressions.Regex.Replace(
-                    Model.Phone,
-                    @"[\x00-\x1F\x7F-\x9F\u0600-\u06FF\u200B-\u200F\u2028-\u2029\u202A-\u202E\u2060-\u206F]",
-                    "").Trim();
-                var telPhone = System.Text.RegularExpressions.Regex.Replace(cleanPhone, @"[^\d+]", "");
-                <p>
-                    <i class="bi bi-telephone"></i>
-                    <a href="tel:@telPhone" class="text-decoration-none">@cleanPhone</a>
-                </p>
-            }
-            @if (!string.IsNullOrEmpty(Model.Website))
-            {
-                <p>
-                    <a href="@Model.Website" target="_blank" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-globe"></i> Visit Website
-                    </a>
-                    @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
+    <!-- Hero Header -->
+    <div class="cafe-hero-header">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 mb-3">@Model.Name</h1>
+                <div class="mb-3">
+                    @if (Model.AverageRating > 0)
                     {
-                        <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-outline-success btn-sm ms-2">
-                            <i class="bi bi-map"></i> View on Google Maps
-                        </a>
+                        <span class="badge bg-warning text-dark me-2">
+                            <i class="bi bi-star-fill"></i> @Model.AverageRating.Value.ToString("0.0")
+                        </span>
+                        <span class="opacity-75">(@Model.TotalReviews reviews)</span>
                     }
-                </p>
-            }
-            @if (!string.IsNullOrEmpty(Model.Description))
-            {
-                <div class="mt-4">
-                    <h5>About this place</h5>
-                    <p class="text-muted">@Model.Description</p>
+                    @if (!string.IsNullOrEmpty(Model.PriceRange))
+                    {
+                        <span class="badge bg-white text-dark ms-2">@Model.PriceRange</span>
+                    }
+                    @if (hasGames)
+                    {
+                        <span class="badge bg-light text-primary ms-2">
+                            <i class="bi bi-controller me-1"></i>@gameCount Games
+                        </span>
+                    }
                 </div>
-            }
-            @{
-                var attributes = Model.GetAttributes();
-                if (attributes != null && attributes.Any())
+                <p class="lead mb-2 opacity-90">
+                    <i class="bi bi-geo-alt-fill me-1"></i> @Model.Address, @Model.City, @Model.State
+                </p>
+                @if (!string.IsNullOrEmpty(Model.Phone))
                 {
-                    <div class="mt-4">
-                        <h5>Amenities & Features</h5>
-                        <div class="row">
-                            @foreach (var category in attributes)
-                            {
-                                <div class="col-md-6 mb-3">
-                                    <h6 class="fw-bold">@category.Key</h6>
-                                    <ul class="list-unstyled">
-                                        @foreach (var item in category.Value)
-                                        {
-                                            <li><i class="bi bi-check-circle-fill text-success small"></i> @item</li>
-                                        }
-                                    </ul>
-                                </div>
-                            }
-                        </div>
-                    </div>
+                    var cleanPhone = System.Text.RegularExpressions.Regex.Replace(
+                        Model.Phone,
+                        @"[\x00-\x1F\x7F-\x9F\u0600-\u06FF\u200B-\u200F\u2028-\u2029\u202A-\u202E\u2060-\u206F]",
+                        "").Trim();
+                    var telPhone = System.Text.RegularExpressions.Regex.Replace(cleanPhone, @"[^\d+]", "");
+                    <p class="mb-2 opacity-90">
+                        <i class="bi bi-telephone-fill me-1"></i>
+                        <a href="tel:@telPhone" class="text-white text-decoration-none">@cleanPhone</a>
+                    </p>
                 }
-            }
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                @if (!string.IsNullOrEmpty(Model.Website))
+                {
+                    <a href="@Model.Website" target="_blank" class="btn btn-outline-light me-2 mb-2">
+                        <i class="bi bi-globe me-1"></i> Website
+                    </a>
+                }
+                @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
+                {
+                    <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-light mb-2">
+                        <i class="bi bi-map-fill me-1"></i> Directions
+                    </a>
+                }
+            </div>
         </div>
     </div>
+
+    <!-- Description & Amenities (moved outside hero for better layout) -->
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <div class="detail-card card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>About this place</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0 text-muted">@Model.Description</p>
+            </div>
+        </div>
+    }
+
+    @{
+        var attributes = Model.GetAttributes();
+        if (attributes != null && attributes.Any())
+        {
+            <div class="detail-card card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-check2-circle me-2"></i>Amenities & Features</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var category in attributes)
+                        {
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <h6 class="fw-bold text-primary mb-2">@category.Key</h6>
+                                <ul class="list-unstyled mb-0">
+                                    @foreach (var item in category.Value)
+                                    {
+                                        <li class="amenity-item">
+                                            <i class="bi bi-check-circle-fill"></i> @item
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
 
     <div class="row">
         <!-- Left Column: Photos & Reviews -->
@@ -115,68 +129,92 @@
             <!-- Photos Carousel -->
             @if (Model.Photos != null && Model.Photos.Any())
             {
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-white">
-                        <h4 class="mb-0">Photos</h4>
-                    </div>
-                    <div class="card-body p-0">
+                var photos = Model.Photos.OrderBy(p => p.DisplayOrder).ToList();
+
+                // Helper function to upgrade Google Photos URLs to higher resolution
+                Func<string, string> upgradePhotoUrl = (url) => {
+                    if (string.IsNullOrEmpty(url)) return url;
+                    // Pattern 1: =w{width}-h{height} format
+                    var whMatch = System.Text.RegularExpressions.Regex.Match(url, @"=w\d+-h\d+");
+                    if (whMatch.Success) return url.Replace(whMatch.Value, "=w1200-h800");
+                    // Pattern 2: =s{size} format
+                    var sMatch = System.Text.RegularExpressions.Regex.Match(url, @"=s\d+");
+                    if (sMatch.Success) return url.Replace(sMatch.Value, "=s1200");
+                    // If googleusercontent URL without size param, append one
+                    if (url.Contains("googleusercontent.com") && !url.Contains("="))
+                        return url + "=w1200-h800";
+                    return url;
+                };
+
+                <div class="mb-4">
+                    <div class="photo-carousel-wrapper">
                         <div id="cafeCarousel" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-indicators">
-                                @for (int i = 0; i < Model.Photos.Count; i++)
+                                @for (int i = 0; i < photos.Count; i++)
                                 {
                                     <button type="button" data-bs-target="#cafeCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
                                 }
                             </div>
                             <div class="carousel-inner">
-                                @{
-                                    var photos = Model.Photos.OrderBy(p => p.DisplayOrder).ToList();
-                                    for (int i = 0; i < photos.Count; i++)
-                                    {
-                                        <div class="carousel-item @(i == 0 ? "active" : "")">
-                                            <div class="ratio ratio-16x9">
-                                                <img src="@photos[i].Url" class="d-block w-100 object-fit-contain bg-dark" alt="Photo of @Model.Name">
+                                @for (int i = 0; i < photos.Count; i++)
+                                {
+                                    var photoUrl = upgradePhotoUrl(photos[i].Url);
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@photoUrl" alt="Photo @(i + 1) of @Model.Name" loading="@(i == 0 ? "eager" : "lazy")">
+                                        @if (!string.IsNullOrEmpty(photos[i].Caption))
+                                        {
+                                            <div class="carousel-caption">
+                                                <p class="mb-0">@photos[i].Caption</p>
                                             </div>
-                                            @if (!string.IsNullOrEmpty(photos[i].Caption))
-                                            {
-                                                <div class="carousel-caption d-none d-md-block">
-                                                    <p>@photos[i].Caption</p>
-                                                </div>
-                                            }
-                                        </div>
-                                    }
+                                        }
+                                    </div>
                                 }
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#cafeCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#cafeCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
+                            @if (photos.Count > 1)
+                            {
+                                <button class="carousel-control-prev" type="button" data-bs-target="#cafeCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#cafeCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            }
                         </div>
                     </div>
+                    @if (photos.Count > 1)
+                    {
+                        <div class="photo-thumbnails">
+                            @for (int i = 0; i < photos.Count; i++)
+                            {
+                                var thumbUrl = upgradePhotoUrl(photos[i].Url);
+                                <img src="@thumbUrl"
+                                     class="photo-thumbnail @(i == 0 ? "active" : "")"
+                                     alt="Thumbnail @(i + 1)"
+                                     data-bs-target="#cafeCarousel"
+                                     data-bs-slide-to="@i"
+                                     onclick="selectThumbnail(this, @i)">
+                            }
+                        </div>
+                    }
                 </div>
             }
             else if (!string.IsNullOrEmpty(Model.LocalImagePath))
             {
-                 <div class="card mb-4 shadow-sm">
-                    <div class="card-body p-0">
-                         <div class="ratio ratio-16x9">
-                             <img src="@Model.LocalImagePath" class="img-fluid rounded w-100 object-fit-cover" alt="@Model.Name">
-                         </div>
-                    </div>
+                <div class="mb-4 photo-carousel-wrapper">
+                    <img src="@Model.LocalImagePath" class="w-100" style="height: 450px; object-fit: cover;" alt="@Model.Name">
                 </div>
             }
 
             <!-- Board Game Library -->
             @if (Model.CafeGames != null && Model.CafeGames.Any())
             {
-                <div class="card mb-4 shadow-sm border-0 bg-light">
-                    <div class="card-header bg-white border-bottom-0 pt-3">
+                <div class="detail-card card mb-4 game-library-card">
+                    <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0"><i class="bi bi-controller me-2"></i>Board Game Library</h4>
-                            <span class="badge bg-primary rounded-pill">@Model.CafeGames.Count Games</span>
+                            <h4 class="mb-0"><i class="bi bi-controller me-2 text-primary"></i>Board Game Library</h4>
+                            <span class="badge bg-primary rounded-pill px-3 py-2">@Model.CafeGames.Count Games</span>
                         </div>
                     </div>
                     <div class="card-body">
@@ -184,15 +222,15 @@
                             @foreach (var cafeGame in Model.CafeGames.OrderBy(cg => cg.Game.Name))
                             {
                                 <div class="col">
-                                    <div class="card h-100 border-0 shadow-sm text-center">
-                                        <div class="p-2">
+                                    <div class="game-card card h-100 text-center">
+                                        <div class="p-2 overflow-hidden" style="border-radius: 12px 12px 0 0;">
                                             @if (!string.IsNullOrEmpty(cafeGame.Game.ImageUrl))
                                             {
-                                                <img src="@cafeGame.Game.ImageUrl" class="card-img-top rounded object-fit-contain" style="height: 100px;" alt="@cafeGame.Game.Name">
+                                                <img src="@cafeGame.Game.ImageUrl" class="rounded object-fit-contain" style="height: 100px; width: 100%;" alt="@cafeGame.Game.Name" loading="lazy">
                                             }
                                             else
                                             {
-                                                <div class="bg-secondary bg-opacity-10 rounded d-flex align-items-center justify-content-center" style="height: 100px;">
+                                                <div class="bg-gradient rounded d-flex align-items-center justify-content-center" style="height: 100px; background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);">
                                                     <i class="bi bi-dice-5 text-secondary display-6"></i>
                                                 </div>
                                             }
@@ -215,81 +253,91 @@
             }
 
             <!-- Reviews -->
-            <div class="card mb-4">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Reviews</h4>
-                    <span class="badge bg-secondary">Total: @Model.TotalReviews</span>
+            <div class="detail-card card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="bi bi-chat-quote me-2 text-primary"></i>Reviews</h4>
+                    <span class="badge bg-secondary rounded-pill px-3">@Model.TotalReviews reviews</span>
                 </div>
                 <div class="card-body">
                     @if (Model.Reviews != null && Model.Reviews.Any())
                     {
-                        <div class="list-group list-group-flush">
-                            @foreach (var review in Model.Reviews.OrderByDescending(r => r.VisitDate).ThenByDescending(r => r.CreatedAt).Take(10))
-                            {
-                                <div class="list-group-item px-0 py-3">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <div>
-                                            <h6 class="mb-0 fw-bold">
-                                                 @(review.User?.GetFullName() ?? review.Title?.Replace("Google Maps Review - ", "") ?? "Anonymous")
-                                            </h6>
-                                            <small class="text-muted">@review.GetTimeAgo()</small>
-                                        </div>
-                                        <span class="badge bg-light text-warning border border-warning">
-                                            @review.Rating <i class="bi bi-star-fill"></i>
-                                        </span>
+                        @foreach (var review in Model.Reviews.OrderByDescending(r => r.VisitDate).ThenByDescending(r => r.CreatedAt).Take(10))
+                        {
+                            <div class="review-item py-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">
+                                            <i class="bi bi-person-circle me-1 text-muted"></i>
+                                            @(review.User?.GetFullName() ?? review.Title?.Replace("Google Maps Review - ", "") ?? "Anonymous")
+                                        </h6>
+                                        <small class="text-muted"><i class="bi bi-clock me-1"></i>@review.GetTimeAgo()</small>
                                     </div>
-                                    <p class="mb-0">@review.Content</p>
+                                    <span class="rating-badge">
+                                        @review.Rating <i class="bi bi-star-fill"></i>
+                                    </span>
                                 </div>
-                            }
-                        </div>
+                                <p class="mb-0 text-muted">@review.Content</p>
+                            </div>
+                        }
                     }
                     else
                     {
-                        <p class="text-muted text-center py-4">No reviews yet.</p>
+                        <div class="text-center py-5">
+                            <i class="bi bi-chat-dots display-4 text-muted mb-3 d-block"></i>
+                            <p class="text-muted mb-0">No reviews yet. Be the first to share your experience!</p>
+                        </div>
                     }
                 </div>
             </div>
 
             <!-- Tips for Visitors -->
-            <div class="card mb-4 border-0 bg-light">
-                <div class="card-header bg-transparent border-0 pt-3">
-                    <h4 class="mb-0"><i class="bi bi-lightbulb me-2 text-warning"></i>Tips for Visiting</h4>
+            <div class="detail-card card mb-4 tips-card">
+                <div class="card-header bg-transparent">
+                    <h4 class="mb-0"><i class="bi bi-lightbulb-fill me-2 text-warning"></i>Tips for Visiting</h4>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-calendar-check text-primary me-3 fs-4"></i>
-                                <div>
-                                    <h6 class="mb-1">Make a Reservation</h6>
-                                    <p class="text-muted small mb-0">Board game cafes can get busy, especially on weekends. Call ahead to reserve a table.</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="tip-item">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-calendar-check me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Make a Reservation</h6>
+                                        <p class="text-muted small mb-0">Board game cafes can get busy, especially on weekends. Call ahead to reserve a table.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-clock text-primary me-3 fs-4"></i>
-                                <div>
-                                    <h6 class="mb-1">Plan Your Time</h6>
-                                    <p class="text-muted small mb-0">Most games take 1-3 hours. Allow extra time to browse the library and learn new games.</p>
+                        <div class="col-md-6">
+                            <div class="tip-item">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-clock me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Plan Your Time</h6>
+                                        <p class="text-muted small mb-0">Most games take 1-3 hours. Allow extra time to browse the library and learn new games.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-people text-primary me-3 fs-4"></i>
-                                <div>
-                                    <h6 class="mb-1">Bring Friends</h6>
-                                    <p class="text-muted small mb-0">Many games are best with 3-5 players. Gather your group for the best experience.</p>
+                        <div class="col-md-6">
+                            <div class="tip-item">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-people me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Bring Friends</h6>
+                                        <p class="text-muted small mb-0">Many games are best with 3-5 players. Gather your group for the best experience.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-question-circle text-primary me-3 fs-4"></i>
-                                <div>
-                                    <h6 class="mb-1">Ask for Recommendations</h6>
-                                    <p class="text-muted small mb-0">Staff are usually board game enthusiasts who can suggest games based on your preferences.</p>
+                        <div class="col-md-6">
+                            <div class="tip-item">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-question-circle me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Ask for Recommendations</h6>
+                                        <p class="text-muted small mb-0">Staff are usually board game enthusiasts who can suggest games based on your preferences.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -301,16 +349,16 @@
         <!-- Right Column: Map & Hours -->
         <div class="col-lg-4">
             <!-- Quick Info Card -->
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Quick Info</h5>
+            <div class="card mb-4 quick-info-card">
+                <div class="card-header">
+                    <h5 class="mb-0 text-white"><i class="bi bi-info-circle me-2"></i>Quick Info</h5>
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled mb-0">
                         @if (hasGames)
                         {
                             <li class="mb-3 d-flex align-items-center">
-                                <i class="bi bi-controller text-primary me-3 fs-5"></i>
+                                <i class="bi bi-controller me-3 fs-5"></i>
                                 <div>
                                     <strong>@gameCount</strong> <span class="text-muted">Board Games</span>
                                 </div>
@@ -319,7 +367,7 @@
                         @if (Model.AverageRating > 0)
                         {
                             <li class="mb-3 d-flex align-items-center">
-                                <i class="bi bi-star-fill text-warning me-3 fs-5"></i>
+                                <i class="bi bi-star-fill me-3 fs-5" style="color: #ffd700 !important;"></i>
                                 <div>
                                     <strong>@Model.AverageRating.Value.ToString("0.0")</strong> <span class="text-muted">Rating (@reviewCount reviews)</span>
                                 </div>
@@ -328,14 +376,14 @@
                         @if (!string.IsNullOrEmpty(Model.PriceRange))
                         {
                             <li class="mb-3 d-flex align-items-center">
-                                <i class="bi bi-currency-dollar text-success me-3 fs-5"></i>
+                                <i class="bi bi-currency-dollar me-3 fs-5"></i>
                                 <div>
                                     <strong>@Model.PriceRange</strong> <span class="text-muted">Price Range</span>
                                 </div>
                             </li>
                         }
                         <li class="d-flex align-items-center">
-                            <i class="bi bi-geo-alt text-danger me-3 fs-5"></i>
+                            <i class="bi bi-geo-alt-fill me-3 fs-5"></i>
                             <div>
                                 <span class="text-muted">@Model.City, @Model.Country</span>
                             </div>
@@ -345,21 +393,21 @@
             </div>
 
             <!-- Map Card -->
-            <div class="card mb-4 shadow-sm">
+            <div class="detail-card card mb-4 map-card">
                 <div class="card-body p-0">
-                    <div id="cafeMap" style="height: 300px; width: 100%; border-radius: 4px 4px 0 0;"></div>
+                    <div id="cafeMap" style="height: 250px; width: 100%;"></div>
                 </div>
                 <div class="card-body">
                     @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
                     {
-                        <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-primary w-100">
-                            <i class="bi bi-map-fill"></i> Open in Google Maps
+                        <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-primary w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            <i class="bi bi-map-fill me-1"></i> Open in Google Maps
                         </a>
                     }
                     else
                     {
-                        <a href="https://www.google.com/maps/search/?api=1&query=@Model.Latitude,@Model.Longitude" target="_blank" class="btn btn-primary w-100">
-                             <i class="bi bi-map-fill"></i> Open in Google Maps
+                        <a href="https://www.google.com/maps/search/?api=1&query=@Model.Latitude,@Model.Longitude" target="_blank" class="btn btn-primary w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            <i class="bi bi-map-fill me-1"></i> Open in Google Maps
                         </a>
                     }
                 </div>
@@ -368,47 +416,49 @@
             <!-- Opening Hours -->
             @if (!string.IsNullOrEmpty(Model.OpeningHours))
             {
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="bi bi-clock me-2"></i>Opening Hours</h5>
+                <div class="detail-card card mb-4 hours-card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-clock-fill me-2 text-primary"></i>Opening Hours</h5>
                     </div>
                     <div class="card-body">
-                        <p class="card-text" style="white-space: pre-line;">@Model.OpeningHours.Replace(";", "\n")</p>
+                        <p class="card-text mb-0" style="white-space: pre-line; line-height: 1.8;">@Model.OpeningHours.Replace(";", "\n")</p>
                     </div>
                 </div>
             }
 
             <!-- Share This Cafe -->
-            <div class="card mb-4 shadow-sm border-0">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0"><i class="bi bi-share me-2"></i>Share This Cafe</h5>
+            <div class="detail-card card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-share-fill me-2 text-primary"></i>Share This Cafe</h5>
                 </div>
                 <div class="card-body text-center">
                     <p class="text-muted small mb-3">Know someone who would love this place? Share it!</p>
-                    <div class="d-flex justify-content-center gap-2">
+                    <div class="d-flex justify-content-center gap-3">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=@Uri.EscapeDataString($"{Context.Request.Scheme}://{Context.Request.Host}/Home/Details/{Model.CafeId}")"
-                           target="_blank" class="btn btn-outline-primary btn-sm" title="Share on Facebook">
+                           target="_blank" class="share-btn btn btn-outline-primary facebook" title="Share on Facebook">
                             <i class="bi bi-facebook"></i>
                         </a>
                         <a href="https://twitter.com/intent/tweet?url=@Uri.EscapeDataString($"{Context.Request.Scheme}://{Context.Request.Host}/Home/Details/{Model.CafeId}")&text=@Uri.EscapeDataString($"Check out {Model.Name} - a board game cafe in {Model.City}!")"
-                           target="_blank" class="btn btn-outline-dark btn-sm" title="Share on X">
+                           target="_blank" class="share-btn btn btn-outline-dark twitter" title="Share on X">
                             <i class="bi bi-twitter-x"></i>
                         </a>
                         <a href="mailto:?subject=@Uri.EscapeDataString($"Check out {Model.Name}")&body=@Uri.EscapeDataString($"I found this great board game cafe: {Model.Name} in {Model.City}. Check it out: {Context.Request.Scheme}://{Context.Request.Host}/Home/Details/{Model.CafeId}")"
-                           class="btn btn-outline-secondary btn-sm" title="Share via Email">
+                           class="share-btn btn btn-outline-secondary email" title="Share via Email">
                             <i class="bi bi-envelope"></i>
                         </a>
-                        <button type="button" class="btn btn-outline-success btn-sm" onclick="copyToClipboard()" title="Copy Link">
+                        <button type="button" class="share-btn btn btn-outline-success copy" onclick="copyToClipboard()" title="Copy Link">
                             <i class="bi bi-link-45deg"></i>
                         </button>
                     </div>
-                    <div id="copyAlert" class="alert alert-success py-1 px-2 mt-2 small d-none">Link copied!</div>
+                    <div id="copyAlert" class="alert alert-success py-2 px-3 mt-3 small d-none" style="border-radius: 10px;">
+                        <i class="bi bi-check-circle me-1"></i>Link copied to clipboard!
+                    </div>
                 </div>
             </div>
 
             <!-- Back to Browse -->
             <div class="d-grid gap-2 mb-4">
-                <a href="/" class="btn btn-outline-primary">
+                <a href="/" class="btn btn-outline-primary" style="border-radius: 10px; padding: 0.75rem;">
                     <i class="bi bi-arrow-left me-2"></i>Back to Browse Cafes
                 </a>
             </div>
@@ -419,17 +469,349 @@
 @section Scripts {
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <style>
+        /* Hero Header Styling */
+        .cafe-hero-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+        .cafe-hero-header h1 {
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .cafe-hero-header .badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        .cafe-hero-header a {
+            color: rgba(255,255,255,0.9);
+        }
+        .cafe-hero-header a:hover {
+            color: white;
+        }
+        .cafe-hero-header .btn-outline-light:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Enhanced Photo Carousel */
+        .photo-carousel-wrapper {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        .photo-carousel-wrapper .carousel-item img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            object-position: center;
+        }
+        .photo-carousel-wrapper .carousel-control-prev,
+        .photo-carousel-wrapper .carousel-control-next {
+            width: 60px;
+            height: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            margin: 0 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .photo-carousel-wrapper:hover .carousel-control-prev,
+        .photo-carousel-wrapper:hover .carousel-control-next {
+            opacity: 1;
+        }
+        .photo-carousel-wrapper .carousel-control-prev-icon,
+        .photo-carousel-wrapper .carousel-control-next-icon {
+            filter: invert(1) grayscale(100);
+        }
+        .photo-carousel-wrapper .carousel-indicators {
+            bottom: 15px;
+        }
+        .photo-carousel-wrapper .carousel-indicators button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 5px;
+            background: rgba(255,255,255,0.6);
+            border: 2px solid white;
+            transition: all 0.3s ease;
+        }
+        .photo-carousel-wrapper .carousel-indicators button.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        .carousel-caption {
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 2rem 1rem 1rem;
+            border-radius: 0 0 16px 16px;
+        }
+
+        /* Photo Thumbnails */
+        .photo-thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .photo-thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            flex-shrink: 0;
+        }
+        .photo-thumbnail:hover,
+        .photo-thumbnail.active {
+            opacity: 1;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        /* Enhanced Card Styling */
+        .detail-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .detail-card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+        .detail-card .card-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: none;
+            padding: 1rem 1.25rem;
+        }
+        .detail-card .card-header h4,
+        .detail-card .card-header h5 {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Quick Info Card Enhancement */
+        .quick-info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        .quick-info-card .card-header {
+            background: transparent !important;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .quick-info-card .card-body {
+            color: white;
+        }
+        .quick-info-card .list-unstyled li i {
+            color: rgba(255,255,255,0.8) !important;
+        }
+        .quick-info-card .text-muted {
+            color: rgba(255,255,255,0.7) !important;
+        }
+        .quick-info-card strong {
+            font-size: 1.1rem;
+        }
+
+        /* Board Game Library Enhancement */
+        .game-library-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+        }
+        .game-card {
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .game-card img {
+            transition: transform 0.3s ease;
+        }
+        .game-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Reviews Enhancement */
+        .review-item {
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        .review-item:hover {
+            background: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+        }
+        .rating-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb800 100%);
+            color: #333;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        /* Tips Section Enhancement */
+        .tips-card {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+            border: none;
+        }
+        .tip-item {
+            padding: 1rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        .tip-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .tip-item i {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* Map Card Enhancement */
+        .map-card {
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .map-card #cafeMap {
+            border-radius: 16px 16px 0 0;
+        }
+
+        /* Share Buttons Enhancement */
+        .share-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .share-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+        .share-btn.facebook:hover {
+            background: #1877f2;
+            border-color: #1877f2;
+            color: white;
+        }
+        .share-btn.twitter:hover {
+            background: #000;
+            border-color: #000;
+            color: white;
+        }
+        .share-btn.email:hover {
+            background: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+        .share-btn.copy:hover {
+            background: #198754;
+            border-color: #198754;
+            color: white;
+        }
+
+        /* Opening Hours Enhancement */
+        .hours-card .card-body {
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(102, 126, 234, 0.03) 10px,
+                rgba(102, 126, 234, 0.03) 20px
+            );
+        }
+
+        /* Breadcrumb Enhancement */
+        .breadcrumb-wrapper {
+            background: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+        .breadcrumb-wrapper .breadcrumb {
+            margin-bottom: 0;
+        }
+        .breadcrumb-wrapper .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .breadcrumb-wrapper .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Amenities Enhancement */
+        .amenities-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+        .amenity-item i {
+            color: #28a745;
+            margin-right: 0.5rem;
+        }
+
         .extra-small-link {
             font-size: 0.7rem;
             color: #6c757d;
         }
         .extra-small-link:hover {
-            color: #0d6efd;
+            color: #667eea;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 768px) {
+            .cafe-hero-header {
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+            .cafe-hero-header h1 {
+                font-size: 1.75rem;
+            }
+            .photo-carousel-wrapper .carousel-item img {
+                height: 280px;
+            }
+            .photo-thumbnail {
+                width: 60px;
+                height: 45px;
+            }
         }
     </style>
     <script>
@@ -457,6 +839,22 @@
                 setTimeout(function() {
                     alert.classList.add('d-none');
                 }, 2000);
+            });
+        }
+
+        // Thumbnail click handler
+        function selectThumbnail(element, index) {
+            document.querySelectorAll('.photo-thumbnail').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Sync thumbnails with carousel
+        var cafeCarousel = document.getElementById('cafeCarousel');
+        if (cafeCarousel) {
+            cafeCarousel.addEventListener('slid.bs.carousel', function(e) {
+                document.querySelectorAll('.photo-thumbnail').forEach((t, i) => {
+                    t.classList.toggle('active', i === e.to);
+                });
             });
         }
     </script>

@@ -254,6 +254,13 @@ namespace BoardGameCafeFinder.Services
 
                             var itemNameLower = item.Name.Trim().ToLowerInvariant();
 
+                            // First check if this name should be excluded (false positives like "Sweet Spot", "Wings")
+                            if (!IsLikelyBoardGameName(item.Name))
+                            {
+                                _logger.LogDebug("Skipping '{Name}' - excluded by filter", item.Name);
+                                continue;
+                            }
+
                             // Strategy 1: Check if exact match exists in known games database
                             if (knownGameDict.TryGetValue(itemNameLower, out var bggId))
                             {
@@ -276,42 +283,39 @@ namespace BoardGameCafeFinder.Services
                             }
 
                             // Strategy 2: Try to search on BGG API for unknown names
-                            // Only search if it passes basic validation (not food/drink, UI text, etc.)
-                            if (IsLikelyBoardGameName(item.Name))
+                            // (already validated by IsLikelyBoardGameName above)
+                            try
                             {
-                                try
+                                var searchResults = await _bggApiService.SearchGamesAsync(item.Name.Trim());
+                                var match = searchResults.FirstOrDefault(r =>
+                                    r.Name.Equals(item.Name.Trim(), StringComparison.OrdinalIgnoreCase));
+
+                                if (match != null)
                                 {
-                                    var searchResults = await _bggApiService.SearchGamesAsync(item.Name.Trim());
-                                    var match = searchResults.FirstOrDefault(r =>
-                                        r.Name.Equals(item.Name.Trim(), StringComparison.OrdinalIgnoreCase));
+                                    _logger.LogDebug("Found '{Name}' on BGG (BGGId: {BggId})", item.Name, match.BggId);
 
-                                    if (match != null)
+                                    var crawledData = new CrawledGameData
                                     {
-                                        _logger.LogDebug("Found '{Name}' on BGG (BGGId: {BggId})", item.Name, match.BggId);
+                                        Name = item.Name.Trim(),
+                                        ImageUrl = item.ImageUrl,
+                                        SourceUrl = item.SourceUrl,
+                                        BggId = match.BggId
+                                    };
 
-                                        var crawledData = new CrawledGameData
-                                        {
-                                            Name = item.Name.Trim(),
-                                            ImageUrl = item.ImageUrl,
-                                            SourceUrl = item.SourceUrl,
-                                            BggId = match.BggId
-                                        };
+                                    // Parse Price
+                                    if (!string.IsNullOrEmpty(item.PriceStr) && decimal.TryParse(item.PriceStr, out decimal p))
+                                        crawledData.Price = p;
 
-                                        // Parse Price
-                                        if (!string.IsNullOrEmpty(item.PriceStr) && decimal.TryParse(item.PriceStr, out decimal p))
-                                            crawledData.Price = p;
-
-                                        results.Add(crawledData);
-                                    }
-                                    else
-                                    {
-                                        _logger.LogDebug("'{Name}' not found on BGG - skipping", item.Name);
-                                    }
+                                    results.Add(crawledData);
                                 }
-                                catch (Exception ex)
+                                else
                                 {
-                                    _logger.LogWarning(ex, "Error searching BGG for '{Name}'", item.Name);
+                                    _logger.LogDebug("'{Name}' not found on BGG - skipping", item.Name);
                                 }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogWarning(ex, "Error searching BGG for '{Name}'", item.Name);
                             }
                         }
                     }
@@ -342,6 +346,10 @@ namespace BoardGameCafeFinder.Services
             // Exclude website UI/navigation text
             var excludeExact = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
+                // False positive board game names - common words that match BGG but aren't actually board games
+                "Sweet Spot", "Wings", "BLT", "Pickles", "Sandwiches", "Sides",
+                "Fried Rice", "Matcha",
+
                 "menu", "home", "contact", "about", "cart", "search", "login", "logout", "register",
                 "shop", "store", "buy", "sell", "view", "more", "read more", "learn more", "view all",
                 "subscribe", "newsletter", "sign up", "sign in", "follow", "share", "like",
