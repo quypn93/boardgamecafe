@@ -1,15 +1,14 @@
-@model List<BoardGameCafeFinder.Models.Domain.BlogPost>
+@model List<BoardGameCafeFinder.Controllers.CityBlogItem>
 @{
-    ViewData["Title"] = "Blog - Board Game Cafe Finder";
-    ViewData["MetaDescription"] = "Read our blog for tips, guides, and insights about board game cafes. Discover top games, city guides, and more.";
+    ViewData["Title"] = "Board Game Cafe Guides by City";
+    ViewData["MetaDescription"] = "Discover board game cafes in cities around the world. Find guides, top games, and the best places to play near you.";
     Layout = "_UserLayout";
 
-    var filterType = ViewBag.FilterType as string;
-    var filterValue = ViewBag.FilterValue as string;
-    var categories = ViewBag.Categories as List<string> ?? new List<string>();
-    var cities = ViewBag.Cities as List<string> ?? new List<string>();
+    var countries = ViewBag.Countries as List<string> ?? new List<string>();
+    var selectedCountry = ViewBag.SelectedCountry as string;
     var currentPage = (int)(ViewBag.CurrentPage ?? 1);
     var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var totalItems = (int)(ViewBag.TotalItems ?? 0);
 }
 
 <!-- Hero Section -->
@@ -18,10 +17,10 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <h1 class="display-5 fw-bold mb-3">
-                    <i class="bi bi-journal-richtext me-3"></i>Board Game Cafe Blog
+                    <i class="bi bi-journal-richtext me-3"></i>Board Game Cafe Guides
                 </h1>
                 <p class="lead opacity-90">
-                    Tips, guides, and insights about board game cafes around the world
+                    Explore board game cafes in @totalItems cities worldwide
                 </p>
             </div>
         </div>
@@ -31,65 +30,98 @@
 <div class="container py-5">
     <div class="row">
         <!-- Main Content -->
-        <div class="col-lg-8">
-            @if (!string.IsNullOrEmpty(filterType))
-            {
-                <div class="alert alert-info mb-4">
-                    <i class="bi bi-funnel me-2"></i>
-                    Showing posts for <strong>@filterType</strong>: @filterValue
-                    <a href="/Blog" class="ms-2">Clear filter</a>
+        <div class="col-lg-9">
+            <!-- Country Filter -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    @if (!string.IsNullOrEmpty(selectedCountry))
+                    {
+                        <span class="badge bg-primary fs-6 me-2">
+                            <i class="bi bi-geo-alt"></i> @selectedCountry
+                        </span>
+                        <a href="/Blog" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-x"></i> Clear
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Showing all cities</span>
+                    }
                 </div>
-            }
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-funnel"></i> Filter by Country
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
+                        <li><a class="dropdown-item @(string.IsNullOrEmpty(selectedCountry) ? "active" : "")" href="/Blog">All Countries</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        @foreach (var country in countries)
+                        {
+                            <li>
+                                <a class="dropdown-item @(selectedCountry == country ? "active" : "")" href="/Blog?country=@Uri.EscapeDataString(country)">
+                                    @country
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
 
             @if (Model.Any())
             {
                 <div class="row">
-                    @foreach (var post in Model)
+                    @foreach (var item in Model)
                     {
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card h-100 shadow-sm blog-card">
-                                @if (!string.IsNullOrEmpty(post.FeaturedImage))
+                                @if (!string.IsNullOrEmpty(item.SampleImage))
                                 {
-                                    <img src="@post.FeaturedImage" class="card-img-top" alt="@post.Title" style="height: 180px; object-fit: cover;">
+                                    <img src="@item.SampleImage" class="card-img-top" alt="Board Game Cafes in @item.City" style="height: 180px; object-fit: cover;">
                                 }
                                 else
                                 {
                                     <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center text-white" style="height: 180px;">
-                                        <i class="bi bi-newspaper display-4 opacity-50"></i>
+                                        <div class="text-center">
+                                            <i class="bi bi-building display-4 opacity-75"></i>
+                                            <div class="mt-2 fw-bold">@item.City</div>
+                                        </div>
                                     </div>
                                 }
                                 <div class="card-body">
                                     <div class="mb-2">
-                                        @if (!string.IsNullOrEmpty(post.Category))
-                                        {
-                                            <a href="/Blog?category=@Uri.EscapeDataString(post.Category)" class="badge bg-primary text-decoration-none">@post.Category</a>
-                                        }
-                                        @if (!string.IsNullOrEmpty(post.RelatedCity))
-                                        {
-                                            <a href="/Blog?city=@Uri.EscapeDataString(post.RelatedCity)" class="badge bg-secondary text-decoration-none">
-                                                <i class="bi bi-geo-alt"></i> @post.RelatedCity
-                                            </a>
-                                        }
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-globe"></i> @item.Country
+                                        </span>
                                     </div>
                                     <h5 class="card-title">
-                                        <a href="/blog/@post.Slug" class="text-decoration-none text-dark stretched-link">@post.Title</a>
+                                        <a href="/blog/@Uri.EscapeDataString(item.City)" class="text-decoration-none text-dark stretched-link">
+                                            Board Game Cafes in @item.City
+                                        </a>
                                     </h5>
-                                    @if (!string.IsNullOrEmpty(post.Summary))
-                                    {
-                                        <p class="card-text text-muted small">
-                                            @(post.Summary.Length > 120 ? post.Summary.Substring(0, 117) + "..." : post.Summary)
-                                        </p>
-                                    }
+                                    <p class="card-text text-muted small">
+                                        Discover @item.CafeCount board game @(item.CafeCount == 1 ? "cafe" : "cafes") in @item.City with @item.TotalGames+ games to play.
+                                    </p>
                                 </div>
                                 <div class="card-footer bg-transparent border-0">
-                                    <small class="text-muted">
-                                        <i class="bi bi-calendar me-1"></i>
-                                        @(post.PublishedAt?.ToString("MMMM dd, yyyy") ?? post.CreatedAt.ToString("MMMM dd, yyyy"))
-                                        @if (post.ViewCount > 0)
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="badge bg-success me-1">
+                                                <i class="bi bi-shop"></i> @item.CafeCount
+                                            </span>
+                                            @if (item.TotalGames > 0)
+                                            {
+                                                <span class="badge bg-info">
+                                                    <i class="bi bi-controller"></i> @item.TotalGames
+                                                </span>
+                                            }
+                                        </div>
+                                        @if (item.AverageRating > 0)
                                         {
-                                            <span class="ms-2"><i class="bi bi-eye me-1"></i>@post.ViewCount views</span>
+                                            <span class="text-warning">
+                                                <i class="bi bi-star-fill"></i> @item.AverageRating.ToString("F1")
+                                            </span>
                                         }
-                                    </small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -102,101 +134,118 @@
                     <nav aria-label="Blog pagination" class="mt-4">
                         <ul class="pagination justify-content-center">
                             <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                                <a class="page-link" href="/Blog?page=@(currentPage - 1)@(filterType == "Category" ? "&category=" + filterValue : "")@(filterType == "City" ? "&city=" + filterValue : "")">
+                                <a class="page-link" href="/Blog?page=@(currentPage - 1)@(!string.IsNullOrEmpty(selectedCountry) ? "&country=" + Uri.EscapeDataString(selectedCountry) : "")">
                                     <i class="bi bi-chevron-left"></i>
                                 </a>
                             </li>
-                            @for (int i = 1; i <= totalPages; i++)
-                            {
-                                <li class="page-item @(i == currentPage ? "active" : "")">
-                                    <a class="page-link" href="/Blog?page=@i@(filterType == "Category" ? "&category=" + filterValue : "")@(filterType == "City" ? "&city=" + filterValue : "")">@i</a>
-                                </li>
+
+                            @{
+                                var startPage = Math.Max(1, currentPage - 2);
+                                var endPage = Math.Min(totalPages, currentPage + 2);
+
+                                if (startPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="/Blog?page=1@(!string.IsNullOrEmpty(selectedCountry) ? "&country=" + Uri.EscapeDataString(selectedCountry) : "")">1</a>
+                                    </li>
+                                    if (startPage > 2)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    }
+                                }
+
+                                for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(i == currentPage ? "active" : "")">
+                                        <a class="page-link" href="/Blog?page=@i@(!string.IsNullOrEmpty(selectedCountry) ? "&country=" + Uri.EscapeDataString(selectedCountry) : "")">@i</a>
+                                    </li>
+                                }
+
+                                if (endPage < totalPages)
+                                {
+                                    if (endPage < totalPages - 1)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    }
+                                    <li class="page-item">
+                                        <a class="page-link" href="/Blog?page=@totalPages@(!string.IsNullOrEmpty(selectedCountry) ? "&country=" + Uri.EscapeDataString(selectedCountry) : "")">@totalPages</a>
+                                    </li>
+                                }
                             }
+
                             <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                                <a class="page-link" href="/Blog?page=@(currentPage + 1)@(filterType == "Category" ? "&category=" + filterValue : "")@(filterType == "City" ? "&city=" + filterValue : "")">
+                                <a class="page-link" href="/Blog?page=@(currentPage + 1)@(!string.IsNullOrEmpty(selectedCountry) ? "&country=" + Uri.EscapeDataString(selectedCountry) : "")">
                                     <i class="bi bi-chevron-right"></i>
                                 </a>
                             </li>
                         </ul>
+                        <p class="text-center text-muted">
+                            Page @currentPage of @totalPages (@totalItems cities)
+                        </p>
                     </nav>
                 }
             }
             else
             {
                 <div class="text-center py-5">
-                    <i class="bi bi-journal-x display-1 text-muted"></i>
-                    <h4 class="mt-3">No posts found</h4>
-                    <p class="text-muted">Check back soon for new content!</p>
-                    @if (!string.IsNullOrEmpty(filterType))
-                    {
-                        <a href="/Blog" class="btn btn-primary">View All Posts</a>
-                    }
+                    <i class="bi bi-geo-alt display-1 text-muted"></i>
+                    <h4 class="mt-3">No cities found</h4>
+                    <p class="text-muted">No board game cafes have been added yet.</p>
+                    <a href="/" class="btn btn-primary">Browse Cafes</a>
                 </div>
             }
         </div>
 
         <!-- Sidebar -->
-        <div class="col-lg-4">
-            <!-- Categories -->
-            @if (categories.Any())
-            {
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="bi bi-tags me-2"></i>Categories</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2">
-                            @foreach (var category in categories)
-                            {
-                                <a href="/Blog?category=@Uri.EscapeDataString(category)"
-                                   class="btn btn-sm @(filterValue == category ? "btn-primary" : "btn-outline-primary")">
-                                    @category
-                                </a>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
-
-            <!-- Cities -->
-            @if (cities.Any())
-            {
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Browse by City</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2">
-                            @foreach (var city in cities.Take(15))
-                            {
-                                <a href="/Blog?city=@Uri.EscapeDataString(city)"
-                                   class="btn btn-sm @(filterValue == city ? "btn-secondary" : "btn-outline-secondary")">
-                                    @city
-                                </a>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
-
-            <!-- About -->
+        <div class="col-lg-3">
+            <!-- Quick Stats -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>About This Blog</h5>
+                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Quick Stats</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-0">
-                        Discover the world of board game cafes! We share guides, tips, and insights to help you find the perfect gaming spot and make the most of your visits.
-                    </p>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Cities</span>
+                        <strong>@totalItems</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Countries</span>
+                        <strong>@countries.Count</strong>
+                    </div>
                 </div>
             </div>
+
+            <!-- Top Countries -->
+            @if (countries.Any())
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-globe me-2"></i>Browse by Country</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var country in countries.Take(10))
+                            {
+                                <a href="/Blog?country=@Uri.EscapeDataString(country)"
+                                   class="btn btn-sm @(selectedCountry == country ? "btn-primary" : "btn-outline-primary")">
+                                    @country
+                                </a>
+                            }
+                            @if (countries.Count > 10)
+                            {
+                                <span class="text-muted small align-self-center">+@(countries.Count - 10) more</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
 
             <!-- CTA -->
             <div class="card shadow-sm bg-gradient-primary text-white">
                 <div class="card-body text-center py-4">
                     <i class="bi bi-map display-4 mb-3"></i>
                     <h5>Find Cafes Near You</h5>
-                    <p class="small opacity-90">Explore our interactive map to discover board game cafes in your area.</p>
+                    <p class="small opacity-90">Use our interactive map to discover board game cafes.</p>
                     <a href="/Map" class="btn btn-light">
                         <i class="bi bi-map me-1"></i> Open Map
                     </a>

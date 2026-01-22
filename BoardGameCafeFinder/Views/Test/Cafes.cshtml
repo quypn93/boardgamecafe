@@ -19,8 +19,28 @@
             <h2><i class="bi bi-geo-alt-fill"></i> All Cafe</h2>
             <p class="text-muted mb-0">Manage and test café data</p>
         </div>
-        <span class="badge bg-info fs-6">@totalCount cafés total</span>
+        <div class="d-flex align-items-center gap-2">
+            <a href="/Test/CreateCafe" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Add New Cafe
+            </a>
+            <span class="badge bg-info fs-6">@totalCount cafés total</span>
+        </div>
     </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
     <!-- Filters -->
     <div class="card shadow-sm mb-4">
@@ -211,6 +231,9 @@
                                     </span>
                                 </a>
                                 <div class="btn-group btn-group-sm">
+                                    <a href="/Test/EditCafe/@cafe.Id" class="btn btn-outline-warning btn-sm" title="Edit Cafe">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
                                     <a href="/Admin/CafeGames/@cafe.Id" class="btn btn-outline-secondary btn-sm" title="Manage Games">
                                         <i class="bi bi-list"></i>
                                     </a>

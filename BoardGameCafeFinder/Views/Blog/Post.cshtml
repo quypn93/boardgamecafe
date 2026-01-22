@@ -1,163 +1,109 @@
-@model BoardGameCafeFinder.Models.Domain.BlogPost
+@model BoardGameCafeFinder.Controllers.DynamicBlogPost
 @{
-    ViewData["Title"] = Model.MetaTitle ?? Model.Title;
-    ViewData["MetaDescription"] = Model.MetaDescription ?? Model.Summary ?? "Read this article on Board Game Cafe Finder.";
-    ViewData["CanonicalUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}/blog/{Model.Slug}";
+    ViewData["Title"] = $"Board Game Cafes in {Model.City} - Complete Guide";
+    ViewData["MetaDescription"] = $"Discover {Model.TotalCafes} board game cafes in {Model.City}, {Model.Country}. Find the best places to play with {Model.TotalGames}+ games available.";
     Layout = "_UserLayout";
 
-    var relatedPosts = ViewBag.RelatedPosts as List<BoardGameCafeFinder.Models.Domain.BlogPost> ?? new List<BoardGameCafeFinder.Models.Domain.BlogPost>();
+    var relatedCities = ViewBag.RelatedCities as List<string> ?? new List<string>();
 }
 
-<!-- Featured Image Header -->
-@if (!string.IsNullOrEmpty(Model.FeaturedImage))
-{
-    <div class="blog-hero" style="background-image: url('@Model.FeaturedImage');">
-        <div class="blog-hero-overlay">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center text-white">
-                        @if (!string.IsNullOrEmpty(Model.Category))
-                        {
-                            <a href="/Blog?category=@Uri.EscapeDataString(Model.Category)" class="badge bg-primary mb-3 text-decoration-none">@Model.Category</a>
-                        }
-                        <h1 class="display-5 fw-bold">@Model.Title</h1>
+<!-- Hero Section -->
+<div class="bg-gradient-primary text-white py-5">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/Blog" class="text-white-50">Guides</a></li>
+                <li class="breadcrumb-item"><a href="/Blog?country=@Uri.EscapeDataString(Model.Country)" class="text-white-50">@Model.Country</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">@Model.City</li>
+            </ol>
+        </nav>
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">
+                    Board Game Cafes in @Model.City
+                </h1>
+                <p class="lead opacity-90">
+                    Your complete guide to @Model.TotalCafes board game @(Model.TotalCafes == 1 ? "cafe" : "cafes") in @Model.City, @Model.Country
+                </p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <div class="bg-white bg-opacity-25 rounded px-3 py-2">
+                        <i class="bi bi-shop me-1"></i>
+                        <strong>@Model.TotalCafes</strong> Cafes
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-else
-{
-    <div class="bg-gradient-primary text-white py-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    @if (!string.IsNullOrEmpty(Model.Category))
+                    <div class="bg-white bg-opacity-25 rounded px-3 py-2">
+                        <i class="bi bi-controller me-1"></i>
+                        <strong>@Model.TotalGames</strong> Games
+                    </div>
+                    @if (Model.AverageRating > 0)
                     {
-                        <span class="badge bg-light text-primary mb-3">@Model.Category</span>
+                        <div class="bg-white bg-opacity-25 rounded px-3 py-2">
+                            <i class="bi bi-star-fill me-1"></i>
+                            <strong>@Model.AverageRating.ToString("F1")</strong> Avg Rating
+                        </div>
                     }
-                    <h1 class="display-5 fw-bold">@Model.Title</h1>
                 </div>
             </div>
         </div>
     </div>
-}
+</div>
 
 <div class="container py-5">
-    <div class="row justify-content-center">
+    <div class="row">
+        <!-- Main Content -->
         <div class="col-lg-8">
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/Blog">Blog</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
-                </ol>
-            </nav>
-
-            <!-- Post Meta -->
-            <div class="d-flex flex-wrap align-items-center gap-3 mb-4 text-muted">
-                @if (!string.IsNullOrEmpty(Model.Author))
-                {
-                    <span>
-                        <i class="bi bi-person me-1"></i> @Model.Author
-                    </span>
-                }
-                <span>
-                    <i class="bi bi-calendar me-1"></i>
-                    @(Model.PublishedAt?.ToString("MMMM dd, yyyy") ?? Model.CreatedAt.ToString("MMMM dd, yyyy"))
-                </span>
-                @if (Model.ViewCount > 0)
-                {
-                    <span>
-                        <i class="bi bi-eye me-1"></i> @Model.ViewCount views
-                    </span>
-                }
-                @if (!string.IsNullOrEmpty(Model.RelatedCity))
-                {
-                    <a href="/Blog?city=@Uri.EscapeDataString(Model.RelatedCity)" class="text-decoration-none">
-                        <i class="bi bi-geo-alt me-1"></i> @Model.RelatedCity
-                    </a>
-                }
+            <!-- Introduction -->
+            <div class="mb-5">
+                <h2 class="h4 mb-3"><i class="bi bi-info-circle me-2"></i>About Board Game Cafes in @Model.City</h2>
+                <p class="lead">
+                    @Model.City is home to <strong>@Model.TotalCafes board game @(Model.TotalCafes == 1 ? "cafe" : "cafes")</strong>,
+                    offering a combined library of over <strong>@Model.TotalGames games</strong> for visitors to enjoy.
+                    Whether you're looking for a casual game night spot or a dedicated gaming venue, you'll find great options here.
+                </p>
             </div>
 
-            <!-- Summary -->
-            @if (!string.IsNullOrEmpty(Model.Summary))
+            <!-- Top Games Section -->
+            @if (Model.TopGames.Any())
             {
-                <div class="alert alert-light border-start border-primary border-4 mb-4">
-                    <p class="lead mb-0">@Model.Summary</p>
-                </div>
-            }
+                <div class="mb-5">
+                    <h2 class="h4 mb-4"><i class="bi bi-trophy me-2"></i>Most Popular Games in @Model.City</h2>
+                    <p class="text-muted mb-4">These games appear most frequently across cafes in @Model.City:</p>
 
-            <!-- Content -->
-            <article class="blog-content">
-                @Html.Raw(Model.Content)
-            </article>
-
-            <!-- Tags -->
-            @if (!string.IsNullOrEmpty(Model.Tags))
-            {
-                <div class="mt-5 pt-4 border-top">
-                    <h6 class="text-muted mb-3"><i class="bi bi-tags me-2"></i>Tags</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        @foreach (var tag in Model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                        {
-                            <span class="badge bg-light text-dark">@tag.Trim()</span>
-                        }
-                    </div>
-                </div>
-            }
-
-            <!-- Share -->
-            <div class="mt-4 pt-4 border-top">
-                <h6 class="text-muted mb-3"><i class="bi bi-share me-2"></i>Share this article</h6>
-                <div class="d-flex gap-2">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=@Uri.EscapeDataString($"{Context.Request.Scheme}://{Context.Request.Host}/blog/{Model.Slug}")"
-                       target="_blank" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-facebook"></i> Facebook
-                    </a>
-                    <a href="https://twitter.com/intent/tweet?url=@Uri.EscapeDataString($"{Context.Request.Scheme}://{Context.Request.Host}/blog/{Model.Slug}")&text=@Uri.EscapeDataString(Model.Title)"
-                       target="_blank" class="btn btn-outline-dark btn-sm">
-                        <i class="bi bi-twitter-x"></i> Twitter
-                    </a>
-                    <a href="mailto:?subject=@Uri.EscapeDataString(Model.Title)&body=@Uri.EscapeDataString($"Check out this article: {Context.Request.Scheme}://{Context.Request.Host}/blog/{Model.Slug}")"
-                       class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-envelope"></i> Email
-                    </a>
-                    <button type="button" class="btn btn-outline-success btn-sm" onclick="copyUrl()">
-                        <i class="bi bi-link-45deg"></i> Copy Link
-                    </button>
-                </div>
-                <div id="copyAlert" class="alert alert-success py-1 px-2 mt-2 small d-none">Link copied!</div>
-            </div>
-
-            <!-- Related Posts -->
-            @if (relatedPosts.Any())
-            {
-                <div class="mt-5 pt-4 border-top">
-                    <h4 class="mb-4"><i class="bi bi-collection me-2"></i>Related Posts</h4>
                     <div class="row">
-                        @foreach (var related in relatedPosts)
+                        @foreach (var item in Model.TopGames.Take(6))
                         {
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <div class="card h-100 shadow-sm">
-                                    @if (!string.IsNullOrEmpty(related.FeaturedImage))
-                                    {
-                                        <img src="@related.FeaturedImage" class="card-img-top" alt="@related.Title" style="height: 120px; object-fit: cover;">
-                                    }
-                                    else
-                                    {
-                                        <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center text-white" style="height: 120px;">
-                                            <i class="bi bi-newspaper display-6 opacity-50"></i>
+                                    <div class="row g-0">
+                                        <div class="col-4">
+                                            @if (!string.IsNullOrEmpty(item.Game.ImageUrl))
+                                            {
+                                                <img src="@item.Game.ImageUrl" class="img-fluid rounded-start h-100" alt="@item.Game.Name" style="object-fit: cover;">
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-secondary h-100 d-flex align-items-center justify-content-center rounded-start">
+                                                    <i class="bi bi-dice-5 text-white display-6"></i>
+                                                </div>
+                                            }
                                         </div>
-                                    }
-                                    <div class="card-body">
-                                        <h6 class="card-title">
-                                            <a href="/blog/@related.Slug" class="text-decoration-none text-dark stretched-link">
-                                                @(related.Title.Length > 50 ? related.Title.Substring(0, 47) + "..." : related.Title)
-                                            </a>
-                                        </h6>
+                                        <div class="col-8">
+                                            <div class="card-body py-2">
+                                                <h6 class="card-title mb-1">@item.Game.Name</h6>
+                                                <div class="small text-muted mb-2">
+                                                    @if (item.Game.MinPlayers.HasValue && item.Game.MaxPlayers.HasValue)
+                                                    {
+                                                        <span class="me-2"><i class="bi bi-people"></i> @item.Game.MinPlayers-@item.Game.MaxPlayers</span>
+                                                    }
+                                                    @if (item.Game.PlaytimeMinutes.HasValue)
+                                                    {
+                                                        <span><i class="bi bi-clock"></i> @item.Game.PlaytimeMinutes min</span>
+                                                    }
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-shop"></i> At @item.CafeCount @(item.CafeCount == 1 ? "cafe" : "cafes")
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -166,29 +112,194 @@ else
                 </div>
             }
 
+            <!-- Cafes List -->
+            <div class="mb-5">
+                <h2 class="h4 mb-4"><i class="bi bi-geo-alt me-2"></i>All Board Game Cafes in @Model.City</h2>
+
+                @foreach (var cafe in Model.Cafes)
+                {
+                    <div class="card mb-4 shadow-sm cafe-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                @{
+                                    var photo = cafe.Photos?.OrderBy(p => p.DisplayOrder).FirstOrDefault();
+                                    var imageUrl = photo?.LocalPath ?? photo?.Url ?? cafe.LocalImagePath;
+                                }
+                                @if (!string.IsNullOrEmpty(imageUrl))
+                                {
+                                    <a href="/cafe/@cafe.Slug">
+                                        <img src="@imageUrl" class="img-fluid rounded-start h-100" alt="@cafe.Name" style="object-fit: cover; min-height: 200px;">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="bg-gradient-primary h-100 d-flex align-items-center justify-content-center rounded-start" style="min-height: 200px;">
+                                        <i class="bi bi-shop text-white display-4 opacity-50"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <h5 class="card-title mb-1">
+                                            <a href="/cafe/@cafe.Slug" class="text-decoration-none">@cafe.Name</a>
+                                        </h5>
+                                        @if (cafe.AverageRating.HasValue)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-star-fill"></i> @cafe.AverageRating.Value.ToString("F1")
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <p class="text-muted small mb-2">
+                                        <i class="bi bi-geo-alt"></i> @cafe.Address
+                                    </p>
+
+                                    @if (!string.IsNullOrEmpty(cafe.Description))
+                                    {
+                                        <p class="card-text">
+                                            @(cafe.Description.Length > 150 ? cafe.Description.Substring(0, 147) + "..." : cafe.Description)
+                                        </p>
+                                    }
+
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        @{
+                                            var gameCount = cafe.CafeGames?.Count ?? 0;
+                                        }
+                                        @if (gameCount > 0)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-controller"></i> @gameCount games
+                                            </span>
+                                        }
+                                        @if (cafe.IsVerified)
+                                        {
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-check-circle"></i> Verified
+                                            </span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(cafe.PriceRange))
+                                        {
+                                            <span class="badge bg-info">@cafe.PriceRange</span>
+                                        }
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <a href="/cafe/@cafe.Slug" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-info-circle"></i> View Details
+                                        </a>
+                                        @if (!string.IsNullOrEmpty(cafe.Website))
+                                        {
+                                            <a href="@cafe.Website" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-globe"></i> Website
+                                            </a>
+                                        }
+                                        @if (!string.IsNullOrEmpty(cafe.GoogleMapsUrl))
+                                        {
+                                            <a href="@cafe.GoogleMapsUrl" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-map"></i> Directions
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Tips Section -->
+            <div class="card bg-light border-0 mb-5">
+                <div class="card-body">
+                    <h3 class="h5 mb-3"><i class="bi bi-lightbulb me-2"></i>Tips for Visiting Board Game Cafes</h3>
+                    <ul class="mb-0">
+                        <li><strong>Make a reservation:</strong> Popular cafes can fill up quickly, especially on weekends.</li>
+                        <li><strong>Ask for recommendations:</strong> Staff are usually gamers themselves and can suggest the perfect game for your group.</li>
+                        <li><strong>Plan your time:</strong> Most games take 1-3 hours. Give yourself plenty of time to enjoy.</li>
+                        <li><strong>Try something new:</strong> Step outside your comfort zone and try a game you've never played before!</li>
+                    </ul>
+                </div>
+            </div>
+
             <!-- CTA -->
-            @if (!string.IsNullOrEmpty(Model.RelatedCity))
+            <div class="text-center py-4">
+                <h4>Ready to Play?</h4>
+                <p class="text-muted">Find all board game cafes in @Model.City on our map</p>
+                <a href="/?city=@Uri.EscapeDataString(Model.City)" class="btn btn-primary btn-lg">
+                    <i class="bi bi-search me-2"></i>Browse Cafes in @Model.City
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Facts -->
+            <div class="card shadow-sm mb-4 sticky-top" style="top: 1rem;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Quick Facts</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Total Cafes</span>
+                            <strong>@Model.TotalCafes</strong>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Total Games</span>
+                            <strong>@Model.TotalGames</strong>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Average Rating</span>
+                            <strong>
+                                @if (Model.AverageRating > 0)
+                                {
+                                    <span><i class="bi bi-star-fill text-warning"></i> @Model.AverageRating.ToString("F1")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </strong>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Country</span>
+                            <strong>@Model.Country</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Related Cities -->
+            @if (relatedCities.Any())
             {
-                <div class="card bg-gradient-primary text-white mt-5">
-                    <div class="card-body text-center py-4">
-                        <i class="bi bi-map display-4 mb-3"></i>
-                        <h4>Looking for cafes in @Model.RelatedCity?</h4>
-                        <p class="opacity-90">Explore all board game cafes in this city on our interactive map.</p>
-                        <a href="/?city=@Uri.EscapeDataString(Model.RelatedCity)" class="btn btn-light me-2">
-                            <i class="bi bi-list me-1"></i> View Cafes
-                        </a>
-                        <a href="/Map" class="btn btn-outline-light">
-                            <i class="bi bi-map me-1"></i> Open Map
-                        </a>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>More Cities in @Model.Country</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var city in relatedCities)
+                            {
+                                <a href="/blog/@Uri.EscapeDataString(city)" class="btn btn-sm btn-outline-primary">
+                                    @city
+                                </a>
+                            }
+                        </div>
                     </div>
                 </div>
             }
 
-            <!-- Back to Blog -->
-            <div class="text-center mt-5">
-                <a href="/Blog" class="btn btn-outline-primary">
-                    <i class="bi bi-arrow-left me-2"></i> Back to Blog
-                </a>
+            <!-- Map Link -->
+            <div class="card shadow-sm bg-gradient-primary text-white">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-map display-4 mb-3"></i>
+                    <h5>View on Map</h5>
+                    <p class="small opacity-90">See all cafes in @Model.City on our interactive map.</p>
+                    <a href="/Map?city=@Uri.EscapeDataString(Model.City)" class="btn btn-light">
+                        <i class="bi bi-map me-1"></i> Open Map
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -199,89 +310,16 @@ else
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
-    .blog-hero {
-        height: 400px;
-        background-size: cover;
-        background-position: center;
-        position: relative;
+    .cafe-card {
+        transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .blog-hero-overlay {
-        height: 100%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
-        display: flex;
-        align-items: flex-end;
-        padding-bottom: 3rem;
+    .cafe-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
     }
 
-    .blog-content {
-        font-size: 1.1rem;
-        line-height: 1.8;
-    }
-
-    .blog-content h2 {
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #667eea;
-    }
-
-    .blog-content h3 {
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .blog-content p {
-        margin-bottom: 1.5rem;
-    }
-
-    .blog-content ul, .blog-content ol {
-        margin-bottom: 1.5rem;
-    }
-
-    .blog-content li {
-        margin-bottom: 0.5rem;
-    }
-
-    .blog-content .game-card,
-    .blog-content .cafe-card {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        border-left: 4px solid #667eea;
-    }
-
-    .blog-content .game-card h3,
-    .blog-content .cafe-card h3 {
-        margin-top: 0;
-        color: #333;
-    }
-
-    .blog-content .game-details {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 0.75rem;
-    }
-
-    .blog-content a {
-        color: #667eea;
-    }
-
-    .blog-content a:hover {
-        color: #764ba2;
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(255, 255, 255, 0.5);
     }
 </style>
-
-<script>
-    function copyUrl() {
-        navigator.clipboard.writeText(window.location.href).then(function() {
-            var alert = document.getElementById('copyAlert');
-            alert.classList.remove('d-none');
-            setTimeout(function() {
-                alert.classList.add('d-none');
-            }, 2000);
-        });
-    }
-</script>

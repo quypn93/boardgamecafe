@@ -160,6 +160,167 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         /// <summary>
+        /// Create a new cafe
+        /// GET: /Test/CreateCafe
+        /// </summary>
+        [Route("CreateCafe")]
+        public IActionResult CreateCafe()
+        {
+            ViewBag.IsEdit = false;
+            return View("CafeEdit", new Cafe());
+        }
+
+        /// <summary>
+        /// Edit an existing cafe
+        /// GET: /Test/EditCafe/{id}
+        /// </summary>
+        [Route("EditCafe/{id}")]
+        public async Task<IActionResult> EditCafe(int id)
+        {
+            var cafe = await _context.Cafes.FindAsync(id);
+            if (cafe == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.IsEdit = true;
+            return View("CafeEdit", cafe);
+        }
+
+        /// <summary>
+        /// Save cafe (create or update)
+        /// POST: /Test/SaveCafe
+        /// </summary>
+        [Route("SaveCafe")]
+        [HttpPost]
+        public async Task<IActionResult> SaveCafe([FromForm] Cafe cafe)
+        {
+            try
+            {
+                if (cafe.CafeId == 0)
+                {
+                    // Create new cafe
+                    cafe.CreatedAt = DateTime.UtcNow;
+                    cafe.UpdatedAt = DateTime.UtcNow;
+
+                    // Generate slug if empty
+                    if (string.IsNullOrEmpty(cafe.Slug))
+                    {
+                        cafe.Slug = GenerateSlug(cafe.Name);
+                    }
+
+                    _context.Cafes.Add(cafe);
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Created new cafe: {Name} (ID: {Id})", cafe.Name, cafe.CafeId);
+
+                    TempData["Success"] = $"Cafe '{cafe.Name}' created successfully!";
+                }
+                else
+                {
+                    // Update existing cafe
+                    var existingCafe = await _context.Cafes.FindAsync(cafe.CafeId);
+                    if (existingCafe == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update fields
+                    existingCafe.Name = cafe.Name;
+                    existingCafe.Description = cafe.Description;
+                    existingCafe.Address = cafe.Address;
+                    existingCafe.City = cafe.City;
+                    existingCafe.State = cafe.State;
+                    existingCafe.Country = cafe.Country;
+                    existingCafe.PostalCode = cafe.PostalCode;
+                    existingCafe.Latitude = cafe.Latitude;
+                    existingCafe.Longitude = cafe.Longitude;
+                    existingCafe.Phone = cafe.Phone;
+                    existingCafe.Email = cafe.Email;
+                    existingCafe.Website = cafe.Website;
+                    existingCafe.BggUsername = cafe.BggUsername;
+                    existingCafe.LibraryUrl = cafe.LibraryUrl;
+                    existingCafe.PriceRange = cafe.PriceRange;
+                    existingCafe.GooglePlaceId = cafe.GooglePlaceId;
+                    existingCafe.GoogleMapsUrl = cafe.GoogleMapsUrl;
+                    existingCafe.LocalImagePath = cafe.LocalImagePath;
+                    existingCafe.AverageRating = cafe.AverageRating;
+                    existingCafe.TotalReviews = cafe.TotalReviews;
+                    existingCafe.IsVerified = cafe.IsVerified;
+                    existingCafe.IsPremium = cafe.IsPremium;
+                    existingCafe.IsActive = cafe.IsActive;
+                    existingCafe.Slug = cafe.Slug;
+                    existingCafe.MetaDescription = cafe.MetaDescription;
+                    existingCafe.UpdatedAt = DateTime.UtcNow;
+
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Updated cafe: {Name} (ID: {Id})", cafe.Name, cafe.CafeId);
+
+                    TempData["Success"] = $"Cafe '{cafe.Name}' updated successfully!";
+                }
+
+                return RedirectToAction("Cafes");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving cafe: {Name}", cafe.Name);
+                TempData["Error"] = $"Error saving cafe: {ex.Message}";
+                ViewBag.IsEdit = cafe.CafeId > 0;
+                return View("CafeEdit", cafe);
+            }
+        }
+
+        /// <summary>
+        /// Delete a cafe
+        /// POST: /Test/DeleteCafe/{id}
+        /// </summary>
+        [Route("DeleteCafe/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteCafe(int id)
+        {
+            try
+            {
+                var cafe = await _context.Cafes
+                    .Include(c => c.CafeGames)
+                    .Include(c => c.Reviews)
+                    .Include(c => c.Photos)
+                    .FirstOrDefaultAsync(c => c.CafeId == id);
+
+                if (cafe == null)
+                {
+                    return Json(new { success = false, message = "Cafe not found" });
+                }
+
+                var cafeName = cafe.Name;
+
+                // Remove related records first
+                if (cafe.CafeGames.Any())
+                {
+                    _context.CafeGames.RemoveRange(cafe.CafeGames);
+                }
+                if (cafe.Reviews.Any())
+                {
+                    _context.Reviews.RemoveRange(cafe.Reviews);
+                }
+                if (cafe.Photos.Any())
+                {
+                    _context.Photos.RemoveRange(cafe.Photos);
+                }
+
+                _context.Cafes.Remove(cafe);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Deleted cafe: {Name} (ID: {Id})", cafeName, id);
+
+                return Json(new { success = true, message = $"Cafe '{cafeName}' deleted successfully!" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting cafe ID: {Id}", id);
+                return Json(new { success = false, message = $"Error deleting cafe: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
         /// Find board games for a specific cafe - uses BGG sync if BggUsername exists, otherwise crawls website
         /// POST: /Test/FindGamesForCafe/{cafeId}
         /// </summary>

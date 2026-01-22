@@ -1,86 +1,196 @@
 using Microsoft.AspNetCore.Mvc;
-using BoardGameCafeFinder.Services;
+using Microsoft.EntityFrameworkCore;
+using BoardGameCafeFinder.Data;
+using BoardGameCafeFinder.Models.Domain;
 
 namespace BoardGameCafeFinder.Controllers
 {
     public class BlogController : Controller
     {
-        private readonly IBlogService _blogService;
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<BlogController> _logger;
 
-        public BlogController(IBlogService blogService)
+        public BlogController(ApplicationDbContext context, ILogger<BlogController> logger)
         {
-            _blogService = blogService;
+            _context = context;
+            _logger = logger;
         }
 
         /// <summary>
-        /// Blog listing page
+        /// Blog listing page - shows cities as dynamic blog posts
         /// </summary>
-        public async Task<IActionResult> Index(string? category = null, string? city = null, int page = 1)
+        public async Task<IActionResult> Index(string? country = null, int page = 1)
         {
-            const int pageSize = 9;
+            const int pageSize = 12;
 
-            List<Models.Domain.BlogPost> posts;
+            // Load cafes with game counts first (EF Core can't translate complex GroupBy with navigation)
+            var cafesQuery = _context.Cafes
+                .Where(c => c.IsActive && !string.IsNullOrEmpty(c.City));
 
-            if (!string.IsNullOrEmpty(category))
+            // Filter by country if specified
+            if (!string.IsNullOrEmpty(country))
             {
-                posts = await _blogService.GetPostsByCategoryAsync(category, page, pageSize);
-                ViewBag.FilterType = "Category";
-                ViewBag.FilterValue = category;
-            }
-            else if (!string.IsNullOrEmpty(city))
-            {
-                posts = await _blogService.GetPostsByCityAsync(city, page, pageSize);
-                ViewBag.FilterType = "City";
-                ViewBag.FilterValue = city;
-            }
-            else
-            {
-                posts = await _blogService.GetPublishedPostsAsync(page, pageSize);
+                cafesQuery = cafesQuery.Where(c => c.Country == country);
+                ViewBag.SelectedCountry = country;
             }
 
-            var totalPosts = await _blogService.GetTotalPublishedCountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalPosts / pageSize);
+            // Load data into memory, then group
+            var cafesData = await cafesQuery
+                .Select(c => new
+                {
+                    c.City,
+                    c.Country,
+                    c.AverageRating,
+                    c.LocalImagePath,
+                    GameCount = c.CafeGames != null ? c.CafeGames.Count() : 0
+                })
+                .ToListAsync();
 
+            // Group in memory
+            var allCities = cafesData
+                .GroupBy(c => new { c.City, c.Country })
+                .Select(g => new CityBlogItem
+                {
+                    City = g.Key.City,
+                    Country = g.Key.Country,
+                    CafeCount = g.Count(),
+                    TotalGames = g.Sum(c => c.GameCount),
+                    AverageRating = g.Where(c => c.AverageRating.HasValue).Average(c => (double?)c.AverageRating) ?? 0,
+                    SampleImage = g.OrderByDescending(c => c.AverageRating).Select(c => c.LocalImagePath).FirstOrDefault()
+                })
+                .OrderByDescending(c => c.CafeCount)
+                .ThenBy(c => c.City)
+                .ToList();
+
+            // Get total count for pagination
+            var totalItems = allCities.Count;
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            // Get paginated results
+            var cities = allCities
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Get distinct countries for filter
+            var countries = await _context.Cafes
+                .Where(c => c.IsActive && !string.IsNullOrEmpty(c.Country))
+                .Select(c => c.Country)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            ViewBag.Countries = countries;
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
-            ViewBag.Categories = await _blogService.GetAllCategoriesAsync();
-            ViewBag.Cities = await _blogService.GetAllCitiesWithPostsAsync();
+            ViewBag.TotalItems = totalItems;
 
-            return View(posts);
+            return View(cities);
         }
 
         /// <summary>
-        /// Single blog post page
+        /// Dynamic blog post page - generates content from database
         /// </summary>
-        [Route("blog/{slug}")]
-        public async Task<IActionResult> Post(string slug)
+        [Route("blog/{city}")]
+        public async Task<IActionResult> Post(string city)
         {
-            var post = await _blogService.GetPostBySlugAsync(slug);
+            // Decode the city name
+            city = Uri.UnescapeDataString(city);
 
-            if (post == null || !post.IsPublished)
+            // Get cafes in this city
+            var cafes = await _context.Cafes
+                .Include(c => c.CafeGames!)
+                    .ThenInclude(cg => cg.Game)
+                .Include(c => c.Photos)
+                .Where(c => c.IsActive && EF.Functions.Like(c.City, city))
+                .OrderByDescending(c => c.AverageRating)
+                .ThenByDescending(c => c.TotalReviews)
+                .ToListAsync();
+
+            if (!cafes.Any())
             {
                 return NotFound();
             }
 
-            // Increment view count
-            await _blogService.IncrementViewCountAsync(post.Id);
+            var firstCafe = cafes.First();
+            var country = firstCafe.Country;
 
-            // Get related posts (same category or city)
-            var relatedPosts = new List<Models.Domain.BlogPost>();
-            if (!string.IsNullOrEmpty(post.Category))
+            // Get top games in this city
+            var topGames = await _context.CafeGames
+                .Where(cg => cafes.Select(c => c.CafeId).Contains(cg.CafeId))
+                .GroupBy(cg => cg.GameId)
+                .Select(g => new
+                {
+                    GameId = g.Key,
+                    CafeCount = g.Count()
+                })
+                .OrderByDescending(g => g.CafeCount)
+                .Take(10)
+                .ToListAsync();
+
+            var topGameIds = topGames.Select(g => g.GameId).ToList();
+            var games = await _context.BoardGames
+                .Where(g => topGameIds.Contains(g.GameId))
+                .ToListAsync();
+
+            // Create dynamic post data
+            var postData = new DynamicBlogPost
             {
-                relatedPosts = await _blogService.GetPostsByCategoryAsync(post.Category, 1, 4);
-                relatedPosts = relatedPosts.Where(p => p.Id != post.Id).Take(3).ToList();
-            }
-            else if (!string.IsNullOrEmpty(post.RelatedCity))
-            {
-                relatedPosts = await _blogService.GetPostsByCityAsync(post.RelatedCity, 1, 4);
-                relatedPosts = relatedPosts.Where(p => p.Id != post.Id).Take(3).ToList();
-            }
+                City = city,
+                Country = country,
+                Cafes = cafes,
+                TopGames = games.Select(g => new GameWithCount
+                {
+                    Game = g,
+                    CafeCount = topGames.FirstOrDefault(tg => tg.GameId == g.GameId)?.CafeCount ?? 0
+                }).OrderByDescending(g => g.CafeCount).ToList(),
+                TotalCafes = cafes.Count,
+                TotalGames = cafes.Sum(c => c.CafeGames?.Count ?? 0),
+                AverageRating = cafes.Where(c => c.AverageRating.HasValue).Average(c => (double?)c.AverageRating) ?? 0
+            };
 
-            ViewBag.RelatedPosts = relatedPosts;
+            // Get related cities (same country)
+            var relatedCities = await _context.Cafes
+                .Where(c => c.IsActive && c.Country == country && !EF.Functions.Like(c.City, city))
+                .GroupBy(c => c.City)
+                .Select(g => new { City = g.Key, Count = g.Count() })
+                .OrderByDescending(g => g.Count)
+                .Take(5)
+                .ToListAsync();
 
-            return View(post);
+            ViewBag.RelatedCities = relatedCities.Select(r => r.City).ToList();
+
+            return View(postData);
         }
+    }
+
+    // DTO classes for dynamic blog
+    public class CityBlogItem
+    {
+        public string City { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public int CafeCount { get; set; }
+        public int TotalGames { get; set; }
+        public double AverageRating { get; set; }
+        public string? SampleImage { get; set; }
+
+        public string Slug => Uri.EscapeDataString(City.ToLower().Replace(" ", "-"));
+    }
+
+    public class DynamicBlogPost
+    {
+        public string City { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public List<Cafe> Cafes { get; set; } = new();
+        public List<GameWithCount> TopGames { get; set; } = new();
+        public int TotalCafes { get; set; }
+        public int TotalGames { get; set; }
+        public double AverageRating { get; set; }
+    }
+
+    public class GameWithCount
+    {
+        public BoardGame Game { get; set; } = null!;
+        public int CafeCount { get; set; }
     }
 }
