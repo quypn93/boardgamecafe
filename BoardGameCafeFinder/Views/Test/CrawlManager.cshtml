@@ -259,106 +259,23 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Quick Crawl - Single City</h5>
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Crawl - Single City</h5>
+            <div>
+                <input type="text" id="quickCrawlSearch" class="form-control form-control-sm" placeholder="Search city..." style="width: 200px; display: inline-block;">
+            </div>
         </div>
         <div class="card-body">
             <p class="text-muted small mb-3">Click a city to crawl it immediately without selecting.</p>
-            <h6 class="text-primary">US Cities</h6>
-            <div class="row mb-3">
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Seattle" data-max="20">
-                        <i class="bi bi-download"></i> Seattle
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Portland" data-max="20">
-                        <i class="bi bi-download"></i> Portland
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="San Francisco" data-max="20">
-                        <i class="bi bi-download"></i> San Francisco
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Los Angeles" data-max="20">
-                        <i class="bi bi-download"></i> Los Angeles
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Chicago" data-max="20">
-                        <i class="bi bi-download"></i> Chicago
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="New York" data-max="20">
-                        <i class="bi bi-download"></i> New York
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Boston" data-max="20">
-                        <i class="bi bi-download"></i> Boston
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Austin" data-max="20">
-                        <i class="bi bi-download"></i> Austin
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Denver" data-max="20">
-                        <i class="bi bi-download"></i> Denver
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Atlanta" data-max="20">
-                        <i class="bi bi-download"></i> Atlanta
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Miami" data-max="20">
-                        <i class="bi bi-download"></i> Miami
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-primary w-100 crawl-btn" data-location="Phoenix" data-max="20">
-                        <i class="bi bi-download"></i> Phoenix
-                    </button>
-                </div>
+
+            <h6 class="text-primary"><i class="bi bi-geo-alt-fill"></i> US Cities <span class="badge bg-primary" id="usQuickCount">0</span></h6>
+            <div class="row mb-3" id="usQuickCrawlButtons" style="max-height: 300px; overflow-y: auto;">
+                <!-- US cities buttons will be populated by JavaScript -->
             </div>
-            <h6 class="text-success">International Cities</h6>
-            <div class="row">
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Hanoi" data-max="15">
-                        <i class="bi bi-download"></i> Hanoi
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Ho Chi Minh" data-max="15">
-                        <i class="bi bi-download"></i> Ho Chi Minh
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Tokyo" data-max="20">
-                        <i class="bi bi-download"></i> Tokyo
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="London" data-max="20">
-                        <i class="bi bi-download"></i> London
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Toronto" data-max="20">
-                        <i class="bi bi-download"></i> Toronto
-                    </button>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <button class="btn btn-outline-success w-100 crawl-btn" data-location="Berlin" data-max="20">
-                        <i class="bi bi-download"></i> Berlin
-                    </button>
-                </div>
+
+            <h6 class="text-success"><i class="bi bi-globe"></i> International Cities <span class="badge bg-success" id="intlQuickCount">0</span></h6>
+            <div class="row" id="intlQuickCrawlButtons" style="max-height: 200px; overflow-y: auto;">
+                <!-- International cities buttons will be populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -653,6 +570,51 @@
             $('#intlCitiesCheckboxes').html(intlHtml);
         }
         populateCityCheckboxes();
+
+        // Populate Quick Crawl Buttons
+        function populateQuickCrawlButtons() {
+            // US Cities buttons
+            let usHtml = '';
+            usCities.forEach((city) => {
+                const cityName = city.split(',')[0]; // Get city name without state
+                usHtml += `
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-2 quick-crawl-item" data-region="us">
+                        <button class="btn btn-outline-primary btn-sm w-100 crawl-btn" data-location="${city}" data-max="15" title="${city}">
+                            <i class="bi bi-download"></i> ${cityName}
+                        </button>
+                    </div>`;
+            });
+            $('#usQuickCrawlButtons').html(usHtml);
+            $('#usQuickCount').text(usCities.length);
+
+            // International Cities buttons
+            let intlHtml = '';
+            intlCities.forEach((city) => {
+                intlHtml += `
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-2 quick-crawl-item" data-region="international">
+                        <button class="btn btn-outline-success btn-sm w-100 crawl-btn" data-location="${city.name}" data-max="${city.max}" title="${city.name}, ${city.country}">
+                            <i class="bi bi-download"></i> ${city.name}
+                        </button>
+                    </div>`;
+            });
+            $('#intlQuickCrawlButtons').html(intlHtml);
+            $('#intlQuickCount').text(intlCities.length);
+        }
+        populateQuickCrawlButtons();
+
+        // Quick Crawl Search Filter
+        $('#quickCrawlSearch').on('input', function() {
+            const searchTerm = $(this).val().toLowerCase();
+            $('.quick-crawl-item').each(function() {
+                const $item = $(this);
+                const cityName = $item.find('button').data('location').toLowerCase();
+                if (!searchTerm || cityName.includes(searchTerm)) {
+                    $item.show();
+                } else {
+                    $item.hide();
+                }
+            });
+        });
 
         // Update selected count
         function updateSelectedCityCount() {

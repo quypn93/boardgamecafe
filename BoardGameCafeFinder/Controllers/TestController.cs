@@ -943,7 +943,8 @@ namespace BoardGameCafeFinder.Controllers
                     "Burger", "Pizza", "Pasta", "Salad", "Soup", "Fries",
                     "Nachos", "Tacos", "Burrito", "Quesadilla",
                     "Beer", "Wine", "Cocktail", "Soda", "Juice", "Water",
-                    "Brownie", "Cookie", "Cake", "Pie", "Ice Cream", "Dessert"
+                    "Brownie", "Cookie", "Cake", "Pie", "Ice Cream", "Dessert",
+                    "Inicio", "Menú", "AFTERLIFE"
                 };
 
                 var deletedGames = new List<string>();
