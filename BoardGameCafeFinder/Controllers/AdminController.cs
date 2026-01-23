@@ -27,6 +27,7 @@ namespace BoardGameCafeFinder.Controllers
             var totalGames = await _context.BoardGames.CountAsync();
             var totalUsers = await _context.Users.CountAsync();
             var totalReviews = await _context.Reviews.CountAsync();
+            var pendingReviews = await _context.Reviews.CountAsync(r => r.UserId != null && !r.IsApproved);
 
             var recentCafes = await _context.Cafes
                 .OrderByDescending(c => c.CreatedAt)
@@ -45,20 +46,42 @@ namespace BoardGameCafeFinder.Controllers
             ViewBag.TotalGames = totalGames;
             ViewBag.TotalUsers = totalUsers;
             ViewBag.TotalReviews = totalReviews;
+            ViewBag.PendingReviewCount = pendingReviews;
             ViewBag.RecentCafes = recentCafes;
             ViewBag.TopCities = topCities;
 
             return View();
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string bggFilter = "all")
         {
-            var cafes = await _context.Cafes
+            var query = _context.Cafes
                 .Include(c => c.CafeGames)
                 .OrderBy(c => c.Name)
-                .ToListAsync();
+                .AsQueryable();
 
-            var cities = cafes.Select(c => c.City).Distinct().OrderBy(c => c).ToList();
+            ViewBag.BggFilter = bggFilter;
+
+            switch (bggFilter.ToLower())
+            {
+                case "with":
+                    query = query.Where(c => !string.IsNullOrEmpty(c.BggUsername));
+                    break;
+                case "without":
+                    query = query.Where(c => string.IsNullOrEmpty(c.BggUsername));
+                    break;
+                // "all" - no filter
+            }
+
+            var cafes = await query.ToListAsync();
+
+            // Get counts for filter badges
+            var allCafes = await _context.Cafes.ToListAsync();
+            ViewBag.AllCount = allCafes.Count;
+            ViewBag.WithBggCount = allCafes.Count(c => !string.IsNullOrEmpty(c.BggUsername));
+            ViewBag.WithoutBggCount = allCafes.Count(c => string.IsNullOrEmpty(c.BggUsername));
+
+            var cities = allCafes.Select(c => c.City).Distinct().OrderBy(c => c).ToList();
             ViewBag.Cities = cities;
 
             return View(cafes);
@@ -267,6 +290,206 @@ namespace BoardGameCafeFinder.Controllers
             TempData["SuccessMessage"] = $"Removed {cafeGames.Count} games from cafe. Deleted {deletedGames} board games no longer used.";
             return RedirectToAction(nameof(CafeGames), new { id = cafeId });
         }
+
+        #region Review Management
+
+        /// <summary>
+        /// List all reviews with filter by approval status
+        /// </summary>
+        public async Task<IActionResult> Reviews(string filter = "pending")
+        {
+            var query = _context.Reviews
+                .Include(r => r.User)
+                .Include(r => r.Cafe)
+                .OrderByDescending(r => r.CreatedAt)
+                .AsQueryable();
+
+            ViewBag.Filter = filter;
+
+            switch (filter.ToLower())
+            {
+                case "pending":
+                    // Only show user-submitted reviews (UserId != null) that are pending approval
+                    // Crawled reviews (UserId = null) don't need approval
+                    query = query.Where(r => r.UserId != null && !r.IsApproved);
+                    break;
+                case "approved":
+                    query = query.Where(r => r.IsApproved);
+                    break;
+                // "all" - no filter
+            }
+
+            var reviews = await query.ToListAsync();
+
+            // Get counts for filter badges (only count user-submitted reviews for pending)
+            ViewBag.PendingCount = await _context.Reviews.CountAsync(r => r.UserId != null && !r.IsApproved);
+            ViewBag.ApprovedCount = await _context.Reviews.CountAsync(r => r.IsApproved);
+            ViewBag.TotalCount = await _context.Reviews.CountAsync();
+
+            return View(reviews);
+        }
+
+        /// <summary>
+        /// Approve a review
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ApproveReview(int id)
+        {
+            var review = await _context.Reviews
+                .Include(r => r.Cafe)
+                .FirstOrDefaultAsync(r => r.ReviewId == id);
+
+            if (review == null)
+            {
+                TempData["ErrorMessage"] = "Review not found.";
+                return RedirectToAction(nameof(Reviews));
+            }
+
+            review.IsApproved = true;
+            review.ApprovedAt = DateTime.UtcNow;
+
+            // Get admin user ID from claims
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int adminUserId))
+            {
+                review.ApprovedByUserId = adminUserId;
+            }
+
+            // Update cafe rating
+            var cafe = review.Cafe;
+            var allApprovedRatings = await _context.Reviews
+                .Where(r => r.CafeId == cafe.CafeId && (r.IsApproved || r.ReviewId == id))
+                .Select(r => r.Rating)
+                .ToListAsync();
+
+            if (allApprovedRatings.Any())
+            {
+                cafe.AverageRating = (decimal)allApprovedRatings.Average();
+                cafe.TotalReviews = allApprovedRatings.Count;
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Review approved successfully.";
+            return RedirectToAction(nameof(Reviews));
+        }
+
+        /// <summary>
+        /// Reject/delete a review
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> RejectReview(int id)
+        {
+            var review = await _context.Reviews
+                .Include(r => r.Cafe)
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.ReviewId == id);
+
+            if (review == null)
+            {
+                TempData["ErrorMessage"] = "Review not found.";
+                return RedirectToAction(nameof(Reviews));
+            }
+
+            var cafe = review.Cafe;
+            var wasApproved = review.IsApproved;
+
+            // Update user's TotalReviews if review belongs to a user
+            if (review.User != null)
+            {
+                review.User.TotalReviews = Math.Max(0, review.User.TotalReviews - 1);
+            }
+
+            _context.Reviews.Remove(review);
+
+            // Update cafe rating if the deleted review was approved
+            if (wasApproved)
+            {
+                var remainingRatings = await _context.Reviews
+                    .Where(r => r.CafeId == cafe.CafeId && r.ReviewId != id && r.IsApproved)
+                    .Select(r => r.Rating)
+                    .ToListAsync();
+
+                if (remainingRatings.Any())
+                {
+                    cafe.AverageRating = (decimal)remainingRatings.Average();
+                    cafe.TotalReviews = remainingRatings.Count;
+                }
+                else
+                {
+                    cafe.AverageRating = null;
+                    cafe.TotalReviews = 0;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Review rejected and deleted.";
+            return RedirectToAction(nameof(Reviews));
+        }
+
+        /// <summary>
+        /// Bulk approve selected reviews
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> BulkApproveReviews(int[] reviewIds)
+        {
+            if (reviewIds == null || reviewIds.Length == 0)
+            {
+                TempData["ErrorMessage"] = "No reviews selected.";
+                return RedirectToAction(nameof(Reviews));
+            }
+
+            var reviews = await _context.Reviews
+                .Include(r => r.Cafe)
+                .Where(r => reviewIds.Contains(r.ReviewId) && !r.IsApproved)
+                .ToListAsync();
+
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            int? adminUserId = null;
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int adminId))
+            {
+                adminUserId = adminId;
+            }
+
+            var affectedCafeIds = new HashSet<int>();
+
+            foreach (var review in reviews)
+            {
+                review.IsApproved = true;
+                review.ApprovedAt = DateTime.UtcNow;
+                review.ApprovedByUserId = adminUserId;
+                affectedCafeIds.Add(review.CafeId);
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Update ratings for affected cafes
+            foreach (var cafeId in affectedCafeIds)
+            {
+                var cafe = await _context.Cafes.FindAsync(cafeId);
+                if (cafe != null)
+                {
+                    var ratings = await _context.Reviews
+                        .Where(r => r.CafeId == cafeId && r.IsApproved)
+                        .Select(r => r.Rating)
+                        .ToListAsync();
+
+                    if (ratings.Any())
+                    {
+                        cafe.AverageRating = (decimal)ratings.Average();
+                        cafe.TotalReviews = ratings.Count;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Approved {reviews.Count} reviews.";
+            return RedirectToAction(nameof(Reviews));
+        }
+
+        #endregion
 
         #region Blog Management
 

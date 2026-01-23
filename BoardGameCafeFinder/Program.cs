@@ -59,6 +59,7 @@ builder.Services.AddScoped<BoardGameCafeFinder.Services.IGoogleMapsCrawlerServic
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IImageStorageService, BoardGameCafeFinder.Services.ImageStorageService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeWebsiteCrawlerService, BoardGameCafeFinder.Services.CafeWebsiteCrawlerService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IBlogService, BoardGameCafeFinder.Services.BlogService>();
+builder.Services.AddScoped<BoardGameCafeFinder.Services.IEmailService, BoardGameCafeFinder.Services.EmailService>();
 
 // Add MVC Controllers and Views
 builder.Services.AddControllersWithViews();
@@ -86,10 +87,12 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+
+// Handle status code errors (404, 403, 500, etc.) with custom pages
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

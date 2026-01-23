@@ -120,6 +120,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Reviews" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Reviews">
+                                <i class="bi bi-chat-square-text"></i> Reviews
+                                @{
+                                    var pendingReviews = ViewBag.PendingReviewCount as int?;
+                                    if (pendingReviews.HasValue && pendingReviews.Value > 0)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">@pendingReviews</span>
+                                    }
+                                }
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CrawlManager" ? "active" : "")"
                                href="/Test/CrawlManager">
                                 <i class="bi bi-cloud-download"></i> Crawl Manager

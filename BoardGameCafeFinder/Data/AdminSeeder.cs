@@ -25,6 +25,13 @@ public static class AdminSeeder
             logger.LogInformation("Created User role");
         }
 
+        // Create CafeOwner role if it doesn't exist
+        if (!await roleManager.RoleExistsAsync("CafeOwner"))
+        {
+            await roleManager.CreateAsync(new IdentityRole<int>("CafeOwner"));
+            logger.LogInformation("Created CafeOwner role");
+        }
+
         // Create default admin user
         const string adminEmail = "admin@bgcfinder.com";
         const string adminPassword = "Admin@123"; // Change this in production!

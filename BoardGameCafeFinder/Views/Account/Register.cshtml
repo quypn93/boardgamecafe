@@ -56,6 +56,19 @@
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
 
+                        <!-- Cafe Owner Option -->
+                        <div class="mb-4 p-3 bg-light rounded">
+                            <div class="form-check">
+                                <input asp-for="IsCafeOwner" class="form-check-input" id="isCafeOwner" />
+                                <label asp-for="IsCafeOwner" class="form-check-label fw-bold">
+                                    <i class="bi bi-shop me-1"></i> I am a cafe owner
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-2">
+                                Check this if you own or manage a board game cafe. You'll be able to claim and manage your cafe listing.
+                            </small>
+                        </div>
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg">
                                 <i class="bi bi-person-plus"></i> Create Account

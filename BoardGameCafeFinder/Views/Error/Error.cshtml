@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = ViewBag.ErrorTitle ?? "Error";
+    Layout = "_UserLayout";
+}
+
+<div class="error-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <!-- Error Icon -->
+                <div class="error-icon mb-4">
+                    <i class="bi bi-exclamation-triangle-fill text-warning display-1"></i>
+                </div>
+
+                <h1 class="display-5 fw-bold text-muted mb-3">@(ViewBag.ErrorTitle ?? "Something went wrong")</h1>
+                <p class="lead text-muted mb-4">
+                    @(ViewBag.ErrorMessage ?? "An unexpected error occurred. Please try again later.")
+                </p>
+
+                <!-- Action buttons -->
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="bi bi-house me-2"></i>Go Home
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i>Go Back
+                    </a>
+                </div>
+
+                <!-- Support info -->
+                <div class="mt-5 pt-4">
+                    <p class="text-muted small mb-2">
+                        If this problem persists, please contact us:
+                    </p>
+                    <a href="mailto:support@boardgamecafefinder.com" class="text-primary">
+                        <i class="bi bi-envelope me-1"></i>support@boardgamecafefinder.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-page {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        padding: 3rem 0;
+    }
+
+    .error-icon {
+        animation: shake 0.5s ease-in-out;
+    }
+
+    @@keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+</style>

@@ -242,13 +242,6 @@ namespace BoardGameCafeFinder.Services
                             if (string.IsNullOrEmpty(item.Name))
                                 continue;
 
-                            // Skip items without images - board games should have product images
-                            if (string.IsNullOrEmpty(item.ImageUrl))
-                            {
-                                _logger.LogDebug("Skipping '{Name}' - no image", item.Name);
-                                continue;
-                            }
-
                             var itemNameLower = item.Name.Trim().ToLowerInvariant();
 
                             // First check if this name should be excluded (false positives like "Sweet Spot", "Wings")

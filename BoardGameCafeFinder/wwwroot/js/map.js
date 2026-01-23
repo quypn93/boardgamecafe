@@ -571,7 +571,7 @@ function createPopupHTML(cafe) {
             <div class="popup-title">${cafe.name}</div>
             <div class="popup-address">${cafe.address || ''}${cafe.city ? `, ${cafe.city}` : ''}</div>
             <div class="popup-meta mt-2">
-                ${statusHtml}
+                
                 ${ratingHtml}
                 ${gamesHtml}
             </div>

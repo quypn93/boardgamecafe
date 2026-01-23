@@ -28,6 +28,21 @@ namespace BoardGameCafeFinder.Models.Domain
 
         public bool IsVerifiedVisit { get; set; } = false;
 
+        /// <summary>
+        /// Whether the review has been approved by admin (if approval is required)
+        /// </summary>
+        public bool IsApproved { get; set; } = false;
+
+        /// <summary>
+        /// Date when the review was approved
+        /// </summary>
+        public DateTime? ApprovedAt { get; set; }
+
+        /// <summary>
+        /// Admin who approved the review
+        /// </summary>
+        public int? ApprovedByUserId { get; set; }
+
         public int HelpfulCount { get; set; } = 0;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
