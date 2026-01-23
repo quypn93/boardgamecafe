@@ -120,6 +120,64 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         /// <summary>
+        /// Get café details by slug (for debugging coordinates)
+        /// </summary>
+        [HttpGet("cafes/slug/{slug}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetCafeBySlug(string slug)
+        {
+            try
+            {
+                var cafe = await _cafeService.GetBySlugAsync(slug);
+
+                if (cafe == null)
+                {
+                    return NotFound(new
+                    {
+                        success = false,
+                        message = "Café not found"
+                    });
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        id = cafe.CafeId,
+                        name = cafe.Name,
+                        slug = cafe.Slug,
+                        address = cafe.Address,
+                        city = cafe.City,
+                        country = cafe.Country,
+                        latitude = cafe.Latitude,
+                        longitude = cafe.Longitude,
+                        googleMapsUrl = cafe.GoogleMapsUrl,
+                        // Debug info
+                        coordinateInfo = new
+                        {
+                            storedLatitude = cafe.Latitude,
+                            storedLongitude = cafe.Longitude,
+                            isLatitudeValid = cafe.Latitude >= -90 && cafe.Latitude <= 90,
+                            isLongitudeValid = cafe.Longitude >= -180 && cafe.Longitude <= 180,
+                            googleMapsLink = $"https://www.google.com/maps?q={cafe.Latitude},{cafe.Longitude}"
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting café with slug {Slug}", slug);
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "An error occurred while retrieving café details"
+                });
+            }
+        }
+
+        /// <summary>
         /// Filter cafés by country/city/categories
         /// </summary>
         [HttpGet("cafes/filter")]

@@ -952,6 +952,99 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         /// <summary>
+        /// Fix cafe coordinates by re-extracting from GoogleMapsUrl
+        /// The @lat,lng pattern is the map VIEW center, not the place location
+        /// The !3d...!4d... pattern contains the actual place coordinates
+        /// POST: /Test/FixCoordinates
+        /// </summary>
+        [HttpPost]
+        [Route("FixCoordinates")]
+        public async Task<IActionResult> FixCoordinates()
+        {
+            try
+            {
+                var cafes = await _context.Cafes
+                    .Where(c => !string.IsNullOrEmpty(c.GoogleMapsUrl))
+                    .ToListAsync();
+
+                var fixed_cafes = new List<object>();
+                var skipped = 0;
+                var noMatch = 0;
+
+                foreach (var cafe in cafes)
+                {
+                    // Try to extract actual place coordinates from !3d...!4d... pattern
+                    var placeMatch = System.Text.RegularExpressions.Regex.Match(
+                        cafe.GoogleMapsUrl!,
+                        @"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)");
+
+                    if (placeMatch.Success)
+                    {
+                        if (double.TryParse(placeMatch.Groups[1].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var newLat) &&
+                            double.TryParse(placeMatch.Groups[2].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var newLng))
+                        {
+                            // Check if coordinates are different (more than 0.001 degree difference)
+                            var latDiff = Math.Abs(cafe.Latitude - newLat);
+                            var lngDiff = Math.Abs(cafe.Longitude - newLng);
+
+                            if (latDiff > 0.001 || lngDiff > 0.001)
+                            {
+                                var oldLat = cafe.Latitude;
+                                var oldLng = cafe.Longitude;
+
+                                cafe.Latitude = newLat;
+                                cafe.Longitude = newLng;
+
+                                fixed_cafes.Add(new
+                                {
+                                    id = cafe.CafeId,
+                                    name = cafe.Name,
+                                    city = cafe.City,
+                                    oldLat,
+                                    oldLng,
+                                    newLat,
+                                    newLng,
+                                    latDiff = latDiff.ToString("F6"),
+                                    lngDiff = lngDiff.ToString("F6")
+                                });
+                            }
+                            else
+                            {
+                                skipped++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        noMatch++;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Json(new
+                {
+                    Success = true,
+                    Message = $"Fixed {fixed_cafes.Count} cafes, skipped {skipped} (already correct), {noMatch} had no !3d!4d pattern",
+                    TotalProcessed = cafes.Count,
+                    Fixed = fixed_cafes.Count,
+                    Skipped = skipped,
+                    NoPattern = noMatch,
+                    FixedCafes = fixed_cafes
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fixing coordinates");
+                return Json(new
+                {
+                    Success = false,
+                    Message = $"Error: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
         /// Clear all cafe data from database
         /// POST: /Test/ClearAllData
         /// </summary>

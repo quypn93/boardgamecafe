@@ -10,6 +10,9 @@
             <p class="text-muted">Crawl board game cafes from Google Maps and save to database</p>
         </div>
         <div class="col-md-3 text-end">
+            <button id="fixCoordinatesBtn" class="btn btn-info me-2" title="Fix cafe coordinates from Google Maps URLs">
+                <i class="bi bi-geo-alt"></i> Fix Coords
+            </button>
             <button id="cleanFalsePositiveGamesBtn" class="btn btn-outline-warning me-2" title="Remove false positive games like Sweet Spot, Wings, etc.">
                 <i class="bi bi-x-circle"></i> Clean Games
             </button>
@@ -957,6 +960,51 @@
                 error: function(xhr, status, error) {
                     $('#cleanFalsePositiveGamesBtn').html('<i class="bi bi-x-circle"></i> Clean Games').prop('disabled', false);
                     alert('Error cleaning false positive games: ' + error);
+                }
+            });
+        });
+
+        // Fix Coordinates button handler
+        $('#fixCoordinatesBtn').on('click', function() {
+            if (!confirm('This will fix cafe coordinates by re-extracting from Google Maps URLs.\n\nThe @@lat,lng pattern is the map view center (wrong).\nThe !3d...!4d... pattern is the actual place location (correct).\n\nContinue?')) {
+                return;
+            }
+
+            $('#fixCoordinatesBtn').html('<span class="spinner-border spinner-border-sm"></span> Fixing...').prop('disabled', true);
+
+            $.ajax({
+                url: '/Test/FixCoordinates',
+                type: 'POST',
+                success: function(response) {
+                    $('#fixCoordinatesBtn').html('<i class="bi bi-geo-alt"></i> Fix Coords').prop('disabled', false);
+
+                    if (response.success) {
+                        let html = '<div class="alert alert-success">';
+                        html += '<h5>' + response.message + '</h5>';
+                        html += '<strong>Total Processed:</strong> ' + response.totalProcessed + '<br>';
+                        html += '<strong>Fixed:</strong> ' + response.fixed + '<br>';
+                        html += '<strong>Already Correct:</strong> ' + response.skipped + '<br>';
+                        html += '<strong>No Pattern Found:</strong> ' + response.noPattern + '<br>';
+
+                        if (response.fixedCafes && response.fixedCafes.length > 0) {
+                            html += '<hr><strong>Fixed Cafes:</strong><ul class="mb-0">';
+                            response.fixedCafes.forEach(function(cafe) {
+                                html += '<li><strong>' + cafe.name + '</strong> (' + cafe.city + ')<br>';
+                                html += '<small class="text-muted">Old: ' + cafe.oldLat + ', ' + cafe.oldLng + ' → New: ' + cafe.newLat + ', ' + cafe.newLng + '</small></li>';
+                            });
+                            html += '</ul>';
+                        }
+                        html += '</div>';
+
+                        $('#resultsContent').html(html);
+                        $('#results').show();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#fixCoordinatesBtn').html('<i class="bi bi-geo-alt"></i> Fix Coords').prop('disabled', false);
+                    alert('Error fixing coordinates: ' + error);
                 }
             });
         });

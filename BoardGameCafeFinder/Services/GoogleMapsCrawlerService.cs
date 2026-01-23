@@ -701,13 +701,29 @@ namespace BoardGameCafeFinder.Services
                 }
 
                 // Extract coordinates from URL
-                var coordMatch = Regex.Match(currentUrl, @"@(-?\d+\.\d+),(-?\d+\.\d+)");
-                if (coordMatch.Success)
+                // Priority 1: Use !3d...!4d... pattern (actual place coordinates)
+                // The @lat,lng pattern is just the map view center, NOT the place location!
+                var placeCoordMatch = Regex.Match(currentUrl, @"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)");
+                if (placeCoordMatch.Success)
                 {
-                    if (double.TryParse(coordMatch.Groups[1].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lat))
+                    if (double.TryParse(placeCoordMatch.Groups[1].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lat))
                         cafe.Latitude = lat;
-                    if (double.TryParse(coordMatch.Groups[2].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lng))
+                    if (double.TryParse(placeCoordMatch.Groups[2].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lng))
                         cafe.Longitude = lng;
+                    _logger.LogDebug("Extracted place coordinates from !3d!4d pattern for {Name}: {Lat}, {Lng}", cafe.Name, cafe.Latitude, cafe.Longitude);
+                }
+                else
+                {
+                    // Fallback: Use @lat,lng pattern (map view center - less accurate)
+                    var viewCoordMatch = Regex.Match(currentUrl, @"@(-?\d+\.\d+),(-?\d+\.\d+)");
+                    if (viewCoordMatch.Success)
+                    {
+                        if (double.TryParse(viewCoordMatch.Groups[1].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lat))
+                            cafe.Latitude = lat;
+                        if (double.TryParse(viewCoordMatch.Groups[2].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var lng))
+                            cafe.Longitude = lng;
+                        _logger.LogDebug("Extracted view coordinates from @ pattern for {Name}: {Lat}, {Lng} (fallback)", cafe.Name, cafe.Latitude, cafe.Longitude);
+                    }
                 }
 
                 // Fallback: Extract coordinates from page script/metadata if URL didn't have them
