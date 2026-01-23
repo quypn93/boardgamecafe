@@ -108,6 +108,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Listing" ? "active" : "")"
+                               href="/Listing/Admin">
+                                <i class="bi bi-star"></i> Listings
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "BlogPosts" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateBlogPost" || ViewContext.RouteData.Values["action"]?.ToString() == "EditBlogPost" ? "active" : "")"
                                asp-controller="Admin" asp-action="BlogPosts">
                                 <i class="bi bi-newspaper"></i> Blog Posts

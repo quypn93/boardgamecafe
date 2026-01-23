@@ -1,0 +1,153 @@
+@model BoardGameCafeFinder.Models.Domain.PremiumListing
+@{
+    ViewData["Title"] = "Create Listing";
+    Layout = "_AdminLayout";
+
+    var plans = ViewBag.Plans as Dictionary<string, BoardGameCafeFinder.Controllers.ListingPlan>;
+    var availableCafes = ViewBag.AvailableCafes as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+    var preselectedCafeId = ViewBag.PreselectedCafeId as int?;
+}
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="bi bi-plus-circle"></i> Create New Listing</h2>
+                    <p class="text-muted mb-0">Add a premium listing for a cafe</p>
+                </div>
+                <a href="/Listing/Admin" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <form method="post" action="/Listing/Create">
+                <!-- Select Cafe -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-shop"></i> Select Cafe</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Cafe <span class="text-danger">*</span></label>
+                            <select class="form-select" name="CafeId" id="cafeSelect" required>
+                                <option value="">Select a cafe...</option>
+                                @foreach (var cafe in availableCafes)
+                                {
+                                    <option value="@cafe.CafeId" selected="@(preselectedCafeId == cafe.CafeId)">
+                                        @cafe.Name - @cafe.City, @cafe.Country
+                                    </option>
+                                }
+                            </select>
+                            <small class="text-muted">Only cafes without active listings are shown</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Select Plan -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-star"></i> Select Plan</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if (plans != null)
+                            {
+                                @foreach (var plan in plans)
+                                {
+                                    var isRecommended = plan.Key == "Premium";
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 @(isRecommended ? "border-primary" : "")">
+                                            @if (isRecommended)
+                                            {
+                                                <div class="card-header bg-primary text-white text-center py-1">
+                                                    <small>Recommended</small>
+                                                </div>
+                                            }
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title">@plan.Key</h5>
+                                                <h3 class="text-primary mb-3">$@plan.Value.MonthlyPrice<small class="text-muted">/mo</small></h3>
+                                                <div class="form-check d-flex justify-content-center mb-3">
+                                                    <input class="form-check-input me-2" type="radio" name="PlanType" id="plan@(plan.Key)"
+                                                           value="@plan.Key" @(Model.PlanType == plan.Key ? "checked" : "") required>
+                                                    <label class="form-check-label" for="plan@(plan.Key)">Select</label>
+                                                </div>
+                                                <ul class="list-unstyled text-start small">
+                                                    @foreach (var feature in plan.Value.Features)
+                                                    {
+                                                        <li class="mb-1"><i class="bi bi-check text-success"></i> @feature</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duration -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-calendar"></i> Duration</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Start Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">End Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="EndDate" id="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-outline-secondary btn-sm duration-btn" data-months="1">1 Month</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm duration-btn" data-months="3">3 Months</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm duration-btn" data-months="6">6 Months</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm duration-btn" data-months="12">1 Year</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="d-flex justify-content-between">
+                    <a href="/Listing/Admin" class="btn btn-outline-secondary">
+                        <i class="bi bi-x"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Create Listing
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        // Duration buttons
+        $('.duration-btn').on('click', function() {
+            const months = $(this).data('months');
+            const startDate = new Date($('input[name="StartDate"]').val());
+            const endDate = new Date(startDate);
+            endDate.setMonth(endDate.getMonth() + months);
+            $('#endDate').val(endDate.toISOString().split('T')[0]);
+
+            $('.duration-btn').removeClass('btn-primary').addClass('btn-outline-secondary');
+            $(this).removeClass('btn-outline-secondary').addClass('btn-primary');
+        });
+    });
+</script>
+}

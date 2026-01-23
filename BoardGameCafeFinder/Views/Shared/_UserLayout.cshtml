@@ -82,6 +82,13 @@
                                 <i class="bi bi-newspaper"></i> Blog
                             </a>
                         </li>
+                        @* TODO: Enable when Listing feature is complete
+                        <li class="nav-item">
+                            <a class="nav-link @(controller == "Listing" && action == "Pricing" ? "active" : "")" href="/Listing/Pricing">
+                                <i class="bi bi-star"></i> For Business
+                            </a>
+                        </li>
+                        *@
                     </ul>
                     <ul class="navbar-nav">
                         @if (User.Identity?.IsAuthenticated == true)
@@ -160,6 +167,7 @@
                         <li class="mb-1"><a href="/" class="text-muted text-decoration-none">Home</a></li>
                         <li class="mb-1"><a asp-controller="Map" asp-action="Index" class="text-muted text-decoration-none">Map View</a></li>
                         <li class="mb-1"><a asp-controller="Blog" asp-action="Index" class="text-muted text-decoration-none">Blog</a></li>
+                        @* <li class="mb-1"><a href="/Listing/Pricing" class="text-muted text-decoration-none">For Business</a></li> *@
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-3 col-6 mb-3">

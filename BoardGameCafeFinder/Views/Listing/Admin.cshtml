@@ -1,0 +1,347 @@
+@model List<BoardGameCafeFinder.Models.Domain.PremiumListing>
+@{
+    ViewData["Title"] = "Listing Management";
+    Layout = "_AdminLayout";
+
+    var plans = ViewBag.Plans as Dictionary<string, BoardGameCafeFinder.Controllers.ListingPlan>;
+    var selectedStatus = ViewBag.SelectedStatus as string;
+    var selectedPlan = ViewBag.SelectedPlan as string;
+    var currentPage = (int)(ViewBag.CurrentPage ?? 1);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var totalItems = (int)(ViewBag.TotalItems ?? 0);
+
+    var totalListings = (int)(ViewBag.TotalListings ?? 0);
+    var activeListings = (int)(ViewBag.ActiveListings ?? 0);
+    var expiredListings = (int)(ViewBag.ExpiredListings ?? 0);
+    var totalRevenue = (decimal)(ViewBag.TotalRevenue ?? 0);
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-star-fill text-warning"></i> Premium Listings</h2>
+            <p class="text-muted mb-0">Manage cafe premium subscriptions</p>
+        </div>
+        <a href="/Listing/Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> New Listing
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Total Listings</h6>
+                            <h2 class="mb-0">@totalListings</h2>
+                        </div>
+                        <i class="bi bi-list-ul display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Active</h6>
+                            <h2 class="mb-0">@activeListings</h2>
+                        </div>
+                        <i class="bi bi-check-circle display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-dark opacity-75">Expired</h6>
+                            <h2 class="mb-0">@expiredListings</h2>
+                        </div>
+                        <i class="bi bi-clock-history display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Total Revenue</h6>
+                            <h2 class="mb-0">$@totalRevenue.ToString("N2")</h2>
+                        </div>
+                        <i class="bi bi-currency-dollar display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Status</label>
+                    <select class="form-select" name="status" onchange="this.form.submit()">
+                        <option value="">All Status</option>
+                        <option value="active" selected="@(selectedStatus == "active")">Active</option>
+                        <option value="expired" selected="@(selectedStatus == "expired")">Expired</option>
+                        <option value="inactive" selected="@(selectedStatus == "inactive")">Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Plan</label>
+                    <select class="form-select" name="plan" onchange="this.form.submit()">
+                        <option value="">All Plans</option>
+                        @if (plans != null)
+                        {
+                            @foreach (var plan in plans)
+                            {
+                                <option value="@plan.Key" selected="@(selectedPlan == plan.Key)">@plan.Key</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(selectedStatus) || !string.IsNullOrEmpty(selectedPlan))
+                    {
+                        <a href="/Listing/Admin" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> Clear Filters
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Listings Table -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cafe</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Duration</th>
+                            <th>Monthly Fee</th>
+                            <th>Features</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var listing in Model)
+                            {
+                                var isExpired = listing.EndDate <= DateTime.UtcNow;
+                                var statusClass = !listing.IsActive ? "bg-secondary" : (isExpired ? "bg-danger" : "bg-success");
+                                var statusText = !listing.IsActive ? "Inactive" : (isExpired ? "Expired" : "Active");
+
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div>
+                                                <a href="/cafe/@listing.Cafe?.Slug" class="fw-bold text-decoration-none">
+                                                    @listing.Cafe?.Name
+                                                </a>
+                                                <div class="text-muted small">
+                                                    @listing.Cafe?.City, @listing.Cafe?.Country
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var planClass = listing.PlanType switch
+                                            {
+                                                "Featured" => "bg-warning text-dark",
+                                                "Premium" => "bg-primary",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @planClass">@listing.PlanType</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @statusClass">@statusText</span>
+                                    </td>
+                                    <td>
+                                        <div class="small">
+                                            <div><i class="bi bi-calendar-event"></i> @listing.StartDate.ToString("MMM dd, yyyy")</div>
+                                            <div><i class="bi bi-calendar-x"></i> @listing.EndDate.ToString("MMM dd, yyyy")</div>
+                                            @if (!isExpired && listing.IsActive)
+                                            {
+                                                <div class="text-success"><i class="bi bi-clock"></i> @listing.GetDaysRemaining() days left</div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold text-success">$@listing.MonthlyFee.ToString("N2")</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @if (listing.FeaturedPlacement)
+                                            {
+                                                <span class="badge bg-light text-dark" title="Featured Placement"><i class="bi bi-star-fill text-warning"></i></span>
+                                            }
+                                            @if (listing.PhotoGallery)
+                                            {
+                                                <span class="badge bg-light text-dark" title="Photo Gallery"><i class="bi bi-images text-primary"></i></span>
+                                            }
+                                            @if (listing.EventListings)
+                                            {
+                                                <span class="badge bg-light text-dark" title="Event Listings"><i class="bi bi-calendar-event text-info"></i></span>
+                                            }
+                                            @if (listing.GameInventoryManager)
+                                            {
+                                                <span class="badge bg-light text-dark" title="Game Inventory"><i class="bi bi-controller text-success"></i></span>
+                                            }
+                                            @if (listing.AnalyticsDashboard)
+                                            {
+                                                <span class="badge bg-light text-dark" title="Analytics"><i class="bi bi-graph-up text-danger"></i></span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/Listing/Edit/@listing.ListingId" class="btn btn-outline-primary" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-outline-success extend-btn" data-id="@listing.ListingId" title="Extend 1 Month">
+                                                <i class="bi bi-plus-circle"></i>
+                                            </button>
+                                            <button class="btn btn-outline-danger delete-btn" data-id="@listing.ListingId" data-name="@listing.Cafe?.Name" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox display-4"></i>
+                                    <p class="mt-2">No listings found</p>
+                                    <a href="/Listing/Create" class="btn btn-primary">Create First Listing</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="/Listing/Admin?page=@(currentPage - 1)&status=@selectedStatus&plan=@selectedPlan">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="/Listing/Admin?page=@i&status=@selectedStatus&plan=@selectedPlan">@i</a>
+                    </li>
+                }
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="/Listing/Admin?page=@(currentPage + 1)&status=@selectedStatus&plan=@selectedPlan">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <p class="text-center text-muted">Showing @((currentPage - 1) * 20 + 1) - @Math.Min(currentPage * 20, totalItems) of @totalItems</p>
+        </nav>
+    }
+</div>
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        // Extend listing
+        $('.extend-btn').on('click', function() {
+            const id = $(this).data('id');
+            const btn = $(this);
+
+            if (!confirm('Extend this listing by 1 month?')) return;
+
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+
+            $.ajax({
+                url: `/Listing/Extend/${id}`,
+                method: 'POST',
+                data: { months: 1 },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + response.message);
+                        btn.prop('disabled', false).html('<i class="bi bi-plus-circle"></i>');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred');
+                    btn.prop('disabled', false).html('<i class="bi bi-plus-circle"></i>');
+                }
+            });
+        });
+
+        // Delete listing
+        $('.delete-btn').on('click', function() {
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+            const btn = $(this);
+
+            if (!confirm(`Delete listing for "${name}"? This action cannot be undone.`)) return;
+
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+
+            $.ajax({
+                url: `/Listing/Delete/${id}`,
+                method: 'POST',
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + response.message);
+                        btn.prop('disabled', false).html('<i class="bi bi-trash"></i>');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred');
+                    btn.prop('disabled', false).html('<i class="bi bi-trash"></i>');
+                }
+            });
+        });
+    });
+</script>
+}

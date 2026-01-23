@@ -1,0 +1,453 @@
+@{
+    ViewData["Title"] = "Claim Your Cafe";
+    Layout = "_UserLayout";
+
+    var cafe = ViewBag.Cafe as BoardGameCafeFinder.Models.Domain.Cafe;
+    var plans = ViewBag.Plans as Dictionary<string, BoardGameCafeFinder.Controllers.ListingPlan>;
+    var selectedPlan = ViewBag.SelectedPlan as string ?? "Premium";
+}
+
+<!-- Hero Section -->
+<div class="bg-gradient-primary text-white py-4">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/Listing/Pricing" class="text-white-50">Pricing</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Claim Cafe</li>
+            </ol>
+        </nav>
+        <h1 class="h2 mb-0">
+            <i class="bi bi-shield-check me-2"></i>Claim Your Cafe
+        </h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Main Form -->
+        <div class="col-lg-8">
+            <!-- Cafe Info -->
+            @if (cafe != null)
+            {
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-shop me-2"></i>Cafe Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @if (!string.IsNullOrEmpty(cafe.LocalImagePath))
+                                {
+                                    <img src="@cafe.LocalImagePath" class="img-fluid rounded" alt="@cafe.Name">
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 150px;">
+                                        <i class="bi bi-shop text-white display-4"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-8">
+                                <h4 class="mb-2">@cafe.Name</h4>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-geo-alt me-1"></i>@cafe.Address
+                                </p>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-globe me-1"></i>@cafe.City, @cafe.Country
+                                </p>
+                                @if (cafe.AverageRating.HasValue)
+                                {
+                                    <p class="mb-0">
+                                        <i class="bi bi-star-fill text-warning me-1"></i>
+                                        @cafe.AverageRating.Value.ToString("F1") rating
+                                        @if (cafe.TotalReviews > 0)
+                                        {
+                                            <span class="text-muted">(@cafe.TotalReviews reviews)</span>
+                                        }
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Claim Form -->
+            <form method="post" action="/Listing/SubmitClaim">
+                @if (cafe != null)
+                {
+                    <input type="hidden" name="CafeId" value="@cafe.CafeId">
+                }
+
+                <!-- Select Plan -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-star me-2"></i>Select Your Plan</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if (plans != null)
+                            {
+                                @foreach (var plan in plans)
+                                {
+                                    var isSelected = selectedPlan == plan.Key;
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 plan-card @(isSelected ? "border-primary border-2" : "")" data-plan="@plan.Key">
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title">@plan.Key</h5>
+                                                <h3 class="text-primary mb-3">$@plan.Value.MonthlyPrice<small class="text-muted">/mo</small></h3>
+                                                <div class="form-check d-flex justify-content-center mb-3">
+                                                    <input class="form-check-input me-2" type="radio" name="PlanType" id="plan@(plan.Key)"
+                                                           value="@plan.Key" @(isSelected ? "checked" : "") required>
+                                                    <label class="form-check-label" for="plan@(plan.Key)">Select</label>
+                                                </div>
+                                                <ul class="list-unstyled text-start small">
+                                                    @foreach (var feature in plan.Value.Features)
+                                                    {
+                                                        <li class="mb-1"><i class="bi bi-check text-success"></i> @feature</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duration -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-calendar me-2"></i>Subscription Duration</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <div class="card duration-card h-100" data-months="1">
+                                    <div class="card-body text-center">
+                                        <input class="form-check-input" type="radio" name="DurationMonths" id="dur1" value="1" required>
+                                        <label class="form-check-label d-block" for="dur1">
+                                            <h5 class="mb-1">1 Month</h5>
+                                            <small class="text-muted">Standard</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card duration-card h-100 border-primary" data-months="3">
+                                    <div class="card-body text-center">
+                                        <input class="form-check-input" type="radio" name="DurationMonths" id="dur3" value="3" checked required>
+                                        <label class="form-check-label d-block" for="dur3">
+                                            <h5 class="mb-1">3 Months</h5>
+                                            <small class="text-success">Save 5%</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card duration-card h-100" data-months="6">
+                                    <div class="card-body text-center">
+                                        <input class="form-check-input" type="radio" name="DurationMonths" id="dur6" value="6" required>
+                                        <label class="form-check-label d-block" for="dur6">
+                                            <h5 class="mb-1">6 Months</h5>
+                                            <small class="text-success">Save 10%</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card duration-card h-100" data-months="12">
+                                    <div class="card-body text-center">
+                                        <input class="form-check-input" type="radio" name="DurationMonths" id="dur12" value="12" required>
+                                        <label class="form-check-label d-block" for="dur12">
+                                            <h5 class="mb-1">12 Months</h5>
+                                            <small class="text-success">Save 20%</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0"><i class="bi bi-person me-2"></i>Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Full Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="ContactName" required placeholder="Your name">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" name="ContactEmail" required placeholder="your@email.com">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Phone Number</label>
+                                <input type="tel" class="form-control" name="ContactPhone" placeholder="+1 (555) 123-4567">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Your Role</label>
+                                <select class="form-select" name="ContactRole">
+                                    <option value="Owner">Owner</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verification -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Ownership Verification</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-3">
+                            To verify your ownership, we'll send a verification code to your business phone or email.
+                            Alternatively, you can provide documentation.
+                        </p>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="VerificationMethod" id="verifyPhone" value="phone" checked>
+                            <label class="form-check-label" for="verifyPhone">
+                                <i class="bi bi-telephone me-1"></i> Verify by phone call
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="VerificationMethod" id="verifyEmail" value="email">
+                            <label class="form-check-label" for="verifyEmail">
+                                <i class="bi bi-envelope me-1"></i> Verify by email
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="VerificationMethod" id="verifyDoc" value="document">
+                            <label class="form-check-label" for="verifyDoc">
+                                <i class="bi bi-file-earmark-text me-1"></i> Upload business documentation
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="AgreeTerms" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Service</a>
+                                and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="d-flex justify-content-between">
+                    <a href="/Listing/Pricing" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Pricing
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-shield-check me-2"></i>Submit Claim Request
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Order Summary -->
+            <div class="card shadow-sm sticky-top" style="top: 1rem;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div id="orderSummary">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Plan:</span>
+                            <strong id="summaryPlan">@selectedPlan</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Duration:</span>
+                            <strong id="summaryDuration">3 months</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Monthly Rate:</span>
+                            <strong id="summaryRate">$59.99</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Discount:</span>
+                            <strong id="summaryDiscount" class="text-success">-5%</strong>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span class="h5 mb-0">Total:</span>
+                            <strong class="h5 mb-0 text-primary" id="summaryTotal">$170.97</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <small class="text-muted">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Secure payment processing
+                    </small>
+                </div>
+            </div>
+
+            <!-- Help -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-body text-center">
+                    <i class="bi bi-question-circle display-4 text-primary mb-3"></i>
+                    <h5>Need Help?</h5>
+                    <p class="text-muted small">Our support team is ready to assist you with the claiming process.</p>
+                    <a href="mailto:support@boardgamecafefinder.com" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-envelope me-1"></i> Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms of Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>By using our premium listing service, you agree to:</p>
+                <ul>
+                    <li>Provide accurate business information</li>
+                    <li>Maintain ownership or authorized management of the listed cafe</li>
+                    <li>Use the platform features responsibly</li>
+                    <li>Accept our billing and refund policies</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>We respect your privacy and are committed to protecting your personal data:</p>
+                <ul>
+                    <li>Your contact information is used only for account verification and communication</li>
+                    <li>Payment information is processed securely through our payment provider</li>
+                    <li>We do not sell your personal information to third parties</li>
+                    <li>You can request deletion of your data at any time</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .plan-card, .duration-card {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .plan-card:hover, .duration-card:hover {
+        border-color: #667eea !important;
+        transform: translateY(-2px);
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(255, 255, 255, 0.5);
+    }
+</style>
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        const plans = {
+            'Basic': 29.99,
+            'Premium': 59.99,
+            'Featured': 99.99
+        };
+
+        const discounts = {
+            1: 0,
+            3: 0.05,
+            6: 0.10,
+            12: 0.20
+        };
+
+        function updateSummary() {
+            const planType = $('input[name="PlanType"]:checked').val() || 'Premium';
+            const months = parseInt($('input[name="DurationMonths"]:checked').val() || '3');
+            const rate = plans[planType];
+            const discount = discounts[months];
+            const subtotal = rate * months;
+            const discountAmount = subtotal * discount;
+            const total = subtotal - discountAmount;
+
+            $('#summaryPlan').text(planType);
+            $('#summaryDuration').text(months + (months === 1 ? ' month' : ' months'));
+            $('#summaryRate').text('$' + rate.toFixed(2));
+            $('#summaryDiscount').text(discount > 0 ? '-' + (discount * 100) + '%' : 'None');
+            $('#summaryTotal').text('$' + total.toFixed(2));
+
+            // Update visual selection
+            $('.plan-card').removeClass('border-primary border-2');
+            $('.plan-card[data-plan="' + planType + '"]').addClass('border-primary border-2');
+
+            $('.duration-card').removeClass('border-primary border-2');
+            $('.duration-card[data-months="' + months + '"]').addClass('border-primary border-2');
+        }
+
+        // Click on plan card
+        $('.plan-card').on('click', function() {
+            const plan = $(this).data('plan');
+            $('input[name="PlanType"][value="' + plan + '"]').prop('checked', true);
+            updateSummary();
+        });
+
+        // Click on duration card
+        $('.duration-card').on('click', function() {
+            const months = $(this).data('months');
+            $('input[name="DurationMonths"][value="' + months + '"]').prop('checked', true);
+            updateSummary();
+        });
+
+        // Radio change events
+        $('input[name="PlanType"], input[name="DurationMonths"]').on('change', updateSummary);
+
+        // Initial update
+        updateSummary();
+    });
+</script>
+}
