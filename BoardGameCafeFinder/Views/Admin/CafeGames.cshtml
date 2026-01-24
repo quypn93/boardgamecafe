@@ -83,6 +83,7 @@
                             <th style="width: 60px;"></th>
                             <th>Game Name</th>
                             <th>BGG ID</th>
+                            <th>Affiliate</th>
                             <th>Players</th>
                             <th>Playtime</th>
                             <th>Price</th>
@@ -130,6 +131,19 @@
                                         <a href="https://boardgamegeek.com/boardgame/@game.BGGId" target="_blank"
                                            class="badge bg-info text-decoration-none">
                                             @game.BGGId
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(game.AmazonAffiliateUrl))
+                                    {
+                                        <a href="@game.AmazonAffiliateUrl" target="_blank" rel="nofollow sponsored"
+                                           class="badge bg-warning text-dark text-decoration-none" title="@game.AmazonAffiliateUrl">
+                                            <i class="bi bi-cart-fill me-1"></i>Link
                                         </a>
                                     }
                                     else

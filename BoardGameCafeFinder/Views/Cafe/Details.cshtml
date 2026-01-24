@@ -207,12 +207,20 @@
                                             </div>
                                             <div class="card-body p-2 d-flex flex-column">
                                                 <h6 class="card-title small fw-bold mb-1 text-truncate" title="@cafeGame.Game.Name">@cafeGame.Game.Name</h6>
-                                                @if (cafeGame.Game.BGGId.HasValue)
-                                                {
-                                                    <a href="https://boardgamegeek.com/boardgame/@cafeGame.Game.BGGId" target="_blank" class="mt-auto text-decoration-none extra-small-link">
-                                                        <i class="bi bi-box-arrow-up-right me-1"></i>BGG
-                                                    </a>
-                                                }
+                                                <div class="mt-auto d-flex flex-column gap-1">
+                                                    @if (cafeGame.Game.BGGId.HasValue)
+                                                    {
+                                                        <a href="https://boardgamegeek.com/boardgame/@cafeGame.Game.BGGId" target="_blank" class="text-decoration-none extra-small-link">
+                                                            <i class="bi bi-box-arrow-up-right me-1"></i>BGG
+                                                        </a>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(cafeGame.Game.AmazonAffiliateUrl))
+                                                    {
+                                                        <a href="@cafeGame.Game.AmazonAffiliateUrl" target="_blank" rel="nofollow sponsored" class="text-decoration-none extra-small-link text-warning">
+                                                            <i class="bi bi-cart-fill me-1"></i>Buy
+                                                        </a>
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -237,11 +245,17 @@
             }
 
             <!-- Reviews -->
+            @{
+                // Calculate actual visible review count
+                var currentUserIdForCount = ViewBag.CurrentUserId as int?;
+                var visibleReviewCount = Model.Reviews?
+                    .Count(r => r.UserId == null || r.IsApproved || (currentUserIdForCount.HasValue && r.UserId == currentUserIdForCount.Value)) ?? 0;
+            }
             <div class="card mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Reviews</h4>
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary">Total: @Model.TotalReviews</span>
+                        <span class="badge bg-secondary">Total: @visibleReviewCount</span>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#reviewForm">
@@ -394,7 +408,22 @@
                                             }
                                         </div>
                                     </div>
-                                    <p class="mb-0">@review.Content</p>
+                                    @{
+                                        var maxLength = 300;
+                                        var content = review.Content ?? "";
+                                        var isLong = content.Length > maxLength;
+                                    }
+                                    @if (isLong)
+                                    {
+                                        <div class="review-content">
+                                            <p class="mb-0 review-text-short">@content.Substring(0, maxLength)... <a href="#" class="read-more-link text-primary">Read more</a></p>
+                                            <p class="mb-0 review-text-full d-none">@content <a href="#" class="read-less-link text-primary">Show less</a></p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="mb-0">@content</p>
+                                    }
                                 </div>
                             }
                         </div>
@@ -658,6 +687,25 @@
                 // Initialize button states
                 updateReviewPage();
             }
+
+            // Read more / Show less for reviews
+            document.querySelectorAll('.read-more-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const container = this.closest('.review-content');
+                    container.querySelector('.review-text-short').classList.add('d-none');
+                    container.querySelector('.review-text-full').classList.remove('d-none');
+                });
+            });
+
+            document.querySelectorAll('.read-less-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const container = this.closest('.review-content');
+                    container.querySelector('.review-text-short').classList.remove('d-none');
+                    container.querySelector('.review-text-full').classList.add('d-none');
+                });
+            });
         });
     </script>
 }

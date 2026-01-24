@@ -261,9 +261,12 @@
                                                 <i class="bi bi-star-fill"></i> @cafe.AverageRating.Value.ToString("0.0")
                                             </span>
                                         }
-                                        @if (cafe.TotalReviews > 0)
+                                        @{
+                                            var reviewCount = cafe.Reviews?.Count(r => r.UserId == null || r.IsApproved) ?? cafe.TotalReviews;
+                                        }
+                                        @if (reviewCount > 0)
                                         {
-                                            <small class="text-muted">(@cafe.TotalReviews)</small>
+                                            <small class="text-muted">(@reviewCount)</small>
                                         }
                                         @if (cafe.DistanceKm > 0)
                                         {
