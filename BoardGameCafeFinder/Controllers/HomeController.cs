@@ -58,6 +58,7 @@ public class HomeController : Controller
             .Where(c => c.IsActive)
             .Include(c => c.CafeGames)
                 .ThenInclude(cg => cg.Game)
+            .Include(c => c.Reviews)
             .AsQueryable();
 
         // Filter by country
