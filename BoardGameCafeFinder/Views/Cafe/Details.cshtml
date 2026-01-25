@@ -216,7 +216,7 @@
                                                     }
                                                     @if (!string.IsNullOrEmpty(cafeGame.Game.AmazonAffiliateUrl))
                                                     {
-                                                        <a href="@cafeGame.Game.AmazonAffiliateUrl" target="_blank" rel="nofollow sponsored" class="text-decoration-none extra-small-link text-warning">
+                                                        <a href="/api/affiliate/click/@cafeGame.Game.GameId?cafeId=@Model.CafeId" target="_blank" rel="nofollow sponsored" class="text-decoration-none extra-small-link text-warning">
                                                             <i class="bi bi-cart-fill me-1"></i>Buy
                                                         </a>
                                                     }

@@ -1,0 +1,318 @@
+@model BoardGameCafeFinder.Controllers.CafeSubmissionModel
+@{
+    ViewData["Title"] = "Submit Your Cafe";
+    Layout = "_UserLayout";
+
+    var plans = ViewBag.Plans as Dictionary<string, BoardGameCafeFinder.Controllers.ListingPlan>;
+    var selectedPlan = ViewBag.SelectedPlan as string;
+}
+
+<!-- Hero Section -->
+<div class="bg-gradient-primary text-white py-5">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold mb-3">
+            <i class="bi bi-shop-window me-2"></i>Add Your Cafe
+        </h1>
+        <p class="lead opacity-90 mb-0">
+            Join the Board Game Cafe Finder directory and reach thousands of board game enthusiasts
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Main Form -->
+        <div class="col-lg-8">
+            <form asp-action="SubmitCafe" method="post" id="submitCafeForm">
+                <!-- Cafe Information -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-shop me-2"></i>Cafe Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Cafe Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="CafeName" placeholder="Your Board Game Cafe" required>
+                                <span asp-validation-for="CafeName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Description</label>
+                                <textarea class="form-control" asp-for="Description" rows="3"
+                                          placeholder="Tell customers what makes your cafe special..."></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Address <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="Address" placeholder="123 Main Street" required>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">City <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="City" placeholder="Seattle" required>
+                                <span asp-validation-for="City" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">State/Province</label>
+                                <input type="text" class="form-control" asp-for="State" placeholder="WA">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Postal Code</label>
+                                <input type="text" class="form-control" asp-for="PostalCode" placeholder="98101">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Country</label>
+                                <input type="text" class="form-control" asp-for="Country" value="United States" placeholder="United States">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone</label>
+                                <input type="tel" class="form-control" asp-for="Phone" placeholder="(206) 555-0100">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email</label>
+                                <input type="email" class="form-control" asp-for="Email" placeholder="contact@yourcafe.com">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Website</label>
+                                <input type="url" class="form-control" asp-for="Website" placeholder="https://www.yourcafe.com">
+                            </div>
+
+                            <!-- Hidden fields for coordinates -->
+                            <input type="hidden" asp-for="Latitude" id="latitude">
+                            <input type="hidden" asp-for="Longitude" id="longitude">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Owner Information -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-person me-2"></i>Your Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Your Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="OwnerName" placeholder="John Smith" required>
+                                <span asp-validation-for="OwnerName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Your Role</label>
+                                <select class="form-select" asp-for="OwnerRole">
+                                    <option value="Owner">Owner</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Staff">Staff</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" asp-for="OwnerEmail" placeholder="you@email.com" required>
+                                <span asp-validation-for="OwnerEmail" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone</label>
+                                <input type="tel" class="form-control" asp-for="OwnerPhone" placeholder="(206) 555-0100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Plan Selection -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-star me-2"></i>Choose Your Listing Plan</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-3">Get more visibility with a premium listing, or start with a free basic listing.</p>
+
+                        <div class="row g-3">
+                            <!-- Free Option -->
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card h-100 plan-card @(selectedPlan == null || selectedPlan == "Free" ? "border-primary border-2" : "")"
+                                     onclick="selectPlan('Free')">
+                                    <div class="card-body text-center p-3">
+                                        <input type="radio" name="PlanType" value="Free" class="btn-check" id="planFree"
+                                               @(selectedPlan == null || selectedPlan == "Free" ? "checked" : "")>
+                                        <label for="planFree" class="d-block cursor-pointer">
+                                            <h6 class="mb-2">Free</h6>
+                                            <div class="display-6 fw-bold text-success mb-2">$0</div>
+                                            <ul class="list-unstyled small text-start mb-0">
+                                                <li><i class="bi bi-check text-success me-1"></i>Basic listing</li>
+                                                <li><i class="bi bi-check text-success me-1"></i>Contact info</li>
+                                                <li><i class="bi bi-x text-muted me-1"></i>Photos</li>
+                                                <li><i class="bi bi-x text-muted me-1"></i>Featured</li>
+                                            </ul>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (plans != null)
+                            {
+                                @foreach (var plan in plans)
+                                {
+                                    var isSelected = selectedPlan == plan.Key;
+                                    var isPremium = plan.Key == "Premium";
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="card h-100 plan-card @(isSelected ? "border-primary border-2" : "") @(isPremium ? "shadow" : "")"
+                                             onclick="selectPlan('@plan.Key')">
+                                            @if (isPremium)
+                                            {
+                                                <div class="card-header bg-primary text-white text-center py-1 small">
+                                                    Most Popular
+                                                </div>
+                                            }
+                                            <div class="card-body text-center p-3">
+                                                <input type="radio" name="PlanType" value="@plan.Key" class="btn-check" id="plan@plan.Key"
+                                                       @(isSelected ? "checked" : "")>
+                                                <label for="plan@plan.Key" class="d-block cursor-pointer">
+                                                    <h6 class="mb-2">@plan.Key</h6>
+                                                    <div class="display-6 fw-bold text-primary mb-2">$@plan.Value.MonthlyPrice</div>
+                                                    <small class="text-muted">/month</small>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <div class="mt-3">
+                            <a href="/Listing/Pricing" class="text-decoration-none small">
+                                <i class="bi bi-info-circle me-1"></i>Compare all plan features
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms & Submit -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" asp-for="AgreeTerms" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the <a href="/Home/Terms" target="_blank">Terms of Service</a>
+                                and confirm that I am authorized to represent this business.
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+                            <span class="submit-text">
+                                <i class="bi bi-send me-2"></i>Submit Your Cafe
+                            </span>
+                            <span class="loading-text d-none">
+                                <span class="spinner-border spinner-border-sm me-2"></span>Submitting...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Benefits Card -->
+            <div class="card shadow-sm mb-4 sticky-top" style="top: 20px;">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>Benefits of Listing</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                            <strong>Get Found</strong>
+                            <p class="text-muted small mb-0">Appear in local searches when gamers look for places to play</p>
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-people-fill text-primary me-2"></i>
+                            <strong>Reach New Customers</strong>
+                            <p class="text-muted small mb-0">Connect with the board gaming community in your area</p>
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-star-fill text-primary me-2"></i>
+                            <strong>Build Your Reputation</strong>
+                            <p class="text-muted small mb-0">Collect reviews and showcase your cafe</p>
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+                            <strong>Grow Your Business</strong>
+                            <p class="text-muted small mb-0">Premium listings get up to 5x more visibility</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Already Listed -->
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-question-circle display-4 text-muted mb-3"></i>
+                    <h6>Already Listed?</h6>
+                    <p class="text-muted small mb-3">
+                        If your cafe is already in our directory, you can claim it instead.
+                    </p>
+                    <a href="/Listing/Pricing" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-search me-1"></i>Find & Claim Your Cafe
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .plan-card {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .plan-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
+
+@section Scripts {
+<script>
+    function selectPlan(plan) {
+        document.querySelectorAll('.plan-card').forEach(card => {
+            card.classList.remove('border-primary', 'border-2');
+        });
+        event.currentTarget.classList.add('border-primary', 'border-2');
+        document.getElementById('plan' + plan).checked = true;
+    }
+
+    // Form submission handling
+    document.getElementById('submitCafeForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        btn.querySelector('.submit-text').classList.add('d-none');
+        btn.querySelector('.loading-text').classList.remove('d-none');
+        btn.disabled = true;
+    });
+</script>
+}

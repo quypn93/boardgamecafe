@@ -1,14 +1,39 @@
 @model List<BoardGameCafeFinder.Controllers.CityBlogItem>
 @{
-    ViewData["Title"] = "Board Game Cafe Guides by City";
-    ViewData["MetaDescription"] = "Discover board game cafes in cities around the world. Find guides, top games, and the best places to play near you.";
-    Layout = "_UserLayout";
-
     var countries = ViewBag.Countries as List<string> ?? new List<string>();
     var selectedCountry = ViewBag.SelectedCountry as string;
     var currentPage = (int)(ViewBag.CurrentPage ?? 1);
     var totalPages = (int)(ViewBag.TotalPages ?? 1);
     var totalItems = (int)(ViewBag.TotalItems ?? 0);
+
+    // SEO: Dynamic title and description based on filters
+    var pageTitle = !string.IsNullOrEmpty(selectedCountry)
+        ? $"Board Game Cafes in {selectedCountry} - City Guides {DateTime.Now.Year}"
+        : $"Board Game Cafe Guides by City - {totalItems} Cities Worldwide";
+
+    var pageDescription = !string.IsNullOrEmpty(selectedCountry)
+        ? $"Find board game cafes in {selectedCountry}. Browse city guides, discover top games, and plan your next board game adventure."
+        : $"Discover board game cafes in {totalItems} cities around the world. Find detailed guides with top games, reviews, ratings & directions.";
+
+    ViewData["Title"] = pageTitle;
+    ViewData["MetaDescription"] = pageDescription;
+    ViewData["Keywords"] = !string.IsNullOrEmpty(selectedCountry)
+        ? $"board game cafe {selectedCountry}, board game lounge {selectedCountry}, tabletop gaming {selectedCountry}"
+        : "board game cafe, board game lounge, tabletop gaming, board games near me, city guides";
+    Layout = "_UserLayout";
+
+    // SEO: Canonical URL with pagination
+    var canonicalUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/Blog";
+    if (!string.IsNullOrEmpty(selectedCountry))
+    {
+        canonicalUrl += $"?country={Uri.EscapeDataString(selectedCountry)}";
+        if (currentPage > 1) canonicalUrl += $"&page={currentPage}";
+    }
+    else if (currentPage > 1)
+    {
+        canonicalUrl += $"?page={currentPage}";
+    }
+    ViewData["CanonicalUrl"] = canonicalUrl;
 
     // Helper function for building pagination URLs
     string BuildBlogPageUrl(int page)
@@ -87,7 +112,8 @@
                             <div class="card h-100 shadow-sm blog-card">
                                 @if (!string.IsNullOrEmpty(item.SampleImage))
                                 {
-                                    <img src="@item.SampleImage" class="card-img-top" alt="Board Game Cafes in @item.City" style="height: 180px; object-fit: cover;">
+                                    <img src="@item.SampleImage" class="card-img-top" alt="Board Game Cafes in @item.City"
+                                         loading="lazy" decoding="async" style="height: 180px; object-fit: cover;">
                                 }
                                 else
                                 {

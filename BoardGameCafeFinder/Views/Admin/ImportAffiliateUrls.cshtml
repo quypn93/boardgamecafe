@@ -1,0 +1,135 @@
+@{
+    ViewData["Title"] = "Import Affiliate URLs";
+    Layout = "_AdminLayout";
+    var importResults = ViewBag.ImportResults as List<string>;
+}
+
+<div class="mb-4">
+    <a href="/Admin/ManageAffiliates" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to Affiliate Management
+    </a>
+    <h2><i class="bi bi-upload me-2"></i>Import Affiliate URLs</h2>
+    <p class="text-muted">Bulk import affiliate URLs from a CSV file</p>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle me-2"></i>@TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Upload Form -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Upload CSV File</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="ImportAffiliateUrls" method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Select CSV File</label>
+                        <input type="file" name="csvFile" class="form-control form-control-lg" accept=".csv" required>
+                        <div class="form-text">
+                            Maximum file size: 5MB. File must be in CSV format.
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-upload me-2"></i>Import URLs
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Import Results -->
+        @if (importResults != null && importResults.Any())
+        {
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Import Notes</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        @foreach (var result in importResults.Take(50))
+                        {
+                            <li class="text-muted">@result</li>
+                        }
+                        @if (importResults.Count > 50)
+                        {
+                            <li class="text-muted fst-italic">... and @(importResults.Count - 50) more</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-4">
+        <!-- CSV Format Guide -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>CSV Format</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">Your CSV file should have these columns:</p>
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Column</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>GameId</code></td>
+                            <td>Game ID, BGG ID, or game name</td>
+                        </tr>
+                        <tr>
+                            <td><code>AffiliateUrl</code></td>
+                            <td>Full Amazon affiliate URL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Example CSV -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Example CSV</h6>
+            </div>
+            <div class="card-body">
+                <pre class="bg-dark text-light p-3 rounded small mb-0" style="overflow-x: auto;">GameId,AffiliateUrl
+174430,https://amzn.to/abc123
+Catan,https://amzn.to/def456
+13,https://amzn.to/ghi789</pre>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h6>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="/Admin/ExportGamesWithoutAffiliate" class="list-group-item list-group-item-action">
+                    <i class="bi bi-download me-2"></i>Download games without affiliate
+                </a>
+                <a href="/Admin/ManageAffiliates?filter=without" class="list-group-item list-group-item-action">
+                    <i class="bi bi-list-ul me-2"></i>View games missing affiliate URLs
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,83 @@
 @model BoardGameCafeFinder.Controllers.DynamicBlogPost
 @{
-    ViewData["Title"] = $"Board Game Cafes in {Model.City} - Complete Guide";
-    ViewData["MetaDescription"] = $"Discover {Model.TotalCafes} board game cafes in {Model.City}, {Model.Country}. Find the best places to play with {Model.TotalGames}+ games available.";
+    ViewData["Title"] = $"Board Game Cafes in {Model.City}, {Model.Country} - Complete Guide {DateTime.Now.Year}";
+    ViewData["MetaDescription"] = $"Discover {Model.TotalCafes} board game cafes in {Model.City}, {Model.Country}. Find the best places to play board games with {Model.TotalGames}+ games available. Reviews, ratings & directions.";
     Layout = "_UserLayout";
 
+    // SEO: Canonical URL
+    ViewData["CanonicalUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}/blog/{Uri.EscapeDataString(Model.City)}";
+
+    // SEO: Dynamic OG Image (first cafe image or default)
+    var firstCafeImage = Model.Cafes.FirstOrDefault()?.LocalImagePath;
+    if (!string.IsNullOrEmpty(firstCafeImage))
+    {
+        ViewData["OGImage"] = firstCafeImage;
+    }
+
+    // SEO: Keywords
+    ViewData["Keywords"] = $"board game cafe {Model.City}, board game lounge {Model.City}, tabletop gaming {Model.City}, {Model.Country} board games, where to play board games {Model.City}";
+
     var relatedCities = ViewBag.RelatedCities as List<string> ?? new List<string>();
+}
+
+@section Head {
+    <!-- JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Article",
+        "headline": "Board Game Cafes in @Model.City - Complete Guide",
+        "description": "@ViewData["MetaDescription"]",
+        "author": {
+            "@@type": "Organization",
+            "name": "Board Game Cafe Finder"
+        },
+        "publisher": {
+            "@@type": "Organization",
+            "name": "Board Game Cafe Finder",
+            "logo": {
+                "@@type": "ImageObject",
+                "url": "@($"{Context.Request.Scheme}://{Context.Request.Host}/logo.svg")"
+            }
+        },
+        "mainEntityOfPage": {
+            "@@type": "WebPage",
+            "@@id": "@ViewData["CanonicalUrl"]"
+        },
+        "about": {
+            "@@type": "ItemList",
+            "name": "Board Game Cafes in @Model.City",
+            "numberOfItems": @Model.TotalCafes,
+            "itemListElement": [
+                @for (int i = 0; i < Math.Min(Model.Cafes.Count, 10); i++)
+                {
+                    var cafe = Model.Cafes[i];
+                    <text>
+                {
+                    "@@type": "ListItem",
+                    "position": @(i + 1),
+                    "item": {
+                        "@@type": "LocalBusiness",
+                        "name": "@cafe.Name.Replace("\"", "\\\"")",
+                        "address": {
+                            "@@type": "PostalAddress",
+                            "addressLocality": "@Model.City",
+                            "addressCountry": "@Model.Country"
+                        }@if (cafe.AverageRating.HasValue)
+                        {<text>,
+                        "aggregateRating": {
+                            "@@type": "AggregateRating",
+                            "ratingValue": "@cafe.AverageRating.Value.ToString("F1")",
+                            "bestRating": "5"
+                        }</text>}
+                    }
+                }@(i < Math.Min(Model.Cafes.Count, 10) - 1 ? "," : "")
+                    </text>
+                }
+            ]
+        }
+    }
+    </script>
 }
 
 <!-- Hero Section -->
@@ -77,7 +150,8 @@
                                         <div class="col-4">
                                             @if (!string.IsNullOrEmpty(item.Game.ImageUrl))
                                             {
-                                                <img src="@item.Game.ImageUrl" class="img-fluid rounded-start h-100" alt="@item.Game.Name" style="object-fit: cover;">
+                                                <img src="@item.Game.ImageUrl" class="img-fluid rounded-start h-100" alt="@item.Game.Name"
+                                                     loading="lazy" decoding="async" style="object-fit: cover;">
                                             }
                                             else
                                             {
@@ -128,7 +202,8 @@
                                 @if (!string.IsNullOrEmpty(imageUrl))
                                 {
                                     <a href="/cafe/@cafe.Slug">
-                                        <img src="@imageUrl" class="img-fluid rounded-start h-100" alt="@cafe.Name" style="object-fit: cover; min-height: 200px;">
+                                        <img src="@imageUrl" class="img-fluid rounded-start h-100" alt="@cafe.Name"
+                                             loading="lazy" decoding="async" style="object-fit: cover; min-height: 200px;">
                                     </a>
                                 }
                                 else

@@ -60,6 +60,7 @@ builder.Services.AddScoped<BoardGameCafeFinder.Services.IImageStorageService, Bo
 builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeWebsiteCrawlerService, BoardGameCafeFinder.Services.CafeWebsiteCrawlerService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IBlogService, BoardGameCafeFinder.Services.BlogService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IEmailService, BoardGameCafeFinder.Services.EmailService>();
+builder.Services.AddScoped<BoardGameCafeFinder.Services.IStripeService, BoardGameCafeFinder.Services.StripeService>();
 
 // Add MVC Controllers and Views
 builder.Services.AddControllersWithViews();

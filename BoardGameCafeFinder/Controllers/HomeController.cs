@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BoardGameCafeFinder.Models;
+using BoardGameCafeFinder.Models.DTOs;
 using BoardGameCafeFinder.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,30 +36,41 @@ public class HomeController : Controller
                            && (gameIds == null || gameIds.Length == 0)
                            && !lat.HasValue && !lng.HasValue;
 
-        // Set SEO metadata
-        var pageTitle = "Board Game Cafes";
-        var pageDescription = "Discover board game cafes near you. Find the best places to play modern board games with friends and family.";
+        // Set SEO metadata with dynamic content
+        var currentYear = DateTime.Now.Year;
+        string pageTitle;
+        string pageDescription;
 
         if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(country))
         {
-            pageTitle = $"Board Game Cafes in {city}, {country}";
-            pageDescription = $"Find the best board game cafes in {city}, {country}. Browse games, read reviews, and plan your visit.";
+            pageTitle = $"Board Game Cafes in {city}, {country} - Find & Compare {currentYear}";
+            pageDescription = $"Find the best board game cafes in {city}, {country}. Browse games, read reviews, check ratings and plan your visit. Updated {currentYear}.";
         }
         else if (!string.IsNullOrEmpty(country))
         {
-            pageTitle = $"Board Game Cafes in {country}";
-            pageDescription = $"Explore board game cafes across {country}. Discover new games and connect with other board game enthusiasts.";
+            pageTitle = $"Board Game Cafes in {country} - Directory {currentYear}";
+            pageDescription = $"Explore board game cafes across {country}. Discover new games, read reviews and connect with other board game enthusiasts.";
+        }
+        else
+        {
+            pageTitle = $"Board Game Cafes Near You - Find & Compare {currentYear}";
+            pageDescription = "Discover board game cafes near you. Find the best places to play modern board games with friends and family. Reviews, ratings & directions.";
         }
 
         ViewData["Title"] = pageTitle;
         ViewData["MetaDescription"] = pageDescription;
-        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/";
 
+        // SEO: Build canonical URL with filters (exclude pagination for canonical)
+        var canonicalUrl = $"{Request.Scheme}://{Request.Host}/";
+        var queryParams = new List<string>();
+        if (!string.IsNullOrEmpty(country)) queryParams.Add($"country={Uri.EscapeDataString(country)}");
+        if (!string.IsNullOrEmpty(city)) queryParams.Add($"city={Uri.EscapeDataString(city)}");
+        if (queryParams.Count > 0) canonicalUrl += "?" + string.Join("&", queryParams);
+        ViewData["CanonicalUrl"] = canonicalUrl;
+
+        // Build base query with filters (NO Include - use projection instead)
         var cafesQuery = _context.Cafes
             .Where(c => c.IsActive)
-            .Include(c => c.CafeGames)
-                .ThenInclude(cg => cg.Game)
-            .Include(c => c.Reviews)
             .AsQueryable();
 
         // Filter by country
@@ -85,38 +97,77 @@ public class HomeController : Controller
             cafesQuery = cafesQuery.Where(c => c.CafeGames.Any(cg => cg.Game != null && categories.Contains(cg.Game.Category)));
         }
 
-        // Get total count for pagination
-        var totalItems = await cafesQuery.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        // Location-based filtering: use bounding box first for better SQL performance
+        if (lat.HasValue && lng.HasValue)
+        {
+            // Calculate approximate bounding box (1 degree ≈ 111km)
+            var latDelta = radius / 111.0;
+            var lngDelta = radius / (111.0 * Math.Cos(lat.Value * Math.PI / 180.0));
 
-        // Get cafes with pagination
-        List<BoardGameCafeFinder.Models.Domain.Cafe> cafes;
+            cafesQuery = cafesQuery.Where(c =>
+                c.Latitude >= lat.Value - latDelta &&
+                c.Latitude <= lat.Value + latDelta &&
+                c.Longitude >= lng.Value - lngDelta &&
+                c.Longitude <= lng.Value + lngDelta);
+        }
+
+        // Project to lightweight DTO - counts are calculated in SQL
+        var projectedQuery = cafesQuery.Select(c => new CafeListItemDto
+        {
+            CafeId = c.CafeId,
+            Name = c.Name,
+            City = c.City,
+            State = c.State,
+            Country = c.Country,
+            Slug = c.Slug,
+            LocalImagePath = c.LocalImagePath,
+            Latitude = c.Latitude,
+            Longitude = c.Longitude,
+            AverageRating = c.AverageRating,
+            // Count reviews in SQL (UserId == null means Google review, skip IsApproved check)
+            ReviewCount = c.Reviews.Count(r => r.UserId == null || r.IsApproved),
+            GamesCount = c.CafeGames.Count,
+            Website = c.Website,
+            GoogleMapsUrl = c.GoogleMapsUrl
+        });
+
+        List<CafeListItemDto> cafes;
+        int totalItems;
+        int totalPages;
 
         if (lat.HasValue && lng.HasValue)
         {
-            // Get all cafes first for distance calculation
-            var allCafes = await cafesQuery.ToListAsync();
+            // Get filtered cafes and calculate precise distance in memory
+            var boundedCafes = await projectedQuery.ToListAsync();
 
-            foreach (var cafe in allCafes)
+            foreach (var cafe in boundedCafes)
             {
                 cafe.DistanceKm = CalculateDistance(lat.Value, lng.Value, cafe.Latitude, cafe.Longitude);
             }
 
-            cafes = allCafes
+            // Filter by exact radius and paginate
+            var filteredCafes = boundedCafes
                 .Where(c => c.DistanceKm <= radius)
                 .OrderBy(c => c.DistanceKm)
+                .ToList();
+
+            totalItems = filteredCafes.Count;
+            totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            cafes = filteredCafes
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-
-            totalItems = allCafes.Count(c => c.DistanceKm <= radius);
-            totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         }
         else
         {
-            cafes = await cafesQuery
+            // Get total count for pagination
+            totalItems = await cafesQuery.CountAsync();
+            totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            cafes = await projectedQuery
                 .OrderByDescending(c => c.AverageRating)
-                .ThenByDescending(c => c.TotalReviews)
+                .ThenByDescending(c => c.ReviewCount)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -182,7 +233,7 @@ public class HomeController : Controller
         ViewBag.PageSize = pageSize;
         ViewBag.IsFirstVisit = isFirstVisit;
 
-        return View(cafes);
+        return View("Index", cafes);
     }
 
     // API endpoint to get cities by country (for dynamic dropdown)

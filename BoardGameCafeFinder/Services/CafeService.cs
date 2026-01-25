@@ -18,6 +18,7 @@ namespace BoardGameCafeFinder.Services
         Task<Cafe?> AddCafeAsync(Cafe cafe);
         Task AddReviewsAsync(int cafeId, List<Review> reviews);
         Task<bool> CafeExistsAsync(string slug);
+        Task<List<Cafe>> SearchByTextAsync(string query, int limit = 10);
     }
 
     public class CafeService : ICafeService
@@ -301,6 +302,24 @@ namespace BoardGameCafeFinder.Services
         public async Task<bool> CafeExistsAsync(string slug)
         {
             return await _context.Cafes.AnyAsync(c => c.Slug == slug);
+        }
+
+        public async Task<List<Cafe>> SearchByTextAsync(string query, int limit = 10)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return new List<Cafe>();
+
+            var searchTerm = query.ToLower().Trim();
+
+            return await _context.Cafes
+                .AsNoTracking()
+                .Where(c => c.IsActive)
+                .Where(c => c.Name.ToLower().Contains(searchTerm) ||
+                           c.City.ToLower().Contains(searchTerm) ||
+                           (c.Address != null && c.Address.ToLower().Contains(searchTerm)))
+                .OrderBy(c => c.Name)
+                .Take(limit)
+                .ToListAsync();
         }
 
         public async Task<List<CafeSearchResultDto>> FilterCafesAsync(string? country, string? city, bool openNow, bool hasGames, double? minRating, List<string>? categories = null)

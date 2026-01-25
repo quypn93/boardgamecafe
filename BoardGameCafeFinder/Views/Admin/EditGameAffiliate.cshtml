@@ -1,0 +1,215 @@
+@model BoardGameCafeFinder.Models.Domain.BoardGame
+@{
+    ViewData["Title"] = $"Edit Affiliate - {Model.Name}";
+    Layout = "_AdminLayout";
+    var clickCount = ViewBag.ClickCount as int? ?? 0;
+}
+
+<div class="mb-4">
+    <a href="/Admin/ManageAffiliates" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to Affiliate Management
+    </a>
+    <h2><i class="bi bi-cart-fill me-2"></i>Edit Affiliate URL</h2>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle me-2"></i>@TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Game Info -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-controller me-2"></i>Game Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded mb-3" style="max-height: 150px;">
+                        }
+                        else
+                        {
+                            <div class="bg-secondary rounded d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                                <i class="bi bi-dice-5 text-white display-4"></i>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-9">
+                        <h4>@Model.Name</h4>
+                        <table class="table table-sm">
+                            <tr>
+                                <th style="width: 120px;">Game ID:</th>
+                                <td>@Model.GameId</td>
+                            </tr>
+                            @if (Model.BGGId.HasValue)
+                            {
+                                <tr>
+                                    <th>BGG ID:</th>
+                                    <td>
+                                        <a href="https://boardgamegeek.com/boardgame/@Model.BGGId" target="_blank">
+                                            @Model.BGGId <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Publisher))
+                            {
+                                <tr>
+                                    <th>Publisher:</th>
+                                    <td>@Model.Publisher</td>
+                                </tr>
+                            }
+                            @if (Model.MinPlayers.HasValue || Model.MaxPlayers.HasValue)
+                            {
+                                <tr>
+                                    <th>Players:</th>
+                                    <td>@Model.GetPlayerRange()</td>
+                                </tr>
+                            }
+                            <tr>
+                                <th>Used by:</th>
+                                <td>
+                                    <span class="badge bg-primary">@Model.CafeGames.Count cafe(s)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Clicks:</th>
+                                <td>
+                                    <span class="badge @(clickCount > 0 ? "bg-success" : "bg-secondary")">@clickCount</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Affiliate URL -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-link-45deg me-2"></i>Affiliate URL</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="UpdateGameAffiliateUrl" method="post">
+                    <input type="hidden" name="gameId" value="@Model.GameId" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Amazon Affiliate URL</label>
+                        <input type="url" name="affiliateUrl" class="form-control form-control-lg"
+                               value="@Model.AmazonAffiliateUrl"
+                               placeholder="https://www.amazon.com/dp/XXXXXX?tag=yourtag-20">
+                        <div class="form-text">
+                            Enter the full Amazon affiliate URL including your affiliate tag.
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i> Save Changes
+                        </button>
+                        <a href="/Admin/ManageAffiliates" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tracking URL -->
+        @if (!string.IsNullOrEmpty(Model.AmazonAffiliateUrl))
+        {
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Tracking URL</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-2">Use this URL in your site to track clicks:</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="trackingUrl" readonly
+                               value="@($"{Context.Request.Scheme}://{Context.Request.Host}/api/affiliate/click/{Model.GameId}")">
+                        <button class="btn btn-outline-secondary" type="button" onclick="copyTrackingUrl()">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            With cafe context: <code>/api/affiliate/click/@Model.GameId?cafeId=123</code>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Quick Tips -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Tips</h6>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0 ps-3">
+                    <li class="mb-2">Use the Amazon Associates link builder to create affiliate links</li>
+                    <li class="mb-2">Include your affiliate tag (e.g., <code>?tag=yourtag-20</code>)</li>
+                    <li class="mb-2">Use shortened links from Amazon for cleaner URLs</li>
+                    <li>Test your links before saving</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Cafes Using This Game -->
+        @if (Model.CafeGames.Any())
+        {
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="bi bi-shop me-2"></i>Cafes with this game</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var cg in Model.CafeGames.Take(10))
+                    {
+                        if (cg.Cafe != null)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="/Cafe/@cg.Cafe.Slug" target="_blank">@cg.Cafe.Name</a>
+                                    <br><small class="text-muted">@cg.Cafe.City</small>
+                                </div>
+                            </li>
+                        }
+                    }
+                    @if (Model.CafeGames.Count > 10)
+                    {
+                        <li class="list-group-item text-center text-muted">
+                            <small>... and @(Model.CafeGames.Count - 10) more</small>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function copyTrackingUrl() {
+        const input = document.getElementById('trackingUrl');
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+            alert('Tracking URL copied!');
+        });
+    }
+</script>
+}

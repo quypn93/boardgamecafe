@@ -1,6 +1,5 @@
-@model List<BoardGameCafeFinder.Models.Domain.Cafe>
+@model List<BoardGameCafeFinder.Models.DTOs.CafeListItemDto>
 @{
-    ViewData["Title"] = "Board Game Cafes";
     Layout = "_UserLayout";
     var countries = ViewBag.Countries as List<string> ?? new List<string>();
     var cities = ViewBag.Cities as List<string> ?? new List<string>();
@@ -12,6 +11,24 @@
     var totalPages = (int)(ViewBag.TotalPages ?? 1);
     var totalItems = (int)(ViewBag.TotalItems ?? 0);
     var isFirstPage = currentPage == 1 && string.IsNullOrEmpty(ViewBag.SelectedCity as string) && selectedGameIds.Length == 0;
+
+    // SEO: Title and description are set by controller, but we can enhance
+    var selectedCountry = ViewBag.SelectedCountry as string;
+    var selectedCity = ViewBag.SelectedCity as string;
+
+    // SEO: Keywords based on filters
+    if (!string.IsNullOrEmpty(selectedCity) && !string.IsNullOrEmpty(selectedCountry))
+    {
+        ViewData["Keywords"] = $"board game cafe {selectedCity}, board game lounge {selectedCity}, tabletop gaming {selectedCity}, {selectedCountry} board games";
+    }
+    else if (!string.IsNullOrEmpty(selectedCountry))
+    {
+        ViewData["Keywords"] = $"board game cafe {selectedCountry}, board game lounge {selectedCountry}, tabletop gaming {selectedCountry}";
+    }
+    else
+    {
+        ViewData["Keywords"] = "board game cafe, board game lounge, tabletop gaming, board games near me, cafe finder, game cafe directory";
+    }
 }
 
 @* Hero Section - Hidden as requested
@@ -240,7 +257,9 @@
                                 @if (!string.IsNullOrEmpty(cafe.LocalImagePath))
                                 {
                                     <a href="/cafe/@cafe.Slug">
-                                        <img src="@cafe.LocalImagePath" class="card-img-top" alt="@cafe.Name" style="height: 180px; object-fit: cover;">
+                                        <img src="@cafe.LocalImagePath" class="card-img-top" alt="@cafe.Name"
+                                             loading="lazy" decoding="async"
+                                             style="height: 180px; object-fit: cover;">
                                     </a>
                                 }
                                 else
@@ -261,12 +280,9 @@
                                                 <i class="bi bi-star-fill"></i> @cafe.AverageRating.Value.ToString("0.0")
                                             </span>
                                         }
-                                        @{
-                                            var reviewCount = cafe.Reviews?.Count(r => r.UserId == null || r.IsApproved) ?? cafe.TotalReviews;
-                                        }
-                                        @if (reviewCount > 0)
+                                        @if (cafe.ReviewCount > 0)
                                         {
-                                            <small class="text-muted">(@reviewCount)</small>
+                                            <small class="text-muted">(@cafe.ReviewCount)</small>
                                         }
                                         @if (cafe.DistanceKm > 0)
                                         {
@@ -278,11 +294,11 @@
                                         <i class="bi bi-geo-alt"></i> @cafe.City, @cafe.State
                                     </p>
 
-                                    @if (cafe.CafeGames != null && cafe.CafeGames.Any())
+                                    @if (cafe.GamesCount > 0)
                                     {
                                         <div class="mb-2">
                                             <small class="text-muted">
-                                                <i class="bi bi-dice-5"></i> @cafe.CafeGames.Count games available
+                                                <i class="bi bi-dice-5"></i> @cafe.GamesCount games available
                                             </small>
                                         </div>
                                     }

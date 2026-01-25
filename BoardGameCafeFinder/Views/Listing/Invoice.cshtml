@@ -1,0 +1,229 @@
+@model BoardGameCafeFinder.Models.Domain.Invoice
+@{
+    ViewData["Title"] = $"Invoice {Model.InvoiceNumber}";
+    Layout = "_UserLayout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Print Button -->
+            <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Back
+                </a>
+                <button onclick="window.print()" class="btn btn-primary">
+                    <i class="bi bi-printer me-1"></i>Print Invoice
+                </button>
+            </div>
+
+            <!-- Invoice Card -->
+            <div class="card shadow-sm" id="invoice">
+                <!-- Header -->
+                <div class="card-header bg-primary text-white py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h2 class="mb-0 fw-bold">
+                                <i class="bi bi-dice-5 me-2"></i>Board Game Cafe Finder
+                            </h2>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <h3 class="mb-0">INVOICE</h3>
+                            <p class="mb-0 opacity-75">@Model.InvoiceNumber</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Invoice Info -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted text-uppercase mb-2">Bill To</h6>
+                            <p class="mb-1 fw-bold">@Model.BillingName</p>
+                            <p class="mb-1">@Model.BillingEmail</p>
+                            @if (!string.IsNullOrEmpty(Model.BillingAddress))
+                            {
+                                <p class="mb-0 text-muted">@Model.BillingAddress</p>
+                            }
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <h6 class="text-muted text-uppercase mb-2">Invoice Details</h6>
+                            <p class="mb-1"><strong>Date:</strong> @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                            @if (Model.PaidAt.HasValue)
+                            {
+                                <p class="mb-1"><strong>Paid:</strong> @Model.PaidAt.Value.ToString("MMMM dd, yyyy")</p>
+                            }
+                            <p class="mb-0">
+                                <strong>Status:</strong>
+                                @if (Model.PaymentStatus == "paid")
+                                {
+                                    <span class="badge bg-success">Paid</span>
+                                }
+                                else if (Model.PaymentStatus == "pending")
+                                {
+                                    <span class="badge bg-warning">Pending</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@Model.PaymentStatus</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Cafe Info -->
+                    @if (Model.Cafe != null)
+                    {
+                        <div class="bg-light rounded p-3 mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h6 class="mb-1"><i class="bi bi-shop me-2"></i>@Model.Cafe.Name</h6>
+                                    <p class="text-muted mb-0 small">
+                                        <i class="bi bi-geo-alt me-1"></i>@Model.Cafe.Address, @Model.Cafe.City
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <span class="badge bg-primary">@Model.PlanType Plan</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Line Items -->
+                    <div class="table-responsive mb-4">
+                        <table class="table table-borderless">
+                            <thead class="border-bottom">
+                                <tr>
+                                    <th class="ps-0">Description</th>
+                                    <th class="text-center">Period</th>
+                                    <th class="text-end pe-0">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-0">
+                                        <strong>@Model.Description</strong>
+                                        <br>
+                                        <small class="text-muted">Premium Listing Subscription</small>
+                                    </td>
+                                    <td class="text-center">
+                                        @Model.PeriodMonths month(s)
+                                        <br>
+                                        <small class="text-muted">
+                                            @Model.PeriodStart.ToString("MMM dd") - @Model.PeriodEnd.ToString("MMM dd, yyyy")
+                                        </small>
+                                    </td>
+                                    <td class="text-end pe-0">$@Model.Subtotal.ToString("N2")</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Totals -->
+                    <div class="row justify-content-end">
+                        <div class="col-md-5">
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-muted">Subtotal</td>
+                                        <td class="text-end">$@Model.Subtotal.ToString("N2")</td>
+                                    </tr>
+                                    @if (Model.DiscountAmount > 0)
+                                    {
+                                        <tr>
+                                            <td class="text-muted">Discount</td>
+                                            <td class="text-end text-success">-$@Model.DiscountAmount.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                    @if (Model.TaxAmount > 0)
+                                    {
+                                        <tr>
+                                            <td class="text-muted">Tax</td>
+                                            <td class="text-end">$@Model.TaxAmount.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                    <tr class="border-top">
+                                        <td class="fw-bold fs-5">Total</td>
+                                        <td class="text-end fw-bold fs-5 text-primary">$@Model.TotalAmount.ToString("N2")</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Payment Info -->
+                    @if (Model.PaymentStatus == "paid")
+                    {
+                        <div class="alert alert-success mt-4 mb-0">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                                <div>
+                                    <strong>Payment Received</strong>
+                                    <p class="mb-0 small">
+                                        Paid via @(Model.PaymentMethod ?? "Card") on @Model.PaidAt?.ToString("MMMM dd, yyyy")
+                                        @if (!string.IsNullOrEmpty(Model.StripePaymentIntentId))
+                                        {
+                                            <br><span class="text-muted">Transaction ID: @Model.StripePaymentIntentId</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer bg-light py-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <p class="mb-0 small text-muted">
+                                <i class="bi bi-envelope me-1"></i>support@boardgamecafefinder.com
+                                <span class="mx-2">|</span>
+                                <i class="bi bi-globe me-1"></i>www.boardgamecafefinder.com
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <p class="mb-0 small text-muted">Thank you for your business!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex justify-content-center gap-3 mt-4 d-print-none">
+                <a href="/" class="btn btn-outline-primary">
+                    <i class="bi bi-house me-1"></i>Back to Home
+                </a>
+                @if (Model.Cafe != null)
+                {
+                    <a href="/Cafe/Details/@Model.CafeId" class="btn btn-primary">
+                        <i class="bi bi-shop me-1"></i>View Your Cafe
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        body {
+            background: white !important;
+        }
+        .d-print-none {
+            display: none !important;
+        }
+        .container {
+            max-width: 100% !important;
+        }
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+        .card-header.bg-primary {
+            background: #333 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+</style>

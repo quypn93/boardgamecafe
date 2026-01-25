@@ -1,0 +1,170 @@
+@{
+    ViewData["Title"] = "Payment Cancelled";
+    Layout = "_UserLayout";
+
+    var claimRequest = ViewBag.ClaimRequest as BoardGameCafeFinder.Models.Domain.ClaimRequest;
+}
+
+<!-- Hero Section -->
+<div class="bg-warning text-dark py-5">
+    <div class="container text-center">
+        <div class="mb-4">
+            <i class="bi bi-x-circle display-1"></i>
+        </div>
+        <h1 class="display-5 fw-bold mb-3">Payment Cancelled</h1>
+        <p class="lead mb-0">
+            Your payment was not completed. No charges have been made.
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            @if (claimRequest != null)
+            {
+                <!-- Order Details -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Your Order</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <strong>Cafe:</strong><br>
+                                    @claimRequest.Cafe?.Name
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Plan:</strong><br>
+                                    @claimRequest.PlanType Plan
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <strong>Duration:</strong><br>
+                                    @claimRequest.DurationMonths month(s)
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Total:</strong><br>
+                                    <span class="fw-bold">$@claimRequest.TotalAmount.ToString("N2")</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div class="card shadow-sm mb-4 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-arrow-repeat me-2"></i>What Would You Like to Do?</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-credit-card-2-front text-success display-4 mb-3"></i>
+                                        <h5>Try Again</h5>
+                                        <p class="text-muted small mb-3">Complete your purchase with a different payment method or retry.</p>
+                                        <a href="/Listing/Claim/@claimRequest.CafeId?plan=@claimRequest.PlanType" class="btn btn-success">
+                                            <i class="bi bi-arrow-right me-1"></i>Retry Payment
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-tags text-primary display-4 mb-3"></i>
+                                        <h5>Choose Different Plan</h5>
+                                        <p class="text-muted small mb-3">Browse our plans and find one that fits your needs.</p>
+                                        <a href="/Listing/Pricing" class="btn btn-outline-primary">
+                                            <i class="bi bi-grid me-1"></i>View Plans
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Generic Cancel Message -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-emoji-frown display-1 text-muted mb-4"></i>
+                        <h4>Payment Not Completed</h4>
+                        <p class="text-muted mb-4">
+                            If you experienced any issues during checkout, please try again or contact our support team.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/Listing/Pricing" class="btn btn-primary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Pricing
+                            </a>
+                            <a href="mailto:support@boardgamecafefinder.com" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-envelope me-2"></i>Contact Support
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- FAQ -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-question-circle me-2"></i>Common Questions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion accordion-flush" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    Was my card charged?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    No, your card was not charged. When a payment is cancelled, no money is taken from your account.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Can I use a different payment method?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes! We accept all major credit cards (Visa, Mastercard, American Express). Simply try again and enter your preferred payment details.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    I need help with my payment
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    If you're experiencing issues with payment, please contact our support team at
+                                    <a href="mailto:support@boardgamecafefinder.com">support@boardgamecafefinder.com</a>
+                                    and we'll be happy to assist you.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%) !important;
+    }
+</style>

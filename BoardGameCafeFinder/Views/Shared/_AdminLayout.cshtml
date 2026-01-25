@@ -146,6 +146,22 @@
                         </li>
                     </ul>
 
+                    <div class="sidebar-heading">Monetization</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "ManageAffiliates" || ViewContext.RouteData.Values["action"]?.ToString() == "EditGameAffiliate" || ViewContext.RouteData.Values["action"]?.ToString() == "ImportAffiliateUrls" ? "active" : "")"
+                               asp-controller="Admin" asp-action="ManageAffiliates">
+                                <i class="bi bi-cart-fill"></i> Affiliate Links
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "AffiliateStats" ? "active" : "")"
+                               asp-controller="Admin" asp-action="AffiliateStats">
+                                <i class="bi bi-graph-up"></i> Affiliate Stats
+                            </a>
+                        </li>
+                    </ul>
+
                     <div class="sidebar-heading">Tools</div>
                     <ul class="nav flex-column">
                         <li class="nav-item">

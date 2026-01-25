@@ -1,0 +1,265 @@
+@model List<BoardGameCafeFinder.Models.Domain.ClaimRequest>
+@{
+    ViewData["Title"] = "Claim Requests";
+    Layout = "_AdminLayout";
+
+    var selectedStatus = ViewBag.SelectedStatus as string;
+    var currentPage = (int)(ViewBag.CurrentPage ?? 1);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var totalItems = (int)(ViewBag.TotalItems ?? 0);
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-shield-check text-primary"></i> Claim Requests</h2>
+            <p class="text-muted mb-0">Manage cafe claim requests and payments</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/Listing/Admin" class="btn btn-outline-primary">
+                <i class="bi bi-star-fill"></i> Listings
+            </a>
+            <a href="/Listing/Invoices" class="btn btn-outline-success">
+                <i class="bi bi-receipt"></i> Invoices
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        @{
+            var pendingCount = Model.Count(c => c.PaymentStatus == "pending");
+            var processingCount = Model.Count(c => c.PaymentStatus == "processing");
+            var completedCount = Model.Count(c => c.PaymentStatus == "completed");
+            var failedCount = Model.Count(c => c.PaymentStatus == "failed" || c.PaymentStatus == "cancelled");
+        }
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-dark opacity-75">Pending</h6>
+                            <h2 class="mb-0">@pendingCount</h2>
+                        </div>
+                        <i class="bi bi-hourglass-split display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Processing</h6>
+                            <h2 class="mb-0">@processingCount</h2>
+                        </div>
+                        <i class="bi bi-arrow-repeat display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Completed</h6>
+                            <h2 class="mb-0">@completedCount</h2>
+                        </div>
+                        <i class="bi bi-check-circle display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Failed/Cancelled</h6>
+                            <h2 class="mb-0">@failedCount</h2>
+                        </div>
+                        <i class="bi bi-x-circle display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Status</label>
+                    <select class="form-select" name="status" onchange="this.form.submit()">
+                        <option value="">All Status</option>
+                        <option value="pending" selected="@(selectedStatus == "pending")">Pending</option>
+                        <option value="processing" selected="@(selectedStatus == "processing")">Processing</option>
+                        <option value="completed" selected="@(selectedStatus == "completed")">Completed</option>
+                        <option value="failed" selected="@(selectedStatus == "failed")">Failed</option>
+                        <option value="cancelled" selected="@(selectedStatus == "cancelled")">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(selectedStatus))
+                    {
+                        <a href="/Listing/Claims" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> Clear Filters
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Claims Table -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cafe</th>
+                            <th>Contact</th>
+                            <th>Plan</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var claim in Model)
+                            {
+                                var statusClass = claim.PaymentStatus switch
+                                {
+                                    "completed" => "bg-success",
+                                    "processing" => "bg-info",
+                                    "pending" => "bg-warning text-dark",
+                                    "failed" => "bg-danger",
+                                    "cancelled" => "bg-secondary",
+                                    _ => "bg-secondary"
+                                };
+
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-light text-dark">#@claim.ClaimRequestId</span>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <a href="/cafe/@claim.Cafe?.Slug" class="fw-bold text-decoration-none">
+                                                @claim.Cafe?.Name
+                                            </a>
+                                            <div class="text-muted small">
+                                                @claim.Cafe?.City
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div class="fw-bold">@claim.ContactName</div>
+                                            <div class="text-muted small">@claim.ContactEmail</div>
+                                            @if (!string.IsNullOrEmpty(claim.ContactRole))
+                                            {
+                                                <span class="badge bg-light text-dark small">@claim.ContactRole</span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var planClass = claim.PlanType switch
+                                            {
+                                                "Featured" => "bg-warning text-dark",
+                                                "Premium" => "bg-primary",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @planClass">@claim.PlanType</span>
+                                        <div class="text-muted small">@claim.DurationMonths mo</div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold text-success">$@claim.TotalAmount.ToString("N2")</span>
+                                        @if (claim.DiscountPercent > 0)
+                                        {
+                                            <div class="text-muted small">-@claim.DiscountPercent.ToString("N0")% off</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge @statusClass">@claim.PaymentStatus</span>
+                                        @if (claim.PaidAt.HasValue)
+                                        {
+                                            <div class="text-muted small">@claim.PaidAt.Value.ToString("MMM dd")</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="small">
+                                            <div>@claim.CreatedAt.ToString("MMM dd, yyyy")</div>
+                                            <div class="text-muted">@claim.CreatedAt.ToString("HH:mm")</div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            @if (claim.PaymentStatus == "completed" && claim.PremiumListingId.HasValue)
+                                            {
+                                                <a href="/Listing/Edit/@claim.PremiumListingId" class="btn btn-outline-primary" title="View Listing">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            }
+                                            @if (!string.IsNullOrEmpty(claim.StripeSessionId))
+                                            {
+                                                <a href="https://dashboard.stripe.com/checkout/sessions/@claim.StripeSessionId"
+                                                   target="_blank" class="btn btn-outline-info" title="View in Stripe">
+                                                    <i class="bi bi-stripe"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox display-4"></i>
+                                    <p class="mt-2">No claim requests found</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="/Listing/Claims?page=@(currentPage - 1)&status=@selectedStatus">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="/Listing/Claims?page=@i&status=@selectedStatus">@i</a>
+                    </li>
+                }
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="/Listing/Claims?page=@(currentPage + 1)&status=@selectedStatus">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <p class="text-center text-muted">Showing @((currentPage - 1) * 20 + 1) - @Math.Min(currentPage * 20, totalItems) of @totalItems</p>
+        </nav>
+    }
+</div>

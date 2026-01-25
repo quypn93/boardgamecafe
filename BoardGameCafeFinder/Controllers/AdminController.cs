@@ -667,6 +667,322 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         #endregion
+
+        #region Affiliate Management
+
+        /// <summary>
+        /// List all games with affiliate management
+        /// </summary>
+        public async Task<IActionResult> ManageAffiliates(string filter = "all", string search = "")
+        {
+            var query = _context.BoardGames
+                .Include(g => g.CafeGames)
+                .OrderBy(g => g.Name)
+                .AsQueryable();
+
+            ViewBag.Filter = filter;
+            ViewBag.Search = search;
+
+            // Apply filter
+            switch (filter.ToLower())
+            {
+                case "with":
+                    query = query.Where(g => !string.IsNullOrEmpty(g.AmazonAffiliateUrl));
+                    break;
+                case "without":
+                    query = query.Where(g => string.IsNullOrEmpty(g.AmazonAffiliateUrl));
+                    break;
+            }
+
+            // Apply search
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var searchLower = search.ToLower();
+                query = query.Where(g => g.Name.ToLower().Contains(searchLower));
+            }
+
+            var games = await query.Take(100).ToListAsync();
+
+            // Get counts for badges
+            ViewBag.AllCount = await _context.BoardGames.CountAsync();
+            ViewBag.WithAffiliateCount = await _context.BoardGames.CountAsync(g => !string.IsNullOrEmpty(g.AmazonAffiliateUrl));
+            ViewBag.WithoutAffiliateCount = await _context.BoardGames.CountAsync(g => string.IsNullOrEmpty(g.AmazonAffiliateUrl));
+
+            // Get click statistics
+            var clickStats = await _context.AffiliateClicks
+                .GroupBy(c => c.GameId)
+                .Select(g => new { GameId = g.Key, ClickCount = g.Count() })
+                .ToDictionaryAsync(x => x.GameId, x => x.ClickCount);
+            ViewBag.ClickStats = clickStats;
+
+            return View(games);
+        }
+
+        /// <summary>
+        /// Edit affiliate URL for a game
+        /// </summary>
+        public async Task<IActionResult> EditGameAffiliate(int id)
+        {
+            var game = await _context.BoardGames
+                .Include(g => g.CafeGames)
+                    .ThenInclude(cg => cg.Cafe)
+                .FirstOrDefaultAsync(g => g.GameId == id);
+
+            if (game == null)
+                return NotFound();
+
+            // Get click count for this game
+            ViewBag.ClickCount = await _context.AffiliateClicks.CountAsync(c => c.GameId == id);
+
+            return View(game);
+        }
+
+        /// <summary>
+        /// Update affiliate URL for a game
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateGameAffiliateUrl(int gameId, string? affiliateUrl)
+        {
+            var game = await _context.BoardGames.FindAsync(gameId);
+            if (game == null)
+            {
+                TempData["ErrorMessage"] = "Game not found.";
+                return RedirectToAction(nameof(ManageAffiliates));
+            }
+
+            // Validate URL if provided
+            if (!string.IsNullOrWhiteSpace(affiliateUrl))
+            {
+                affiliateUrl = affiliateUrl.Trim();
+                if (!Uri.TryCreate(affiliateUrl, UriKind.Absolute, out var uri) ||
+                    (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                {
+                    TempData["ErrorMessage"] = "Invalid URL format.";
+                    return RedirectToAction(nameof(EditGameAffiliate), new { id = gameId });
+                }
+            }
+
+            game.AmazonAffiliateUrl = string.IsNullOrWhiteSpace(affiliateUrl) ? null : affiliateUrl;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Affiliate URL updated for '{game.Name}'.";
+            return RedirectToAction(nameof(ManageAffiliates));
+        }
+
+        /// <summary>
+        /// Bulk update affiliate URLs
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BulkUpdateAffiliateUrls(Dictionary<int, string> affiliateUrls)
+        {
+            if (affiliateUrls == null || !affiliateUrls.Any())
+            {
+                TempData["ErrorMessage"] = "No URLs provided.";
+                return RedirectToAction(nameof(ManageAffiliates));
+            }
+
+            var gameIds = affiliateUrls.Keys.ToList();
+            var games = await _context.BoardGames
+                .Where(g => gameIds.Contains(g.GameId))
+                .ToListAsync();
+
+            int updated = 0;
+            foreach (var game in games)
+            {
+                if (affiliateUrls.TryGetValue(game.GameId, out var url))
+                {
+                    var newUrl = string.IsNullOrWhiteSpace(url) ? null : url.Trim();
+                    if (game.AmazonAffiliateUrl != newUrl)
+                    {
+                        game.AmazonAffiliateUrl = newUrl;
+                        updated++;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = $"Updated {updated} affiliate URLs.";
+            return RedirectToAction(nameof(ManageAffiliates));
+        }
+
+        /// <summary>
+        /// Import affiliate URLs from CSV
+        /// </summary>
+        public IActionResult ImportAffiliateUrls()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Process CSV import
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportAffiliateUrls(IFormFile csvFile)
+        {
+            if (csvFile == null || csvFile.Length == 0)
+            {
+                TempData["ErrorMessage"] = "Please select a CSV file.";
+                return View();
+            }
+
+            if (!csvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["ErrorMessage"] = "File must be a CSV.";
+                return View();
+            }
+
+            var results = new List<string>();
+            int updated = 0, skipped = 0, errors = 0;
+
+            try
+            {
+                using var reader = new StreamReader(csvFile.OpenReadStream());
+                string? line;
+                int lineNumber = 0;
+
+                while ((line = await reader.ReadLineAsync()) != null)
+                {
+                    lineNumber++;
+
+                    // Skip header row
+                    if (lineNumber == 1 && (line.ToLower().Contains("gameid") || line.ToLower().Contains("bggid")))
+                        continue;
+
+                    var parts = line.Split(',');
+                    if (parts.Length < 2)
+                    {
+                        errors++;
+                        continue;
+                    }
+
+                    var identifier = parts[0].Trim().Trim('"');
+                    var url = parts[1].Trim().Trim('"');
+
+                    Models.Domain.BoardGame? game = null;
+
+                    // Try to find game by GameId or BGGId
+                    if (int.TryParse(identifier, out int id))
+                    {
+                        game = await _context.BoardGames.FirstOrDefaultAsync(g => g.GameId == id || g.BGGId == id);
+                    }
+
+                    if (game == null)
+                    {
+                        // Try to find by name
+                        game = await _context.BoardGames.FirstOrDefaultAsync(g => g.Name.ToLower() == identifier.ToLower());
+                    }
+
+                    if (game == null)
+                    {
+                        skipped++;
+                        results.Add($"Line {lineNumber}: Game '{identifier}' not found.");
+                        continue;
+                    }
+
+                    // Validate URL
+                    if (!string.IsNullOrWhiteSpace(url) &&
+                        !Uri.TryCreate(url, UriKind.Absolute, out _))
+                    {
+                        errors++;
+                        results.Add($"Line {lineNumber}: Invalid URL for '{game.Name}'.");
+                        continue;
+                    }
+
+                    game.AmazonAffiliateUrl = string.IsNullOrWhiteSpace(url) ? null : url;
+                    updated++;
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Import complete: {updated} updated, {skipped} skipped, {errors} errors.";
+                ViewBag.ImportResults = results;
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Import failed: {ex.Message}";
+            }
+
+            return View();
+        }
+
+        /// <summary>
+        /// Export games without affiliate URLs as CSV
+        /// </summary>
+        public async Task<IActionResult> ExportGamesWithoutAffiliate()
+        {
+            var games = await _context.BoardGames
+                .Where(g => string.IsNullOrEmpty(g.AmazonAffiliateUrl))
+                .OrderBy(g => g.Name)
+                .Select(g => new { g.GameId, g.BGGId, g.Name })
+                .ToListAsync();
+
+            var csv = new System.Text.StringBuilder();
+            csv.AppendLine("GameId,BGGId,Name,AffiliateUrl");
+
+            foreach (var game in games)
+            {
+                var name = game.Name.Replace("\"", "\"\"");
+                csv.AppendLine($"{game.GameId},{game.BGGId ?? 0},\"{name}\",");
+            }
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(csv.ToString());
+            return File(bytes, "text/csv", $"games_without_affiliate_{DateTime.UtcNow:yyyyMMdd}.csv");
+        }
+
+        /// <summary>
+        /// Affiliate click statistics
+        /// </summary>
+        public async Task<IActionResult> AffiliateStats()
+        {
+            // Total clicks
+            var totalClicks = await _context.AffiliateClicks.CountAsync();
+
+            // Clicks today
+            var today = DateTime.UtcNow.Date;
+            var clicksToday = await _context.AffiliateClicks.CountAsync(c => c.ClickedAt >= today);
+
+            // Clicks this month
+            var monthStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+            var clicksThisMonth = await _context.AffiliateClicks.CountAsync(c => c.ClickedAt >= monthStart);
+
+            // Top games by clicks
+            var topGames = await _context.AffiliateClicks
+                .GroupBy(c => c.GameId)
+                .Select(g => new { GameId = g.Key, Clicks = g.Count() })
+                .OrderByDescending(x => x.Clicks)
+                .Take(10)
+                .ToListAsync();
+
+            var topGameIds = topGames.Select(x => x.GameId).ToList();
+            var gameNames = await _context.BoardGames
+                .Where(g => topGameIds.Contains(g.GameId))
+                .ToDictionaryAsync(g => g.GameId, g => g.Name);
+
+            // Clicks by day (last 30 days)
+            var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30).Date;
+            var clicksByDay = await _context.AffiliateClicks
+                .Where(c => c.ClickedAt >= thirtyDaysAgo)
+                .GroupBy(c => c.ClickedAt.Date)
+                .Select(g => new { Date = g.Key, Clicks = g.Count() })
+                .OrderBy(x => x.Date)
+                .ToListAsync();
+
+            ViewBag.TotalClicks = totalClicks;
+            ViewBag.ClicksToday = clicksToday;
+            ViewBag.ClicksThisMonth = clicksThisMonth;
+            ViewBag.TopGames = topGames.Select(x => new {
+                GameName = gameNames.GetValueOrDefault(x.GameId, "Unknown"),
+                x.Clicks
+            }).ToList();
+            ViewBag.ClicksByDay = clicksByDay;
+
+            return View();
+        }
+
+        #endregion
     }
 
     public class GeneratePostsRequest

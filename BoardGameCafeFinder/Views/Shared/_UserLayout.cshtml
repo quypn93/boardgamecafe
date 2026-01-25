@@ -4,12 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="@(ViewData["MetaDescription"] ?? ViewData["Description"] ?? "Find the best board game cafes near you. Discover board game lounges with our interactive map and comprehensive cafe directory.")" />
-    <meta name="keywords" content="board game cafe, board game lounge, tabletop gaming, board games near me, cafe finder" />
+    <meta name="keywords" content="@(ViewData["Keywords"] ?? "board game cafe, board game lounge, tabletop gaming, board games near me, cafe finder")" />
     <meta name="author" content="Board Game Cafe Finder" />
     <meta property="og:title" content="@(ViewData["Title"] ?? "Board Game Cafe Finder") - Board Game Cafe Finder" />
     <meta property="og:description" content="@(ViewData["MetaDescription"] ?? ViewData["Description"] ?? "Find the best board game cafes near you. Discover board game lounges with our interactive map.")" />
-    <meta property="og:image" content="/logo.svg" />
+    <meta property="og:image" content="@(ViewData["OGImage"] ?? "/logo.svg")" />
+    <meta property="og:type" content="@(ViewData["OGType"] ?? "website")" />
+    <meta property="og:url" content="@(ViewData["CanonicalUrl"] ?? $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}")" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="@(ViewData["OGImage"] ?? "/logo.svg")" />
     <meta name="theme-color" content="#6f42c1" />
 
     <title>@(ViewData["Title"] ?? "Find Board Game Cafes") - Board Game Cafe Finder</title>
@@ -48,6 +51,7 @@
         }
     </style>
     @await RenderSectionAsync("Styles", required: false)
+    @await RenderSectionAsync("Head", required: false)
 </head>
 <body>
     <header>
@@ -82,13 +86,18 @@
                                 <i class="bi bi-newspaper"></i> Blog
                             </a>
                         </li>
-                        @* TODO: Enable when Listing feature is complete
-                        <li class="nav-item">
-                            <a class="nav-link @(controller == "Listing" && action == "Pricing" ? "active" : "")" href="/Listing/Pricing">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle @(controller == "Listing" ? "active" : "")" href="#" id="businessDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-star"></i> For Business
                             </a>
+                            <ul class="dropdown-menu" aria-labelledby="businessDropdown">
+                                <li><a class="dropdown-item" href="/Listing/Pricing"><i class="bi bi-tags me-2"></i>Pricing Plans</a></li>
+                                <li><a class="dropdown-item" href="/Listing/SubmitCafe"><i class="bi bi-plus-circle me-2"></i>Add Your Cafe</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Listing/Pricing#faqAccordion"><i class="bi bi-question-circle me-2"></i>FAQ</a></li>
+                            </ul>
                         </li>
-                        *@
                     </ul>
                     <ul class="navbar-nav">
                         @if (User.Identity?.IsAuthenticated == true)
@@ -167,7 +176,7 @@
                         <li class="mb-1"><a href="/" class="text-muted text-decoration-none">Home</a></li>
                         <li class="mb-1"><a asp-controller="Map" asp-action="Index" class="text-muted text-decoration-none">Map View</a></li>
                         <li class="mb-1"><a asp-controller="Blog" asp-action="Index" class="text-muted text-decoration-none">Blog</a></li>
-                        @* <li class="mb-1"><a href="/Listing/Pricing" class="text-muted text-decoration-none">For Business</a></li> *@
+                        <li class="mb-1"><a href="/Listing/Pricing" class="text-muted text-decoration-none">For Business</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-3 col-6 mb-3">

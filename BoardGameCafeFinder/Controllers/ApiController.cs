@@ -1,6 +1,9 @@
+using BoardGameCafeFinder.Data;
+using BoardGameCafeFinder.Models.Domain;
 using BoardGameCafeFinder.Models.DTOs;
 using BoardGameCafeFinder.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BoardGameCafeFinder.Controllers
 {
@@ -10,11 +13,13 @@ namespace BoardGameCafeFinder.Controllers
     {
         private readonly ICafeService _cafeService;
         private readonly ILogger<ApiController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public ApiController(ICafeService cafeService, ILogger<ApiController> logger)
+        public ApiController(ICafeService cafeService, ILogger<ApiController> logger, ApplicationDbContext context)
         {
             _cafeService = cafeService;
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>
@@ -58,6 +63,39 @@ namespace BoardGameCafeFinder.Controllers
                     success = false,
                     message = "An error occurred while searching for cafés. Please try again later."
                 });
+            }
+        }
+
+        /// <summary>
+        /// Simple text search for cafés by name or city
+        /// </summary>
+        [HttpGet("cafes/search")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> SearchCafesByText([FromQuery] string q, [FromQuery] int limit = 10)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(q) || q.Length < 2)
+                {
+                    return Ok(new List<object>());
+                }
+
+                var results = await _cafeService.SearchByTextAsync(q, limit);
+
+                return Ok(results.Select(cafe => new
+                {
+                    cafeId = cafe.CafeId,
+                    name = cafe.Name,
+                    city = cafe.City,
+                    country = cafe.Country,
+                    localImagePath = cafe.LocalImagePath,
+                    slug = cafe.Slug
+                }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching cafés by text: {Query}", q);
+                return StatusCode(500, new List<object>());
             }
         }
 
@@ -255,6 +293,77 @@ namespace BoardGameCafeFinder.Controllers
                     message = "An error occurred while retrieving cities"
                 }));
             }
+        }
+
+        /// <summary>
+        /// Track affiliate link click and redirect
+        /// </summary>
+        [HttpGet("affiliate/click/{gameId}")]
+        public async Task<IActionResult> TrackAffiliateClick(int gameId, [FromQuery] int? cafeId = null)
+        {
+            try
+            {
+                var game = await _context.BoardGames.FindAsync(gameId);
+                if (game == null || string.IsNullOrEmpty(game.AmazonAffiliateUrl))
+                {
+                    return NotFound(new { success = false, message = "Game or affiliate URL not found" });
+                }
+
+                // Record the click
+                var click = new AffiliateClick
+                {
+                    GameId = gameId,
+                    CafeId = cafeId,
+                    IpAddress = GetClientIpAddress(),
+                    UserAgent = Request.Headers.UserAgent.ToString().Length > 500
+                        ? Request.Headers.UserAgent.ToString()[..500]
+                        : Request.Headers.UserAgent.ToString(),
+                    Referrer = Request.Headers.Referer.ToString().Length > 500
+                        ? Request.Headers.Referer.ToString()[..500]
+                        : Request.Headers.Referer.ToString(),
+                    ClickedAt = DateTime.UtcNow
+                };
+
+                // Get user ID if logged in
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    click.UserId = userId;
+                }
+
+                _context.AffiliateClicks.Add(click);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Affiliate click tracked: GameId={GameId}, CafeId={CafeId}", gameId, cafeId);
+
+                // Redirect to affiliate URL
+                return Redirect(game.AmazonAffiliateUrl);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error tracking affiliate click for game {GameId}", gameId);
+
+                // Still try to redirect even if tracking fails
+                var game = await _context.BoardGames.FindAsync(gameId);
+                if (game != null && !string.IsNullOrEmpty(game.AmazonAffiliateUrl))
+                {
+                    return Redirect(game.AmazonAffiliateUrl);
+                }
+
+                return StatusCode(500, new { success = false, message = "An error occurred" });
+            }
+        }
+
+        private string? GetClientIpAddress()
+        {
+            // Check for forwarded IP (behind proxy/load balancer)
+            var forwardedFor = Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(forwardedFor))
+            {
+                return forwardedFor.Split(',').FirstOrDefault()?.Trim();
+            }
+
+            return HttpContext.Connection.RemoteIpAddress?.ToString();
         }
     }
 }

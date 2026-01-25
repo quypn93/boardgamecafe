@@ -1,0 +1,168 @@
+@{
+    ViewData["Title"] = "Payment Successful";
+    Layout = "_UserLayout";
+
+    var claimRequest = ViewBag.ClaimRequest as BoardGameCafeFinder.Models.Domain.ClaimRequest;
+    var invoice = ViewBag.Invoice as BoardGameCafeFinder.Models.Domain.Invoice;
+}
+
+<!-- Hero Section -->
+<div class="bg-success text-white py-5">
+    <div class="container text-center">
+        <div class="mb-4">
+            <i class="bi bi-check-circle-fill display-1"></i>
+        </div>
+        <h1 class="display-5 fw-bold mb-3">Payment Successful!</h1>
+        <p class="lead opacity-90 mb-0">
+            Thank you for your purchase. Your premium listing is now active.
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            @if (claimRequest != null)
+            {
+                <!-- Order Confirmation -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>Order Confirmation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <strong>Cafe:</strong><br>
+                                    @claimRequest.Cafe?.Name
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Plan:</strong><br>
+                                    @claimRequest.PlanType Plan
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Duration:</strong><br>
+                                    @claimRequest.DurationMonths month(s)
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2">
+                                    <strong>Contact Name:</strong><br>
+                                    @claimRequest.ContactName
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Email:</strong><br>
+                                    @claimRequest.ContactEmail
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Total Paid:</strong><br>
+                                    <span class="text-success fw-bold fs-4">$@claimRequest.TotalAmount.ToString("N2")</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoice Details -->
+                @if (invoice != null)
+                {
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Invoice</h5>
+                            <a href="/Listing/Invoice/@invoice.InvoiceId" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye me-1"></i>View Full Invoice
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Invoice Number:</strong></p>
+                                    <p class="text-muted">@invoice.InvoiceNumber</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Payment Date:</strong></p>
+                                    <p class="text-muted">@invoice.PaidAt?.ToString("MMMM dd, yyyy")</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Period:</strong></p>
+                                    <p class="text-muted">@invoice.PeriodStart.ToString("MMM dd, yyyy") - @invoice.PeriodEnd.ToString("MMM dd, yyyy")</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Status:</strong></p>
+                                    <span class="badge bg-success">Paid</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- What's Next -->
+                <div class="card shadow-sm mb-4 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-rocket-takeoff me-2"></i>What's Next?</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-md-4 text-center">
+                                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                    <i class="bi bi-envelope-check text-primary fs-4"></i>
+                                </div>
+                                <h6>Check Your Email</h6>
+                                <p class="small text-muted mb-0">We've sent a confirmation email with your receipt and listing details.</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                    <i class="bi bi-pencil-square text-success fs-4"></i>
+                                </div>
+                                <h6>Update Your Listing</h6>
+                                <p class="small text-muted mb-0">Add photos, events, and details to make your listing stand out.</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                    <i class="bi bi-graph-up-arrow text-warning fs-4"></i>
+                                </div>
+                                <h6>Track Performance</h6>
+                                <p class="small text-muted mb-0">Monitor views and engagement from your dashboard.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex justify-content-between flex-wrap gap-3">
+                    <a href="/Cafe/Details/@claimRequest.CafeId" class="btn btn-primary btn-lg">
+                        <i class="bi bi-shop me-2"></i>View Your Cafe
+                    </a>
+                    @if (invoice != null)
+                    {
+                        <a href="/Listing/Invoice/@invoice.InvoiceId" class="btn btn-outline-secondary btn-lg" target="_blank">
+                            <i class="bi bi-printer me-2"></i>Print Invoice
+                        </a>
+                    }
+                    <a href="/" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-house me-2"></i>Back to Home
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Unable to load order details. Please check your email for confirmation or contact support.
+                </div>
+                <div class="text-center">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="bi bi-house me-2"></i>Back to Home
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Confetti Animation (optional fun touch) -->
+<style>
+    .bg-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    }
+</style>

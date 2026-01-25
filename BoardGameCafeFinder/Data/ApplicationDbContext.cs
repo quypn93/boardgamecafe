@@ -22,6 +22,9 @@ namespace BoardGameCafeFinder.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<PremiumListing> PremiumListings { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<ClaimRequest> ClaimRequests { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<AffiliateClick> AffiliateClicks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -232,6 +235,99 @@ namespace BoardGameCafeFinder.Data
                 entity.Property(e => e.Slug).IsRequired();
                 entity.Property(e => e.Content).IsRequired();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // ClaimRequest Configuration
+            modelBuilder.Entity<ClaimRequest>(entity =>
+            {
+                entity.HasKey(e => e.ClaimRequestId);
+
+                entity.HasIndex(e => e.CafeId);
+                entity.HasIndex(e => e.StripeSessionId);
+                entity.HasIndex(e => e.PaymentStatus);
+                entity.HasIndex(e => e.CreatedAt);
+
+                entity.HasOne(e => e.Cafe)
+                    .WithMany()
+                    .HasForeignKey(e => e.CafeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(e => e.PremiumListing)
+                    .WithMany()
+                    .HasForeignKey(e => e.PremiumListingId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.Property(e => e.ContactName).IsRequired();
+                entity.Property(e => e.ContactEmail).IsRequired();
+                entity.Property(e => e.PlanType).HasDefaultValue("Premium");
+                entity.Property(e => e.PaymentStatus).HasDefaultValue("pending");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // Invoice Configuration
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasKey(e => e.InvoiceId);
+
+                entity.HasIndex(e => e.InvoiceNumber).IsUnique();
+                entity.HasIndex(e => e.CafeId);
+                entity.HasIndex(e => e.ClaimRequestId);
+                entity.HasIndex(e => e.PaymentStatus);
+                entity.HasIndex(e => e.CreatedAt);
+
+                entity.HasOne(e => e.Cafe)
+                    .WithMany()
+                    .HasForeignKey(e => e.CafeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.ClaimRequest)
+                    .WithMany()
+                    .HasForeignKey(e => e.ClaimRequestId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(e => e.PremiumListing)
+                    .WithMany()
+                    .HasForeignKey(e => e.PremiumListingId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.Property(e => e.InvoiceNumber).IsRequired();
+                entity.Property(e => e.BillingName).IsRequired();
+                entity.Property(e => e.BillingEmail).IsRequired();
+                entity.Property(e => e.PaymentStatus).HasDefaultValue("pending");
+                entity.Property(e => e.Currency).HasDefaultValue("USD");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // AffiliateClick Configuration
+            modelBuilder.Entity<AffiliateClick>(entity =>
+            {
+                entity.HasKey(e => e.ClickId);
+
+                entity.HasIndex(e => e.GameId);
+                entity.HasIndex(e => e.CafeId);
+                entity.HasIndex(e => e.ClickedAt);
+
+                entity.HasOne(e => e.Game)
+                    .WithMany()
+                    .HasForeignKey(e => e.GameId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Cafe)
+                    .WithMany()
+                    .HasForeignKey(e => e.CafeId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.Property(e => e.ClickedAt).HasDefaultValueSql("GETUTCDATE()");
             });
         }
     }

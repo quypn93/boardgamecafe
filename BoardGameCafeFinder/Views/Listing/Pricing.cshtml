@@ -51,9 +51,10 @@
                             </ul>
                         </div>
                         <div class="card-footer bg-white border-0 pb-4 text-center">
-                            <a href="/Listing/Claim/0?plan=@plan.Key" class="btn @(isPremium ? "btn-primary" : "btn-outline-primary") btn-lg w-100">
+                            <button type="button" class="btn @(isPremium ? "btn-primary" : "btn-outline-primary") btn-lg w-100 select-plan-btn"
+                                    data-plan="@plan.Key" data-bs-toggle="modal" data-bs-target="#selectCafeModal">
                                 Get Started
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -203,14 +204,161 @@
     <div class="text-center py-4 bg-light rounded">
         <h4>Ready to grow your business?</h4>
         <p class="text-muted mb-3">Join hundreds of board game cafes already using our platform</p>
-        <a href="/" class="btn btn-primary btn-lg">
-            <i class="bi bi-search me-2"></i>Find Your Cafe
-        </a>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="/" class="btn btn-primary btn-lg">
+                <i class="bi bi-search me-2"></i>Find Your Cafe
+            </a>
+            <a href="/Listing/SubmitCafe" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-plus-circle me-2"></i>Add Your Cafe
+            </a>
+        </div>
     </div>
 </div>
+
+<!-- Select Cafe Modal -->
+<div class="modal fade" id="selectCafeModal" tabindex="-1" aria-labelledby="selectCafeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="selectCafeModalLabel">
+                    <i class="bi bi-search me-2"></i>Find Your Cafe
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3">Search for your board game cafe to get started with the <strong id="selectedPlanName">Premium</strong> plan.</p>
+
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" id="cafeSearchInput" placeholder="Enter cafe name or city...">
+                    </div>
+                </div>
+
+                <div id="searchResults" class="mt-3" style="max-height: 400px; overflow-y: auto;">
+                    <div class="text-center text-muted py-4" id="searchPlaceholder">
+                        <i class="bi bi-shop display-4"></i>
+                        <p class="mt-2">Start typing to search for your cafe</p>
+                    </div>
+                    <div id="searchResultsList" class="list-group" style="display: none;"></div>
+                    <div id="noResults" class="text-center text-muted py-4" style="display: none;">
+                        <i class="bi bi-emoji-frown display-4"></i>
+                        <p class="mt-2">No cafes found. Try a different search term.</p>
+                        <p class="small">Can't find your cafe? <a href="/Listing/SubmitCafe" class="fw-bold">Add it now</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="selectedPlan" value="Premium">
 
 <style>
     .bg-gradient-primary {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
+    .cafe-result-item {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .cafe-result-item:hover {
+        background-color: #f8f9fa;
+    }
 </style>
+
+@section Scripts {
+<script>
+    let searchTimeout;
+    const selectedPlanInput = document.getElementById('selectedPlan');
+    const selectedPlanName = document.getElementById('selectedPlanName');
+    const cafeSearchInput = document.getElementById('cafeSearchInput');
+    const searchPlaceholder = document.getElementById('searchPlaceholder');
+    const searchResultsList = document.getElementById('searchResultsList');
+    const noResults = document.getElementById('noResults');
+
+    // Handle plan selection
+    document.querySelectorAll('.select-plan-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const plan = this.dataset.plan;
+            selectedPlanInput.value = plan;
+            selectedPlanName.textContent = plan;
+            cafeSearchInput.value = '';
+            searchPlaceholder.style.display = 'block';
+            searchResultsList.style.display = 'none';
+            noResults.style.display = 'none';
+        });
+    });
+
+    // Handle cafe search
+    cafeSearchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+
+        if (query.length < 2) {
+            searchPlaceholder.style.display = 'block';
+            searchResultsList.style.display = 'none';
+            noResults.style.display = 'none';
+            return;
+        }
+
+        searchTimeout = setTimeout(() => searchCafes(query), 300);
+    });
+
+    async function searchCafes(query) {
+        try {
+            searchPlaceholder.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+
+            const response = await fetch(`/api/cafes/search?q=${encodeURIComponent(query)}&limit=10`);
+            const cafes = await response.json();
+
+            searchPlaceholder.style.display = 'none';
+
+            if (cafes.length === 0) {
+                searchResultsList.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+            searchResultsList.innerHTML = cafes.map(cafe => `
+                <a href="/Listing/Claim/${cafe.cafeId}?plan=${selectedPlanInput.value}"
+                   class="list-group-item list-group-item-action cafe-result-item">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            ${cafe.localImagePath
+                                ? `<img src="${cafe.localImagePath}" alt="${cafe.name}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">`
+                                : `<div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;"><i class="bi bi-shop text-white"></i></div>`
+                            }
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">${cafe.name}</h6>
+                            <small class="text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>${cafe.city}${cafe.country ? ', ' + cafe.country : ''}
+                            </small>
+                        </div>
+                        <div>
+                            <i class="bi bi-chevron-right text-muted"></i>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+            searchResultsList.style.display = 'block';
+
+        } catch (error) {
+            console.error('Search error:', error);
+            searchPlaceholder.innerHTML = '<p class="text-danger">Error searching. Please try again.</p>';
+            searchPlaceholder.style.display = 'block';
+        }
+    }
+
+    // Reset search placeholder
+    searchPlaceholder.innerHTML = `
+        <i class="bi bi-shop display-4"></i>
+        <p class="mt-2">Start typing to search for your cafe</p>
+    `;
+</script>
+}
