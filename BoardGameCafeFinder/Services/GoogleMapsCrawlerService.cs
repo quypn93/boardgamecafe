@@ -1059,12 +1059,31 @@ namespace BoardGameCafeFinder.Services
 
                     if (scrollableParent != null)
                     {
+                        // Scroll more times to load more reviews (up to 50 reviews typically need ~15 scrolls)
                         var scrollCount = 0;
-                        while (scrollCount < 3)
+                        var maxScrolls = 15;
+                        var previousCount = 0;
+                        var noNewReviewsCount = 0;
+
+                        while (scrollCount < maxScrolls && noNewReviewsCount < 3)
                         {
                             await scrollableParent.EvaluateAsync("el => el.scrollTop = el.scrollHeight");
                             await page.WaitForTimeoutAsync(1500);
                             scrollCount++;
+
+                            // Check if new reviews loaded
+                            var currentCount = await page.Locator("div[data-review-id]").CountAsync();
+                            if (currentCount == previousCount)
+                            {
+                                noNewReviewsCount++;
+                            }
+                            else
+                            {
+                                noNewReviewsCount = 0;
+                                previousCount = currentCount;
+                            }
+
+                            _logger.LogDebug("Scroll {Count}/{Max}: {Reviews} reviews loaded", scrollCount, maxScrolls, currentCount);
                         }
                     }
                     else
@@ -1084,9 +1103,11 @@ namespace BoardGameCafeFinder.Services
                 var reviewItems = page.Locator("div[data-review-id]");
                 var reviewCount = await reviewItems.CountAsync();
 
-                _logger.LogInformation("Found {Count} reviews", reviewCount);
+                _logger.LogInformation("Found {Count} reviews to extract", reviewCount);
 
-                for (int i = 0; i < Math.Min(reviewCount, 10); i++)
+                // Extract up to 50 reviews per cafe
+                var maxReviews = 50;
+                for (int i = 0; i < Math.Min(reviewCount, maxReviews); i++)
                 {
                     try
                     {
