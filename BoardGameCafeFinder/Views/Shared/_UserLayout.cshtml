@@ -14,6 +14,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="@(ViewData["OGImage"] ?? "/logo.svg")" />
     <meta name="theme-color" content="#6f42c1" />
+    <meta name="google-site-verification" content="ywtjfYRvcyLlJtKcEAsXegoTLPzexq2OUy5Su3vKQ4Y" />
+    <meta name='impact-site-verification' value='ef63a81a-46a4-4fec-bc37-6ec917c00948'>
 
     <title>@(ViewData["Title"] ?? "Find Board Game Cafes") - Board Game Cafe Finder</title>
 
@@ -150,6 +152,15 @@
             </div>
         </nav>
     </header>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0PQD14R3H3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-0PQD14R3H3');
+    </script>
 
     <main role="main">
         @RenderBody()
@@ -189,7 +200,7 @@
                 <div class="col-lg-4 col-md-6 mb-3">
                     <h6>Contact Us</h6>
                     <ul class="list-unstyled text-muted">
-                        <li class="mb-1"><i class="bi bi-envelope me-2"></i>boardgamecafefinder@gmail.com</li>
+                        <li class="mb-1"><i class="bi bi-envelope me-2"></i>support@boardgamecafefinder.com</li>
                     </ul>
                     <p class="text-muted small mt-2">
                         Have a board game cafe you'd like to add? Own a cafe and want to update your listing?

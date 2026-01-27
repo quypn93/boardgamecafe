@@ -31,35 +31,32 @@
     }
 }
 
-@* Hero Section - Hidden as requested
-@if (isFirstPage)
-{
-    <div class="hero-section py-5 mb-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="display-5 fw-bold mb-3">Find Your Perfect Board Game Cafe</h1>
-                    <p class="lead mb-4">
-                        Discover amazing board game cafes near you. Browse thousands of games,
-                        read reviews, and find the perfect spot for your next gaming session with friends and family.
-                    </p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <a href="#cafes" class="btn btn-light btn-lg">
-                            <i class="bi bi-search me-2"></i>Browse Cafes
-                        </a>
-                        <a asp-controller="Map" asp-action="Index" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-map me-2"></i>View Map
-                        </a>
-                    </div>
+@* Hero Section - Hidden on mobile, shown on tablet and desktop *@
+<div class="hero-section py-5 mb-4 d-none d-md-block">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">Find Your Perfect Board Game Cafe</h1>
+                <p class="lead mb-4">
+                    Discover amazing board game cafes near you. Browse thousands of games,
+                    read reviews, and find the perfect spot for your next gaming session with friends and family.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="#cafes" class="btn btn-light btn-lg">
+                        <i class="bi bi-search me-2"></i>Browse Cafes
+                    </a>
+                    <a asp-controller="Map" asp-action="Index" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-map me-2"></i>View Map
+                    </a>
                 </div>
-                <div class="col-lg-4 d-none d-lg-block text-center">
-                    <i class="bi bi-person-fill display-1 opacity-75"></i>
-                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block text-center">
+                <i class="bi bi-person-fill display-1 opacity-75"></i>
             </div>
         </div>
     </div>
-}
-*@
+</div>
+
 
 <div class="container-fluid mt-4" id="cafes">
     <div class="row">

@@ -99,22 +99,36 @@
             </div>
         </div>
 
-        <!-- Edit Affiliate URL -->
+        <!-- Edit Affiliate URLs -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0"><i class="bi bi-link-45deg me-2"></i>Affiliate URL</h5>
+                <h5 class="mb-0"><i class="bi bi-link-45deg me-2"></i>Affiliate URLs</h5>
             </div>
             <div class="card-body">
                 <form asp-action="UpdateGameAffiliateUrl" method="post">
                     <input type="hidden" name="gameId" value="@Model.GameId" />
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Amazon Affiliate URL</label>
-                        <input type="url" name="affiliateUrl" class="form-control form-control-lg"
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-amazon text-warning me-1"></i> Amazon Affiliate URL
+                        </label>
+                        <input type="url" name="amazonAffiliateUrl" class="form-control"
                                value="@Model.AmazonAffiliateUrl"
                                placeholder="https://www.amazon.com/dp/XXXXXX?tag=yourtag-20">
                         <div class="form-text">
                             Enter the full Amazon affiliate URL including your affiliate tag.
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-shop text-primary me-1"></i> Miniature Market Affiliate URL
+                        </label>
+                        <input type="url" name="miniatureMarketAffiliateUrl" class="form-control"
+                               value="@Model.MiniatureMarketAffiliateUrl"
+                               placeholder="https://miniaturemarket.sjv.io/c/...">
+                        <div class="form-text">
+                            Enter the Miniature Market affiliate URL from Impact.com.
                         </div>
                     </div>
 
@@ -128,25 +142,47 @@
             </div>
         </div>
 
-        <!-- Tracking URL -->
-        @if (!string.IsNullOrEmpty(Model.AmazonAffiliateUrl))
+        <!-- Tracking URLs -->
+        @if (!string.IsNullOrEmpty(Model.AmazonAffiliateUrl) || !string.IsNullOrEmpty(Model.MiniatureMarketAffiliateUrl))
         {
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Tracking URL</h5>
+                    <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Tracking URLs</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-2">Use this URL in your site to track clicks:</p>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="trackingUrl" readonly
-                               value="@($"{Context.Request.Scheme}://{Context.Request.Host}/api/affiliate/click/{Model.GameId}")">
-                        <button class="btn btn-outline-secondary" type="button" onclick="copyTrackingUrl()">
-                            <i class="bi bi-clipboard"></i> Copy
-                        </button>
-                    </div>
+                    <p class="text-muted mb-2">Use these URLs in your site to track clicks:</p>
+
+                    @if (!string.IsNullOrEmpty(Model.AmazonAffiliateUrl))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Amazon:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" id="trackingUrlAmazon" readonly
+                                       value="@($"{Context.Request.Scheme}://{Context.Request.Host}/api/affiliate/click/{Model.GameId}?source=amazon")">
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyUrl('trackingUrlAmazon')">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.MiniatureMarketAffiliateUrl))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Miniature Market:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" id="trackingUrlMM" readonly
+                                       value="@($"{Context.Request.Scheme}://{Context.Request.Host}/api/affiliate/click/{Model.GameId}?source=miniaturemarket")">
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyUrl('trackingUrlMM')">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+
                     <div class="mt-2">
                         <small class="text-muted">
-                            With cafe context: <code>/api/affiliate/click/@Model.GameId?cafeId=123</code>
+                            Add cafe context: <code>?cafeId=123&amp;source=amazon</code>
                         </small>
                     </div>
                 </div>
@@ -161,11 +197,15 @@
                 <h6 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Tips</h6>
             </div>
             <div class="card-body">
-                <ul class="mb-0 ps-3">
-                    <li class="mb-2">Use the Amazon Associates link builder to create affiliate links</li>
-                    <li class="mb-2">Include your affiliate tag (e.g., <code>?tag=yourtag-20</code>)</li>
-                    <li class="mb-2">Use shortened links from Amazon for cleaner URLs</li>
-                    <li>Test your links before saving</li>
+                <h6 class="small fw-bold">Amazon:</h6>
+                <ul class="mb-3 ps-3 small">
+                    <li>Use Amazon Associates link builder</li>
+                    <li>Include affiliate tag: <code>?tag=yourtag-20</code></li>
+                </ul>
+                <h6 class="small fw-bold">Miniature Market:</h6>
+                <ul class="mb-0 ps-3 small">
+                    <li>Get links from Impact.com dashboard</li>
+                    <li>Use Link Generator for deep links</li>
                 </ul>
             </div>
         </div>
@@ -204,11 +244,11 @@
 
 @section Scripts {
 <script>
-    function copyTrackingUrl() {
-        const input = document.getElementById('trackingUrl');
+    function copyUrl(inputId) {
+        const input = document.getElementById(inputId);
         input.select();
         navigator.clipboard.writeText(input.value).then(() => {
-            alert('Tracking URL copied!');
+            alert('URL copied!');
         });
     }
 </script>

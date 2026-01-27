@@ -299,14 +299,27 @@ namespace BoardGameCafeFinder.Controllers
         /// Track affiliate link click and redirect
         /// </summary>
         [HttpGet("affiliate/click/{gameId}")]
-        public async Task<IActionResult> TrackAffiliateClick(int gameId, [FromQuery] int? cafeId = null)
+        public async Task<IActionResult> TrackAffiliateClick(int gameId, [FromQuery] int? cafeId = null, [FromQuery] string? source = null)
         {
             try
             {
                 var game = await _context.BoardGames.FindAsync(gameId);
-                if (game == null || string.IsNullOrEmpty(game.AmazonAffiliateUrl))
+                if (game == null)
                 {
-                    return NotFound(new { success = false, message = "Game or affiliate URL not found" });
+                    return NotFound(new { success = false, message = "Game not found" });
+                }
+
+                // Determine which affiliate URL to use based on source
+                string? affiliateUrl = source?.ToLower() switch
+                {
+                    "miniaturemarket" or "mm" => game.MiniatureMarketAffiliateUrl ?? game.AmazonAffiliateUrl,
+                    "amazon" => game.AmazonAffiliateUrl ?? game.MiniatureMarketAffiliateUrl,
+                    _ => game.AmazonAffiliateUrl ?? game.MiniatureMarketAffiliateUrl // Default: prefer Amazon
+                };
+
+                if (string.IsNullOrEmpty(affiliateUrl))
+                {
+                    return NotFound(new { success = false, message = "No affiliate URL found for this game" });
                 }
 
                 // Record the click
@@ -334,10 +347,10 @@ namespace BoardGameCafeFinder.Controllers
                 _context.AffiliateClicks.Add(click);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Affiliate click tracked: GameId={GameId}, CafeId={CafeId}", gameId, cafeId);
+                _logger.LogInformation("Affiliate click tracked: GameId={GameId}, CafeId={CafeId}, Source={Source}", gameId, cafeId, source ?? "default");
 
                 // Redirect to affiliate URL
-                return Redirect(game.AmazonAffiliateUrl);
+                return Redirect(affiliateUrl);
             }
             catch (Exception ex)
             {
@@ -345,9 +358,13 @@ namespace BoardGameCafeFinder.Controllers
 
                 // Still try to redirect even if tracking fails
                 var game = await _context.BoardGames.FindAsync(gameId);
-                if (game != null && !string.IsNullOrEmpty(game.AmazonAffiliateUrl))
+                if (game != null)
                 {
-                    return Redirect(game.AmazonAffiliateUrl);
+                    var fallbackUrl = game.AmazonAffiliateUrl ?? game.MiniatureMarketAffiliateUrl;
+                    if (!string.IsNullOrEmpty(fallbackUrl))
+                    {
+                        return Redirect(fallbackUrl);
+                    }
                 }
 
                 return StatusCode(500, new { success = false, message = "An error occurred" });

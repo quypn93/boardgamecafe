@@ -742,7 +742,7 @@ namespace BoardGameCafeFinder.Controllers
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateGameAffiliateUrl(int gameId, string? affiliateUrl)
+        public async Task<IActionResult> UpdateGameAffiliateUrl(int gameId, string? amazonAffiliateUrl, string? miniatureMarketAffiliateUrl)
         {
             var game = await _context.BoardGames.FindAsync(gameId);
             if (game == null)
@@ -751,22 +751,35 @@ namespace BoardGameCafeFinder.Controllers
                 return RedirectToAction(nameof(ManageAffiliates));
             }
 
-            // Validate URL if provided
-            if (!string.IsNullOrWhiteSpace(affiliateUrl))
+            // Validate Amazon URL if provided
+            if (!string.IsNullOrWhiteSpace(amazonAffiliateUrl))
             {
-                affiliateUrl = affiliateUrl.Trim();
-                if (!Uri.TryCreate(affiliateUrl, UriKind.Absolute, out var uri) ||
+                amazonAffiliateUrl = amazonAffiliateUrl.Trim();
+                if (!Uri.TryCreate(amazonAffiliateUrl, UriKind.Absolute, out var uri) ||
                     (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
                 {
-                    TempData["ErrorMessage"] = "Invalid URL format.";
+                    TempData["ErrorMessage"] = "Invalid Amazon URL format.";
                     return RedirectToAction(nameof(EditGameAffiliate), new { id = gameId });
                 }
             }
 
-            game.AmazonAffiliateUrl = string.IsNullOrWhiteSpace(affiliateUrl) ? null : affiliateUrl;
+            // Validate Miniature Market URL if provided
+            if (!string.IsNullOrWhiteSpace(miniatureMarketAffiliateUrl))
+            {
+                miniatureMarketAffiliateUrl = miniatureMarketAffiliateUrl.Trim();
+                if (!Uri.TryCreate(miniatureMarketAffiliateUrl, UriKind.Absolute, out var uri) ||
+                    (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                {
+                    TempData["ErrorMessage"] = "Invalid Miniature Market URL format.";
+                    return RedirectToAction(nameof(EditGameAffiliate), new { id = gameId });
+                }
+            }
+
+            game.AmazonAffiliateUrl = string.IsNullOrWhiteSpace(amazonAffiliateUrl) ? null : amazonAffiliateUrl;
+            game.MiniatureMarketAffiliateUrl = string.IsNullOrWhiteSpace(miniatureMarketAffiliateUrl) ? null : miniatureMarketAffiliateUrl;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Affiliate URL updated for '{game.Name}'.";
+            TempData["SuccessMessage"] = $"Affiliate URLs updated for '{game.Name}'.";
             return RedirectToAction(nameof(ManageAffiliates));
         }
 
@@ -882,16 +895,32 @@ namespace BoardGameCafeFinder.Controllers
                         continue;
                     }
 
-                    // Validate URL
+                    // Get Miniature Market URL if provided (3rd column)
+                    var mmUrl = parts.Length > 2 ? parts[2].Trim().Trim('"') : null;
+
+                    // Validate Amazon URL
                     if (!string.IsNullOrWhiteSpace(url) &&
                         !Uri.TryCreate(url, UriKind.Absolute, out _))
                     {
                         errors++;
-                        results.Add($"Line {lineNumber}: Invalid URL for '{game.Name}'.");
+                        results.Add($"Line {lineNumber}: Invalid Amazon URL for '{game.Name}'.");
+                        continue;
+                    }
+
+                    // Validate Miniature Market URL
+                    if (!string.IsNullOrWhiteSpace(mmUrl) &&
+                        !Uri.TryCreate(mmUrl, UriKind.Absolute, out _))
+                    {
+                        errors++;
+                        results.Add($"Line {lineNumber}: Invalid Miniature Market URL for '{game.Name}'.");
                         continue;
                     }
 
                     game.AmazonAffiliateUrl = string.IsNullOrWhiteSpace(url) ? null : url;
+                    if (!string.IsNullOrWhiteSpace(mmUrl))
+                    {
+                        game.MiniatureMarketAffiliateUrl = mmUrl;
+                    }
                     updated++;
                 }
 
@@ -913,19 +942,22 @@ namespace BoardGameCafeFinder.Controllers
         /// </summary>
         public async Task<IActionResult> ExportGamesWithoutAffiliate()
         {
+            // Export games missing at least one affiliate URL
             var games = await _context.BoardGames
-                .Where(g => string.IsNullOrEmpty(g.AmazonAffiliateUrl))
+                .Where(g => string.IsNullOrEmpty(g.AmazonAffiliateUrl) || string.IsNullOrEmpty(g.MiniatureMarketAffiliateUrl))
                 .OrderBy(g => g.Name)
-                .Select(g => new { g.GameId, g.BGGId, g.Name })
+                .Select(g => new { g.GameId, g.BGGId, g.Name, g.AmazonAffiliateUrl, g.MiniatureMarketAffiliateUrl })
                 .ToListAsync();
 
             var csv = new System.Text.StringBuilder();
-            csv.AppendLine("GameId,BGGId,Name,AffiliateUrl");
+            csv.AppendLine("GameId,BGGId,Name,AmazonAffiliateUrl,MiniatureMarketAffiliateUrl");
 
             foreach (var game in games)
             {
                 var name = game.Name.Replace("\"", "\"\"");
-                csv.AppendLine($"{game.GameId},{game.BGGId ?? 0},\"{name}\",");
+                var amazonUrl = (game.AmazonAffiliateUrl ?? "").Replace("\"", "\"\"");
+                var mmUrl = (game.MiniatureMarketAffiliateUrl ?? "").Replace("\"", "\"\"");
+                csv.AppendLine($"{game.GameId},{game.BGGId ?? 0},\"{name}\",\"{amazonUrl}\",\"{mmUrl}\"");
             }
 
             var bytes = System.Text.Encoding.UTF8.GetBytes(csv.ToString());

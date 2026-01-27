@@ -49,7 +49,7 @@ namespace BoardGameCafeFinder.Controllers
                     sitemapXml += CreateSitemapEntry($"{baseUrl}/cafe/{cafe.Slug}", lastMod, "weekly", "0.8");
                 }
 
-                // Dynamic blog post pages
+                // Dynamic blog post pages from BlogPosts table
                 var blogPosts = await _context.BlogPosts
                     .Where(p => p.IsPublished && !string.IsNullOrEmpty(p.Slug))
                     .Select(p => new { p.Slug, p.UpdatedAt, p.PublishedAt })
@@ -60,6 +60,27 @@ namespace BoardGameCafeFinder.Controllers
                 {
                     var lastMod = (post.UpdatedAt ?? post.PublishedAt ?? DateTime.Now).ToString("yyyy-MM-dd");
                     sitemapXml += CreateSitemapEntry($"{baseUrl}/blog/{post.Slug}", lastMod, "weekly", "0.7");
+                }
+
+                // Dynamic city blog posts (generated from Cafes table - not in BlogPosts)
+                var cityPosts = await _context.Cafes
+                    .Where(c => c.IsActive && !string.IsNullOrEmpty(c.City))
+                    .GroupBy(c => c.City)
+                    .Select(g => new
+                    {
+                        City = g.Key,
+                        LastUpdated = g.Max(c => c.UpdatedAt),
+                        CafeCount = g.Count()
+                    })
+                    .Where(c => c.CafeCount > 0)
+                    .OrderByDescending(c => c.CafeCount)
+                    .ToListAsync();
+
+                foreach (var cityPost in cityPosts)
+                {
+                    var citySlug = Uri.EscapeDataString(cityPost.City.ToLower().Replace(" ", "-"));
+                    var lastMod = cityPost.LastUpdated.ToString("yyyy-MM-dd");
+                    sitemapXml += CreateSitemapEntry($"{baseUrl}/blog/{citySlug}", lastMod, "weekly", "0.7");
                 }
 
                 sitemapXml += "</urlset>";
@@ -92,6 +113,7 @@ namespace BoardGameCafeFinder.Controllers
             robotsTxt += "# Allow crawling of important pages\r\n";
             robotsTxt += "Allow: /\r\n";
             robotsTxt += "Allow: /cafe/\r\n";
+            robotsTxt += "Allow: /blog/\r\n";
             robotsTxt += "Allow: /Map/\r\n";
             robotsTxt += "\r\n";
             robotsTxt += "# Sitemap location\r\n";

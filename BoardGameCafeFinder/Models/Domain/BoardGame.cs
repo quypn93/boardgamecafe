@@ -43,6 +43,10 @@ namespace BoardGameCafeFinder.Models.Domain
         [Url]
         public string? AmazonAffiliateUrl { get; set; }
 
+        [MaxLength(1000)]
+        [Url]
+        public string? MiniatureMarketAffiliateUrl { get; set; }
+
         [MaxLength(2000)]
         [Url]
         public string? SourceUrl { get; set; } // URL to the game on the cafe's website

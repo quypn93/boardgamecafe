@@ -139,12 +139,24 @@
                                     }
                                 </td>
                                 <td>
-                                    @if (!string.IsNullOrEmpty(game.AmazonAffiliateUrl))
+                                    @if (!string.IsNullOrEmpty(game.AmazonAffiliateUrl) || !string.IsNullOrEmpty(game.MiniatureMarketAffiliateUrl))
                                     {
-                                        <a href="@game.AmazonAffiliateUrl" target="_blank" rel="nofollow sponsored"
-                                           class="badge bg-warning text-dark text-decoration-none" title="@game.AmazonAffiliateUrl">
-                                            <i class="bi bi-cart-fill me-1"></i>Link
-                                        </a>
+                                        <div class="d-flex gap-1 flex-wrap">
+                                            @if (!string.IsNullOrEmpty(game.AmazonAffiliateUrl))
+                                            {
+                                                <a href="@game.AmazonAffiliateUrl" target="_blank" rel="nofollow sponsored"
+                                                   class="badge bg-warning text-dark text-decoration-none" title="Amazon">
+                                                    AMZ
+                                                </a>
+                                            }
+                                            @if (!string.IsNullOrEmpty(game.MiniatureMarketAffiliateUrl))
+                                            {
+                                                <a href="@game.MiniatureMarketAffiliateUrl" target="_blank" rel="nofollow sponsored"
+                                                   class="badge bg-primary text-decoration-none" title="Miniature Market">
+                                                    MM
+                                                </a>
+                                            }
+                                        </div>
                                     }
                                     else
                                     {

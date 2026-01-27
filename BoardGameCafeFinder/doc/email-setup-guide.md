@@ -78,7 +78,7 @@ Edit `appsettings.json`:
   "SmtpHost": "smtp.zoho.com",
   "SmtpPort": 587,
   "SmtpUser": "support@boardgamecafefinder.com",
-  "SmtpPassword": "YOUR_ZOHO_APP_PASSWORD",
+  "SmtpPassword": "4fqYynh%",
   "FromEmail": "support@boardgamecafefinder.com",
   "FromName": "BoardGame Cafe Finder"
 }
