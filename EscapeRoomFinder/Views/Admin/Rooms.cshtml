@@ -1,0 +1,224 @@
+@model List<EscapeRoomFinder.Models.Domain.EscapeRoom>
+@{
+    ViewData["Title"] = "Room Management";
+    Layout = "_AdminLayout";
+    var venues = ViewBag.Venues as List<EscapeRoomFinder.Models.Domain.EscapeRoomVenue>;
+    var venueId = ViewBag.VenueId as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-door-closed me-2"></i>Room Management</h1>
+    <a href="/admin/rooms/create@(venueId.HasValue ? "?venueId=" + venueId : "")" class="btn btn-primary">
+        <i class="bi bi-plus"></i> Add Room
+    </a>
+</div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Filter by Venue -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label">Filter by Venue</label>
+                    <select name="venueId" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- All Venues --</option>
+                        @if (venues != null)
+                        {
+                            foreach (var venue in venues)
+                            {
+                                if (venueId == venue.VenueId)
+                                {
+                                    <option value="@venue.VenueId" selected>@venue.Name (@venue.City)</option>
+                                }
+                                else
+                                {
+                                    <option value="@venue.VenueId">@venue.Name (@venue.City)</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <span class="text-muted">Showing @Model.Count rooms</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rooms Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-list-ul"></i> Rooms</span>
+            @if (Model.Any())
+            {
+                <form method="post" action="/admin/rooms/delete-selected" id="deleteSelectedForm">
+                    <button type="submit" class="btn btn-danger btn-sm" id="deleteSelectedBtn" disabled
+                            onclick="return confirm('Delete selected rooms?');">
+                        <i class="bi bi-trash"></i> Delete Selected (<span id="selectedCount">0</span>)
+                    </button>
+                </form>
+            }
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="40">
+                                <input type="checkbox" id="selectAll" class="form-check-input">
+                            </th>
+                            <th>Room</th>
+                            <th>Venue</th>
+                            <th>Theme</th>
+                            <th>Difficulty</th>
+                            <th>Players</th>
+                            <th>Duration</th>
+                            <th>Rating</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var room in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="roomIds" value="@room.RoomId"
+                                           class="form-check-input room-checkbox" form="deleteSelectedForm">
+                                </td>
+                                <td>
+                                    <strong>@room.Name</strong>
+                                    @if (!string.IsNullOrEmpty(room.LocalImagePath))
+                                    {
+                                        <br><img src="@room.LocalImagePath" alt="" style="height: 30px;" class="rounded">
+                                    }
+                                </td>
+                                <td>
+                                    <a href="/admin/venues/edit/@room.VenueId">@room.Venue?.Name</a>
+                                </td>
+                                <td><span class="badge bg-info">@room.Theme</span></td>
+                                <td>
+                                    @for (int i = 0; i < room.Difficulty; i++)
+                                    {
+                                        <i class="bi bi-puzzle-fill text-warning"></i>
+                                    }
+                                </td>
+                                <td>@room.MinPlayers - @room.MaxPlayers</td>
+                                <td>@room.DurationMinutes min</td>
+                                <td>
+                                    @if (room.AverageRating.HasValue)
+                                    {
+                                        <span class="text-warning">@room.AverageRating.Value.ToString("F1") <i class="bi bi-star-fill"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (room.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="/admin/rooms/edit/@room.RoomId" class="btn btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" title="Delete"
+                                                onclick="deleteRoom(@room.RoomId)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @if (ViewBag.TotalPages > 1)
+                {
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                    <a class="page-link" href="/admin/rooms?venueId=@venueId&page=@i">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-door-closed display-4"></i>
+                    <p class="mt-2">No rooms found.</p>
+                    <a href="/admin/rooms/create" class="btn btn-primary">Add First Room</a>
+                </div>
+            }
+        </div>
+    </div>
+
+@section Scripts {
+<script>
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.room-checkbox');
+    const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+    const selectedCount = document.getElementById('selectedCount');
+
+    function updateButtonState() {
+        const checked = document.querySelectorAll('.room-checkbox:checked').length;
+        if (selectedCount) selectedCount.textContent = checked;
+        if (deleteSelectedBtn) deleteSelectedBtn.disabled = checked === 0;
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateButtonState();
+        });
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateButtonState);
+    });
+
+    async function deleteRoom(roomId) {
+        if (!confirm('Are you sure you want to delete this room?')) return;
+
+        try {
+            const response = await fetch('/admin/rooms/delete/' + roomId, { method: 'POST' });
+            const result = await response.json();
+            if (result.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+</script>
+}

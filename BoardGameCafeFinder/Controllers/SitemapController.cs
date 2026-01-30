@@ -78,7 +78,7 @@ namespace BoardGameCafeFinder.Controllers
 
                 foreach (var cityPost in cityPosts)
                 {
-                    var citySlug = Uri.EscapeDataString(cityPost.City.ToLower().Replace(" ", "-"));
+                    var citySlug = cityPost.City.ToLower().Replace(" ", "-");
                     var lastMod = cityPost.LastUpdated.ToString("yyyy-MM-dd");
                     sitemapXml += CreateSitemapEntry($"{baseUrl}/blog/{citySlug}", lastMod, "weekly", "0.7");
                 }

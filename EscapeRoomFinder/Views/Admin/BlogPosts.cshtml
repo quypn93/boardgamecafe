@@ -1,0 +1,276 @@
+@model List<EscapeRoomFinder.Models.Domain.BlogPost>
+@{
+    ViewData["Title"] = "Blog Posts Management";
+    Layout = "_AdminLayout";
+    var cities = ViewBag.Cities;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-file-earmark-text me-2"></i>Blog Posts</h1>
+    <a href="/admin/blog/create" class="btn btn-primary"><i class="bi bi-plus me-1"></i>New Post</a>
+</div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Count</h3>
+                    <small>Total Posts</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Count(p => p.IsPublished)</h3>
+                    <small>Published</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h3>@Model.Count(p => !p.IsPublished)</h3>
+                    <small>Drafts</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h3>@Model.Sum(p => p.ViewCount)</h3>
+                    <small>Total Views</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto-Generate Section -->
+    @if (cities != null)
+    {
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <i class="bi bi-magic"></i> Auto-Generate Blog Posts
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-trophy"></i> Generate Top Rooms Posts</h6>
+                        <p class="text-muted small">Auto-generate "Top Escape Rooms in [City]" posts for selected cities.</p>
+                        <select id="topRoomsCities" class="form-select mb-2" multiple size="5">
+                            @foreach (var city in (dynamic)cities)
+                            {
+                                <option value="@city.City">@city.City (@city.Count venues)</option>
+                            }
+                        </select>
+                        <button type="button" class="btn btn-primary btn-sm" id="generateTopRoomsBtn">
+                            <i class="bi bi-lightning"></i> Generate Top Rooms Posts
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-map"></i> Generate City Guide</h6>
+                        <p class="text-muted small">Auto-generate a comprehensive guide for a city.</p>
+                        <select id="cityGuideCity" class="form-select mb-2">
+                            <option value="">-- Select City --</option>
+                            @foreach (var city in (dynamic)cities)
+                            {
+                                <option value="@city.City">@city.City (@city.Count venues)</option>
+                            }
+                        </select>
+                        <button type="button" class="btn btn-success btn-sm" id="generateCityGuideBtn">
+                            <i class="bi bi-book"></i> Generate City Guide
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Blog Posts Table -->
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-list-ul"></i> All Blog Posts
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Views</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var post in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@post.Title</strong>
+                                    @if (!string.IsNullOrEmpty(post.RelatedCity))
+                                    {
+                                        <br><small class="text-muted"><i class="bi bi-geo-alt"></i> @post.RelatedCity</small>
+                                    }
+                                </td>
+                                <td><span class="badge bg-secondary">@(post.Category ?? "General")</span></td>
+                                <td>
+                                    @if (post.IsPublished)
+                                    {
+                                        <span class="badge bg-success">Published</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Draft</span>
+                                    }
+                                </td>
+                                <td>@post.ViewCount</td>
+                                <td>
+                                    <small>@post.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                    @if (post.PublishedAt.HasValue)
+                                    {
+                                        <br><small class="text-muted">Published: @post.PublishedAt.Value.ToString("MMM dd")</small>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="/admin/blog/edit/@post.Id" class="btn btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        @if (post.IsPublished)
+                                        {
+                                            <a href="/blog/@post.Slug" target="_blank" class="btn btn-outline-info" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        }
+                                        <form method="post" action="/admin/blog/toggle-publish/@post.Id" class="d-inline">
+                                            <button type="submit" class="btn @(post.IsPublished ? "btn-outline-warning" : "btn-outline-success")"
+                                                    title="@(post.IsPublished ? "Unpublish" : "Publish")">
+                                                <i class="bi @(post.IsPublished ? "bi-eye-slash" : "bi-check-lg")"></i>
+                                            </button>
+                                        </form>
+                                        <form method="post" action="/admin/blog/delete/@post.Id" class="d-inline"
+                                              onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                            <button type="submit" class="btn btn-outline-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @if (ViewBag.TotalPages > 1)
+                {
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                    <a class="page-link" href="/admin/blog?page=@i">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-file-earmark-text display-4"></i>
+                    <p class="mt-2">No blog posts yet. Create one or use auto-generate!</p>
+                </div>
+            }
+        </div>
+    </div>
+
+@section Scripts {
+<script>
+    document.getElementById('generateTopRoomsBtn')?.addEventListener('click', async function() {
+        const select = document.getElementById('topRoomsCities');
+        const cities = Array.from(select.selectedOptions).map(opt => opt.value);
+
+        if (cities.length === 0) {
+            alert('Please select at least one city');
+            return;
+        }
+
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating...';
+
+        try {
+            const response = await fetch('/admin/blog/generate-top-rooms', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cities: cities })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(result.message);
+                location.reload();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="bi bi-lightning"></i> Generate Top Rooms Posts';
+        }
+    });
+
+    document.getElementById('generateCityGuideBtn')?.addEventListener('click', async function() {
+        const city = document.getElementById('cityGuideCity').value;
+
+        if (!city) {
+            alert('Please select a city');
+            return;
+        }
+
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating...';
+
+        try {
+            const response = await fetch('/admin/blog/generate-city-guide', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ city: city })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(result.message);
+                location.reload();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="bi bi-book"></i> Generate City Guide';
+        }
+    });
+</script>
+}

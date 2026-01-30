@@ -1,0 +1,44 @@
+@model List<EscapeRoomFinder.Models.Domain.ClaimRequest>
+@{
+    ViewData["Title"] = "Claim Requests";
+}
+
+<div class="container-fluid py-4">
+    <h1><i class="bi bi-file-earmark-text me-2"></i>Claim Requests</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Venue</th>
+                        <th>Contact</th>
+                        <th>Plan</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var claim in Model)
+                    {
+                        <tr>
+                            <td>@claim.ClaimRequestId</td>
+                            <td>@claim.Venue?.Name</td>
+                            <td>@claim.ContactName<br><small class="text-muted">@claim.ContactEmail</small></td>
+                            <td>@claim.PlanType (@claim.DurationMonths mo)</td>
+                            <td>$@claim.TotalAmount.ToString("F2")</td>
+                            <td>
+                                <span class="badge bg-@(claim.PaymentStatus == "completed" ? "success" : claim.PaymentStatus == "pending" ? "warning" : "secondary")">
+                                    @claim.PaymentStatus
+                                </span>
+                            </td>
+                            <td>@claim.CreatedAt.ToString("MM/dd/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

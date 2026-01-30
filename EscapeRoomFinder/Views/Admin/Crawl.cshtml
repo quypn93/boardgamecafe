@@ -1,0 +1,486 @@
+@{
+    ViewData["Title"] = "Crawl Data";
+    Layout = "_AdminLayout";
+
+    // US Cities - Major metro areas
+    var usCities = new[] {
+        // Top 50 US cities
+        "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ",
+        "Philadelphia, PA", "San Antonio, TX", "San Diego, CA", "Dallas, TX", "San Jose, CA",
+        "Austin, TX", "Jacksonville, FL", "Fort Worth, TX", "Columbus, OH", "Charlotte, NC",
+        "San Francisco, CA", "Indianapolis, IN", "Seattle, WA", "Denver, CO", "Washington, DC",
+        "Boston, MA", "El Paso, TX", "Nashville, TN", "Detroit, MI", "Oklahoma City, OK",
+        "Portland, OR", "Las Vegas, NV", "Memphis, TN", "Louisville, KY", "Baltimore, MD",
+        "Milwaukee, WI", "Albuquerque, NM", "Tucson, AZ", "Fresno, CA", "Mesa, AZ",
+        "Sacramento, CA", "Atlanta, GA", "Kansas City, MO", "Colorado Springs, CO", "Miami, FL",
+        "Raleigh, NC", "Omaha, NE", "Long Beach, CA", "Virginia Beach, VA", "Oakland, CA",
+        "Minneapolis, MN", "Tulsa, OK", "Tampa, FL", "Arlington, TX", "New Orleans, LA",
+        // Additional popular cities
+        "Cleveland, OH", "Anaheim, CA", "Honolulu, HI", "Henderson, NV", "Orlando, FL",
+        "Lexington, KY", "Stockton, CA", "Pittsburgh, PA", "Cincinnati, OH", "Anchorage, AK",
+        "Greensboro, NC", "Plano, TX", "Newark, NJ", "Lincoln, NE", "Buffalo, NY",
+        "Jersey City, NJ", "Chandler, AZ", "St. Paul, MN", "Durham, NC", "Chula Vista, CA",
+        "Toledo, OH", "Madison, WI", "Fort Wayne, IN", "Lubbock, TX", "St. Petersburg, FL",
+        "Laredo, TX", "Irving, TX", "Chesapeake, VA", "Glendale, AZ", "Garland, TX",
+        "Scottsdale, AZ", "Norfolk, VA", "Boise, ID", "Fremont, CA", "Spokane, WA",
+        "Richmond, VA", "Santa Clarita, CA", "San Bernardino, CA", "Tacoma, WA", "Hialeah, FL"
+    };
+
+    // International Cities
+    var internationalCities = new[] {
+        // Europe
+        "London, UK", "Paris, France", "Berlin, Germany", "Amsterdam, Netherlands", "Madrid, Spain",
+        "Barcelona, Spain", "Rome, Italy", "Milan, Italy", "Vienna, Austria", "Prague, Czech Republic",
+        "Budapest, Hungary", "Warsaw, Poland", "Dublin, Ireland", "Brussels, Belgium", "Lisbon, Portugal",
+        "Munich, Germany", "Hamburg, Germany", "Frankfurt, Germany", "Zurich, Switzerland", "Stockholm, Sweden",
+        "Copenhagen, Denmark", "Oslo, Norway", "Helsinki, Finland", "Athens, Greece", "Edinburgh, UK",
+        "Manchester, UK", "Birmingham, UK", "Glasgow, UK", "Lyon, France", "Marseille, France",
+
+        // Asia
+        "Tokyo, Japan", "Singapore", "Hong Kong", "Seoul, South Korea", "Bangkok, Thailand",
+        "Kuala Lumpur, Malaysia", "Shanghai, China", "Beijing, China", "Taipei, Taiwan", "Manila, Philippines",
+        "Jakarta, Indonesia", "Ho Chi Minh City, Vietnam", "Mumbai, India", "Delhi, India", "Bangalore, India",
+        "Dubai, UAE", "Abu Dhabi, UAE", "Tel Aviv, Israel", "Istanbul, Turkey",
+
+        // Oceania
+        "Sydney, Australia", "Melbourne, Australia", "Brisbane, Australia", "Perth, Australia", "Auckland, New Zealand",
+        "Wellington, New Zealand",
+
+        // Americas (non-US)
+        "Toronto, Canada", "Vancouver, Canada", "Montreal, Canada", "Calgary, Canada", "Ottawa, Canada",
+        "Mexico City, Mexico", "Guadalajara, Mexico", "Monterrey, Mexico", "Cancun, Mexico",
+        "Sao Paulo, Brazil", "Rio de Janeiro, Brazil", "Buenos Aires, Argentina", "Santiago, Chile",
+        "Lima, Peru", "Bogota, Colombia", "Medellin, Colombia",
+
+        // Africa
+        "Cape Town, South Africa", "Johannesburg, South Africa", "Cairo, Egypt", "Marrakech, Morocco"
+    };
+}
+
+<h1 class="mb-4"><i class="bi bi-cloud-download"></i> Crawl Escape Room Data</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <strong><i class="bi bi-check-circle"></i> Success!</strong> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <strong><i class="bi bi-exclamation-triangle"></i> Error!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["CrawlLogs"] != null)
+{
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-terminal"></i> Crawl Log</span>
+            <button class="btn btn-sm btn-outline-light" onclick="document.getElementById('crawlLogContent').classList.toggle('d-none')">
+                Toggle
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <pre id="crawlLogContent" class="bg-dark text-light p-3 m-0" style="max-height: 300px; overflow-y: auto; font-size: 0.85rem;">@TempData["CrawlLogs"]</pre>
+        </div>
+    </div>
+}
+
+<!-- Live Crawl Progress -->
+<div class="card mb-4 d-none" id="liveProgressCard">
+    <div class="card-header bg-info text-white">
+        <i class="bi bi-activity"></i> Live Crawl Progress
+    </div>
+    <div class="card-body">
+        <div class="progress mb-3" style="height: 25px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" id="crawlProgressBar" style="width: 0%">
+                <span id="crawlProgressText">Starting...</span>
+            </div>
+        </div>
+        <pre id="liveLogContent" class="bg-dark text-light p-3" style="max-height: 250px; overflow-y: auto; font-size: 0.85rem;"></pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-google"></i> Google Maps Crawler</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Search Google Maps for escape rooms in a specific location and import them into the database.</p>
+
+                <form method="post" action="/admin/crawl/google-maps" id="crawlForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><strong>Select from US Cities</strong></label>
+                            <select class="form-select" id="usCitySelect" onchange="setLocation(this.value)">
+                                <option value="">-- Select US City --</option>
+                                @foreach (var city in usCities)
+                                {
+                                    <option value="@city">@city</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><strong>Select from International Cities</strong></label>
+                            <select class="form-select" id="intlCitySelect" onchange="setLocation(this.value)">
+                                <option value="">-- Select International City --</option>
+                                <optgroup label="Europe">
+                                    @foreach (var city in internationalCities.Take(30))
+                                    {
+                                        <option value="@city">@city</option>
+                                    }
+                                </optgroup>
+                                <optgroup label="Asia">
+                                    @foreach (var city in internationalCities.Skip(30).Take(19))
+                                    {
+                                        <option value="@city">@city</option>
+                                    }
+                                </optgroup>
+                                <optgroup label="Oceania">
+                                    @foreach (var city in internationalCities.Skip(49).Take(6))
+                                    {
+                                        <option value="@city">@city</option>
+                                    }
+                                </optgroup>
+                                <optgroup label="Americas (non-US)">
+                                    @foreach (var city in internationalCities.Skip(55).Take(16))
+                                    {
+                                        <option value="@city">@city</option>
+                                    }
+                                </optgroup>
+                                <optgroup label="Africa">
+                                    @foreach (var city in internationalCities.Skip(71))
+                                    {
+                                        <option value="@city">@city</option>
+                                    }
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Or Enter Custom Location</strong></label>
+                        <input type="text" name="location" id="locationInput" class="form-control"
+                               placeholder="e.g., New York, NY or London, UK" required>
+                        <small class="text-muted">City name, state/country for best results</small>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Max Results</label>
+                            <select name="maxResults" class="form-select">
+                                <option value="10">10 venues</option>
+                                <option value="20" selected>20 venues</option>
+                                <option value="50">50 venues</option>
+                                <option value="100">100 venues</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg" id="crawlBtn">
+                        <i class="bi bi-search"></i> Start Crawl
+                    </button>
+                    <span class="text-muted ms-3" id="crawlStatus"></span>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Crawl Multiple Cities -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Crawl - Multiple Cities</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Select multiple cities to crawl in batch.</p>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>US Cities</strong></label>
+                        <select class="form-select" id="multiUSCities" multiple size="8">
+                            @foreach (var city in usCities.Take(50))
+                            {
+                                <option value="@city">@city</option>
+                            }
+                        </select>
+                        <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>International Cities</strong></label>
+                        <select class="form-select" id="multiIntlCities" multiple size="8">
+                            @foreach (var city in internationalCities)
+                            {
+                                <option value="@city">@city</option>
+                            }
+                        </select>
+                        <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-success" id="batchCrawlBtn" onclick="startBatchCrawl()">
+                    <i class="bi bi-collection"></i> Start Batch Crawl
+                </button>
+                <span class="ms-3" id="batchStatus"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Crawl Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>Select a city from the dropdown or type custom location</li>
+                    <li>The crawler searches Google Maps for escape rooms</li>
+                    <li>Existing venues (by name/address) are skipped</li>
+                    <li>Reviews from Google Maps are auto-imported</li>
+                    <li>Crawling may take 2-5 minutes per city</li>
+                    <li>After crawling, edit venues to crawl their websites for room data</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Important Notes</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li><strong>Requires Playwright</strong> - Make sure browsers are installed</li>
+                    <li>Don't crawl too frequently (rate limits)</li>
+                    <li>Verify imported data for accuracy</li>
+                    <li>Images are downloaded and stored locally</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-terminal"></i> Install Playwright</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">If crawl fails, run this command to install browsers:</p>
+                <code class="d-block p-2 bg-dark text-light rounded">
+                    pwsh bin/Debug/net8.0/playwright.ps1 install
+                </code>
+                <p class="small text-muted mt-2">Or on Linux/Mac:</p>
+                <code class="d-block p-2 bg-dark text-light rounded">
+                    ./bin/Debug/net8.0/playwright.sh install
+                </code>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function setLocation(value) {
+        if (value) {
+            document.getElementById('locationInput').value = value;
+            // Clear the other select
+            if (event.target.id === 'usCitySelect') {
+                document.getElementById('intlCitySelect').value = '';
+            } else {
+                document.getElementById('usCitySelect').value = '';
+            }
+        }
+    }
+
+    function addLog(message) {
+        var logContent = document.getElementById('liveLogContent');
+        var timestamp = new Date().toLocaleTimeString();
+        logContent.textContent += `[${timestamp}] ${message}\n`;
+        logContent.scrollTop = logContent.scrollHeight;
+    }
+
+    function updateProgress(percent, text) {
+        var bar = document.getElementById('crawlProgressBar');
+        bar.style.width = percent + '%';
+        document.getElementById('crawlProgressText').textContent = text;
+    }
+
+    // Form submission with AJAX
+    document.getElementById('crawlForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        var btn = document.getElementById('crawlBtn');
+        var location = document.getElementById('locationInput').value;
+        var maxResults = document.querySelector('select[name="maxResults"]').value;
+
+        if (!location) {
+            alert('Please select or enter a location');
+            return;
+        }
+
+        // Show progress card
+        document.getElementById('liveProgressCard').classList.remove('d-none');
+        document.getElementById('liveLogContent').textContent = '';
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Crawling...';
+
+        addLog('Starting crawl for: ' + location);
+        addLog('Max results: ' + maxResults);
+        updateProgress(10, 'Initializing...');
+
+        try {
+            addLog('Sending request to server...');
+            updateProgress(20, 'Connecting to Google Maps...');
+
+            var formData = new FormData();
+            formData.append('location', location);
+            formData.append('maxResults', maxResults);
+            formData.append('ajax', 'true');
+
+            var response = await fetch('/admin/crawl/google-maps', {
+                method: 'POST',
+                body: formData
+            });
+
+            updateProgress(80, 'Processing results...');
+
+            var result = await response.json();
+
+            if (result.success) {
+                updateProgress(100, 'Complete!');
+                document.getElementById('crawlProgressBar').classList.remove('progress-bar-animated');
+                document.getElementById('crawlProgressBar').classList.add('bg-success');
+
+                addLog('────────────────────────────────');
+                addLog('✓ CRAWL COMPLETED SUCCESSFULLY');
+                addLog(`Found: ${result.found} venues`);
+                addLog(`Saved: ${result.saved} new venues`);
+                addLog(`Skipped: ${result.skipped} (already exist)`);
+                addLog(`Time: ${result.elapsedSeconds.toFixed(1)} seconds`);
+
+                if (result.venues && result.venues.length > 0) {
+                    addLog('────────────────────────────────');
+                    addLog('New venues saved:');
+                    result.venues.forEach(v => addLog('  • ' + v));
+                }
+
+                // Show server logs if available
+                if (result.logs && result.logs.length > 0) {
+                    addLog('────────────────────────────────');
+                    addLog('Server logs:');
+                    result.logs.forEach(log => addLog('  ' + log));
+                }
+            } else {
+                document.getElementById('crawlProgressBar').classList.remove('progress-bar-animated');
+                document.getElementById('crawlProgressBar').classList.add('bg-danger');
+                updateProgress(100, 'Failed');
+
+                addLog('────────────────────────────────');
+                addLog('✗ CRAWL FAILED');
+                addLog('Error: ' + result.message);
+                if (result.innerError) {
+                    addLog('Details: ' + result.innerError);
+                }
+
+                if (result.logs && result.logs.length > 0) {
+                    addLog('────────────────────────────────');
+                    result.logs.forEach(log => addLog(log));
+                }
+            }
+        } catch (error) {
+            document.getElementById('crawlProgressBar').classList.add('bg-danger');
+            updateProgress(100, 'Error');
+            addLog('✗ Request failed: ' + error.message);
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-search"></i> Start Crawl';
+    });
+
+    async function startBatchCrawl() {
+        var usSelect = document.getElementById('multiUSCities');
+        var intlSelect = document.getElementById('multiIntlCities');
+
+        var selectedCities = [];
+        Array.from(usSelect.selectedOptions).forEach(opt => selectedCities.push(opt.value));
+        Array.from(intlSelect.selectedOptions).forEach(opt => selectedCities.push(opt.value));
+
+        if (selectedCities.length === 0) {
+            alert('Please select at least one city');
+            return;
+        }
+
+        // Show progress card
+        document.getElementById('liveProgressCard').classList.remove('d-none');
+        document.getElementById('liveLogContent').textContent = '';
+
+        var btn = document.getElementById('batchCrawlBtn');
+        var status = document.getElementById('batchStatus');
+        btn.disabled = true;
+
+        addLog('═══════════════════════════════════════════════');
+        addLog('BATCH CRAWL STARTED');
+        addLog(`Cities to crawl: ${selectedCities.length}`);
+        addLog('═══════════════════════════════════════════════');
+
+        var totalSaved = 0;
+        var totalFound = 0;
+        var completed = 0;
+
+        for (var city of selectedCities) {
+            var percent = Math.round((completed / selectedCities.length) * 100);
+            updateProgress(percent, `Crawling ${city} (${completed + 1}/${selectedCities.length})`);
+            status.innerHTML = `<span class="text-primary"><span class="spinner-border spinner-border-sm"></span> Crawling ${city}... (${completed + 1}/${selectedCities.length})</span>`;
+
+            addLog('────────────────────────────────');
+            addLog(`[${completed + 1}/${selectedCities.length}] Crawling: ${city}`);
+
+            try {
+                var formData = new FormData();
+                formData.append('location', city);
+                formData.append('maxResults', '20');
+                formData.append('ajax', 'true');
+
+                var response = await fetch('/admin/crawl/google-maps', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                var result = await response.json();
+
+                if (result.success) {
+                    addLog(`  ✓ Found: ${result.found}, Saved: ${result.saved}, Skipped: ${result.skipped}`);
+                    totalSaved += result.saved;
+                    totalFound += result.found;
+                } else {
+                    addLog(`  ✗ Failed: ${result.message}`);
+                }
+
+                completed++;
+            } catch (error) {
+                addLog(`  ✗ Error: ${error.message}`);
+                completed++;
+            }
+
+            // Small delay between cities to avoid rate limiting
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+
+        updateProgress(100, 'Batch Complete!');
+        document.getElementById('crawlProgressBar').classList.remove('progress-bar-animated');
+        document.getElementById('crawlProgressBar').classList.add('bg-success');
+
+        addLog('═══════════════════════════════════════════════');
+        addLog('BATCH CRAWL COMPLETED');
+        addLog(`Total cities crawled: ${completed}`);
+        addLog(`Total venues found: ${totalFound}`);
+        addLog(`Total new venues saved: ${totalSaved}`);
+        addLog('═══════════════════════════════════════════════');
+
+        status.innerHTML = `<span class="text-success"><i class="bi bi-check-circle"></i> Completed ${completed} cities! Saved ${totalSaved} venues.</span>`;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-collection"></i> Start Batch Crawl';
+    }
+</script>
+}

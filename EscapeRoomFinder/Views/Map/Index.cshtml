@@ -1,0 +1,117 @@
+@model MapViewModel
+@{
+    ViewData["Title"] = "Escape Room Map";
+    ViewData["Description"] = "Find escape rooms on an interactive map. Discover venues near you.";
+}
+
+<div class="d-flex flex-column" style="height: calc(100vh - 56px);">
+    <div class="bg-light border-bottom p-2">
+        <div class="container-fluid">
+            <form class="row g-2 align-items-center">
+                <div class="col-auto">
+                    <select name="city" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Cities</option>
+                        @foreach (var city in ViewBag.Cities as List<string> ?? new List<string>())
+                        {
+                            <option value="@city" selected="@(Model.City == city)">@city</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select name="theme" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Themes</option>
+                        @foreach (var theme in ViewBag.Themes as List<string> ?? new List<string>())
+                        {
+                            <option value="@theme" selected="@(Model.Theme == theme)">@theme</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="locateMe()">
+                        <i class="bi bi-geo-alt"></i> Near Me
+                    </button>
+                </div>
+                <div class="col-auto ms-auto">
+                    <span class="text-muted small">@Model.Venues.Count venues shown</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="flex-grow-1 position-relative">
+        <div id="map" style="height: 100%; width: 100%;"></div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .venue-popup { min-width: 250px; }
+        .venue-popup img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; }
+        .venue-popup h6 { margin: 8px 0 4px; }
+        .leaflet-popup-content-wrapper { padding: 0; overflow: hidden; }
+        .leaflet-popup-content { margin: 0; }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const venues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Venues));
+        const centerLat = @Model.CenterLat;
+        const centerLng = @Model.CenterLng;
+        const zoomLevel = @Model.ZoomLevel;
+
+        const map = L.map('map').setView([centerLat, centerLng], zoomLevel);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const markers = L.markerClusterGroup ? L.markerClusterGroup() : L.layerGroup();
+
+        venues.forEach(venue => {
+            const marker = L.marker([venue.lat, venue.lng]);
+            const popupContent = `
+                <div class="venue-popup">
+                    <img src="${venue.imageUrl || '/images/placeholder-venue.jpg'}" alt="${venue.name}">
+                    <div class="p-2">
+                        <h6>${venue.name}</h6>
+                        <small class="text-muted">${venue.city}</small>
+                        <div class="mt-1">
+                            ${venue.rating ? `<span class="badge bg-success"><i class="bi bi-star-fill"></i> ${venue.rating.toFixed(1)}</span>` : ''}
+                            <span class="badge bg-secondary">${venue.roomCount} rooms</span>
+                        </div>
+                        <a href="/venue/${venue.slug}" class="btn btn-primary btn-sm w-100 mt-2">View Details</a>
+                    </div>
+                </div>
+            `;
+            marker.bindPopup(popupContent);
+            markers.addLayer(marker);
+        });
+
+        map.addLayer(markers);
+
+        if (venues.length > 0) {
+            const bounds = L.latLngBounds(venues.map(v => [v.lat, v.lng]));
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
+
+        function locateMe() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        window.location.href = `/map?lat=${lat}&lng=${lng}`;
+                    },
+                    error => {
+                        alert('Unable to get your location. Please allow location access.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        }
+    </script>
+}

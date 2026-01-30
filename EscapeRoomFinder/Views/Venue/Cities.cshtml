@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Escape Rooms by City";
+    ViewData["Description"] = "Find escape rooms in cities across the country. Browse venues and book your next adventure.";
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1><i class="bi bi-building me-2"></i>Escape Rooms by City</h1>
+            <p class="lead text-muted">
+                Find escape room venues in your city or discover new destinations
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var city in (dynamic)Model)
+        {
+            <div class="col-md-4 col-lg-3 mb-4">
+                <a href="/search?city=@city.City" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm city-card">
+                        <div class="card-body">
+                            <h5 class="card-title text-dark">
+                                <i class="bi bi-geo-alt text-primary"></i> @city.City
+                            </h5>
+                            <p class="text-muted small mb-2">@city.Country</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">@city.VenueCount venues</span>
+                                <span class="badge bg-success">@city.RoomCount rooms</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-primary">Explore <i class="bi bi-arrow-right"></i></small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
+    @if (Model == null || !(Model as System.Collections.IEnumerable)!.Cast<object>().Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-geo-alt display-1 text-muted"></i>
+            <h3 class="mt-3 text-muted">No cities found</h3>
+            <p class="text-muted">Check back soon for escape rooms in new locations!</p>
+        </div>
+    }
+</div>
+
+@section Styles {
+<style>
+    .city-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .city-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+}

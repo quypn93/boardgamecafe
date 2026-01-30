@@ -90,14 +90,15 @@ namespace BoardGameCafeFinder.Controllers
 
         /// <summary>
         /// Dynamic blog post page - generates content from database
+        /// Supports both slug format (virginia-beach) and URL-encoded format (Virginia%20Beach)
         /// </summary>
         [Route("blog/{city}")]
         public async Task<IActionResult> Post(string city)
         {
-            // Decode the city name
+            // First, decode URL encoding for backward compatibility
             city = Uri.UnescapeDataString(city);
 
-            // Get cafes in this city
+            // Try to find city by exact match first
             var cafes = await _context.Cafes
                 .Include(c => c.CafeGames!)
                     .ThenInclude(cg => cg.Game)
@@ -106,6 +107,27 @@ namespace BoardGameCafeFinder.Controllers
                 .OrderByDescending(c => c.AverageRating)
                 .ThenByDescending(c => c.TotalReviews)
                 .ToListAsync();
+
+            // If no match, try matching by slug (convert slug to pattern: "virginia-beach" matches "Virginia Beach")
+            if (!cafes.Any())
+            {
+                // Convert slug to match pattern: replace hyphens with spaces for LIKE comparison
+                var slugPattern = city.Replace("-", " ");
+                cafes = await _context.Cafes
+                    .Include(c => c.CafeGames!)
+                        .ThenInclude(cg => cg.Game)
+                    .Include(c => c.Photos)
+                    .Where(c => c.IsActive && EF.Functions.Like(c.City.ToLower(), slugPattern.ToLower()))
+                    .OrderByDescending(c => c.AverageRating)
+                    .ThenByDescending(c => c.TotalReviews)
+                    .ToListAsync();
+
+                // Update city name to the actual value from database
+                if (cafes.Any())
+                {
+                    city = cafes.First().City;
+                }
+            }
 
             if (!cafes.Any())
             {
@@ -174,7 +196,7 @@ namespace BoardGameCafeFinder.Controllers
         public double AverageRating { get; set; }
         public string? SampleImage { get; set; }
 
-        public string Slug => Uri.EscapeDataString(City.ToLower().Replace(" ", "-"));
+        public string Slug => City.ToLower().Replace(" ", "-");
     }
 
     public class DynamicBlogPost

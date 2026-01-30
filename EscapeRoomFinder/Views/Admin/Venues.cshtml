@@ -1,0 +1,212 @@
+@model List<EscapeRoomFinder.Models.Domain.EscapeRoomVenue>
+@{
+    ViewData["Title"] = "Venue Management";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-building me-2"></i>Venue Management</h1>
+    <a href="/admin/venues/create" class="btn btn-primary">
+        <i class="bi bi-plus"></i> Add Venue
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Search -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label class="form-label">Search Venues</label>
+                <input type="text" name="search" class="form-control" value="@ViewBag.Search"
+                       placeholder="Search by name or city...">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                @if (!string.IsNullOrEmpty(ViewBag.Search as string))
+                {
+                    <a href="/admin/venues" class="btn btn-outline-secondary">Clear</a>
+                }
+            </div>
+            <div class="col-md-3 text-end">
+                <span class="text-muted">Showing @Model.Count venues</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Venues Table -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-list-ul"></i> Venues</span>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Venue</th>
+                        <th>Location</th>
+                        <th>Rooms</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var venue in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    @if (!string.IsNullOrEmpty(venue.LocalImagePath))
+                                    {
+                                        <img src="@venue.LocalImagePath" alt="@venue.Name"
+                                             style="width: 40px; height: 40px; object-fit: cover;" class="rounded me-2">
+                                    }
+                                    <div>
+                                        <strong>@venue.Name</strong>
+                                        @if (venue.IsPremium)
+                                        {
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i></span>
+                                        }
+                                        <br>
+                                        <small class="text-muted">@venue.Slug</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span>@venue.City</span><br>
+                                <small class="text-muted">@venue.Country</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@venue.TotalRooms rooms</span>
+                            </td>
+                            <td>
+                                @if (venue.AverageRating.HasValue)
+                                {
+                                    <span class="text-warning">
+                                        @venue.AverageRating.Value.ToString("F1") <i class="bi bi-star-fill"></i>
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">@venue.TotalReviews reviews</small>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No ratings</span>
+                                }
+                            </td>
+                            <td>
+                                @if (venue.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="/admin/venues/edit/@venue.VenueId" class="btn btn-outline-primary" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="/admin/rooms?venueId=@venue.VenueId" class="btn btn-outline-info" title="View Rooms">
+                                        <i class="bi bi-door-closed"></i>
+                                    </a>
+                                    @if (!string.IsNullOrEmpty(venue.Slug))
+                                    {
+                                        <a href="/venue/@venue.Slug" target="_blank" class="btn btn-outline-secondary" title="View on Site">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    }
+                                    <button type="button" class="btn btn-outline-warning" title="Toggle Premium"
+                                            onclick="togglePremium(@venue.VenueId)">
+                                        <i class="bi bi-star@(venue.IsPremium ? "-fill" : "")"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger" title="Delete"
+                                            onclick="deleteVenue(@venue.VenueId)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                <a class="page-link" href="/admin/venues?search=@ViewBag.Search&page=@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-building display-4"></i>
+                <p class="mt-2">No venues found.</p>
+                <a href="/admin/venues/create" class="btn btn-primary">Add First Venue</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    async function deleteVenue(venueId) {
+        if (!confirm('Are you sure you want to delete this venue? This will make it inactive.')) return;
+
+        try {
+            const response = await fetch('/admin/venues/delete/' + venueId, { method: 'POST' });
+            const result = await response.json();
+            if (result.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+
+    async function togglePremium(venueId) {
+        try {
+            const response = await fetch('/admin/venues/toggle-premium/' + venueId, { method: 'POST' });
+            const result = await response.json();
+            if (result.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+</script>
+}

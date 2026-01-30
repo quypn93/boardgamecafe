@@ -36,6 +36,20 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// Configure application cookie - must be after AddIdentity
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.Cookie.Name = "BoardGameCafeFinder.Auth";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax; // Allow cookie in redirects
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+    options.SlidingExpiration = true;
+});
+
 // Redis Cache Configuration (optional for MVP, can be added later)
 // builder.Services.AddStackExchangeRedisCache(options =>
 // {
@@ -60,7 +74,17 @@ builder.Services.AddScoped<BoardGameCafeFinder.Services.IImageStorageService, Bo
 builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeWebsiteCrawlerService, BoardGameCafeFinder.Services.CafeWebsiteCrawlerService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IBlogService, BoardGameCafeFinder.Services.BlogService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IEmailService, BoardGameCafeFinder.Services.EmailService>();
-builder.Services.AddScoped<BoardGameCafeFinder.Services.IStripeService, BoardGameCafeFinder.Services.StripeService>();
+
+// Payment Services - supports Stripe and PayPal with configurable switching
+builder.Services.AddScoped<BoardGameCafeFinder.Services.StripePaymentService>();
+builder.Services.AddScoped<BoardGameCafeFinder.Services.PayPalPaymentService>();
+builder.Services.AddScoped<BoardGameCafeFinder.Services.IPaymentServiceFactory, BoardGameCafeFinder.Services.PaymentServiceFactory>();
+// Register IPaymentService using factory
+builder.Services.AddScoped<BoardGameCafeFinder.Services.IPaymentService>(sp =>
+    sp.GetRequiredService<BoardGameCafeFinder.Services.IPaymentServiceFactory>().GetPaymentService());
+// Legacy Stripe interface for backward compatibility
+builder.Services.AddScoped<BoardGameCafeFinder.Services.IStripeService>(sp =>
+    sp.GetRequiredService<BoardGameCafeFinder.Services.StripePaymentService>());
 
 // Add MVC Controllers and Views
 builder.Services.AddControllersWithViews();

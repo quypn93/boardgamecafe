@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using BoardGameCafeFinder.Models.Domain;
 using BoardGameCafeFinder.Models.ViewModels;
 using BoardGameCafeFinder.Services;
@@ -34,6 +35,7 @@ public class AccountController : Controller
     private bool RequireEmailConfirmation => _configuration.GetValue<bool>("Email:RequireConfirmation", false);
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login(string? returnUrl = null)
     {
         if (User.Identity?.IsAuthenticated == true)
@@ -46,6 +48,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
@@ -93,6 +96,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Register()
     {
         if (User.Identity?.IsAuthenticated == true)
@@ -104,6 +108,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
@@ -196,6 +201,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult AccessDenied()
     {
         return View();
@@ -394,6 +400,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> ConfirmEmail(int userId, string token)
     {
         if (string.IsNullOrEmpty(token))

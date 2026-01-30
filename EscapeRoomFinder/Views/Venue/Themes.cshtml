@@ -1,0 +1,121 @@
+@{
+    ViewData["Title"] = "Escape Room Themes";
+    ViewData["Description"] = "Browse escape rooms by theme. Find horror, mystery, adventure, sci-fi, and more themed escape rooms near you.";
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1><i class="bi bi-tags me-2"></i>Escape Room Themes</h1>
+            <p class="lead text-muted">
+                Explore escape rooms by theme and find the perfect adventure for your group
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var theme in (dynamic)Model)
+        {
+            var themeIcon = GetThemeIcon((string)theme.Theme);
+            var themeColor = GetThemeColor((string)theme.Theme);
+
+            <div class="col-md-4 col-lg-3 mb-4">
+                <a href="/search?theme=@theme.Theme" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm theme-card">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <span class="display-4" style="color: @themeColor;">
+                                    <i class="bi bi-@themeIcon"></i>
+                                </span>
+                            </div>
+                            <h5 class="card-title text-dark">@theme.Theme</h5>
+                            <p class="text-muted mb-2">
+                                <strong>@theme.RoomCount</strong> escape rooms
+                            </p>
+                            <div class="d-flex justify-content-around text-muted small">
+                                <div>
+                                    <i class="bi bi-puzzle"></i>
+                                    @{
+                                        double avgDiff = theme.AvgDifficulty;
+                                    }
+                                    @avgDiff.ToString("F1")/5
+                                </div>
+                                <div>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    @{
+                                        double avgRating = theme.AvgRating;
+                                    }
+                                    @avgRating.ToString("F1")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent text-center">
+                            <small class="text-primary">Browse Rooms <i class="bi bi-arrow-right"></i></small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
+    @if (Model == null || !(Model as System.Collections.IEnumerable)!.Cast<object>().Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-tags display-1 text-muted"></i>
+            <h3 class="mt-3 text-muted">No themes found</h3>
+            <p class="text-muted">Check back soon for new escape room themes!</p>
+        </div>
+    }
+</div>
+
+@section Styles {
+<style>
+    .theme-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .theme-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+}
+
+@functions {
+    string GetThemeIcon(string theme)
+    {
+        return (theme?.ToLower()) switch
+        {
+            "horror" => "emoji-dizzy",
+            "adventure" => "compass",
+            "mystery" => "search",
+            "sci-fi" => "rocket",
+            "fantasy" => "magic",
+            "historical" => "hourglass",
+            "crime" => "shield-exclamation",
+            "thriller" => "lightning",
+            "comedy" => "emoji-laughing",
+            "kids" => "balloon",
+            "family" => "people",
+            _ => "puzzle"
+        };
+    }
+
+    string GetThemeColor(string theme)
+    {
+        return (theme?.ToLower()) switch
+        {
+            "horror" => "#8B0000",
+            "adventure" => "#228B22",
+            "mystery" => "#4B0082",
+            "sci-fi" => "#00CED1",
+            "fantasy" => "#9932CC",
+            "historical" => "#8B4513",
+            "crime" => "#2F4F4F",
+            "thriller" => "#FF4500",
+            "comedy" => "#FFD700",
+            "kids" => "#FF69B4",
+            "family" => "#4169E1",
+            _ => "#6c757d"
+        };
+    }
+}

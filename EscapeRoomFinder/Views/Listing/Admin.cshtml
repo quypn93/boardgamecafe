@@ -1,0 +1,105 @@
+@model List<EscapeRoomFinder.Models.Domain.PremiumListing>
+@{
+    ViewData["Title"] = "Listing Management";
+    var plans = ViewBag.Plans as Dictionary<string, EscapeRoomFinder.Controllers.ListingPlan>;
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-star me-2"></i>Premium Listings</h1>
+        <a href="/Listing/Create" class="btn btn-primary"><i class="bi bi-plus me-1"></i>Add Listing</a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5>Total Listings</h5>
+                    <h2>@ViewBag.TotalListings</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5>Active</h5>
+                    <h2>@ViewBag.ActiveListings</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5>Expired</h5>
+                    <h2>@ViewBag.ExpiredListings</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5>Revenue</h5>
+                    <h2>$@ViewBag.TotalRevenue?.ToString("N2")</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Venue</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Period</th>
+                        <th>Monthly Fee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var listing in Model)
+                    {
+                        var isActive = listing.IsActive && listing.EndDate > DateTime.UtcNow;
+                        <tr>
+                            <td>@listing.Venue?.Name</td>
+                            <td><span class="badge bg-primary">@listing.PlanType</span></td>
+                            <td>
+                                @if (isActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Expired</span>
+                                }
+                            </td>
+                            <td>@listing.StartDate.ToString("MM/dd/yyyy") - @listing.EndDate.ToString("MM/dd/yyyy")</td>
+                            <td>$@listing.MonthlyFee</td>
+                            <td>
+                                <a href="/Listing/Edit/@listing.ListingId" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <button class="btn btn-sm btn-outline-success extend-btn" data-id="@listing.ListingId">Extend</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.querySelectorAll('.extend-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            if (confirm('Extend this listing by 1 month?')) {
+                const response = await fetch(`/Listing/Extend/${this.dataset.id}`, { method: 'POST' });
+                const result = await response.json();
+                alert(result.message);
+                if (result.success) location.reload();
+            }
+        });
+    });
+</script>
+}

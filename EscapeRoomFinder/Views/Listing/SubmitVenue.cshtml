@@ -1,0 +1,133 @@
+@{
+    ViewData["Title"] = "Submit Your Venue";
+    var plans = ViewBag.Plans as Dictionary<string, EscapeRoomFinder.Controllers.ListingPlan>;
+}
+
+<div class="bg-dark text-white py-5">
+    <div class="container text-center">
+        <h1><i class="bi bi-door-open me-2"></i>Submit Your Escape Room Venue</h1>
+        <p class="lead">Get your venue listed and reach more players</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form method="post" action="/Listing/SubmitVenue">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header"><h5 class="mb-0"><i class="bi bi-building me-2"></i>Venue Information</h5></div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Venue Name *</label>
+                            <input type="text" name="VenueName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="Description" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address *</label>
+                            <input type="text" name="Address" class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">City *</label>
+                                <input type="text" name="City" class="form-control" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">State</label>
+                                <input type="text" name="State" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Country</label>
+                                <input type="text" name="Country" class="form-control" value="United States">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" name="Phone" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="Email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" name="Website" class="form-control" placeholder="https://">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header"><h5 class="mb-0"><i class="bi bi-person me-2"></i>Your Information</h5></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Your Name *</label>
+                                <input type="text" name="OwnerName" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Your Email *</label>
+                                <input type="email" name="OwnerEmail" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" name="OwnerPhone" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Role</label>
+                                <select name="OwnerRole" class="form-select">
+                                    <option value="Owner">Owner</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Marketing">Marketing</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input type="checkbox" name="AgreeTerms" class="form-check-input" required>
+                    <label class="form-check-label">I agree to the Terms of Service</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-send me-2"></i>Submit Venue
+                </button>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header"><h5 class="mb-0">Select a Plan (Optional)</h5></div>
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            <input type="radio" name="PlanType" value="" class="form-check-input" id="planFree" checked>
+                            <label class="form-check-label" for="planFree"><strong>Free Listing</strong><br><small class="text-muted">Basic listing only</small></label>
+                        </div>
+                        @if (plans != null)
+                        {
+                            foreach (var plan in plans)
+                            {
+                                <div class="form-check mb-2">
+                                    <input type="radio" name="PlanType" value="@plan.Key" class="form-check-input" id="plan@plan.Key">
+                                    <label class="form-check-label" for="plan@plan.Key">
+                                        <strong>@plan.Key - $@plan.Value.MonthlyPrice/mo</strong>
+                                    </label>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

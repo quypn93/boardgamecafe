@@ -1,0 +1,309 @@
+@model EscapeRoomVenue
+@{
+    ViewData["Title"] = $"{Model.Name} - Escape Rooms in {Model.City}";
+    ViewData["Description"] = Model.MetaDescription ?? $"Find escape rooms at {Model.Name} in {Model.City}. {Model.TotalRooms} rooms available. Read reviews, compare difficulty, and book your adventure.";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/?city=@Model.City">@Model.City</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <img src="@(Model.LocalImagePath ?? "/images/placeholder-venue.jpg")" class="card-img-top" alt="@Model.Name" style="max-height: 400px; object-fit: cover;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h1 class="card-title">
+                                @Model.Name
+                                @if (Model.IsVerified)
+                                {
+                                    <i class="bi bi-patch-check-fill text-primary" title="Verified Venue"></i>
+                                }
+                            </h1>
+                            <p class="text-muted">
+                                <i class="bi bi-geo-alt"></i> @Model.Address, @Model.City, @Model.Country
+                            </p>
+                        </div>
+                        @if (Model.AverageRating.HasValue)
+                        {
+                            <div class="text-center">
+                                <span class="display-6 fw-bold text-success">@Model.AverageRating.Value.ToString("F1")</span>
+                                <div class="small text-muted">@Model.TotalReviews reviews</div>
+                            </div>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <p class="mt-3">@Model.Description</p>
+                    }
+
+                    <div class="row mt-3">
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            <div class="col-md-4">
+                                <p><i class="bi bi-telephone"></i> <a href="tel:@Model.Phone">@Model.Phone</a></p>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Website))
+                        {
+                            <div class="col-md-4">
+                                <p><i class="bi bi-globe"></i> <a href="@Model.Website" target="_blank">Visit Website</a></p>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.BookingUrl))
+                        {
+                            <div class="col-md-4">
+                                <a href="@Model.BookingUrl" target="_blank" class="btn btn-primary">
+                                    <i class="bi bi-calendar-check"></i> Book Now
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="bi bi-door-open"></i> Escape Rooms (@Model.TotalRooms)</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.Rooms.Any())
+                    {
+                        <div class="row row-cols-1 row-cols-md-2 g-3">
+                            @foreach (var room in Model.Rooms.Where(r => r.IsActive))
+                            {
+                                <div class="col">
+                                    <div class="card h-100">
+                                        @if (!string.IsNullOrEmpty(room.LocalImagePath) || !string.IsNullOrEmpty(room.ImageUrl))
+                                        {
+                                            <img src="@(room.LocalImagePath ?? room.ImageUrl ?? "/images/placeholder-room.jpg")" class="card-img-top" alt="@room.Name" style="height: 150px; object-fit: cover;">
+                                        }
+                                        <div class="card-body">
+                                            <h5 class="card-title">@room.Name</h5>
+                                            <div class="mb-2">
+                                                <span class="badge @room.GetDifficultyBadgeClass()">@room.GetDifficultyText()</span>
+                                                <span class="badge bg-secondary">@room.Theme</span>
+                                            </div>
+                                            <p class="card-text small text-muted">
+                                                <i class="bi bi-people"></i> @room.GetPlayerRange() |
+                                                <i class="bi bi-clock"></i> @room.DurationMinutes min
+                                                @if (room.SuccessRate.HasValue)
+                                                {
+                                                    <span>| @room.GetSuccessRateDisplay()</span>
+                                                }
+                                            </p>
+                                            @if (room.PricePerPerson.HasValue || room.PricePerGroup.HasValue)
+                                            {
+                                                <p class="card-text fw-bold">@room.GetPriceDisplay()</p>
+                                            }
+                                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                                @foreach (var tag in room.GetFeatureTags().Take(3))
+                                                {
+                                                    <span class="badge bg-light text-dark">@tag</span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <a href="/venue/@Model.Slug/room/@room.Slug" class="btn btn-outline-primary btn-sm w-100">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No room information available yet.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="bi bi-chat-left-text"></i> Reviews (@Model.TotalReviews)</h4>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                            <i class="bi bi-pencil"></i> Write Review
+                        </button>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (Model.Reviews.Any())
+                    {
+                        @foreach (var review in Model.Reviews.Take(10))
+                        {
+                            <div class="border-bottom py-3">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>@(review.User?.DisplayName ?? review.Title ?? "Anonymous")</strong>
+                                        <span class="text-warning">@review.GetRatingStars()</span>
+                                    </div>
+                                    <small class="text-muted">@review.GetTimeAgo()</small>
+                                </div>
+                                @if (!string.IsNullOrEmpty(review.Content))
+                                {
+                                    <p class="mt-2 mb-0">@review.Content</p>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">No reviews yet. Be the first to review!</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Venue Info</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-door-open text-primary"></i>
+                            <strong>@Model.TotalRooms</strong> Escape Rooms
+                        </li>
+                        @if (Model.HasParking)
+                        {
+                            <li class="mb-2"><i class="bi bi-p-circle text-primary"></i> Parking Available</li>
+                        }
+                        @if (Model.IsWheelchairAccessible)
+                        {
+                            <li class="mb-2"><i class="bi bi-universal-access text-primary"></i> Wheelchair Accessible</li>
+                        }
+                        @if (Model.HasWaitingArea)
+                        {
+                            <li class="mb-2"><i class="bi bi-cup text-primary"></i> Waiting Area</li>
+                        }
+                        @if (Model.MinAge.HasValue)
+                        {
+                            <li class="mb-2"><i class="bi bi-person text-primary"></i> Min Age: @Model.MinAge years</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-map"></i> Location</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <a href="@Model.GoogleMapsUrl" target="_blank">
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center=@Model.Latitude,@Model.Longitude&zoom=15&size=400x200&markers=@Model.Latitude,@Model.Longitude"
+                                 class="img-fluid" alt="Map location" style="width: 100%;">
+                        </a>
+                        <div class="p-3">
+                            <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-outline-primary btn-sm w-100">
+                                <i class="bi bi-map"></i> Get Directions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (ViewBag.NearbyVenues != null && ((List<EscapeRoomVenue>)ViewBag.NearbyVenues).Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-geo-alt"></i> Nearby Venues</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var nearby in (List<EscapeRoomVenue>)ViewBag.NearbyVenues)
+                        {
+                            if (nearby.VenueId != Model.VenueId)
+                            {
+                                <li class="list-group-item">
+                                    <a href="/venue/@nearby.Slug" class="text-decoration-none">
+                                        <strong>@nearby.Name</strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            @nearby.TotalRooms rooms | @(nearby.DistanceKm.ToString("F1")) km away
+                                        </small>
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-controller="Venue" asp-action="SubmitReview" asp-route-venueId="@Model.VenueId" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Write a Review for @Model.Name</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Your Rating</label>
+                            <div class="rating-input">
+                                @for (int i = 5; i >= 1; i--)
+                                {
+                                    <input type="radio" name="rating" value="@i" id="star@i" required>
+                                    <label for="star@i"><i class="bi bi-star-fill"></i></label>
+                                }
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Title (optional)</label>
+                            <input type="text" name="title" class="form-control" maxlength="200">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Your Review</label>
+                            <textarea name="content" class="form-control" rows="4" maxlength="5000"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Styles {
+    <style>
+        .rating-input {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        .rating-input input { display: none; }
+        .rating-input label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ddd;
+            padding: 0 2px;
+        }
+        .rating-input label:hover,
+        .rating-input label:hover ~ label,
+        .rating-input input:checked ~ label {
+            color: #ffc107;
+        }
+    </style>
+}

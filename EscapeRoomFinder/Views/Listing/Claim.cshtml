@@ -1,0 +1,195 @@
+@{
+    ViewData["Title"] = "Claim Your Venue";
+    var venue = ViewBag.Venue as EscapeRoomFinder.Models.Domain.EscapeRoomVenue;
+    var plans = ViewBag.Plans as Dictionary<string, EscapeRoomFinder.Controllers.ListingPlan>;
+    var selectedPlan = ViewBag.SelectedPlan as string ?? "Premium";
+}
+
+<div class="bg-dark text-white py-4">
+    <div class="container">
+        <h1 class="h2 mb-0"><i class="bi bi-shield-check me-2"></i>Claim Your Venue</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8">
+            @if (venue != null)
+            {
+                <div class="card mb-4">
+                    <div class="card-header"><h5 class="mb-0"><i class="bi bi-door-open me-2"></i>Venue Information</h5></div>
+                    <div class="card-body">
+                        <h4>@venue.Name</h4>
+                        <p class="text-muted"><i class="bi bi-geo-alt me-1"></i>@venue.Address, @venue.City</p>
+                        @if (venue.AverageRating.HasValue)
+                        {
+                            <p><i class="bi bi-star-fill text-warning"></i> @venue.AverageRating.Value.ToString("F1") (@venue.TotalReviews reviews)</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <form method="post" action="/Listing/SubmitClaim">
+                @if (venue != null)
+                {
+                    <input type="hidden" name="VenueId" value="@venue.VenueId">
+                }
+
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark"><h5 class="mb-0"><i class="bi bi-star me-2"></i>Select Plan</h5></div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if (plans != null)
+                            {
+                                @foreach (var plan in plans)
+                                {
+                                    var isSelected = selectedPlan == plan.Key;
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 plan-card @(isSelected ? "border-primary border-2" : "")" data-plan="@plan.Key">
+                                            <div class="card-body text-center">
+                                                <h5>@plan.Key</h5>
+                                                <h3 class="text-primary">$@plan.Value.MonthlyPrice<small>/mo</small></h3>
+                                                <input type="radio" name="PlanType" value="@plan.Key" @(isSelected ? "checked" : "") required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white"><h5 class="mb-0"><i class="bi bi-calendar me-2"></i>Duration</h5></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <input type="radio" name="DurationMonths" value="1" id="dur1"> <label for="dur1">1 Month</label>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <input type="radio" name="DurationMonths" value="3" id="dur3" checked> <label for="dur3">3 Months (5% off)</label>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <input type="radio" name="DurationMonths" value="6" id="dur6"> <label for="dur6">6 Months (10% off)</label>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <input type="radio" name="DurationMonths" value="12" id="dur12"> <label for="dur12">12 Months (20% off)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header"><h5 class="mb-0"><i class="bi bi-person me-2"></i>Contact Information</h5></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" name="ContactName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="ContactEmail" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" name="ContactPhone">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Role</label>
+                                <select class="form-select" name="ContactRole">
+                                    <option value="Owner">Owner</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Marketing">Marketing</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header"><h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Verification</h5></div>
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="VerificationMethod" value="email" checked>
+                            <label class="form-check-label">Verify by email</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="VerificationMethod" value="phone">
+                            <label class="form-check-label">Verify by phone</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" name="AgreeTerms" required>
+                    <label class="form-check-label">I agree to the Terms of Service and Privacy Policy</label>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="/Listing/Pricing" class="btn btn-outline-secondary">Back</a>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-shield-check me-2"></i>Submit Claim
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 1rem;">
+                <div class="card-header bg-primary text-white"><h5 class="mb-0">Order Summary</h5></div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Plan:</span><strong id="summaryPlan">@selectedPlan</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Duration:</span><strong id="summaryDuration">3 months</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span class="h5">Total:</span><strong class="h5 text-primary" id="summaryTotal">$170.97</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const plans = { 'Basic': 29.99, 'Premium': 59.99, 'Featured': 99.99 };
+    const discounts = { 1: 0, 3: 0.05, 6: 0.10, 12: 0.20 };
+
+    function updateSummary() {
+        const plan = document.querySelector('input[name="PlanType"]:checked')?.value || 'Premium';
+        const months = parseInt(document.querySelector('input[name="DurationMonths"]:checked')?.value || '3');
+        const rate = plans[plan];
+        const discount = discounts[months];
+        const total = (rate * months) * (1 - discount);
+
+        document.getElementById('summaryPlan').textContent = plan;
+        document.getElementById('summaryDuration').textContent = months + ' month(s)';
+        document.getElementById('summaryTotal').textContent = '$' + total.toFixed(2);
+    }
+
+    document.querySelectorAll('.plan-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelector(`input[name="PlanType"][value="${this.dataset.plan}"]`).checked = true;
+            document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('border-primary', 'border-2'));
+            this.classList.add('border-primary', 'border-2');
+            updateSummary();
+        });
+    });
+
+    document.querySelectorAll('input[name="PlanType"], input[name="DurationMonths"]').forEach(input => {
+        input.addEventListener('change', updateSummary);
+    });
+
+    updateSummary();
+</script>
+}

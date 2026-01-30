@@ -1,0 +1,99 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img src="@(Model.AvatarUrl ?? "/images/default-avatar.png")" class="rounded-circle mb-3" alt="Profile" style="width: 150px; height: 150px; object-fit: cover;">
+                    <h4>@(Model.DisplayName ?? Model.Email)</h4>
+                    <p class="text-muted">@Model.Email</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-trophy"></i> Stats</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><i class="bi bi-chat-left-text"></i> Reviews Written</span>
+                        <strong>@Model.TotalReviews</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><i class="bi bi-door-open"></i> Rooms Played</span>
+                        <strong>@Model.TotalRoomsPlayed</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><i class="bi bi-trophy"></i> Escapes</span>
+                        <strong>@Model.TotalEscapes</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><i class="bi bi-percent"></i> Escape Rate</span>
+                        <strong>@Model.EscapeRate%</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><i class="bi bi-star"></i> Reputation</span>
+                        <strong>@Model.ReputationScore</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-person"></i> Edit Profile</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Profile" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label"></label>
+                                <input asp-for="LastName" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DisplayName" class="form-label"></label>
+                            <input asp-for="DisplayName" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Bio" class="form-label"></label>
+                            <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="City" class="form-label"></label>
+                                <input asp-for="City" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Country" class="form-label"></label>
+                                <input asp-for="Country" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FavoriteThemes" class="form-label">Favorite Themes</label>
+                            <input asp-for="FavoriteThemes" class="form-control" placeholder="Horror, Mystery, Adventure..." />
+                            <small class="text-muted">Separate with commas</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

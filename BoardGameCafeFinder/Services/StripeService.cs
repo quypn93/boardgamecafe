@@ -4,6 +4,9 @@ using BoardGameCafeFinder.Models.Domain;
 
 namespace BoardGameCafeFinder.Services
 {
+    /// <summary>
+    /// Legacy interface for backward compatibility
+    /// </summary>
     public interface IStripeService
     {
         Task<Session> CreateCheckoutSessionAsync(ClaimRequest claimRequest, string successUrl, string cancelUrl);
@@ -13,24 +16,138 @@ namespace BoardGameCafeFinder.Services
         Stripe.Event ConstructWebhookEvent(string json, string signature, string webhookSecret);
     }
 
-    public class StripeService : IStripeService
+    /// <summary>
+    /// Stripe payment service implementing both legacy and new interfaces
+    /// </summary>
+    public class StripePaymentService : IPaymentService, IStripeService
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger<StripeService> _logger;
+        private readonly ILogger<StripePaymentService> _logger;
 
-        public StripeService(IConfiguration configuration, ILogger<StripeService> logger)
+        public string ProviderName => "Stripe";
+
+        public StripePaymentService(IConfiguration configuration, ILogger<StripePaymentService> logger)
         {
             _configuration = configuration;
             _logger = logger;
 
             // Configure Stripe API key
-            StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
+            var secretKey = _configuration["Stripe:SecretKey"];
+            if (!string.IsNullOrEmpty(secretKey))
+            {
+                StripeConfiguration.ApiKey = secretKey;
+            }
         }
 
-        /// <summary>
-        /// Creates a Stripe Checkout Session for the claim request
-        /// </summary>
-        public async Task<Session> CreateCheckoutSessionAsync(ClaimRequest claimRequest, string successUrl, string cancelUrl)
+        public bool IsConfigured()
+        {
+            return !string.IsNullOrEmpty(_configuration["Stripe:SecretKey"]) &&
+                   !string.IsNullOrEmpty(_configuration["Stripe:PublishableKey"]);
+        }
+
+        #region IPaymentService Implementation
+
+        public async Task<PaymentSessionResult> CreateCheckoutSessionAsync(ClaimRequest claimRequest, string successUrl, string cancelUrl)
+        {
+            try
+            {
+                var session = await CreateStripeCheckoutSessionAsync(claimRequest, successUrl, cancelUrl);
+                return new PaymentSessionResult
+                {
+                    Success = true,
+                    SessionId = session.Id,
+                    CheckoutUrl = session.Url
+                };
+            }
+            catch (StripeException ex)
+            {
+                _logger.LogError(ex, "Error creating Stripe checkout session");
+                return new PaymentSessionResult
+                {
+                    Success = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        async Task<PaymentSessionDetails?> IPaymentService.GetSessionAsync(string sessionId)
+        {
+            var session = await GetSessionAsync(sessionId);
+            if (session == null) return null;
+
+            return new PaymentSessionDetails
+            {
+                SessionId = session.Id,
+                Status = MapStripeStatus(session.PaymentStatus),
+                PaymentId = session.PaymentIntentId,
+                AmountPaid = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : null,
+                Currency = session.Currency,
+                CustomerEmail = session.CustomerEmail,
+                Metadata = session.Metadata ?? new Dictionary<string, string>()
+            };
+        }
+
+        public Task<bool> CapturePaymentAsync(string sessionId, string? payerId = null)
+        {
+            // Stripe captures payment automatically after checkout
+            return Task.FromResult(true);
+        }
+
+        public WebhookEventResult ParseWebhookEvent(string payload, string? signature, string? webhookSecret)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(signature) || string.IsNullOrEmpty(webhookSecret))
+                {
+                    return new WebhookEventResult { IsValid = false, ErrorMessage = "Missing signature or webhook secret" };
+                }
+
+                var stripeEvent = ConstructWebhookEvent(payload, signature, webhookSecret);
+
+                var result = new WebhookEventResult
+                {
+                    IsValid = true,
+                    EventType = stripeEvent.Type
+                };
+
+                // Extract session/payment info based on event type
+                if (stripeEvent.Data.Object is Session session)
+                {
+                    result.SessionId = session.Id;
+                    result.PaymentId = session.PaymentIntentId;
+                    result.Metadata = session.Metadata ?? new Dictionary<string, string>();
+                }
+                else if (stripeEvent.Data.Object is PaymentIntent paymentIntent)
+                {
+                    result.PaymentId = paymentIntent.Id;
+                    result.Metadata = paymentIntent.Metadata ?? new Dictionary<string, string>();
+                }
+
+                return result;
+            }
+            catch (StripeException ex)
+            {
+                _logger.LogError(ex, "Error parsing Stripe webhook");
+                return new WebhookEventResult { IsValid = false, ErrorMessage = ex.Message };
+            }
+        }
+
+        private string MapStripeStatus(string? stripeStatus)
+        {
+            return stripeStatus?.ToLower() switch
+            {
+                "paid" => "completed",
+                "unpaid" => "pending",
+                "no_payment_required" => "completed",
+                _ => "pending"
+            };
+        }
+
+        #endregion
+
+        #region IStripeService Implementation (Legacy)
+
+        public async Task<Session> CreateStripeCheckoutSessionAsync(ClaimRequest claimRequest, string successUrl, string cancelUrl)
         {
             var options = new SessionCreateOptions
             {
@@ -82,9 +199,11 @@ namespace BoardGameCafeFinder.Services
             return session;
         }
 
-        /// <summary>
-        /// Retrieves a checkout session by ID
-        /// </summary>
+        Task<Session> IStripeService.CreateCheckoutSessionAsync(ClaimRequest claimRequest, string successUrl, string cancelUrl)
+        {
+            return CreateStripeCheckoutSessionAsync(claimRequest, successUrl, cancelUrl);
+        }
+
         public async Task<Session?> GetSessionAsync(string sessionId)
         {
             try
@@ -99,9 +218,6 @@ namespace BoardGameCafeFinder.Services
             }
         }
 
-        /// <summary>
-        /// Retrieves a payment intent by ID
-        /// </summary>
         public async Task<PaymentIntent?> GetPaymentIntentAsync(string paymentIntentId)
         {
             try
@@ -116,9 +232,6 @@ namespace BoardGameCafeFinder.Services
             }
         }
 
-        /// <summary>
-        /// Retrieves a Stripe invoice by ID
-        /// </summary>
         public async Task<Stripe.Invoice?> GetStripeInvoiceAsync(string invoiceId)
         {
             try
@@ -133,12 +246,18 @@ namespace BoardGameCafeFinder.Services
             }
         }
 
-        /// <summary>
-        /// Constructs and validates a webhook event from Stripe
-        /// </summary>
         public Stripe.Event ConstructWebhookEvent(string json, string signature, string webhookSecret)
         {
             return EventUtility.ConstructEvent(json, signature, webhookSecret);
         }
+
+        #endregion
+    }
+
+    // Alias for backward compatibility
+    public class StripeService : StripePaymentService
+    {
+        public StripeService(IConfiguration configuration, ILogger<StripePaymentService> logger)
+            : base(configuration, logger) { }
     }
 }

@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Venue Submitted";
+    var venue = ViewBag.Venue as EscapeRoomFinder.Models.Domain.EscapeRoomVenue;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                    <h1 class="mt-4">Venue Submitted!</h1>
+                    <p class="lead text-muted">
+                        Thank you for submitting your escape room venue. We'll review it and notify you once it's approved.
+                    </p>
+
+                    @if (venue != null)
+                    {
+                        <div class="card bg-light mb-4 mx-auto" style="max-width: 400px;">
+                            <div class="card-body">
+                                <h5>@venue.Name</h5>
+                                <p class="text-muted mb-0">@venue.City, @venue.Country</p>
+                            </div>
+                        </div>
+
+                        <p>Want to get premium features right away?</p>
+                        <a href="/Listing/Claim/@venue.VenueId" class="btn btn-primary">
+                            <i class="bi bi-star me-1"></i>Get Premium Listing
+                        </a>
+                    }
+
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-outline-secondary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

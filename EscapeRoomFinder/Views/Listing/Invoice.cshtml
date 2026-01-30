@@ -1,0 +1,62 @@
+@model EscapeRoomFinder.Models.Domain.Invoice
+@{
+    ViewData["Title"] = "Invoice " + Model.InvoiceNumber;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Invoice</h4>
+                    <span class="badge bg-@(Model.Status == "paid" ? "success" : "warning")">@Model.Status.ToUpper()</span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>From:</h5>
+                            <p>Escape Room Finder<br>support@escaperoomfinder.com</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <h5>Invoice #: @Model.InvoiceNumber</h5>
+                            <p>Date: @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-4">
+                        <h5>Bill To:</h5>
+                        <p>@Model.Venue?.Name</p>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@Model.Description</td>
+                                <td class="text-end">$@Model.Amount.ToString("F2")</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th class="text-end">$@Model.Amount.ToString("F2")</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    @if (Model.PaidAt.HasValue)
+                    {
+                        <p class="text-success"><i class="bi bi-check-circle me-1"></i>Paid on @Model.PaidAt.Value.ToString("MMMM dd, yyyy")</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

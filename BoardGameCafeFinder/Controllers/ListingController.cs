@@ -14,7 +14,9 @@ namespace BoardGameCafeFinder.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ListingController> _logger;
-        private readonly IStripeService _stripeService;
+        private readonly IPaymentService _paymentService;
+        private readonly IPaymentServiceFactory _paymentServiceFactory;
+        private readonly IStripeService _stripeService; // Legacy support
         private readonly IConfiguration _configuration;
 
         // Plan definitions
@@ -67,12 +69,16 @@ namespace BoardGameCafeFinder.Controllers
         public ListingController(
             ApplicationDbContext context,
             ILogger<ListingController> logger,
+            IPaymentService paymentService,
+            IPaymentServiceFactory paymentServiceFactory,
             IStripeService stripeService,
             IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
-            _stripeService = stripeService;
+            _paymentService = paymentService;
+            _paymentServiceFactory = paymentServiceFactory;
+            _stripeService = stripeService; // Legacy support for webhook
             _configuration = configuration;
         }
 
@@ -614,23 +620,32 @@ namespace BoardGameCafeFinder.Controllers
                 _context.ClaimRequests.Add(claimRequest);
                 await _context.SaveChangesAsync();
 
-                // Create Stripe checkout session
+                // Create checkout session using active payment provider
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                var successUrl = $"{baseUrl}/Listing/CheckoutSuccess?session_id={{CHECKOUT_SESSION_ID}}";
+                // PayPal uses token param, Stripe uses session_id with placeholder
+                var successUrl = _paymentService.ProviderName == "Stripe"
+                    ? $"{baseUrl}/Listing/CheckoutSuccess?session_id={{CHECKOUT_SESSION_ID}}"
+                    : $"{baseUrl}/Listing/CheckoutSuccess?claim_id={claimRequest.ClaimRequestId}";
                 var cancelUrl = $"{baseUrl}/Listing/CheckoutCancel?claim_id={claimRequest.ClaimRequestId}";
 
-                var session = await _stripeService.CreateCheckoutSessionAsync(claimRequest, successUrl, cancelUrl);
+                var result = await _paymentService.CreateCheckoutSessionAsync(claimRequest, successUrl, cancelUrl);
+
+                if (!result.Success)
+                {
+                    TempData["Error"] = $"Payment error: {result.ErrorMessage}";
+                    return RedirectToAction("Claim", new { cafeId = model.CafeId });
+                }
 
                 // Update claim with session ID
-                claimRequest.StripeSessionId = session.Id;
+                claimRequest.StripeSessionId = result.SessionId; // Used for both Stripe and PayPal
                 claimRequest.PaymentStatus = "processing";
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Created claim request {ClaimId} for cafe {CafeName}, redirecting to Stripe",
-                    claimRequest.ClaimRequestId, cafe.Name);
+                _logger.LogInformation("Created claim request {ClaimId} for cafe {CafeName}, redirecting to {Provider}",
+                    claimRequest.ClaimRequestId, cafe.Name, _paymentService.ProviderName);
 
-                // Redirect to Stripe Checkout
-                return Redirect(session.Url);
+                // Redirect to checkout
+                return Redirect(result.CheckoutUrl!);
             }
             catch (Exception ex)
             {
@@ -643,25 +658,36 @@ namespace BoardGameCafeFinder.Controllers
         /// <summary>
         /// Checkout success - called after successful payment
         /// GET: /Listing/CheckoutSuccess
+        /// Supports both Stripe (session_id) and PayPal (token, PayerID, claim_id)
         /// </summary>
         [Route("CheckoutSuccess")]
-        public async Task<IActionResult> CheckoutSuccess(string session_id)
+        public async Task<IActionResult> CheckoutSuccess(
+            string? session_id = null,
+            string? token = null,
+            string? PayerID = null,
+            int? claim_id = null)
         {
             try
             {
-                var session = await _stripeService.GetSessionAsync(session_id);
-                if (session == null)
-                {
-                    TempData["Error"] = "Payment session not found";
-                    return RedirectToAction("Pricing");
-                }
+                ClaimRequest? claimRequest = null;
+                string? sessionId = session_id ?? token; // PayPal uses 'token' as order ID
 
                 // Find claim request
-                var claimRequest = await _context.ClaimRequests
-                    .Include(c => c.Cafe)
-                    .FirstOrDefaultAsync(c => c.StripeSessionId == session_id);
+                if (!string.IsNullOrEmpty(sessionId))
+                {
+                    claimRequest = await _context.ClaimRequests
+                        .Include(c => c.Cafe)
+                        .FirstOrDefaultAsync(c => c.StripeSessionId == sessionId);
+                }
+                else if (claim_id.HasValue)
+                {
+                    claimRequest = await _context.ClaimRequests
+                        .Include(c => c.Cafe)
+                        .FirstOrDefaultAsync(c => c.ClaimRequestId == claim_id.Value);
+                    sessionId = claimRequest?.StripeSessionId;
+                }
 
-                if (claimRequest == null)
+                if (claimRequest == null || string.IsNullOrEmpty(sessionId))
                 {
                     TempData["Error"] = "Claim request not found";
                     return RedirectToAction("Pricing");
@@ -673,18 +699,38 @@ namespace BoardGameCafeFinder.Controllers
                     ViewBag.ClaimRequest = claimRequest;
                     ViewBag.Invoice = await _context.Invoices
                         .FirstOrDefaultAsync(i => i.ClaimRequestId == claimRequest.ClaimRequestId);
+                    ViewBag.PaymentProvider = _paymentService.ProviderName;
                     return View();
                 }
 
-                // Process payment
-                if (session.PaymentStatus == "paid")
+                // Get session details from payment provider
+                var sessionDetails = await _paymentService.GetSessionAsync(sessionId);
+                if (sessionDetails == null)
                 {
-                    await ProcessSuccessfulPayment(claimRequest, session);
+                    TempData["Error"] = "Payment session not found";
+                    return RedirectToAction("Pricing");
+                }
+
+                // For PayPal, we need to capture the payment
+                if (_paymentService.ProviderName == "PayPal" && !string.IsNullOrEmpty(PayerID))
+                {
+                    var captured = await _paymentService.CapturePaymentAsync(sessionId, PayerID);
+                    if (captured)
+                    {
+                        sessionDetails = await _paymentService.GetSessionAsync(sessionId);
+                    }
+                }
+
+                // Process payment if completed
+                if (sessionDetails?.Status == "completed")
+                {
+                    await ProcessSuccessfulPaymentGeneric(claimRequest, sessionDetails);
                 }
 
                 ViewBag.ClaimRequest = claimRequest;
                 ViewBag.Invoice = await _context.Invoices
                     .FirstOrDefaultAsync(i => i.ClaimRequestId == claimRequest.ClaimRequestId);
+                ViewBag.PaymentProvider = _paymentService.ProviderName;
 
                 return View();
             }
@@ -830,13 +876,15 @@ namespace BoardGameCafeFinder.Controllers
 
         #region Private Methods
 
-        private async Task ProcessSuccessfulPayment(ClaimRequest claimRequest, Session session)
+        /// <summary>
+        /// Process successful payment - provider agnostic version
+        /// </summary>
+        private async Task ProcessSuccessfulPaymentGeneric(ClaimRequest claimRequest, PaymentSessionDetails sessionDetails)
         {
             // Update claim request
             claimRequest.PaymentStatus = "completed";
             claimRequest.PaidAt = DateTime.UtcNow;
-            claimRequest.StripePaymentIntentId = session.PaymentIntentId;
-            claimRequest.StripeCustomerId = session.CustomerId;
+            claimRequest.StripePaymentIntentId = sessionDetails.PaymentId; // Works for both Stripe and PayPal
             claimRequest.UpdatedAt = DateTime.UtcNow;
 
             // Get plan features
@@ -891,8 +939,8 @@ namespace BoardGameCafeFinder.Controllers
                 TaxAmount = 0,
                 TotalAmount = claimRequest.TotalAmount,
                 PaymentStatus = "paid",
-                PaymentMethod = "stripe",
-                StripePaymentIntentId = session.PaymentIntentId,
+                PaymentMethod = _paymentService.ProviderName.ToLower(),
+                StripePaymentIntentId = sessionDetails.PaymentId,
                 PaidAt = DateTime.UtcNow,
                 CreatedAt = DateTime.UtcNow
             };
@@ -900,8 +948,25 @@ namespace BoardGameCafeFinder.Controllers
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Payment processed for ClaimRequest {ClaimId}. Created Listing {ListingId} and Invoice {InvoiceNumber}",
-                claimRequest.ClaimRequestId, listing.ListingId, invoice.InvoiceNumber);
+            _logger.LogInformation("Payment processed via {Provider} for ClaimRequest {ClaimId}. Created Listing {ListingId} and Invoice {InvoiceNumber}",
+                _paymentService.ProviderName, claimRequest.ClaimRequestId, listing.ListingId, invoice.InvoiceNumber);
+        }
+
+        /// <summary>
+        /// Legacy Stripe-specific version for webhook compatibility
+        /// </summary>
+        private async Task ProcessSuccessfulPayment(ClaimRequest claimRequest, Session session)
+        {
+            var sessionDetails = new PaymentSessionDetails
+            {
+                SessionId = session.Id,
+                Status = "completed",
+                PaymentId = session.PaymentIntentId,
+                AmountPaid = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : null,
+                Currency = session.Currency,
+                CustomerEmail = session.CustomerEmail
+            };
+            await ProcessSuccessfulPaymentGeneric(claimRequest, sessionDetails);
         }
 
         private async Task HandleCheckoutSessionCompleted(Session session)

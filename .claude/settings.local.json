@@ -18,7 +18,8 @@
       "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\BoardGameCafeFinder\\\\wwwroot && dir favicon*\")",
       "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\GenerateFavicon && dotnet restore && dotnet run -- D:\\\\Task\\\\BoardGameCFFinder\\\\BoardGameCafeFinder\\\\wwwroot\\\\favicon.ico\")",
       "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\GenerateFavicon && dotnet restore 2>&1\")",
-      "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\GenerateFavicon && dotnet build 2>&1 && dotnet run -- D:\\\\Task\\\\BoardGameCFFinder\\\\BoardGameCafeFinder\\\\wwwroot\\\\favicon.ico 2>&1\")"
+      "Bash(cmd /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\GenerateFavicon && dotnet build 2>&1 && dotnet run -- D:\\\\Task\\\\BoardGameCFFinder\\\\BoardGameCafeFinder\\\\wwwroot\\\\favicon.ico 2>&1\")",
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''http://localhost:5000/admin/crawl/google-maps'' -Method POST -Body @{location=''Los Angeles''; maxResults=5; ajax=''true''} -ContentType ''application/x-www-form-urlencoded'' 2>&1\")"
     ]
   }
 }

@@ -92,4 +92,34 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Reset validation state when user changes email after server error
+            var $form = $('form');
+            var $validationSummary = $form.find('[data-valmsg-summary="true"]');
+
+            // When any input changes, clear server-side validation errors
+            $form.find('input').on('input', function() {
+                // Clear the validation summary (server-side errors)
+                if ($validationSummary.hasClass('validation-summary-errors')) {
+                    $validationSummary.removeClass('validation-summary-errors')
+                                      .addClass('validation-summary-valid');
+                    $validationSummary.find('ul').empty();
+                }
+            });
+
+            // Reset validator when email field changes specifically
+            $('#Email').on('input', function() {
+                var validator = $form.validate();
+                if (validator) {
+                    // Clear errors for this field
+                    validator.resetForm();
+                    $form.find('.field-validation-error')
+                         .removeClass('field-validation-error')
+                         .addClass('field-validation-valid')
+                         .empty();
+                }
+            });
+        });
+    </script>
 }

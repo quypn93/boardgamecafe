@@ -1,0 +1,97 @@
+@model List<BlogPost>
+@{
+    ViewData["Title"] = "Blog - Escape Room Tips & Guides";
+}
+
+<div class="container py-4">
+    <h1 class="mb-4"><i class="bi bi-journal-text"></i> Escape Room Blog</h1>
+
+    @if (ViewBag.City != null)
+    {
+        <div class="alert alert-info">
+            Showing posts about <strong>@ViewBag.City</strong>
+            <a href="/blog" class="ms-2">Clear filter</a>
+        </div>
+    }
+
+    @if (ViewBag.Category != null)
+    {
+        <div class="alert alert-info">
+            Category: <strong>@ViewBag.Category</strong>
+            <a href="/blog" class="ms-2">Clear filter</a>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var post in Model)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(post.FeaturedImage))
+                        {
+                            <img src="@post.FeaturedImage" class="card-img-top" alt="@post.Title" style="height: 180px; object-fit: cover;">
+                        }
+                        <div class="card-body">
+                            <div class="mb-2">
+                                @if (!string.IsNullOrEmpty(post.Category))
+                                {
+                                    <a href="/blog/category/@post.Category" class="badge bg-primary text-decoration-none">@post.Category</a>
+                                }
+                                @if (!string.IsNullOrEmpty(post.RelatedCity))
+                                {
+                                    <a href="/blog/city/@post.RelatedCity" class="badge bg-secondary text-decoration-none">@post.RelatedCity</a>
+                                }
+                            </div>
+                            <h5 class="card-title">
+                                <a href="/blog/@post.Slug" class="text-decoration-none text-dark">@post.Title</a>
+                            </h5>
+                            @if (!string.IsNullOrEmpty(post.Summary))
+                            {
+                                <p class="card-text text-muted">@post.Summary</p>
+                            }
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar"></i> @(post.PublishedAt?.ToString("MMM d, yyyy") ?? "Draft")
+                                @if (post.ViewCount > 0)
+                                {
+                                    <span class="ms-2"><i class="bi bi-eye"></i> @post.ViewCount views</span>
+                                }
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if ((int)ViewBag.TotalPages > 1)
+        {
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @((int)ViewBag.Page <= 1 ? "disabled" : "")">
+                        <a class="page-link" href="/blog?page=@((int)ViewBag.Page - 1)">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == (int)ViewBag.Page ? "active" : "")">
+                            <a class="page-link" href="/blog?page=@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @((int)ViewBag.Page >= (int)ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="/blog?page=@((int)ViewBag.Page + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-journal display-1 text-muted"></i>
+            <h3 class="mt-3">No posts yet</h3>
+            <p class="text-muted">Check back soon for escape room tips and guides!</p>
+        </div>
+    }
+</div>

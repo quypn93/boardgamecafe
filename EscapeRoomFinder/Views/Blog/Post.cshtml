@@ -1,0 +1,104 @@
+@model BlogPost
+@{
+    ViewData["Title"] = Model.MetaTitle ?? Model.Title;
+    ViewData["Description"] = Model.MetaDescription ?? Model.Summary;
+}
+
+<article class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/blog">Blog</a></li>
+            @if (!string.IsNullOrEmpty(Model.Category))
+            {
+                <li class="breadcrumb-item"><a href="/blog/category/@Model.Category">@Model.Category</a></li>
+            }
+            <li class="breadcrumb-item active">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            @if (!string.IsNullOrEmpty(Model.FeaturedImage))
+            {
+                <img src="@Model.FeaturedImage" class="img-fluid rounded mb-4" alt="@Model.Title">
+            }
+
+            <h1 class="mb-3">@Model.Title</h1>
+
+            <div class="text-muted mb-4">
+                <i class="bi bi-calendar"></i> @(Model.PublishedAt?.ToString("MMMM d, yyyy") ?? "Draft")
+                @if (!string.IsNullOrEmpty(Model.Author))
+                {
+                    <span class="ms-3"><i class="bi bi-person"></i> @Model.Author</span>
+                }
+                <span class="ms-3"><i class="bi bi-eye"></i> @Model.ViewCount views</span>
+            </div>
+
+            <div class="blog-content">
+                @Html.Raw(Model.Content)
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Tags))
+            {
+                <div class="mt-4">
+                    <strong>Tags:</strong>
+                    @foreach (var tag in Model.Tags.Split(','))
+                    {
+                        <span class="badge bg-light text-dark me-1">@tag.Trim()</span>
+                    }
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.RelatedCity))
+            {
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Looking for escape rooms in @Model.RelatedCity?</h5>
+                        <a href="/?city=@Model.RelatedCity" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Search Escape Rooms in @Model.RelatedCity
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            @if (ViewBag.RelatedPosts != null && ((List<BlogPost>)ViewBag.RelatedPosts).Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Related Posts</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var related in (List<BlogPost>)ViewBag.RelatedPosts)
+                        {
+                            if (related.Id != Model.Id)
+                            {
+                                <li class="list-group-item">
+                                    <a href="/blog/@related.Slug" class="text-decoration-none">
+                                        @related.Title
+                                    </a>
+                                    <br>
+                                    <small class="text-muted">@(related.PublishedAt?.ToString("MMM d, yyyy"))</small>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</article>
+
+@section Styles {
+    <style>
+        .blog-content h2, .blog-content h3, .blog-content h4 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .blog-content p { margin-bottom: 1rem; }
+        .blog-content ul, .blog-content ol { margin-bottom: 1rem; }
+        .blog-content img { max-width: 100%; height: auto; }
+    </style>
+}

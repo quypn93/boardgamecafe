@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<h1 class="mb-4"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5><i class="bi bi-door-open me-2"></i>Venues</h5>
+                    <h2>@ViewBag.VenueCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5><i class="bi bi-puzzle me-2"></i>Rooms</h5>
+                    <h2>@ViewBag.RoomCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5><i class="bi bi-people me-2"></i>Users</h5>
+                    <h2>@ViewBag.UserCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5><i class="bi bi-star me-2"></i>Reviews</h5>
+                    <h2>@ViewBag.ReviewCount</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header"><h5 class="mb-0">Quick Actions</h5></div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/Admin/Dashboard" class="btn btn-outline-primary"><i class="bi bi-activity me-2"></i>Dashboard & Crawl</a>
+                        <a href="/Admin/BlogPosts" class="btn btn-outline-primary"><i class="bi bi-file-earmark-text me-2"></i>Blog Posts</a>
+                        <a href="/Admin/Reviews" class="btn btn-outline-primary"><i class="bi bi-chat-square-text me-2"></i>Reviews</a>
+                        <a href="/Admin/Users" class="btn btn-outline-primary"><i class="bi bi-people me-2"></i>Users</a>
+                        <a href="/Listing/Admin" class="btn btn-outline-primary"><i class="bi bi-star me-2"></i>Premium Listings</a>
+                        <a href="/Listing/Claims" class="btn btn-outline-primary"><i class="bi bi-file-earmark me-2"></i>Claim Requests</a>
+                        <a href="/Listing/Invoices" class="btn btn-outline-primary"><i class="bi bi-receipt me-2"></i>Invoices</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header"><h5 class="mb-0">Recent Activity</h5></div>
+                <div class="card-body">
+                    <p class="text-muted">Recent reviews, new venues, and user registrations will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>

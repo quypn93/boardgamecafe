@@ -4,8 +4,11 @@
     ViewData["MetaDescription"] = $"Discover {Model.TotalCafes} board game cafes in {Model.City}, {Model.Country}. Find the best places to play board games with {Model.TotalGames}+ games available. Reviews, ratings & directions.";
     Layout = "_UserLayout";
 
+    // Helper function to create URL-friendly slug from city name
+    string ToSlug(string cityName) => cityName.ToLower().Replace(" ", "-");
+
     // SEO: Canonical URL
-    ViewData["CanonicalUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}/blog/{Uri.EscapeDataString(Model.City)}";
+    ViewData["CanonicalUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}/blog/{ToSlug(Model.City)}";
 
     // SEO: Dynamic OG Image (first cafe image or default)
     var firstCafeImage = Model.Cafes.FirstOrDefault()?.LocalImagePath;
@@ -63,12 +66,13 @@
                             "@@type": "PostalAddress",
                             "addressLocality": "@Model.City",
                             "addressCountry": "@Model.Country"
-                        }@if (cafe.AverageRating.HasValue)
+                        }@if (cafe.AverageRating.HasValue && cafe.TotalReviews > 0)
                         {<text>,
                         "aggregateRating": {
                             "@@type": "AggregateRating",
                             "ratingValue": "@cafe.AverageRating.Value.ToString("F1")",
-                            "bestRating": "5"
+                            "bestRating": "5",
+                            "ratingCount": "@cafe.TotalReviews"
                         }</text>}
                     }
                 }@(i < Math.Min(Model.Cafes.Count, 10) - 1 ? "," : "")
@@ -356,7 +360,7 @@
                         <div class="d-flex flex-wrap gap-2">
                             @foreach (var city in relatedCities)
                             {
-                                <a href="/blog/@Uri.EscapeDataString(city)" class="btn btn-sm btn-outline-primary">
+                                <a href="/blog/@ToSlug(city)" class="btn btn-sm btn-outline-primary">
                                     @city
                                 </a>
                             }

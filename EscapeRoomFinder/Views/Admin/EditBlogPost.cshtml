@@ -1,0 +1,75 @@
+@model EscapeRoomFinder.Models.Domain.BlogPost
+@{
+    ViewData["Title"] = "Edit Blog Post";
+    Layout = "_AdminLayout";
+}
+
+<h1 class="mb-4"><i class="bi bi-pencil me-2"></i>Edit Blog Post</h1>
+
+    <form method="post" action="/Admin/EditBlogPost/@Model.Id">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Title *</label>
+                    <input type="text" name="Title" class="form-control" value="@Model.Title" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Slug *</label>
+                    <input type="text" name="Slug" class="form-control" value="@Model.Slug" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Summary</label>
+                    <textarea name="Summary" class="form-control" rows="2">@Model.Summary</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Content *</label>
+                    <textarea name="Content" class="form-control" rows="10" required>@Model.Content</textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="Category" class="form-select">
+                            @{
+                                var cats = new[] { "Guide", "Tips", "News", "Review" };
+                            }
+                            @foreach (var cat in cats)
+                            {
+                                if (Model.Category == cat)
+                                {
+                                    <option value="@cat" selected>@cat</option>
+                                }
+                                else
+                                {
+                                    <option value="@cat">@cat</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Related City</label>
+                        <input type="text" name="RelatedCity" class="form-control" value="@Model.RelatedCity">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Featured Image URL</label>
+                        <input type="text" name="FeaturedImage" class="form-control" value="@Model.FeaturedImage">
+                    </div>
+                </div>
+                <div class="form-check mb-3">
+                    @if (Model.IsPublished)
+                    {
+                        <input type="checkbox" name="IsPublished" value="true" class="form-check-input" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="IsPublished" value="true" class="form-check-input">
+                    }
+                    <label class="form-check-label">Published</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="/Admin/BlogPosts" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+    </form>

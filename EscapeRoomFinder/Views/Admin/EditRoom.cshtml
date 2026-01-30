@@ -1,0 +1,247 @@
+@model EscapeRoomFinder.Models.Domain.EscapeRoom
+@{
+    ViewData["Title"] = "Edit Room";
+    Layout = "_AdminLayout";
+    var venues = ViewBag.Venues as List<EscapeRoomFinder.Models.Domain.EscapeRoomVenue>;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-pencil me-2"></i>Edit Room</h1>
+    <div>
+        <a href="/admin/rooms?venueId=@Model.VenueId" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Back to Rooms
+        </a>
+        @if (!string.IsNullOrEmpty(Model.Venue?.Slug))
+        {
+            <a href="/@Model.Venue.Slug/@Model.Slug" target="_blank" class="btn btn-outline-info">
+                <i class="bi bi-eye"></i> View Room
+            </a>
+        }
+    </div>
+</div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <form method="post" action="/admin/rooms/edit/@Model.RoomId">
+        <input type="hidden" name="RoomId" value="@Model.RoomId">
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">Basic Information</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Venue</label>
+                            <input type="text" class="form-control" value="@Model.Venue?.Name" disabled>
+                            <input type="hidden" name="VenueId" value="@Model.VenueId">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Room Name <span class="text-danger">*</span></label>
+                            <input type="text" name="Name" class="form-control" value="@Model.Name" required maxlength="200">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="Description" class="form-control" rows="4">@Model.Description</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Theme <span class="text-danger">*</span></label>
+                                <input type="text" name="Theme" class="form-control" value="@Model.Theme" required
+                                       list="themeList" placeholder="e.g., Horror, Adventure, Sci-Fi">
+                                <datalist id="themeList">
+                                    <option value="Horror"></option>
+                                    <option value="Adventure"></option>
+                                    <option value="Mystery"></option>
+                                    <option value="Sci-Fi"></option>
+                                    <option value="Fantasy"></option>
+                                    <option value="Historical"></option>
+                                    <option value="Crime"></option>
+                                    <option value="Thriller"></option>
+                                </datalist>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Difficulty (1-5) <span class="text-danger">*</span></label>
+                                <select name="Difficulty" class="form-select" required>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (Model.Difficulty == i)
+                                        {
+                                            <option value="@i" selected>@i - @(i == 1 ? "Easy" : i == 2 ? "Moderate" : i == 3 ? "Challenging" : i == 4 ? "Hard" : "Expert")</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@i">@i - @(i == 1 ? "Easy" : i == 2 ? "Moderate" : i == 3 ? "Challenging" : i == 4 ? "Hard" : "Expert")</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Game Details</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Min Players <span class="text-danger">*</span></label>
+                                <input type="number" name="MinPlayers" class="form-control" value="@Model.MinPlayers" required min="1" max="20">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Max Players <span class="text-danger">*</span></label>
+                                <input type="number" name="MaxPlayers" class="form-control" value="@Model.MaxPlayers" required min="1" max="20">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Duration (minutes)</label>
+                                <input type="number" name="DurationMinutes" class="form-control" value="@Model.DurationMinutes" min="15" max="180">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Price per Person ($)</label>
+                                <input type="number" name="PricePerPerson" class="form-control" value="@Model.PricePerPerson" step="0.01" min="0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Success Rate (%)</label>
+                                <input type="number" name="SuccessRate" class="form-control" value="@Model.SuccessRate" step="0.1" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats (Read-only) -->
+                @if (Model.AverageRating.HasValue || Model.TotalReviews > 0)
+                {
+                    <div class="card mb-4">
+                        <div class="card-header">Statistics</div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <h4>@(Model.AverageRating?.ToString("F1") ?? "-")</h4>
+                                    <small class="text-muted">Average Rating</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>@Model.TotalReviews</h4>
+                                    <small class="text-muted">Total Reviews</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>@(Model.SuccessRate?.ToString("F0") ?? "-")%</h4>
+                                    <small class="text-muted">Success Rate</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">Media & Links</div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.LocalImagePath))
+                        {
+                            <div class="mb-3">
+                                <img src="@Model.LocalImagePath" alt="@Model.Name" class="img-fluid rounded mb-2">
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Image URL</label>
+                            <input type="url" name="ImageUrl" class="form-control" value="@Model.ImageUrl" placeholder="https://...">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Booking URL</label>
+                            <input type="url" name="BookingUrl" class="form-control" value="@Model.BookingUrl" placeholder="https://...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Options</div>
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            @if (Model.IsKidFriendly)
+                            {
+                                <input type="checkbox" name="IsKidFriendly" class="form-check-input" value="true" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsKidFriendly" class="form-check-input" value="true">
+                            }
+                            <label class="form-check-label">Kid Friendly</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            @if (Model.IsActive)
+                            {
+                                <input type="checkbox" name="IsActive" class="form-check-input" value="true" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsActive" class="form-check-input" value="true">
+                            }
+                            <label class="form-check-label">Active</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Metadata</div>
+                    <div class="card-body">
+                        <small class="text-muted">
+                            <strong>Slug:</strong> @Model.Slug<br>
+                            <strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")<br>
+                            <strong>Updated:</strong> @Model.UpdatedAt.ToString("MMM dd, yyyy HH:mm")
+                        </small>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-check-lg"></i> Save Changes
+                    </button>
+                    <a href="/admin/rooms?venueId=@Model.VenueId" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="button" class="btn btn-outline-danger" onclick="deleteRoom(@Model.RoomId)">
+                        <i class="bi bi-trash"></i> Delete Room
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+@section Scripts {
+<script>
+    async function deleteRoom(roomId) {
+        if (!confirm('Are you sure you want to delete this room? This action cannot be undone.')) return;
+
+        try {
+            const response = await fetch('/admin/rooms/delete/' + roomId, { method: 'POST' });
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = '/admin/rooms';
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+</script>
+}

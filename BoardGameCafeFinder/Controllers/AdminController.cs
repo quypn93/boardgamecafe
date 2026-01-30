@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using BoardGameCafeFinder.Services;
 using BoardGameCafeFinder.Data;
+using BoardGameCafeFinder.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace BoardGameCafeFinder.Controllers
@@ -12,12 +14,21 @@ namespace BoardGameCafeFinder.Controllers
         private readonly IBggSyncService _bggSyncService;
         private readonly ApplicationDbContext _context;
         private readonly IBlogService _blogService;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
 
-        public AdminController(IBggSyncService bggSyncService, ApplicationDbContext context, IBlogService blogService)
+        public AdminController(
+            IBggSyncService bggSyncService,
+            ApplicationDbContext context,
+            IBlogService blogService,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole<int>> roleManager)
         {
             _bggSyncService = bggSyncService;
             _context = context;
             _blogService = blogService;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Dashboard()
@@ -1012,6 +1023,300 @@ namespace BoardGameCafeFinder.Controllers
             ViewBag.ClicksByDay = clicksByDay;
 
             return View();
+        }
+
+        #endregion
+
+        #region User Management
+
+        /// <summary>
+        /// List all users with filtering and search
+        /// </summary>
+        public async Task<IActionResult> Users(string filter = "all", string search = "", int page = 1)
+        {
+            const int pageSize = 20;
+            var query = _context.Users
+                .OrderByDescending(u => u.CreatedAt)
+                .AsQueryable();
+
+            ViewBag.Filter = filter;
+            ViewBag.Search = search;
+            ViewBag.CurrentPage = page;
+
+            // Apply filter
+            switch (filter.ToLower())
+            {
+                case "admin":
+                    var adminRoleId = await _context.Roles
+                        .Where(r => r.Name == "Admin")
+                        .Select(r => r.Id)
+                        .FirstOrDefaultAsync();
+                    var adminUserIds = await _context.UserRoles
+                        .Where(ur => ur.RoleId == adminRoleId)
+                        .Select(ur => ur.UserId)
+                        .ToListAsync();
+                    query = query.Where(u => adminUserIds.Contains(u.Id));
+                    break;
+                case "cafeowner":
+                    query = query.Where(u => u.IsCafeOwner);
+                    break;
+                case "locked":
+                    query = query.Where(u => u.LockoutEnd != null && u.LockoutEnd > DateTimeOffset.UtcNow);
+                    break;
+            }
+
+            // Apply search
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var searchLower = search.ToLower();
+                query = query.Where(u =>
+                    (u.Email != null && u.Email.ToLower().Contains(searchLower)) ||
+                    (u.FirstName != null && u.FirstName.ToLower().Contains(searchLower)) ||
+                    (u.LastName != null && u.LastName.ToLower().Contains(searchLower)) ||
+                    (u.DisplayName != null && u.DisplayName.ToLower().Contains(searchLower)));
+            }
+
+            // Get counts
+            ViewBag.TotalCount = await _context.Users.CountAsync();
+            var adminRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
+            ViewBag.AdminCount = adminRole != null
+                ? await _context.UserRoles.CountAsync(ur => ur.RoleId == adminRole.Id)
+                : 0;
+            ViewBag.CafeOwnerCount = await _context.Users.CountAsync(u => u.IsCafeOwner);
+            ViewBag.LockedCount = await _context.Users.CountAsync(u => u.LockoutEnd != null && u.LockoutEnd > DateTimeOffset.UtcNow);
+
+            // Pagination
+            var totalItems = await query.CountAsync();
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var users = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Get roles for each user
+            var userRoles = new Dictionary<int, List<string>>();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userRoles[user.Id] = roles.ToList();
+            }
+            ViewBag.UserRoles = userRoles;
+
+            // Get all available roles
+            ViewBag.AllRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+
+            return View(users);
+        }
+
+        /// <summary>
+        /// Edit user form
+        /// </summary>
+        public async Task<IActionResult> EditUser(int id)
+        {
+            var user = await _context.Users
+                .Include(u => u.Reviews)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                return NotFound();
+
+            var roles = await _userManager.GetRolesAsync(user);
+            ViewBag.UserRoles = roles.ToList();
+            ViewBag.AllRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            ViewBag.Cafes = await _context.Cafes.OrderBy(c => c.Name).ToListAsync();
+
+            return View(user);
+        }
+
+        /// <summary>
+        /// Update user info
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateUser(int id, string firstName, string lastName, string? displayName,
+            string? city, string? country, bool isCafeOwner, int? cafeId, string[] roles)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            // Update user properties
+            user.FirstName = firstName;
+            user.LastName = lastName;
+            user.DisplayName = displayName ?? $"{firstName} {lastName}";
+            user.City = city;
+            user.Country = country;
+            user.IsCafeOwner = isCafeOwner;
+            user.CafeId = isCafeOwner ? cafeId : null;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] = string.Join(", ", result.Errors.Select(e => e.Description));
+                return RedirectToAction(nameof(EditUser), new { id });
+            }
+
+            // Update roles
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            var rolesToRemove = currentRoles.Except(roles ?? Array.Empty<string>());
+            var rolesToAdd = (roles ?? Array.Empty<string>()).Except(currentRoles);
+
+            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            await _userManager.AddToRolesAsync(user, rolesToAdd);
+
+            TempData["SuccessMessage"] = $"User '{user.Email}' updated successfully.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        /// <summary>
+        /// Toggle user lockout status
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ToggleUserLockout(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            // Don't allow locking out yourself
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (currentUserId == id.ToString())
+            {
+                TempData["ErrorMessage"] = "You cannot lock out yourself.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            if (user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.UtcNow)
+            {
+                // Unlock user
+                await _userManager.SetLockoutEndDateAsync(user, null);
+                TempData["SuccessMessage"] = $"User '{user.Email}' has been unlocked.";
+            }
+            else
+            {
+                // Lock user for 100 years (effectively permanent)
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow.AddYears(100));
+                TempData["SuccessMessage"] = $"User '{user.Email}' has been locked out.";
+            }
+
+            return RedirectToAction(nameof(Users));
+        }
+
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            // Don't allow deleting yourself
+            var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (currentUserId == id.ToString())
+            {
+                TempData["ErrorMessage"] = "You cannot delete yourself.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            // Check if user is an admin
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                TempData["ErrorMessage"] = "Cannot delete admin users. Remove admin role first.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var email = user.Email;
+
+            // Delete user's reviews first
+            var userReviews = await _context.Reviews.Where(r => r.UserId == id).ToListAsync();
+            _context.Reviews.RemoveRange(userReviews);
+
+            // Delete user
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = $"User '{email}' and {userReviews.Count} reviews have been deleted.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = string.Join(", ", result.Errors.Select(e => e.Description));
+            }
+
+            return RedirectToAction(nameof(Users));
+        }
+
+        /// <summary>
+        /// Reset user password
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ResetUserPassword(int id, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8)
+            {
+                TempData["ErrorMessage"] = "Password must be at least 8 characters.";
+                return RedirectToAction(nameof(EditUser), new { id });
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = $"Password for '{user.Email}' has been reset.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = string.Join(", ", result.Errors.Select(e => e.Description));
+            }
+
+            return RedirectToAction(nameof(EditUser), new { id });
+        }
+
+        /// <summary>
+        /// Confirm user email manually
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ConfirmUserEmail(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = $"Email for '{user.Email}' has been confirmed.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = string.Join(", ", result.Errors.Select(e => e.Description));
+            }
+
+            return RedirectToAction(nameof(EditUser), new { id });
         }
 
         #endregion
