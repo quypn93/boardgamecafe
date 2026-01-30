@@ -131,6 +131,13 @@
                                     <a href="/admin/rooms?venueId=@venue.VenueId" class="btn btn-outline-info" title="View Rooms">
                                         <i class="bi bi-door-closed"></i>
                                     </a>
+                                    @if (!string.IsNullOrEmpty(venue.Website))
+                                    {
+                                        <button type="button" class="btn btn-outline-success" title="Crawl Rooms from Website"
+                                                onclick="crawlRooms(@venue.VenueId, '@venue.Name.Replace("'", "\\'")' )">
+                                            <i class="bi bi-cloud-download"></i>
+                                        </button>
+                                    }
                                     @if (!string.IsNullOrEmpty(venue.Slug))
                                     {
                                         <a href="/venue/@venue.Slug" target="_blank" class="btn btn-outline-secondary" title="View on Site">
@@ -206,6 +213,28 @@
             }
         } catch (error) {
             alert('Error: ' + error.message);
+        }
+    }
+
+    async function crawlRooms(venueId, venueName) {
+        if (!confirm(`Crawl rooms from website for "${venueName}"?\n\nThis will visit the venue website and attempt to extract room information.`)) return;
+
+        const btn = event.target.closest('button');
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+        try {
+            const response = await fetch('/admin/crawl/venue-website/' + venueId, { method: 'POST' });
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                location.reload();
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
         }
     }
 </script>

@@ -1,0 +1,395 @@
+@model EscapeRoomFinder.Models.Domain.EscapeRoomVenue
+@{
+    ViewData["Title"] = "Edit Venue";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-pencil me-2"></i>Edit Venue</h1>
+    <a href="/admin/venues" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Venues
+    </a>
+</div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<form method="post" asp-action="EditVenue" asp-route-id="@Model.VenueId">
+    <input type="hidden" asp-for="VenueId" />
+    <input type="hidden" asp-for="CreatedAt" />
+    <input type="hidden" asp-for="CreatedByUserId" />
+    <input type="hidden" asp-for="GooglePlaceId" />
+    <input type="hidden" asp-for="YelpBusinessId" />
+    <input type="hidden" asp-for="AverageRating" />
+    <input type="hidden" asp-for="TotalReviews" />
+
+    <div class="row">
+        <!-- Basic Information -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-info-circle"></i> Basic Information
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label asp-for="Name" class="form-label">Venue Name <span class="text-danger">*</span></label>
+                            <input asp-for="Name" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                            <input asp-for="Slug" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaDescription" class="form-label">Meta Description (SEO)</label>
+                        <textarea asp-for="MetaDescription" class="form-control" rows="2" maxlength="500"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-geo-alt"></i> Location
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Address" class="form-label">Address <span class="text-danger">*</span></label>
+                        <input asp-for="Address" class="form-control" required />
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="City" class="form-label">City <span class="text-danger">*</span></label>
+                            <input asp-for="City" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="State" class="form-label">State</label>
+                            <input asp-for="State" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="PostalCode" class="form-label">Postal Code</label>
+                            <input asp-for="PostalCode" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Country" class="form-label">Country <span class="text-danger">*</span></label>
+                            <input asp-for="Country" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Latitude" class="form-label">Latitude <span class="text-danger">*</span></label>
+                            <input asp-for="Latitude" class="form-control" type="number" step="any" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Longitude" class="form-label">Longitude <span class="text-danger">*</span></label>
+                            <input asp-for="Longitude" class="form-control" type="number" step="any" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="GoogleMapsUrl" class="form-label">Google Maps URL</label>
+                        <input asp-for="GoogleMapsUrl" class="form-control" type="url" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-telephone"></i> Contact Information
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label">Phone</label>
+                            <input asp-for="Phone" class="form-control" type="tel" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Website" class="form-label">Website</label>
+                            <input asp-for="Website" class="form-control" type="url" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="BookingUrl" class="form-label">Booking URL</label>
+                            <input asp-for="BookingUrl" class="form-control" type="url" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rooms Section -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-door-closed"></i> Rooms (@Model.Rooms.Count)</span>
+                    <div>
+                        @if (!string.IsNullOrEmpty(Model.Website))
+                        {
+                            <button type="button" class="btn btn-sm btn-outline-success me-2" onclick="crawlRooms()">
+                                <i class="bi bi-cloud-download"></i> Crawl from Website
+                            </button>
+                        }
+                        <a href="/admin/rooms?venueId=@Model.VenueId" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i> Manage Rooms
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (Model.Rooms.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Room Name</th>
+                                        <th>Theme</th>
+                                        <th>Difficulty</th>
+                                        <th>Players</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var room in Model.Rooms)
+                                    {
+                                        <tr>
+                                            <td>@room.Name</td>
+                                            <td><span class="badge bg-secondary">@room.Theme</span></td>
+                                            <td>
+                                                @for (int i = 0; i < room.Difficulty; i++)
+                                                {
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                }
+                                            </td>
+                                            <td>@room.MinPlayers - @room.MaxPlayers</td>
+                                            <td>@room.DurationMinutes min</td>
+                                            <td>
+                                                @if (room.IsActive)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="bi bi-door-closed display-6"></i>
+                            <p class="mt-2">No rooms found for this venue.</p>
+                            @if (!string.IsNullOrEmpty(Model.Website))
+                            {
+                                <button type="button" class="btn btn-success" onclick="crawlRooms()">
+                                    <i class="bi bi-cloud-download"></i> Crawl Rooms from Website
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Status & Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-toggles"></i> Status & Settings
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsActive" class="form-check-label">Active</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="IsVerified" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsVerified" class="form-check-label">Verified</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="IsPremium" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsPremium" class="form-check-label">Premium</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Venue Features -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-list-check"></i> Venue Features
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="HasParking" class="form-check-input" type="checkbox" />
+                        <label asp-for="HasParking" class="form-check-label">Has Parking</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="IsWheelchairAccessible" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsWheelchairAccessible" class="form-check-label">Wheelchair Accessible</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="AllowsPrivateBookings" class="form-check-input" type="checkbox" />
+                        <label asp-for="AllowsPrivateBookings" class="form-check-label">Allows Private Bookings</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="HasWaitingArea" class="form-check-input" type="checkbox" />
+                        <label asp-for="HasWaitingArea" class="form-check-label">Has Waiting Area</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MinAge" class="form-label">Minimum Age</label>
+                        <input asp-for="MinAge" class="form-control" type="number" min="0" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PriceRange" class="form-label">Price Range</label>
+                        <select asp-for="PriceRange" class="form-select">
+                            <option value="">Select...</option>
+                            <option value="$">$ - Budget</option>
+                            <option value="$$">$$ - Moderate</option>
+                            <option value="$$$">$$$ - Upscale</option>
+                            <option value="$$$$">$$$$ - Premium</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TotalRooms" class="form-label">Total Rooms</label>
+                        <input asp-for="TotalRooms" class="form-control" type="number" min="0" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-image"></i> Image
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.LocalImagePath))
+                    {
+                        <img src="@Model.LocalImagePath" alt="@Model.Name" class="img-fluid rounded mb-3" />
+                    }
+                    <div class="mb-3">
+                        <label asp-for="LocalImagePath" class="form-label">Image Path</label>
+                        <input asp-for="LocalImagePath" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats (Read-only) -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-graph-up"></i> Statistics
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Average Rating:</span>
+                        <span class="text-warning">
+                            @if (Model.AverageRating.HasValue)
+                            {
+                                @Model.AverageRating.Value.ToString("F1") <i class="bi bi-star-fill"></i>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Reviews:</span>
+                        <span>@Model.TotalReviews</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Created:</span>
+                        <span>@Model.CreatedAt.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Updated:</span>
+                        <span>@Model.UpdatedAt.ToString("MMM dd, yyyy")</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-lg"></i> Save Changes
+                </button>
+                <a href="/admin/venues" class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+                @if (!string.IsNullOrEmpty(Model.Slug))
+                {
+                    <a href="/venue/@Model.Slug" target="_blank" class="btn btn-outline-info">
+                        <i class="bi bi-eye"></i> View on Site
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+    async function crawlRooms() {
+        if (!confirm('Crawl rooms from website for "@Model.Name.Replace("\"", "\\\"")"?\n\nThis will visit the venue website and attempt to extract room information.')) return;
+
+        const btn = event.target.closest('button');
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Crawling...';
+
+        try {
+            const response = await fetch('/admin/crawl/venue-website/@Model.VenueId', { method: 'POST' });
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                const result = await response.json();
+                if (result.success) {
+                    alert(`Successfully crawled ${result.roomsFound} rooms!`);
+                    location.reload();
+                } else {
+                    alert('Error: ' + (result.message || 'Unknown error'));
+                }
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+    }
+</script>
+}

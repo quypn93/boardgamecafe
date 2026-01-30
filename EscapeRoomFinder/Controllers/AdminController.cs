@@ -830,20 +830,27 @@ namespace EscapeRoomFinder.Controllers
 
         [HttpPost]
         [Route("crawl/venue-website/{id}")]
-        public async Task<IActionResult> CrawlVenueWebsite(int id)
+        public async Task<IActionResult> CrawlVenueWebsite(int id, bool ajax = false)
         {
             try
             {
                 var venue = await _context.Venues.FindAsync(id);
                 if (venue == null || string.IsNullOrEmpty(venue.Website))
                 {
+                    if (ajax)
+                        return Json(new { success = false, message = "Venue not found or has no website." });
+
                     TempData["Error"] = "Venue not found or has no website.";
-                    return RedirectToAction(nameof(EditVenue), new { id });
+                    return RedirectToAction(nameof(Venues));
                 }
 
+                _logger.LogInformation("Starting room crawl for venue {Name} from {Website}", venue.Name, venue.Website);
                 var rooms = await _websiteCrawlerService.CrawlVenueWebsiteForRoomsAsync(venue.Website);
+                _logger.LogInformation("Room crawl found {Count} potential rooms", rooms.Count);
 
                 var savedCount = 0;
+                var savedRooms = new List<string>();
+
                 foreach (var roomData in rooms)
                 {
                     // Check if room already exists
@@ -872,6 +879,12 @@ namespace EscapeRoomFinder.Controllers
 
                         _context.Rooms.Add(room);
                         savedCount++;
+                        savedRooms.Add(roomData.Name);
+                        _logger.LogInformation("  ✓ Saved room: {Name}", roomData.Name);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("  ⊘ Room already exists: {Name}", roomData.Name);
                     }
                 }
 
@@ -879,15 +892,56 @@ namespace EscapeRoomFinder.Controllers
                 venue.TotalRooms = await _context.Rooms.CountAsync(r => r.VenueId == id && r.IsActive);
                 await _context.SaveChangesAsync();
 
-                TempData["Success"] = $"Crawl completed. Found {rooms.Count} rooms, saved {savedCount} new rooms.";
+                var message = $"Crawl completed. Found {rooms.Count} rooms, saved {savedCount} new rooms.";
+                _logger.LogInformation(message);
+
+                if (ajax)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        found = rooms.Count,
+                        saved = savedCount,
+                        rooms = savedRooms,
+                        message
+                    });
+                }
+
+                TempData["Success"] = message;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during website crawl for venue {Id}", id);
+
+                if (ajax)
+                    return Json(new { success = false, message = ex.Message });
+
                 TempData["Error"] = $"Crawl failed: {ex.Message}";
             }
 
-            return RedirectToAction(nameof(EditVenue), new { id });
+            return RedirectToAction(nameof(Venues));
+        }
+
+        [HttpGet]
+        [Route("api/venues-without-rooms")]
+        public async Task<IActionResult> GetVenuesWithoutRooms()
+        {
+            var venues = await _context.Venues
+                .Where(v => v.IsActive && !string.IsNullOrEmpty(v.Website))
+                .Select(v => new
+                {
+                    id = v.VenueId,
+                    name = v.Name,
+                    city = v.City,
+                    website = v.Website,
+                    roomCount = v.Rooms.Count(r => r.IsActive)
+                })
+                .OrderBy(v => v.roomCount)
+                .ThenBy(v => v.name)
+                .Take(100)
+                .ToListAsync();
+
+            return Json(venues);
         }
 
         private string ExtractCity(string address)

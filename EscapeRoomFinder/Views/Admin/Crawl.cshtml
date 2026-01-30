@@ -227,6 +227,56 @@
                 <span class="ms-3" id="batchStatus"></span>
             </div>
         </div>
+
+        <!-- Room Crawler -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-door-open"></i> Crawl Rooms from Venue Websites</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">After crawling venues from Google Maps, you can extract room details from their websites.</p>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> This crawler visits each venue's website and attempts to extract:
+                    <ul class="mb-0 mt-2">
+                        <li>Room names and descriptions</li>
+                        <li>Difficulty levels and player counts</li>
+                        <li>Duration and pricing information</li>
+                        <li>Room images and themes</li>
+                    </ul>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label class="form-label"><strong>Venues with Websites (no rooms yet)</strong></label>
+                        <select class="form-select" id="venueSelect" multiple size="6">
+                            <!-- Will be populated via AJAX -->
+                        </select>
+                        <small class="text-muted">Select venues to crawl their websites for room data</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <div>
+                            <button type="button" class="btn btn-outline-secondary btn-sm mb-2 w-100" onclick="loadVenuesWithoutRooms()">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh List
+                            </button>
+                            <button type="button" class="btn btn-info w-100" id="crawlRoomsBtn" onclick="startRoomCrawl()">
+                                <i class="bi bi-door-open"></i> Crawl Rooms
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="roomCrawlProgress" class="d-none">
+                    <div class="progress mb-2" style="height: 20px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" id="roomProgressBar" style="width: 0%">
+                            <span id="roomProgressText">Starting...</span>
+                        </div>
+                    </div>
+                    <div id="roomCrawlStatus" class="text-muted small"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="col-md-4">
@@ -482,5 +532,121 @@
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-collection"></i> Start Batch Crawl';
     }
+
+    // Room Crawler Functions
+    async function loadVenuesWithoutRooms() {
+        const select = document.getElementById('venueSelect');
+        select.innerHTML = '<option disabled>Loading...</option>';
+
+        try {
+            const response = await fetch('/admin/api/venues-without-rooms');
+            const venues = await response.json();
+
+            select.innerHTML = '';
+            if (venues.length === 0) {
+                select.innerHTML = '<option disabled>No venues with websites found (or all have rooms)</option>';
+            } else {
+                venues.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.id;
+                    opt.textContent = `${v.name} (${v.city}) - ${v.website ? '✓ Has website' : '✗ No website'}`;
+                    opt.disabled = !v.website;
+                    select.appendChild(opt);
+                });
+            }
+        } catch (error) {
+            select.innerHTML = '<option disabled>Error loading venues</option>';
+        }
+    }
+
+    async function startRoomCrawl() {
+        const select = document.getElementById('venueSelect');
+        const selectedVenues = Array.from(select.selectedOptions).map(opt => ({
+            id: opt.value,
+            name: opt.textContent.split(' (')[0]
+        }));
+
+        if (selectedVenues.length === 0) {
+            alert('Please select at least one venue');
+            return;
+        }
+
+        const btn = document.getElementById('crawlRoomsBtn');
+        const progress = document.getElementById('roomCrawlProgress');
+        const progressBar = document.getElementById('roomProgressBar');
+        const progressText = document.getElementById('roomProgressText');
+        const status = document.getElementById('roomCrawlStatus');
+
+        btn.disabled = true;
+        progress.classList.remove('d-none');
+        progressBar.style.width = '0%';
+        progressBar.classList.remove('bg-success', 'bg-danger');
+        progressBar.classList.add('progress-bar-animated');
+
+        let completed = 0;
+        let totalRooms = 0;
+
+        addLog('═══════════════════════════════════════════════');
+        addLog('ROOM CRAWL STARTED');
+        addLog(`Venues to crawl: ${selectedVenues.length}`);
+        addLog('═══════════════════════════════════════════════');
+
+        for (const venue of selectedVenues) {
+            const percent = Math.round((completed / selectedVenues.length) * 100);
+            progressBar.style.width = percent + '%';
+            progressText.textContent = `Crawling ${venue.name} (${completed + 1}/${selectedVenues.length})`;
+            status.textContent = `Processing: ${venue.name}...`;
+
+            addLog('────────────────────────────────');
+            addLog(`[${completed + 1}/${selectedVenues.length}] Crawling rooms: ${venue.name}`);
+
+            try {
+                const response = await fetch('/admin/crawl/venue-website/' + venue.id + '?ajax=true', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    addLog(`  ✓ Found: ${result.found} rooms, Saved: ${result.saved} new rooms`);
+                    if (result.rooms && result.rooms.length > 0) {
+                        result.rooms.forEach(r => addLog(`    • ${r}`));
+                    }
+                    totalRooms += result.saved;
+                } else {
+                    addLog(`  ✗ Failed: ${result.message}`);
+                }
+                completed++;
+            } catch (error) {
+                addLog(`  ✗ Error: ${error.message}`);
+                completed++;
+            }
+
+            // Delay between venues
+            await new Promise(resolve => setTimeout(resolve, 3000));
+        }
+
+        progressBar.style.width = '100%';
+        progressBar.classList.remove('progress-bar-animated');
+        progressBar.classList.add('bg-success');
+        progressText.textContent = 'Complete!';
+
+        addLog('═══════════════════════════════════════════════');
+        addLog('ROOM CRAWL COMPLETED');
+        addLog(`Total venues processed: ${completed}`);
+        addLog(`Total new rooms saved: ${totalRooms}`);
+        addLog('═══════════════════════════════════════════════');
+
+        status.textContent = `Completed ${completed} venues. Check each venue for imported rooms.`;
+        btn.disabled = false;
+
+        // Refresh the list
+        loadVenuesWithoutRooms();
+    }
+
+    // Load venues on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadVenuesWithoutRooms();
+    });
 </script>
 }
