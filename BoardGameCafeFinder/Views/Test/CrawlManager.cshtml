@@ -223,7 +223,7 @@
         </div>
         <div class="card-body">
             <div class="row mb-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label fw-bold">Filter by Region</label>
                     <select id="regionFilter" class="form-select form-select-sm">
                         <option value="all">All Regions</option>
@@ -231,9 +231,13 @@
                         <option value="international">International</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label fw-bold">Search Cities</label>
                     <input type="text" id="citySearchInput" class="form-control form-control-sm" placeholder="Type to filter...">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Delay (sec)</label>
+                    <input type="number" id="selectedCrawlDelay" class="form-control form-control-sm" value="30" min="5" max="300" title="Delay between each city crawl to avoid being blocked">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fw-bold d-block">&nbsp;</label>
@@ -466,26 +470,176 @@
 
         // International cities for multi-select
         const intlCities = [
+            // Vietnam
             { name: 'Hanoi', country: 'Vietnam', max: 15 },
             { name: 'Ho Chi Minh', country: 'Vietnam', max: 15 },
             { name: 'Da Nang', country: 'Vietnam', max: 15 },
+            { name: 'Hai Phong', country: 'Vietnam', max: 10 },
+            { name: 'Can Tho', country: 'Vietnam', max: 10 },
+            { name: 'Nha Trang', country: 'Vietnam', max: 10 },
+            { name: 'Hue', country: 'Vietnam', max: 10 },
+            // Japan
             { name: 'Tokyo', country: 'Japan', max: 20 },
             { name: 'Osaka', country: 'Japan', max: 20 },
+            { name: 'Kyoto', country: 'Japan', max: 15 },
+            { name: 'Nagoya', country: 'Japan', max: 15 },
+            { name: 'Yokohama', country: 'Japan', max: 15 },
+            { name: 'Fukuoka', country: 'Japan', max: 15 },
+            { name: 'Sapporo', country: 'Japan', max: 15 },
+            { name: 'Kobe', country: 'Japan', max: 15 },
+            // South Korea
+            { name: 'Seoul', country: 'South Korea', max: 20 },
+            { name: 'Busan', country: 'South Korea', max: 15 },
+            { name: 'Incheon', country: 'South Korea', max: 15 },
+            { name: 'Daegu', country: 'South Korea', max: 15 },
+            { name: 'Daejeon', country: 'South Korea', max: 15 },
+            // China
+            { name: 'Shanghai', country: 'China', max: 20 },
+            { name: 'Beijing', country: 'China', max: 20 },
+            { name: 'Guangzhou', country: 'China', max: 20 },
+            { name: 'Shenzhen', country: 'China', max: 20 },
+            { name: 'Chengdu', country: 'China', max: 15 },
+            { name: 'Hangzhou', country: 'China', max: 15 },
+            { name: 'Nanjing', country: 'China', max: 15 },
+            { name: 'Wuhan', country: 'China', max: 15 },
+            { name: 'Xian', country: 'China', max: 15 },
+            // Taiwan
+            { name: 'Taipei', country: 'Taiwan', max: 20 },
+            { name: 'Taichung', country: 'Taiwan', max: 15 },
+            { name: 'Kaohsiung', country: 'Taiwan', max: 15 },
+            { name: 'Tainan', country: 'Taiwan', max: 15 },
+            // Hong Kong & Macau
+            { name: 'Hong Kong', country: 'Hong Kong', max: 20 },
+            { name: 'Macau', country: 'Macau', max: 10 },
+            // Southeast Asia
+            { name: 'Singapore', country: 'Singapore', max: 20 },
+            { name: 'Bangkok', country: 'Thailand', max: 20 },
+            { name: 'Chiang Mai', country: 'Thailand', max: 15 },
+            { name: 'Phuket', country: 'Thailand', max: 10 },
+            { name: 'Kuala Lumpur', country: 'Malaysia', max: 20 },
+            { name: 'Penang', country: 'Malaysia', max: 15 },
+            { name: 'Johor Bahru', country: 'Malaysia', max: 10 },
+            { name: 'Jakarta', country: 'Indonesia', max: 20 },
+            { name: 'Bali', country: 'Indonesia', max: 15 },
+            { name: 'Surabaya', country: 'Indonesia', max: 15 },
+            { name: 'Bandung', country: 'Indonesia', max: 15 },
+            { name: 'Manila', country: 'Philippines', max: 20 },
+            { name: 'Cebu', country: 'Philippines', max: 15 },
+            // South Asia
+            { name: 'Mumbai', country: 'India', max: 20 },
+            { name: 'Delhi', country: 'India', max: 20 },
+            { name: 'Bangalore', country: 'India', max: 20 },
+            { name: 'Hyderabad', country: 'India', max: 15 },
+            { name: 'Chennai', country: 'India', max: 15 },
+            { name: 'Kolkata', country: 'India', max: 15 },
+            { name: 'Pune', country: 'India', max: 15 },
+            // UK & Ireland
             { name: 'London', country: 'UK', max: 20 },
-            { name: 'Toronto', country: 'Canada', max: 20 },
-            { name: 'Vancouver', country: 'Canada', max: 20 },
+            { name: 'Manchester', country: 'UK', max: 15 },
+            { name: 'Birmingham', country: 'UK', max: 15 },
+            { name: 'Edinburgh', country: 'UK', max: 15 },
+            { name: 'Glasgow', country: 'UK', max: 15 },
+            { name: 'Bristol', country: 'UK', max: 15 },
+            { name: 'Liverpool', country: 'UK', max: 15 },
+            { name: 'Leeds', country: 'UK', max: 15 },
+            { name: 'Dublin', country: 'Ireland', max: 15 },
+            // Germany
             { name: 'Berlin', country: 'Germany', max: 20 },
             { name: 'Munich', country: 'Germany', max: 20 },
+            { name: 'Hamburg', country: 'Germany', max: 15 },
+            { name: 'Frankfurt', country: 'Germany', max: 15 },
+            { name: 'Cologne', country: 'Germany', max: 15 },
+            { name: 'Dusseldorf', country: 'Germany', max: 15 },
+            { name: 'Stuttgart', country: 'Germany', max: 15 },
+            { name: 'Essen', country: 'Germany', max: 15 },
+            // France
             { name: 'Paris', country: 'France', max: 20 },
+            { name: 'Lyon', country: 'France', max: 15 },
+            { name: 'Marseille', country: 'France', max: 15 },
+            { name: 'Toulouse', country: 'France', max: 15 },
+            { name: 'Nice', country: 'France', max: 15 },
+            { name: 'Bordeaux', country: 'France', max: 15 },
+            // Spain
+            { name: 'Madrid', country: 'Spain', max: 20 },
+            { name: 'Barcelona', country: 'Spain', max: 20 },
+            { name: 'Valencia', country: 'Spain', max: 15 },
+            { name: 'Seville', country: 'Spain', max: 15 },
+            { name: 'Bilbao', country: 'Spain', max: 15 },
+            // Italy
+            { name: 'Rome', country: 'Italy', max: 20 },
+            { name: 'Milan', country: 'Italy', max: 20 },
+            { name: 'Florence', country: 'Italy', max: 15 },
+            { name: 'Naples', country: 'Italy', max: 15 },
+            { name: 'Turin', country: 'Italy', max: 15 },
+            { name: 'Bologna', country: 'Italy', max: 15 },
+            // Netherlands & Belgium
+            { name: 'Amsterdam', country: 'Netherlands', max: 20 },
+            { name: 'Rotterdam', country: 'Netherlands', max: 15 },
+            { name: 'The Hague', country: 'Netherlands', max: 15 },
+            { name: 'Utrecht', country: 'Netherlands', max: 15 },
+            { name: 'Brussels', country: 'Belgium', max: 15 },
+            { name: 'Antwerp', country: 'Belgium', max: 15 },
+            // Scandinavia
+            { name: 'Stockholm', country: 'Sweden', max: 15 },
+            { name: 'Gothenburg', country: 'Sweden', max: 15 },
+            { name: 'Copenhagen', country: 'Denmark', max: 15 },
+            { name: 'Oslo', country: 'Norway', max: 15 },
+            { name: 'Helsinki', country: 'Finland', max: 15 },
+            // Central & Eastern Europe
+            { name: 'Prague', country: 'Czech Republic', max: 20 },
+            { name: 'Vienna', country: 'Austria', max: 15 },
+            { name: 'Zurich', country: 'Switzerland', max: 15 },
+            { name: 'Geneva', country: 'Switzerland', max: 15 },
+            { name: 'Warsaw', country: 'Poland', max: 15 },
+            { name: 'Krakow', country: 'Poland', max: 15 },
+            { name: 'Budapest', country: 'Hungary', max: 15 },
+            { name: 'Bucharest', country: 'Romania', max: 15 },
+            // Portugal & Greece
+            { name: 'Lisbon', country: 'Portugal', max: 15 },
+            { name: 'Porto', country: 'Portugal', max: 15 },
+            { name: 'Athens', country: 'Greece', max: 15 },
+            // Canada
+            { name: 'Toronto', country: 'Canada', max: 20 },
+            { name: 'Vancouver', country: 'Canada', max: 20 },
+            { name: 'Montreal', country: 'Canada', max: 20 },
+            { name: 'Calgary', country: 'Canada', max: 15 },
+            { name: 'Edmonton', country: 'Canada', max: 15 },
+            { name: 'Ottawa', country: 'Canada', max: 15 },
+            { name: 'Quebec City', country: 'Canada', max: 15 },
+            { name: 'Winnipeg', country: 'Canada', max: 15 },
+            // Australia & New Zealand
             { name: 'Sydney', country: 'Australia', max: 20 },
             { name: 'Melbourne', country: 'Australia', max: 20 },
-            { name: 'Singapore', country: 'Singapore', max: 20 },
-            { name: 'Seoul', country: 'South Korea', max: 20 },
-            { name: 'Bangkok', country: 'Thailand', max: 15 },
-            { name: 'Amsterdam', country: 'Netherlands', max: 20 },
-            { name: 'Prague', country: 'Czech Republic', max: 20 },
-            { name: 'Barcelona', country: 'Spain', max: 20 },
-            { name: 'Madrid', country: 'Spain', max: 20 }
+            { name: 'Brisbane', country: 'Australia', max: 15 },
+            { name: 'Perth', country: 'Australia', max: 15 },
+            { name: 'Adelaide', country: 'Australia', max: 15 },
+            { name: 'Auckland', country: 'New Zealand', max: 15 },
+            { name: 'Wellington', country: 'New Zealand', max: 15 },
+            // Latin America
+            { name: 'Mexico City', country: 'Mexico', max: 20 },
+            { name: 'Guadalajara', country: 'Mexico', max: 15 },
+            { name: 'Monterrey', country: 'Mexico', max: 15 },
+            { name: 'Sao Paulo', country: 'Brazil', max: 20 },
+            { name: 'Rio de Janeiro', country: 'Brazil', max: 20 },
+            { name: 'Curitiba', country: 'Brazil', max: 15 },
+            { name: 'Belo Horizonte', country: 'Brazil', max: 15 },
+            { name: 'Buenos Aires', country: 'Argentina', max: 20 },
+            { name: 'Santiago', country: 'Chile', max: 15 },
+            { name: 'Lima', country: 'Peru', max: 15 },
+            { name: 'Bogota', country: 'Colombia', max: 15 },
+            { name: 'Medellin', country: 'Colombia', max: 15 },
+            // Middle East
+            { name: 'Dubai', country: 'UAE', max: 15 },
+            { name: 'Abu Dhabi', country: 'UAE', max: 15 },
+            { name: 'Tel Aviv', country: 'Israel', max: 15 },
+            { name: 'Istanbul', country: 'Turkey', max: 20 },
+            { name: 'Ankara', country: 'Turkey', max: 15 },
+            // Africa
+            { name: 'Cape Town', country: 'South Africa', max: 15 },
+            { name: 'Johannesburg', country: 'South Africa', max: 15 },
+            { name: 'Cairo', country: 'Egypt', max: 15 },
+            { name: 'Nairobi', country: 'Kenya', max: 10 },
+            { name: 'Lagos', country: 'Nigeria', max: 10 }
         ];
 
         // Expanded US Cities list for batch crawl (100+ cities)
@@ -700,7 +854,11 @@
                 return;
             }
 
-            if (!confirm(`Crawl ${selectedCities.length} selected city/cities?\n\nThis will crawl them sequentially with delays to avoid being blocked.\n\nContinue?`)) {
+            // Use delay from the nearby input field
+            const selectedDelay = parseInt($('#selectedCrawlDelay').val()) || 30;
+            $('#crawlDelay').val(selectedDelay);
+
+            if (!confirm(`Crawl ${selectedCities.length} selected city/cities?\n\nDelay between cities: ${selectedDelay} seconds\nThis will crawl them sequentially to avoid being blocked.\n\nContinue?`)) {
                 return;
             }
 
