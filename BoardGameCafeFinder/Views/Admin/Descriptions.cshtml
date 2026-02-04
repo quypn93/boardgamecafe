@@ -1,0 +1,288 @@
+@model List<BoardGameCafeFinder.Models.Domain.Cafe>
+@{
+    ViewData["Title"] = "Cafe Descriptions";
+    Layout = "_AdminLayout";
+    var filter = ViewBag.Filter as string ?? "pending";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-card-text me-2"></i>Cafe Descriptions</h2>
+    <div class="btn-group">
+        <form asp-action="BulkCrawlDescriptions" method="post" class="d-inline">
+            <input type="hidden" name="maxCafes" value="10" />
+            <button type="submit" class="btn btn-outline-primary" onclick="return confirm('This will crawl descriptions for up to 10 cafes with websites. Continue?');">
+                <i class="bi bi-globe me-1"></i> Bulk Crawl (10)
+            </button>
+        </form>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 @(filter == "pending" ? "border-warning border-2" : "")">
+            <a href="@Url.Action("Descriptions", new { filter = "pending" })" class="text-decoration-none">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-warning"><i class="bi bi-clock-history me-1"></i> Pending</h6>
+                    <div class="display-5 fw-bold text-warning">@ViewBag.PendingCount</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 @(filter == "approved" ? "border-success border-2" : "")">
+            <a href="@Url.Action("Descriptions", new { filter = "approved" })" class="text-decoration-none">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-success"><i class="bi bi-check-circle me-1"></i> Approved</h6>
+                    <div class="display-5 fw-bold text-success">@ViewBag.ApprovedCount</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 @(filter == "empty" ? "border-secondary border-2" : "")">
+            <a href="@Url.Action("Descriptions", new { filter = "empty" })" class="text-decoration-none">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-secondary"><i class="bi bi-x-circle me-1"></i> Empty</h6>
+                    <div class="display-5 fw-bold text-secondary">@ViewBag.EmptyCount</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 @(filter == "all" ? "border-primary border-2" : "")">
+            <a href="@Url.Action("Descriptions", new { filter = "all" })" class="text-decoration-none">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-primary"><i class="bi bi-list-ul me-1"></i> All</h6>
+                    <div class="display-5 fw-bold text-primary">@ViewBag.TotalCount</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Descriptions Table -->
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white border-bottom-0 pt-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            @if (filter == "pending")
+            {
+                <span class="badge bg-warning text-dark me-2">Pending Review</span>
+            }
+            else if (filter == "approved")
+            {
+                <span class="badge bg-success me-2">Approved</span>
+            }
+            else if (filter == "empty")
+            {
+                <span class="badge bg-secondary me-2">No Description</span>
+            }
+            else
+            {
+                <span class="badge bg-primary me-2">All Cafes</span>
+            }
+            <small class="text-muted">(@Model.Count results)</small>
+        </h5>
+        @if (filter == "pending" && Model.Any())
+        {
+            <form asp-action="BulkApproveDescriptions" method="post" id="bulkApproveForm">
+                <button type="submit" class="btn btn-success btn-sm" id="bulkApproveBtn" disabled>
+                    <i class="bi bi-check-all me-1"></i> Approve Selected (<span id="selectedCount">0</span>)
+                </button>
+            </form>
+        }
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            @if (filter == "pending")
+                            {
+                                <th style="width: 40px;">
+                                    <input type="checkbox" class="form-check-input" id="selectAll" title="Select all">
+                                </th>
+                            }
+                            <th>Cafe</th>
+                            <th>Location</th>
+                            <th style="max-width: 400px;">Description</th>
+                            <th>Website</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cafe in Model)
+                        {
+                            <tr>
+                                @if (filter == "pending")
+                                {
+                                    <td>
+                                        <input type="checkbox" class="form-check-input cafe-checkbox"
+                                               name="cafeIds" value="@cafe.CafeId" form="bulkApproveForm">
+                                    </td>
+                                }
+                                <td>
+                                    <div class="fw-bold">
+                                        <a href="/cafe/@cafe.Slug" target="_blank" class="text-decoration-none">
+                                            @cafe.Name
+                                        </a>
+                                    </div>
+                                    @if (cafe.IsPremium)
+                                    {
+                                        <span class="badge bg-warning text-dark">Premium</span>
+                                    }
+                                </td>
+                                <td>
+                                    <small>@cafe.City, @cafe.Country</small>
+                                </td>
+                                <td style="max-width: 400px;">
+                                    @if (!string.IsNullOrEmpty(cafe.Description))
+                                    {
+                                        <div class="small" style="max-height: 100px; overflow-y: auto;">
+                                            @(cafe.Description.Length > 200 ? cafe.Description.Substring(0, 200) + "..." : cafe.Description)
+                                        </div>
+                                        <small class="text-muted">(@cafe.Description.Length chars)</small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No description</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(cafe.Website))
+                                    {
+                                        <a href="@cafe.Website" target="_blank" class="btn btn-sm btn-outline-secondary" title="@cafe.Website">
+                                            <i class="bi bi-globe"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (string.IsNullOrEmpty(cafe.Description))
+                                    {
+                                        <span class="badge bg-secondary">Empty</span>
+                                    }
+                                    else if (cafe.IsDescriptionApproved)
+                                    {
+                                        <span class="badge bg-success">Approved</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        @if (!string.IsNullOrEmpty(cafe.Website))
+                                        {
+                                            <form asp-action="CrawlDescription" asp-route-id="@cafe.CafeId" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-outline-info" title="Crawl from website">
+                                                    <i class="bi bi-download"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        <a href="@Url.Action("EditDescription", new { id = cafe.CafeId })" class="btn btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        @if (!string.IsNullOrEmpty(cafe.Description) && !cafe.IsDescriptionApproved)
+                                        {
+                                            <form asp-action="ApproveDescription" asp-route-id="@cafe.CafeId" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-outline-success" title="Approve">
+                                                    <i class="bi bi-check-lg"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        @if (!string.IsNullOrEmpty(cafe.Description))
+                                        {
+                                            <form asp-action="RejectDescription" asp-route-id="@cafe.CafeId" method="post" class="d-inline"
+                                                  onsubmit="return confirm('Are you sure you want to clear this description?');">
+                                                <button type="submit" class="btn btn-outline-danger" title="Clear description">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <p class="text-muted mt-3">
+                    @if (filter == "pending")
+                    {
+                        <span>No pending descriptions. All caught up!</span>
+                    }
+                    else if (filter == "empty")
+                    {
+                        <span>All cafes have descriptions!</span>
+                    }
+                    else
+                    {
+                        <span>No cafes found.</span>
+                    }
+                </p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.cafe-checkbox');
+            const bulkApproveBtn = document.getElementById('bulkApproveBtn');
+            const selectedCountSpan = document.getElementById('selectedCount');
+
+            function updateSelectedCount() {
+                const checkedCount = document.querySelectorAll('.cafe-checkbox:checked').length;
+                if (selectedCountSpan) selectedCountSpan.textContent = checkedCount;
+                if (bulkApproveBtn) bulkApproveBtn.disabled = checkedCount === 0;
+            }
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    checkboxes.forEach(cb => cb.checked = this.checked);
+                    updateSelectedCount();
+                });
+            }
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    updateSelectedCount();
+                    if (selectAll) {
+                        selectAll.checked = document.querySelectorAll('.cafe-checkbox:checked').length === checkboxes.length;
+                    }
+                });
+            });
+        });
+    </script>
+}

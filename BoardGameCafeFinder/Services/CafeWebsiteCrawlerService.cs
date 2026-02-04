@@ -9,6 +9,7 @@ namespace BoardGameCafeFinder.Services
     public interface ICafeWebsiteCrawlerService
     {
         Task<List<CrawledGameData>> CrawlCafeWebsiteForGamesAsync(string websiteUrl);
+        Task<string?> CrawlCafeDescriptionAsync(string websiteUrl);
     }
 
     public class CrawledGameData
@@ -439,6 +440,200 @@ namespace BoardGameCafeFinder.Services
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Crawls a cafe website to extract description/about text
+        /// </summary>
+        public async Task<string?> CrawlCafeDescriptionAsync(string websiteUrl)
+        {
+            if (string.IsNullOrEmpty(websiteUrl))
+                return null;
+
+            try
+            {
+                _logger.LogInformation("Crawling description from cafe website: {Url}", websiteUrl);
+
+                using var playwright = await Playwright.CreateAsync();
+                await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
+                var page = await browser.NewPageAsync();
+
+                // 1. Visit Main Page
+                await page.GotoAsync(websiteUrl, new PageGotoOptions { Timeout = 60000, WaitUntil = WaitUntilState.DOMContentLoaded });
+
+                // 2. First try to extract from main page
+                var description = await ExtractDescriptionFromPage(page);
+
+                // 3. If not found, look for About/About Us page
+                if (string.IsNullOrEmpty(description))
+                {
+                    var aboutUrl = await FindAboutPageUrl(page, websiteUrl);
+                    if (!string.IsNullOrEmpty(aboutUrl))
+                    {
+                        _logger.LogInformation("Found About page: {Url}", aboutUrl);
+                        try
+                        {
+                            await page.GotoAsync(aboutUrl, new PageGotoOptions { Timeout = 60000, WaitUntil = WaitUntilState.DOMContentLoaded });
+                            description = await ExtractDescriptionFromPage(page);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to load About page: {Url}", aboutUrl);
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(description))
+                {
+                    // Clean up and truncate if needed
+                    description = CleanDescription(description);
+                    if (description.Length > 2000)
+                        description = description.Substring(0, 1997) + "...";
+
+                    _logger.LogInformation("Successfully extracted description ({Length} chars) from {Url}", description.Length, websiteUrl);
+                }
+
+                return description;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error crawling cafe description from {Url}", websiteUrl);
+                return null;
+            }
+        }
+
+        private async Task<string?> FindAboutPageUrl(IPage page, string baseUrl)
+        {
+            var aboutKeywords = new[] { "about", "about us", "about-us", "our story", "who we are", "giới thiệu", "ve-chung-toi" };
+
+            var links = page.Locator("a");
+            var count = await links.CountAsync();
+
+            for (int i = 0; i < count && i < 100; i++)
+            {
+                try
+                {
+                    var href = await links.Nth(i).GetAttributeAsync("href");
+                    var text = await links.Nth(i).InnerTextAsync();
+
+                    if (string.IsNullOrEmpty(href)) continue;
+
+                    var hrefLower = href.ToLowerInvariant();
+                    var textLower = text?.ToLowerInvariant() ?? "";
+
+                    if (aboutKeywords.Any(k => hrefLower.Contains(k) || textLower.Contains(k)))
+                    {
+                        // Construct absolute URL
+                        if (!href.StartsWith("http"))
+                        {
+                            var uri = new Uri(new Uri(baseUrl), href);
+                            return uri.ToString();
+                        }
+                        return href;
+                    }
+                }
+                catch { }
+            }
+
+            return null;
+        }
+
+        private async Task<string?> ExtractDescriptionFromPage(IPage page)
+        {
+            // JavaScript to extract potential description text
+            var description = await page.EvaluateAsync<string?>(@"() => {
+                const clean = (txt) => txt ? txt.trim().replace(/\s+/g, ' ') : '';
+
+                // Strategy 1: Look for meta description
+                const metaDesc = document.querySelector('meta[name=""description""]');
+                if (metaDesc && metaDesc.content && metaDesc.content.length > 50) {
+                    return clean(metaDesc.content);
+                }
+
+                // Strategy 2: Look for specific About/Description sections
+                const aboutSelectors = [
+                    '.about-us', '.about-section', '.about-content', '.about-text',
+                    '#about', '#about-us', '.description', '.intro', '.intro-text',
+                    '[class*=""about""]', '[class*=""description""]', '[class*=""intro""]',
+                    '.hero-text', '.banner-text', '.main-content p',
+                    'section.about', 'div.about', 'article.about'
+                ];
+
+                for (const selector of aboutSelectors) {
+                    try {
+                        const el = document.querySelector(selector);
+                        if (el) {
+                            // Get all paragraph text within this section
+                            const paragraphs = el.querySelectorAll('p');
+                            if (paragraphs.length > 0) {
+                                let text = '';
+                                for (const p of paragraphs) {
+                                    const pText = clean(p.innerText);
+                                    if (pText.length > 30 && !isNavigationText(pText)) {
+                                        text += pText + ' ';
+                                        if (text.length > 500) break;
+                                    }
+                                }
+                                if (text.length > 50) return text.trim();
+                            } else {
+                                const text = clean(el.innerText);
+                                if (text.length > 50 && text.length < 2000 && !isNavigationText(text)) {
+                                    return text;
+                                }
+                            }
+                        }
+                    } catch {}
+                }
+
+                // Strategy 3: Look for first meaningful paragraph on the page
+                const allParagraphs = document.querySelectorAll('main p, article p, .content p, #content p, body > div p');
+                for (const p of allParagraphs) {
+                    const text = clean(p.innerText);
+                    if (text.length > 100 && text.length < 1500 && !isNavigationText(text)) {
+                        return text;
+                    }
+                }
+
+                return null;
+
+                function isNavigationText(text) {
+                    const navKeywords = [
+                        'menu', 'home', 'contact', 'login', 'sign up', 'subscribe',
+                        'facebook', 'instagram', 'twitter', 'follow us',
+                        'copyright', 'privacy policy', 'terms', 'all rights reserved',
+                        'cookie', 'cart', 'checkout', 'shipping'
+                    ];
+                    const lower = text.toLowerCase();
+                    return navKeywords.some(k => lower.includes(k)) && text.length < 200;
+                }
+            }");
+
+            return description;
+        }
+
+        private static string CleanDescription(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+
+            // Remove excess whitespace
+            text = Regex.Replace(text, @"\s+", " ").Trim();
+
+            // Remove common noise phrases
+            var noisePatterns = new[]
+            {
+                @"Read more\.?\.?\.?$",
+                @"Learn more\.?\.?\.?$",
+                @"Click here.*$",
+                @"Contact us.*$",
+                @"Follow us.*$"
+            };
+
+            foreach (var pattern in noisePatterns)
+            {
+                text = Regex.Replace(text, pattern, "", RegexOptions.IgnoreCase).Trim();
+            }
+
+            return text;
         }
     }
 }

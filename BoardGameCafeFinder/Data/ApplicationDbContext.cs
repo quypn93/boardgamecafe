@@ -25,6 +25,8 @@ namespace BoardGameCafeFinder.Data
         public DbSet<ClaimRequest> ClaimRequests { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<AffiliateClick> AffiliateClicks { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<CrawlHistory> CrawlHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -328,6 +330,47 @@ namespace BoardGameCafeFinder.Data
                     .OnDelete(DeleteBehavior.SetNull);
 
                 entity.Property(e => e.ClickedAt).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // City Configuration
+            modelBuilder.Entity<City>(entity =>
+            {
+                entity.HasKey(e => e.CityId);
+
+                entity.HasIndex(e => e.Name);
+                entity.HasIndex(e => e.Region);
+                entity.HasIndex(e => e.CrawlCount);
+                entity.HasIndex(e => e.LastCrawledAt);
+                entity.HasIndex(e => e.NextCrawlAt);
+                entity.HasIndex(e => e.IsActive);
+
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Region).HasDefaultValue("US");
+                entity.Property(e => e.CrawlCount).HasDefaultValue(0);
+                entity.Property(e => e.IsActive).HasDefaultValue(true);
+                entity.Property(e => e.MaxResults).HasDefaultValue(15);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // CrawlHistory Configuration
+            modelBuilder.Entity<CrawlHistory>(entity =>
+            {
+                entity.HasKey(e => e.CrawlHistoryId);
+
+                entity.HasIndex(e => e.CityId);
+                entity.HasIndex(e => e.StartedAt);
+                entity.HasIndex(e => e.Status);
+
+                entity.HasOne(e => e.City)
+                    .WithMany(c => c.CrawlHistories)
+                    .HasForeignKey(e => e.CityId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(e => e.Status).HasDefaultValue("InProgress");
+                entity.Property(e => e.CafesFound).HasDefaultValue(0);
+                entity.Property(e => e.CafesAdded).HasDefaultValue(0);
+                entity.Property(e => e.CafesUpdated).HasDefaultValue(0);
+                entity.Property(e => e.StartedAt).HasDefaultValueSql("GETUTCDATE()");
             });
         }
     }

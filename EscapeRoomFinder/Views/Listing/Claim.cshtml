@@ -3,6 +3,7 @@
     var venue = ViewBag.Venue as EscapeRoomFinder.Models.Domain.EscapeRoomVenue;
     var plans = ViewBag.Plans as Dictionary<string, EscapeRoomFinder.Controllers.ListingPlan>;
     var selectedPlan = ViewBag.SelectedPlan as string ?? "Premium";
+    Layout = "_AdminLayout";
 }
 
 <div class="bg-dark text-white py-4">

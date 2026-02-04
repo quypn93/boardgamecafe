@@ -78,6 +78,14 @@ builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeWebsiteCrawlerServi
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IBlogService, BoardGameCafeFinder.Services.BlogService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IEmailService, BoardGameCafeFinder.Services.EmailService>();
 
+// Crawl Settings
+builder.Services.Configure<BoardGameCafeFinder.Models.CrawlSettings>(
+    builder.Configuration.GetSection("CrawlSettings"));
+
+// Auto Crawl Service (background service)
+builder.Services.AddSingleton<BoardGameCafeFinder.Services.IAutoCrawlService, BoardGameCafeFinder.Services.AutoCrawlService>();
+builder.Services.AddHostedService(sp => (BoardGameCafeFinder.Services.AutoCrawlService)sp.GetRequiredService<BoardGameCafeFinder.Services.IAutoCrawlService>());
+
 // Payment Services - supports Stripe and PayPal with configurable switching
 builder.Services.AddScoped<BoardGameCafeFinder.Services.StripePaymentService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.PayPalPaymentService>();
@@ -97,18 +105,22 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Seed admin user
+// Seed admin user and cities
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         await BoardGameCafeFinder.Data.AdminSeeder.SeedAdminUserAsync(services);
+
+        // Seed cities for auto crawl
+        var autoCrawlService = services.GetRequiredService<BoardGameCafeFinder.Services.IAutoCrawlService>();
+        await autoCrawlService.SeedCitiesAsync();
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding admin user.");
+        logger.LogError(ex, "An error occurred while seeding admin user or cities.");
     }
 }
 

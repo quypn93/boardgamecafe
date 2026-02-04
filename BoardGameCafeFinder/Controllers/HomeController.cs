@@ -36,29 +36,8 @@ public class HomeController : Controller
                            && (gameIds == null || gameIds.Length == 0)
                            && !lat.HasValue && !lng.HasValue;
 
-        // Set SEO metadata with dynamic content
+        // SEO metadata will be set after we have cafe count
         var currentYear = DateTime.Now.Year;
-        string pageTitle;
-        string pageDescription;
-
-        if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(country))
-        {
-            pageTitle = $"Board Game Cafes in {city}, {country} - Find & Compare {currentYear}";
-            pageDescription = $"Find the best board game cafes in {city}, {country}. Browse games, read reviews, check ratings and plan your visit. Updated {currentYear}.";
-        }
-        else if (!string.IsNullOrEmpty(country))
-        {
-            pageTitle = $"Board Game Cafes in {country} - Directory {currentYear}";
-            pageDescription = $"Explore board game cafes across {country}. Discover new games, read reviews and connect with other board game enthusiasts.";
-        }
-        else
-        {
-            pageTitle = $"Board Game Cafes Near You - Find & Compare {currentYear}";
-            pageDescription = "Discover board game cafes near you. Find the best places to play modern board games with friends and family. Reviews, ratings & directions.";
-        }
-
-        ViewData["Title"] = pageTitle;
-        ViewData["MetaDescription"] = pageDescription;
 
         // SEO: Build canonical URL with filters (exclude pagination for canonical)
         var canonicalUrl = $"{Request.Scheme}://{Request.Host}/";
@@ -232,6 +211,29 @@ public class HomeController : Controller
         ViewBag.TotalItems = totalItems;
         ViewBag.PageSize = pageSize;
         ViewBag.IsFirstVisit = isFirstVisit;
+
+        // Set SEO metadata with cafe count for better CTR
+        string pageTitle;
+        string pageDescription;
+
+        if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(country))
+        {
+            pageTitle = $"{totalItems}+ Board Game Cafes in {city} ({currentYear}) | Reviews & Maps";
+            pageDescription = $"Find {totalItems} board game cafes in {city}, {country}. Compare ratings, browse games, get directions. Updated {DateTime.Now:MMMM yyyy}.";
+        }
+        else if (!string.IsNullOrEmpty(country))
+        {
+            pageTitle = $"{totalItems}+ Board Game Cafes in {country} ({currentYear}) | Directory";
+            pageDescription = $"Explore {totalItems} board game cafes across {country}. Discover games, read reviews and plan your visit.";
+        }
+        else
+        {
+            pageTitle = $"Find Board Game Cafes Near You | {totalItems}+ Locations";
+            pageDescription = "Discover board game cafes near you. Browse games, read reviews, get directions. Find the perfect spot for your next gaming session!";
+        }
+
+        ViewData["Title"] = pageTitle;
+        ViewData["MetaDescription"] = pageDescription;
 
         return View("Index", cafes);
     }

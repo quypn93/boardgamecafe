@@ -21,6 +21,7 @@ namespace EscapeRoomFinder.Controllers
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly ILogger<AdminController> _logger;
+        private readonly IWebHostEnvironment _environment;
 
         public AdminController(
             ApplicationDbContext context,
@@ -30,7 +31,8 @@ namespace EscapeRoomFinder.Controllers
             IVenueWebsiteCrawlerService websiteCrawlerService,
             UserManager<User> userManager,
             RoleManager<IdentityRole<int>> roleManager,
-            ILogger<AdminController> logger)
+            ILogger<AdminController> logger,
+            IWebHostEnvironment environment)
         {
             _context = context;
             _venueService = venueService;
@@ -40,6 +42,7 @@ namespace EscapeRoomFinder.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
+            _environment = environment;
         }
 
         [Route("")]
@@ -942,6 +945,84 @@ namespace EscapeRoomFinder.Controllers
                 .ToListAsync();
 
             return Json(venues);
+        }
+
+        /// <summary>
+        /// Clear all venue data from database for testing
+        /// POST: /admin/crawl/clear-all
+        /// </summary>
+        [HttpPost]
+        [Route("crawl/clear-all")]
+        public async Task<IActionResult> ClearAllData()
+        {
+            try
+            {
+                // Get counts before deletion
+                var venueCount = await _context.Venues.CountAsync();
+                var roomCount = await _context.Rooms.CountAsync();
+                var reviewCount = await _context.Reviews.CountAsync();
+                var photoCount = await _context.Photos.CountAsync();
+
+                // Delete in order (related tables first due to FK constraints)
+                _context.Reviews.RemoveRange(_context.Reviews);
+                _context.Photos.RemoveRange(_context.Photos);
+                _context.Rooms.RemoveRange(_context.Rooms);
+                _context.PremiumListings.RemoveRange(_context.PremiumListings);
+                _context.Venues.RemoveRange(_context.Venues);
+
+                await _context.SaveChangesAsync();
+
+                // Delete all images from wwwroot/images folders
+                int imagesDeleted = 0;
+                var imageFolders = new[] { "venues", "photos", "rooms" };
+                foreach (var folder in imageFolders)
+                {
+                    var imagePath = Path.Combine(_environment.WebRootPath, "images", folder);
+                    if (Directory.Exists(imagePath))
+                    {
+                        var imageFiles = Directory.GetFiles(imagePath);
+                        foreach (var file in imageFiles)
+                        {
+                            try
+                            {
+                                System.IO.File.Delete(file);
+                                imagesDeleted++;
+                            }
+                            catch (Exception fileEx)
+                            {
+                                _logger.LogWarning(fileEx, "Failed to delete image file: {File}", file);
+                            }
+                        }
+                        _logger.LogInformation("Deleted {Count} image files from {Path}", imageFiles.Length, imagePath);
+                    }
+                }
+
+                _logger.LogInformation("Cleared all data: {VenueCount} venues, {RoomCount} rooms, {ReviewCount} reviews, {PhotoCount} photos, {ImagesDeleted} image files",
+                    venueCount, roomCount, reviewCount, photoCount, imagesDeleted);
+
+                return Json(new
+                {
+                    success = true,
+                    message = "All data cleared successfully.",
+                    deleted = new
+                    {
+                        venues = venueCount,
+                        rooms = roomCount,
+                        reviews = reviewCount,
+                        photos = photoCount,
+                        imageFiles = imagesDeleted
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error clearing all data");
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                });
+            }
         }
 
         private string ExtractCity(string address)

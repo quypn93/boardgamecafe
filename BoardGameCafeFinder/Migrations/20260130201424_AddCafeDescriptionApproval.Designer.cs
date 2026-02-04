@@ -4,6 +4,7 @@ using BoardGameCafeFinder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BoardGameCafeFinder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260130201424_AddCafeDescriptionApproval")]
+    partial class AddCafeDescriptionApproval
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -453,77 +456,6 @@ namespace BoardGameCafeFinder.Migrations
                     b.ToTable("CafeGames");
                 });
 
-            modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.City", b =>
-                {
-                    b.Property<int>("CityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityId"));
-
-                    b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("CrawlCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<string>("LastCrawlStatus")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime?>("LastCrawledAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MaxResults")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(15);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime?>("NextCrawlAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasDefaultValue("US");
-
-                    b.HasKey("CityId");
-
-                    b.HasIndex("CrawlCount");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("LastCrawledAt");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("NextCrawlAt");
-
-                    b.HasIndex("Region");
-
-                    b.ToTable("Cities");
-                });
-
             modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.ClaimRequest", b =>
                 {
                     b.Property<int>("ClaimRequestId")
@@ -639,62 +571,6 @@ namespace BoardGameCafeFinder.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ClaimRequests");
-                });
-
-            modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.CrawlHistory", b =>
-                {
-                    b.Property<int>("CrawlHistoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CrawlHistoryId"));
-
-                    b.Property<int>("CafesAdded")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("CafesFound")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("CafesUpdated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("StartedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasDefaultValue("InProgress");
-
-                    b.HasKey("CrawlHistoryId");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("StartedAt");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("CrawlHistories");
                 });
 
             modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.Event", b =>
@@ -1503,17 +1379,6 @@ namespace BoardGameCafeFinder.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.CrawlHistory", b =>
-                {
-                    b.HasOne("BoardGameCafeFinder.Models.Domain.City", "City")
-                        .WithMany("CrawlHistories")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
-                });
-
             modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.Event", b =>
                 {
                     b.HasOne("BoardGameCafeFinder.Models.Domain.Cafe", "Cafe")
@@ -1683,11 +1548,6 @@ namespace BoardGameCafeFinder.Migrations
                     b.Navigation("PremiumListing");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.City", b =>
-                {
-                    b.Navigation("CrawlHistories");
                 });
 
             modelBuilder.Entity("BoardGameCafeFinder.Models.Domain.Event", b =>

@@ -36,14 +36,14 @@
                                 <div>
                                     <i class="bi bi-puzzle"></i>
                                     @{
-                                        double avgDiff = theme.AvgDifficulty;
+                                        double avgDiff = (double)theme.AvgDifficulty;
                                     }
                                     @avgDiff.ToString("F1")/5
                                 </div>
                                 <div>
                                     <i class="bi bi-star-fill text-warning"></i>
                                     @{
-                                        double avgRating = theme.AvgRating;
+                                        double avgRating = (double)theme.AvgRating;
                                     }
                                     @avgRating.ToString("F1")
                                 </div>

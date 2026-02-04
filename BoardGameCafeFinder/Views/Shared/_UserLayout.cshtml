@@ -15,9 +15,13 @@
     <meta name="twitter:image" content="@(ViewData["OGImage"] ?? "/logo.svg")" />
     <meta name="theme-color" content="#6f42c1" />
     <meta name="google-site-verification" content="ywtjfYRvcyLlJtKcEAsXegoTLPzexq2OUy5Su3vKQ4Y" />
-    <meta name='impact-site-verification' value='ef63a81a-46a4-4fec-bc37-6ec917c00948'>
+    <meta name='impact-site-verification' value='b9ed2060-bd39-41a1-99fc-5685bfb102cd'>
 
-    <title>@(ViewData["Title"] ?? "Find Board Game Cafes") - Board Game Cafe Finder</title>
+    @{
+        var pageTitle = ViewData["Title"]?.ToString() ?? "Find Board Game Cafes Near You";
+        var fullTitle = pageTitle.Length < 45 ? $"{pageTitle} | Board Game Cafe Finder" : pageTitle;
+    }
+    <title>@fullTitle</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

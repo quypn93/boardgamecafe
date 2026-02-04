@@ -1,0 +1,145 @@
+@model BoardGameCafeFinder.Models.Domain.Cafe
+@{
+    ViewData["Title"] = $"Edit Description - {Model.Name}";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-card-text me-2"></i>Edit Description</h2>
+    <a href="@Url.Action("Descriptions")" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Back to List
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <a href="/cafe/@Model.Slug" target="_blank" class="text-decoration-none">
+                        @Model.Name
+                    </a>
+                </h5>
+                <small class="text-muted">@Model.City, @Model.Country</small>
+            </div>
+            <div class="card-body">
+                <form asp-action="UpdateDescription" method="post">
+                    <input type="hidden" name="id" value="@Model.CafeId" />
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" id="description" class="form-control" rows="10"
+                                  maxlength="2000" placeholder="Enter cafe description...">@Model.Description</textarea>
+                        <div class="form-text">
+                            <span id="charCount">@(Model.Description?.Length ?? 0)</span> / 2000 characters
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" name="isApproved" value="true" id="isApproved"
+                                   class="form-check-input" @(Model.IsDescriptionApproved ? "checked" : "")>
+                            <label for="isApproved" class="form-check-label">
+                                Approve this description for public display
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i> Save Description
+                        </button>
+                        @if (!string.IsNullOrEmpty(Model.Website))
+                        {
+                            <form asp-action="CrawlDescription" asp-route-id="@Model.CafeId" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-outline-info">
+                                    <i class="bi bi-download me-1"></i> Crawl from Website
+                                </button>
+                            </form>
+                        }
+                        <a href="@Url.Action("Descriptions")" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-header bg-white">
+                <h6 class="mb-0"><i class="bi bi-info-circle me-1"></i> Cafe Info</h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Address</dt>
+                    <dd class="col-sm-8">@Model.Address</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.Phone))
+                    {
+                        <dt class="col-sm-4">Phone</dt>
+                        <dd class="col-sm-8">@Model.Phone</dd>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.Website))
+                    {
+                        <dt class="col-sm-4">Website</dt>
+                        <dd class="col-sm-8">
+                            <a href="@Model.Website" target="_blank" class="text-truncate d-block" style="max-width: 200px;">
+                                @Model.Website
+                            </a>
+                        </dd>
+                    }
+
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        @if (string.IsNullOrEmpty(Model.Description))
+                        {
+                            <span class="badge bg-secondary">No Description</span>
+                        }
+                        else if (Model.IsDescriptionApproved)
+                        {
+                            <span class="badge bg-success">Approved</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Website))
+        {
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0"><i class="bi bi-globe me-1"></i> Website Preview</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">
+                        Click "Crawl from Website" to automatically extract description from the cafe's website.
+                        The crawled content will need to be reviewed before approval.
+                    </p>
+                    <a href="@Model.Website" target="_blank" class="btn btn-sm btn-outline-secondary w-100">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Visit Website
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('description');
+            const charCount = document.getElementById('charCount');
+
+            function updateCharCount() {
+                charCount.textContent = textarea.value.length;
+            }
+
+            textarea.addEventListener('input', updateCharCount);
+        });
+    </script>
+}

@@ -27,6 +27,7 @@ namespace BoardGameCafeFinder.Services
         public string Address { get; set; } = string.Empty;
         public string? Phone { get; set; }
         public string? Website { get; set; }
+        public string? Description { get; set; }
         public double? Rating { get; set; }
         public int? ReviewCount { get; set; }
         public string? PriceLevel { get; set; }
@@ -55,6 +56,54 @@ namespace BoardGameCafeFinder.Services
         private readonly IImageStorageService _imageStorageService;
         private readonly ICafeWebsiteCrawlerService _cafeWebsiteCrawlerService;
         private readonly IBggXmlApiService _bggXmlApiService;
+
+        // Valid countries list for validation
+        private static readonly HashSet<string> ValidCountries = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "United States", "USA", "US",
+            "United Kingdom", "UK", "Great Britain", "England", "Scotland", "Wales", "Northern Ireland",
+            "Canada",
+            "Australia",
+            "Germany", "Deutschland",
+            "France",
+            "Italy", "Italia",
+            "Spain", "España",
+            "Netherlands", "Holland",
+            "Belgium", "België", "Belgique",
+            "Japan", "日本",
+            "South Korea", "Korea", "대한민국", "한국",
+            "China", "中国",
+            "Taiwan", "台灣", "台湾",
+            "Hong Kong", "香港",
+            "Singapore",
+            "Malaysia",
+            "Thailand", "ประเทศไทย",
+            "Vietnam", "Việt Nam",
+            "Indonesia",
+            "Philippines",
+            "India",
+            "Brazil", "Brasil",
+            "Mexico", "México",
+            "Argentina",
+            "Chile",
+            "Colombia",
+            "Poland", "Polska",
+            "Czech Republic", "Czechia", "Česko",
+            "Austria", "Österreich",
+            "Switzerland", "Schweiz", "Suisse",
+            "Sweden", "Sverige",
+            "Norway", "Norge",
+            "Denmark", "Danmark",
+            "Finland", "Suomi",
+            "Ireland", "Éire",
+            "Portugal",
+            "Greece", "Ελλάδα",
+            "Turkey", "Türkiye",
+            "Russia", "Россия",
+            "Ukraine", "Україна",
+            "New Zealand",
+            "South Africa"
+        };
 
         public GoogleMapsCrawlerService(
             ILogger<GoogleMapsCrawlerService> logger,
@@ -1028,24 +1077,79 @@ namespace BoardGameCafeFinder.Services
                 await page.WaitForTimeoutAsync(2000);
 
                 // Click on reviews button to expand reviews
-                // Try multiple potential selectors for the Reviews tab
-                var reviewsTab = page.Locator("button[role='tab'][aria-label*='Reviews']").First;
-                if (await reviewsTab.CountAsync() == 0)
+                // Try multiple potential selectors for the Reviews tab (including Vietnamese)
+                var reviewsTabSelectors = new[]
                 {
-                    reviewsTab = page.Locator("button:has-text('Reviews')").First;
+                    "button[role='tab'][aria-label*='Reviews']",
+                    "button[role='tab'][aria-label*='Đánh giá']",
+                    "button[role='tab'][aria-label*='reviews']",
+                    "button:has-text('Reviews')",
+                    "button:has-text('Đánh giá')",
+                    "div[role='tab']:has-text('Reviews')",
+                    "div[role='tab']:has-text('Đánh giá')",
+                    "[data-tab-index='1']" // Reviews tab is usually index 1
+                };
+
+                ILocator? reviewsTab = null;
+                foreach (var selector in reviewsTabSelectors)
+                {
+                    var tab = page.Locator(selector).First;
+                    if (await tab.CountAsync() > 0)
+                    {
+                        reviewsTab = tab;
+                        _logger.LogInformation("Found reviews tab with selector: {Selector}", selector);
+                        break;
+                    }
                 }
 
-                if (await reviewsTab.CountAsync() > 0)
+                if (reviewsTab != null)
                 {
-                    await reviewsTab.ClickAsync();
-                    await page.WaitForTimeoutAsync(3000);
+                    try
+                    {
+                        await reviewsTab.ClickAsync();
+                        await page.WaitForTimeoutAsync(3000);
+                        _logger.LogInformation("Clicked on reviews tab successfully");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning("Failed to click reviews tab: {Message}", ex.Message);
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("Could not find reviews tab with any selector");
                 }
 
                 // Scroll reviews panel to load more
-                // Scroll reviews panel to load more by finding the scrollable container of the reviews
-                // We find the first review item and look for its scrollable parent
-                var firstReviewItem = page.Locator("div[data-review-id]").First;
-                if (await firstReviewItem.CountAsync() > 0)
+                // Try multiple selectors to find review items (Google Maps changes these frequently)
+                var reviewItemSelectors = new[]
+                {
+                    "div[data-review-id]",
+                    "div[class*='jftiEf']", // Common Google Maps review container class
+                    "div.jftiEf",
+                    "div[jsaction*='review']",
+                    "div[data-index][class*='fontBodyMedium']", // Alternative structure
+                    "[data-review-id]",
+                    ".jJc9Ad" // Another common review container
+                };
+
+                string? workingReviewSelector = null;
+                ILocator? firstReviewItem = null;
+
+                foreach (var selector in reviewItemSelectors)
+                {
+                    var item = page.Locator(selector).First;
+                    var count = await item.CountAsync();
+                    if (count > 0)
+                    {
+                        workingReviewSelector = selector;
+                        firstReviewItem = item;
+                        _logger.LogInformation("Found review items with selector: {Selector}", selector);
+                        break;
+                    }
+                }
+
+                if (firstReviewItem != null && workingReviewSelector != null)
                 {
                     var scrollableParent = await firstReviewItem.EvaluateHandleAsync(@"element => {
                         let parent = element.parentElement;
@@ -1072,7 +1176,7 @@ namespace BoardGameCafeFinder.Services
                             scrollCount++;
 
                             // Check if new reviews loaded
-                            var currentCount = await page.Locator("div[data-review-id]").CountAsync();
+                            var currentCount = await page.Locator(workingReviewSelector).CountAsync();
                             if (currentCount == previousCount)
                             {
                                 noNewReviewsCount++;
@@ -1088,20 +1192,51 @@ namespace BoardGameCafeFinder.Services
                     }
                     else
                     {
-                        // Fallback: Try to scroll the last review item into view
-                         var reviewItemsList = page.Locator("div[data-review-id]");
-                         var count = await reviewItemsList.CountAsync();
-                         if (count > 0)
-                         {
-                             await reviewItemsList.Nth(count - 1).ScrollIntoViewIfNeededAsync();
-                             await page.WaitForTimeoutAsync(1500);
-                         }
+                        // Fallback: Try to scroll the main scrollable area
+                        _logger.LogInformation("No scrollable parent found, trying to scroll main area");
+                        await page.EvaluateAsync(@"() => {
+                            const scrollable = document.querySelector('div[role=""main""] div[tabindex=""-1""]') ||
+                                              document.querySelector('.m6QErb.DxyBCb.kA9KIf.dS8AEf') ||
+                                              document.querySelector('[role=""feed""]');
+                            if (scrollable) {
+                                for (let i = 0; i < 10; i++) {
+                                    scrollable.scrollTop = scrollable.scrollHeight;
+                                }
+                            }
+                        }");
+                        await page.WaitForTimeoutAsync(2000);
                     }
                 }
+                else
+                {
+                    _logger.LogWarning("Could not find any review items with known selectors");
+                }
 
-                // Extract individual reviews
-                var reviewItems = page.Locator("div[data-review-id]");
-                var reviewCount = await reviewItems.CountAsync();
+                // Extract individual reviews - use the working selector or try all
+                ILocator reviewItems;
+                int reviewCount = 0;
+
+                if (workingReviewSelector != null)
+                {
+                    reviewItems = page.Locator(workingReviewSelector);
+                    reviewCount = await reviewItems.CountAsync();
+                }
+                else
+                {
+                    // Try all selectors again
+                    foreach (var selector in reviewItemSelectors)
+                    {
+                        reviewItems = page.Locator(selector);
+                        reviewCount = await reviewItems.CountAsync();
+                        if (reviewCount > 0)
+                        {
+                            workingReviewSelector = selector;
+                            _logger.LogInformation("Found {Count} reviews with selector: {Selector}", reviewCount, selector);
+                            break;
+                        }
+                    }
+                    reviewItems = page.Locator(workingReviewSelector ?? "div[data-review-id]");
+                }
 
                 _logger.LogInformation("Found {Count} reviews to extract", reviewCount);
 
@@ -1114,101 +1249,152 @@ namespace BoardGameCafeFinder.Services
                         var review = new CrawledReviewData();
                         var reviewItem = reviewItems.Nth(i);
 
-                        // Extract author - Updated selector based on feedback
-                        var authorElement = reviewItem.Locator("div.d4r55").First;
-                        if (await authorElement.CountAsync() == 0)
+                        // Extract author - try multiple selectors
+                        var authorSelectors = new[] { "div.d4r55", ".d4r55", "button.WEBjve div", ".WEBjve", "a[href*='contrib'] > div" };
+                        string? authorText = null;
+                        foreach (var selector in authorSelectors)
                         {
-                            authorElement = reviewItem.Locator(".d4qsdf").First; // Fallback
-                        }
-
-                        if (await authorElement.CountAsync() > 0)
-                        {
-                            review.Author = await authorElement.InnerTextAsync();
-                        }
-
-                        // Extract rating
-                        var ratingElement = reviewItem.Locator("span[role='img'][aria-label*='stars']").First;
-                        if (await ratingElement.CountAsync() > 0)
-                        {
-                            var ariaLabel = await ratingElement.GetAttributeAsync("aria-label");
-                            if (ariaLabel != null)
+                            var authorElement = reviewItem.Locator(selector).First;
+                            if (await authorElement.CountAsync() > 0)
                             {
-                                var match = Regex.Match(ariaLabel, @"([\d.]+)\s*stars?");
-                                if (match.Success && double.TryParse(match.Groups[1].Value, out var rating))
+                                authorText = await authorElement.InnerTextAsync();
+                                if (!string.IsNullOrWhiteSpace(authorText))
                                 {
-                                    review.Rating = rating;
+                                    review.Author = authorText.Trim();
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Extract rating - try multiple patterns
+                        var ratingSelectors = new[]
+                        {
+                            "span[role='img'][aria-label*='stars']",
+                            "span[role='img'][aria-label*='sao']", // Vietnamese
+                            "span[aria-label*='stars']",
+                            "span[aria-label*='sao']",
+                            ".kvMYJc", // Common Google Maps rating class
+                            "span.fzvQIb" // Another rating class
+                        };
+
+                        foreach (var selector in ratingSelectors)
+                        {
+                            var ratingElement = reviewItem.Locator(selector).First;
+                            if (await ratingElement.CountAsync() > 0)
+                            {
+                                var ariaLabel = await ratingElement.GetAttributeAsync("aria-label");
+                                if (ariaLabel != null)
+                                {
+                                    // Match both "X stars" and "X sao" (Vietnamese)
+                                    var match = Regex.Match(ariaLabel, @"([\d.,]+)\s*(stars?|sao)");
+                                    if (match.Success)
+                                    {
+                                        var ratingStr = match.Groups[1].Value.Replace(",", ".");
+                                        if (double.TryParse(ratingStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var rating))
+                                        {
+                                            review.Rating = rating;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
 
                         // Click "More" button to expand full review text if available
-                        var moreButton = reviewItem.Locator("button.w8nwRe.kyuRq[aria-label='See more']").First;
-                        if (await moreButton.CountAsync() == 0)
+                        var moreButtonSelectors = new[]
                         {
-                            // Fallback selectors for More button
-                            moreButton = reviewItem.Locator("button[aria-label='See more']").First;
-                        }
-                        if (await moreButton.CountAsync() == 0)
-                        {
-                            moreButton = reviewItem.Locator("button:has-text('More')").First;
-                        }
+                            "button.w8nwRe.kyuRq[aria-label='See more']",
+                            "button[aria-label='See more']",
+                            "button[aria-label='Xem thêm']", // Vietnamese
+                            "button:has-text('More')",
+                            "button:has-text('Thêm')", // Vietnamese
+                            "span.w8nwRe"
+                        };
 
-                        if (await moreButton.CountAsync() > 0)
+                        foreach (var selector in moreButtonSelectors)
                         {
-                            try
+                            var moreButton = reviewItem.Locator(selector).First;
+                            if (await moreButton.CountAsync() > 0)
                             {
-                                await moreButton.ClickAsync();
-                                await page.WaitForTimeoutAsync(500); // Wait for text to expand
-                            }
-                            catch (Exception clickEx)
-                            {
-                                _logger.LogDebug("Could not click More button: {Message}", clickEx.Message);
-                            }
-                        }
-
-                        // Extract review text - Updated selector
-                        var textElement = reviewItem.Locator("span.wiI7pd").First;
-                        if (await textElement.CountAsync() == 0)
-                        {
-                             textElement = reviewItem.Locator(".MyEned").First;
-                        }
-
-                        if (await textElement.CountAsync() > 0)
-                        {
-                            review.ReviewText = await textElement.InnerTextAsync();
-                        }
-
-                        // Extract review date - Updated selector
-                        var dateElement = reviewItem.Locator("span.rsqaWe").First;
-                        if (await dateElement.CountAsync() == 0)
-                        {
-                             dateElement = reviewItem.Locator(".p5KrLc").First;
-                        }
-
-                        if (await dateElement.CountAsync() > 0)
-                        {
-                            var dateText = await dateElement.InnerTextAsync();
-                            if (TryParseRelativeDate(dateText, out var date))
-                            {
-                                review.ReviewDate = date;
+                                try
+                                {
+                                    await moreButton.ClickAsync();
+                                    await page.WaitForTimeoutAsync(500);
+                                    break;
+                                }
+                                catch (Exception clickEx)
+                                {
+                                    _logger.LogDebug("Could not click More button with {Selector}: {Message}", selector, clickEx.Message);
+                                }
                             }
                         }
 
-                        // Extract helpful count
-                        var helpfulElement = reviewItem.Locator("button[aria-label*='helpful']").First;
-                        if (await helpfulElement.CountAsync() > 0)
+                        // Extract review text - try multiple selectors
+                        var textSelectors = new[] { "span.wiI7pd", ".wiI7pd", ".MyEned", "div.MyEned span", ".review-full-text" };
+                        string? reviewText = null;
+                        foreach (var selector in textSelectors)
                         {
-                            var helpfulText = await helpfulElement.InnerTextAsync();
-                            if (int.TryParse(Regex.Match(helpfulText, @"\d+").Value, out var helpful))
+                            var textElement = reviewItem.Locator(selector).First;
+                            if (await textElement.CountAsync() > 0)
                             {
-                                review.HelpfulCount = helpful;
+                                reviewText = await textElement.InnerTextAsync();
+                                if (!string.IsNullOrWhiteSpace(reviewText))
+                                {
+                                    review.ReviewText = reviewText.Trim();
+                                    break;
+                                }
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(review.Author) && !string.IsNullOrEmpty(review.ReviewText))
+                        // Extract review date - try multiple selectors
+                        var dateSelectors = new[] { "span.rsqaWe", ".rsqaWe", ".p5KrLc", "span.dehysf" };
+                        foreach (var selector in dateSelectors)
+                        {
+                            var dateElement = reviewItem.Locator(selector).First;
+                            if (await dateElement.CountAsync() > 0)
+                            {
+                                var dateText = await dateElement.InnerTextAsync();
+                                if (!string.IsNullOrWhiteSpace(dateText) && TryParseRelativeDate(dateText, out var date))
+                                {
+                                    review.ReviewDate = date;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Extract helpful count - include Vietnamese
+                        var helpfulSelectors = new[]
+                        {
+                            "button[aria-label*='helpful']",
+                            "button[aria-label*='hữu ích']", // Vietnamese
+                            "span[aria-label*='helpful']"
+                        };
+
+                        foreach (var selector in helpfulSelectors)
+                        {
+                            var helpfulElement = reviewItem.Locator(selector).First;
+                            if (await helpfulElement.CountAsync() > 0)
+                            {
+                                var helpfulText = await helpfulElement.InnerTextAsync();
+                                var helpfulMatch = Regex.Match(helpfulText, @"\d+");
+                                if (helpfulMatch.Success && int.TryParse(helpfulMatch.Value, out var helpful))
+                                {
+                                    review.HelpfulCount = helpful;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Accept review if we have author (even without text, rating is still valuable)
+                        if (!string.IsNullOrEmpty(review.Author))
                         {
                             reviews.Add(review);
-                            _logger.LogInformation("Extracted review by: {Author}", review.Author);
+                            _logger.LogInformation("Extracted review by: {Author}, Rating: {Rating}, HasText: {HasText}",
+                                review.Author, review.Rating, !string.IsNullOrEmpty(review.ReviewText));
+                        }
+                        else
+                        {
+                            _logger.LogDebug("Skipping review {Index} - no author found", i);
                         }
                     }
                     catch (Exception ex)
@@ -1234,8 +1420,8 @@ namespace BoardGameCafeFinder.Services
 
             dateText = dateText.ToLower().Trim();
 
-            // Parse "X days ago", "X months ago", etc.
-            if (Regex.Match(dateText, @"(\d+)\s*days?\s*ago").Success)
+            // Parse "X days ago" or "X ngày trước" (Vietnamese)
+            if (Regex.IsMatch(dateText, @"(\d+)\s*(days?\s*ago|ngày\s*trước)"))
             {
                 var match = Regex.Match(dateText, @"(\d+)");
                 if (int.TryParse(match.Value, out var days))
@@ -1244,7 +1430,8 @@ namespace BoardGameCafeFinder.Services
                     return true;
                 }
             }
-            else if (Regex.Match(dateText, @"(\d+)\s*weeks?\s*ago").Success)
+            // Parse "X weeks ago" or "X tuần trước" (Vietnamese)
+            else if (Regex.IsMatch(dateText, @"(\d+)\s*(weeks?\s*ago|tuần\s*trước)"))
             {
                 var match = Regex.Match(dateText, @"(\d+)");
                 if (int.TryParse(match.Value, out var weeks))
@@ -1253,7 +1440,8 @@ namespace BoardGameCafeFinder.Services
                     return true;
                 }
             }
-             else if (Regex.Match(dateText, @"(\d+)\s*months?\s*ago").Success)
+            // Parse "X months ago" or "X tháng trước" (Vietnamese)
+            else if (Regex.IsMatch(dateText, @"(\d+)\s*(months?\s*ago|tháng\s*trước)"))
             {
                 var match = Regex.Match(dateText, @"(\d+)");
                 if (int.TryParse(match.Value, out var months))
@@ -1262,23 +1450,44 @@ namespace BoardGameCafeFinder.Services
                     return true;
                 }
             }
-            else if (Regex.Match(dateText, @"(\d+)\s*years?\s*ago").Success)
+            // Parse "X years ago" or "X năm trước" (Vietnamese)
+            else if (Regex.IsMatch(dateText, @"(\d+)\s*(years?\s*ago|năm\s*trước)"))
             {
-                 var match = Regex.Match(dateText, @"(\d+)");
+                var match = Regex.Match(dateText, @"(\d+)");
                 if (int.TryParse(match.Value, out var years))
                 {
                     date = DateTime.UtcNow.AddYears(-years);
                     return true;
                 }
             }
-            else if (dateText.Contains("today"))
+            // "today" or "hôm nay" (Vietnamese)
+            else if (dateText.Contains("today") || dateText.Contains("hôm nay"))
             {
                 date = DateTime.UtcNow;
                 return true;
             }
-            else if (dateText.Contains("yesterday"))
+            // "yesterday" or "hôm qua" (Vietnamese)
+            else if (dateText.Contains("yesterday") || dateText.Contains("hôm qua"))
             {
                 date = DateTime.UtcNow.AddDays(-1);
+                return true;
+            }
+            // "a week ago" or "một tuần trước"
+            else if (dateText.Contains("a week ago") || dateText.Contains("một tuần trước"))
+            {
+                date = DateTime.UtcNow.AddDays(-7);
+                return true;
+            }
+            // "a month ago" or "một tháng trước"
+            else if (dateText.Contains("a month ago") || dateText.Contains("một tháng trước"))
+            {
+                date = DateTime.UtcNow.AddMonths(-1);
+                return true;
+            }
+            // "a year ago" or "một năm trước"
+            else if (dateText.Contains("a year ago") || dateText.Contains("một năm trước"))
+            {
+                date = DateTime.UtcNow.AddYears(-1);
                 return true;
             }
 
@@ -1437,13 +1646,26 @@ namespace BoardGameCafeFinder.Services
             var cleanAddress = Regex.Replace(cafe.Address, @"[\uE000-\uF8FF]", "").Trim();
             cafe.Address = cleanAddress;
 
+            // First, try to detect country from address patterns
+            var detectedCountry = DetectCountryFromAddress(cleanAddress);
+
             // Try to parse US address format: "City, State ZIP, Country"
             var parts = cleanAddress.Split(',').Select(p => p.Trim()).Where(p => !string.IsNullOrEmpty(p)).ToList();
 
             if (parts.Count >= 2)
             {
-                // Last part is usually country
-                cafe.Country = parts[^1];
+                // Check if last part is a valid country
+                var lastPart = parts[^1];
+                if (IsValidCountry(lastPart))
+                {
+                    cafe.Country = NormalizeCountryName(lastPart);
+                }
+                else if (!string.IsNullOrEmpty(detectedCountry))
+                {
+                    // Use detected country from address patterns
+                    cafe.Country = detectedCountry;
+                }
+                // If no valid country found, leave it null (will default to "United States" in the model)
 
                 // Second to last contains state and ZIP
                 if (parts.Count >= 3)
@@ -1490,6 +1712,11 @@ namespace BoardGameCafeFinder.Services
             {
                 // Single part - use as city
                 cafe.City = parts[0];
+                // Try to detect country from the single part
+                if (!string.IsNullOrEmpty(detectedCountry))
+                {
+                    cafe.Country = detectedCountry;
+                }
             }
 
             // Clean up city name (remove ZIP codes and extra whitespace)
@@ -1497,6 +1724,97 @@ namespace BoardGameCafeFinder.Services
             {
                 cafe.City = Regex.Replace(cafe.City, @"\s+\d{5}(-\d{4})?$", "").Trim();
             }
+        }
+
+        private bool IsValidCountry(string? country)
+        {
+            if (string.IsNullOrWhiteSpace(country))
+                return false;
+            return ValidCountries.Contains(country.Trim());
+        }
+
+        private string NormalizeCountryName(string country)
+        {
+            var trimmed = country.Trim();
+
+            // Normalize common variations
+            return trimmed.ToUpperInvariant() switch
+            {
+                "USA" or "US" => "United States",
+                "UK" or "GREAT BRITAIN" or "ENGLAND" or "SCOTLAND" or "WALES" or "NORTHERN IRELAND" => "United Kingdom",
+                "HOLLAND" => "Netherlands",
+                "DEUTSCHLAND" => "Germany",
+                "ESPAÑA" => "Spain",
+                "ITALIA" => "Italy",
+                "日本" => "Japan",
+                "대한민국" or "한국" or "KOREA" => "South Korea",
+                "中国" => "China",
+                "台灣" or "台湾" => "Taiwan",
+                "香港" => "Hong Kong",
+                "VIỆT NAM" => "Vietnam",
+                "ประเทศไทย" => "Thailand",
+                "BRASIL" => "Brazil",
+                "MÉXICO" => "Mexico",
+                "POLSKA" => "Poland",
+                "ČESKO" or "CZECHIA" => "Czech Republic",
+                "ÖSTERREICH" => "Austria",
+                "SCHWEIZ" or "SUISSE" => "Switzerland",
+                "SVERIGE" => "Sweden",
+                "NORGE" => "Norway",
+                "DANMARK" => "Denmark",
+                "SUOMI" => "Finland",
+                "ÉIRE" => "Ireland",
+                "ΕΛΛΆΔΑ" => "Greece",
+                "TÜRKIYE" => "Turkey",
+                "РОССИЯ" => "Russia",
+                "УКРАЇНА" => "Ukraine",
+                _ => trimmed // Return original if no normalization needed
+            };
+        }
+
+        private string? DetectCountryFromAddress(string address)
+        {
+            // Japanese address patterns (contains Japanese characters or patterns like "Chome", prefecture names)
+            if (Regex.IsMatch(address, @"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]") || // Japanese characters
+                Regex.IsMatch(address, @"Chome|丁目|番地|号|〒\d{3}-\d{4}|都|道|府|県", RegexOptions.IgnoreCase))
+            {
+                return "Japan";
+            }
+
+            // Korean address patterns (contains Korean characters or patterns)
+            if (Regex.IsMatch(address, @"[\uAC00-\uD7AF]") || // Korean characters
+                Regex.IsMatch(address, @"층|동|호|로|길|구|시|도", RegexOptions.IgnoreCase))
+            {
+                return "South Korea";
+            }
+
+            // Vietnamese address patterns
+            if (Regex.IsMatch(address, @"Việt Nam|Vietnam|Quận|Phường|Đường|Thành phố|TP\.|Hồ Chí Minh|Hà Nội", RegexOptions.IgnoreCase))
+            {
+                return "Vietnam";
+            }
+
+            // Chinese address patterns (Simplified/Traditional)
+            if (Regex.IsMatch(address, @"中国|省|市|区|街|路|号|楼", RegexOptions.IgnoreCase) &&
+                !Regex.IsMatch(address, @"[\u3040-\u309F\u30A0-\u30FF]")) // Exclude Japanese
+            {
+                return "China";
+            }
+
+            // Thai address patterns
+            if (Regex.IsMatch(address, @"[\u0E00-\u0E7F]") || // Thai characters
+                Regex.IsMatch(address, @"Thailand|Bangkok|ประเทศไทย", RegexOptions.IgnoreCase))
+            {
+                return "Thailand";
+            }
+
+            // Indonesian address patterns
+            if (Regex.IsMatch(address, @"Indonesia|Jakarta|Jl\.|Jalan", RegexOptions.IgnoreCase))
+            {
+                return "Indonesia";
+            }
+
+            return null;
         }
         private async Task<string?> DiscoverBggUsernameAsync(IPage googleMapsPage, string? websiteUrl, string cafeName)
         {

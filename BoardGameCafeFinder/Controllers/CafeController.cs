@@ -67,21 +67,24 @@ public class CafeController : Controller
             }
         }
 
-        // Set SEO metadata for cafe detail page
-        ViewData["Title"] = cafe.Name;
+        // Set SEO metadata for cafe detail page - optimized for CTR
+        var ratingText = cafe.AverageRating.HasValue && cafe.TotalReviews > 0
+            ? $"★ {cafe.AverageRating:0.0} ({cafe.TotalReviews} reviews). "
+            : "";
+        var gamesCount = cafe.CafeGames?.Count ?? 0;
+        var gamesText = gamesCount > 0 ? $"{gamesCount}+ games available. " : "";
 
-        var description = $"{cafe.Name} - Board game cafe";
-        if (!string.IsNullOrEmpty(cafe.City))
+        // Title with rating star for SERP visibility
+        var titleSuffix = cafe.AverageRating.HasValue && cafe.AverageRating > 0
+            ? $" | {cafe.AverageRating:0.0}★"
+            : "";
+        ViewData["Title"] = $"{cafe.Name} - Board Game Cafe in {cafe.City}{titleSuffix}";
+
+        // Meta description with social proof and CTA
+        var description = $"{cafe.Name} in {cafe.City} - {ratingText}{gamesText}Hours, directions & menu. Plan your visit today!";
+        if (description.Length > 160)
         {
-            description += $" in {cafe.City}";
-        }
-        if (cafe.AverageRating.HasValue && cafe.AverageRating > 0)
-        {
-            description += $" with {cafe.AverageRating:0.0} star rating";
-        }
-        if (!string.IsNullOrEmpty(cafe.Description))
-        {
-            description = $"{cafe.Name} - {cafe.Description}".Substring(0, Math.Min(160, $"{cafe.Name} - {cafe.Description}".Length));
+            description = description.Substring(0, 157) + "...";
         }
 
         ViewData["MetaDescription"] = description;

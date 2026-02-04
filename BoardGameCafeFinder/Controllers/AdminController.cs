@@ -16,19 +16,25 @@ namespace BoardGameCafeFinder.Controllers
         private readonly IBlogService _blogService;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly ICafeWebsiteCrawlerService _cafeWebsiteCrawlerService;
+        private readonly IAutoCrawlService _autoCrawlService;
 
         public AdminController(
             IBggSyncService bggSyncService,
             ApplicationDbContext context,
             IBlogService blogService,
             UserManager<User> userManager,
-            RoleManager<IdentityRole<int>> roleManager)
+            RoleManager<IdentityRole<int>> roleManager,
+            ICafeWebsiteCrawlerService cafeWebsiteCrawlerService,
+            IAutoCrawlService autoCrawlService)
         {
             _bggSyncService = bggSyncService;
             _context = context;
             _blogService = blogService;
             _userManager = userManager;
             _roleManager = roleManager;
+            _cafeWebsiteCrawlerService = cafeWebsiteCrawlerService;
+            _autoCrawlService = autoCrawlService;
         }
 
         public async Task<IActionResult> Dashboard()
@@ -1320,6 +1326,751 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         #endregion
+
+        #region Description Management
+
+        /// <summary>
+        /// List all cafes with description status for management
+        /// </summary>
+        public async Task<IActionResult> Descriptions(string filter = "pending")
+        {
+            var query = _context.Cafes
+                .OrderBy(c => c.Name)
+                .AsQueryable();
+
+            ViewBag.Filter = filter;
+
+            switch (filter.ToLower())
+            {
+                case "pending":
+                    // Cafes with description but not approved
+                    query = query.Where(c => !string.IsNullOrEmpty(c.Description) && !c.IsDescriptionApproved);
+                    break;
+                case "approved":
+                    query = query.Where(c => c.IsDescriptionApproved);
+                    break;
+                case "empty":
+                    query = query.Where(c => string.IsNullOrEmpty(c.Description));
+                    break;
+                // "all" - no filter
+            }
+
+            var cafes = await query.ToListAsync();
+
+            // Get counts for filter badges
+            ViewBag.PendingCount = await _context.Cafes.CountAsync(c => !string.IsNullOrEmpty(c.Description) && !c.IsDescriptionApproved);
+            ViewBag.ApprovedCount = await _context.Cafes.CountAsync(c => c.IsDescriptionApproved);
+            ViewBag.EmptyCount = await _context.Cafes.CountAsync(c => string.IsNullOrEmpty(c.Description));
+            ViewBag.TotalCount = await _context.Cafes.CountAsync();
+
+            return View(cafes);
+        }
+
+        /// <summary>
+        /// Approve a cafe's description
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ApproveDescription(int id)
+        {
+            var cafe = await _context.Cafes.FindAsync(id);
+            if (cafe == null)
+            {
+                TempData["ErrorMessage"] = "Cafe not found.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            if (string.IsNullOrEmpty(cafe.Description))
+            {
+                TempData["ErrorMessage"] = "Cannot approve empty description.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            cafe.IsDescriptionApproved = true;
+            cafe.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Description approved for '{cafe.Name}'.";
+            return RedirectToAction(nameof(Descriptions));
+        }
+
+        /// <summary>
+        /// Reject/clear a cafe's description
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> RejectDescription(int id)
+        {
+            var cafe = await _context.Cafes.FindAsync(id);
+            if (cafe == null)
+            {
+                TempData["ErrorMessage"] = "Cafe not found.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            cafe.Description = null;
+            cafe.IsDescriptionApproved = false;
+            cafe.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Description rejected and cleared for '{cafe.Name}'.";
+            return RedirectToAction(nameof(Descriptions));
+        }
+
+        /// <summary>
+        /// Edit cafe description form
+        /// </summary>
+        public async Task<IActionResult> EditDescription(int id)
+        {
+            var cafe = await _context.Cafes.FindAsync(id);
+            if (cafe == null)
+                return NotFound();
+
+            return View(cafe);
+        }
+
+        /// <summary>
+        /// Update cafe description
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateDescription(int id, string? description, bool isApproved)
+        {
+            var cafe = await _context.Cafes.FindAsync(id);
+            if (cafe == null)
+            {
+                TempData["ErrorMessage"] = "Cafe not found.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            cafe.Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+            cafe.IsDescriptionApproved = isApproved && !string.IsNullOrEmpty(cafe.Description);
+            cafe.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Description updated for '{cafe.Name}'.";
+            return RedirectToAction(nameof(Descriptions));
+        }
+
+        /// <summary>
+        /// Crawl description from cafe's website
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> CrawlDescription(int id)
+        {
+            var cafe = await _context.Cafes.FindAsync(id);
+            if (cafe == null)
+            {
+                TempData["ErrorMessage"] = "Cafe not found.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            if (string.IsNullOrEmpty(cafe.Website))
+            {
+                TempData["ErrorMessage"] = $"No website URL for '{cafe.Name}'.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            try
+            {
+                var description = await _cafeWebsiteCrawlerService.CrawlCafeDescriptionAsync(cafe.Website);
+
+                if (!string.IsNullOrEmpty(description))
+                {
+                    cafe.Description = description;
+                    cafe.IsDescriptionApproved = false; // Requires admin approval
+                    cafe.UpdatedAt = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = $"Description crawled for '{cafe.Name}' ({description.Length} chars). Please review and approve.";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"Could not extract description from '{cafe.Website}'.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error crawling description: {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(Descriptions));
+        }
+
+        /// <summary>
+        /// Bulk approve selected descriptions
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> BulkApproveDescriptions(int[] cafeIds)
+        {
+            if (cafeIds == null || cafeIds.Length == 0)
+            {
+                TempData["ErrorMessage"] = "No cafes selected.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            var cafes = await _context.Cafes
+                .Where(c => cafeIds.Contains(c.CafeId) && !string.IsNullOrEmpty(c.Description) && !c.IsDescriptionApproved)
+                .ToListAsync();
+
+            foreach (var cafe in cafes)
+            {
+                cafe.IsDescriptionApproved = true;
+                cafe.UpdatedAt = DateTime.UtcNow;
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Approved descriptions for {cafes.Count} cafes.";
+            return RedirectToAction(nameof(Descriptions));
+        }
+
+        /// <summary>
+        /// Bulk crawl descriptions for cafes with websites but no description
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> BulkCrawlDescriptions(int maxCafes = 10)
+        {
+            var cafes = await _context.Cafes
+                .Where(c => string.IsNullOrEmpty(c.Description) && !string.IsNullOrEmpty(c.Website))
+                .Take(maxCafes)
+                .ToListAsync();
+
+            if (!cafes.Any())
+            {
+                TempData["ErrorMessage"] = "No cafes with websites and empty descriptions found.";
+                return RedirectToAction(nameof(Descriptions));
+            }
+
+            int success = 0, failed = 0;
+
+            foreach (var cafe in cafes)
+            {
+                try
+                {
+                    var description = await _cafeWebsiteCrawlerService.CrawlCafeDescriptionAsync(cafe.Website!);
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        cafe.Description = description;
+                        cafe.IsDescriptionApproved = false;
+                        cafe.UpdatedAt = DateTime.UtcNow;
+                        success++;
+                    }
+                    else
+                    {
+                        failed++;
+                    }
+                }
+                catch
+                {
+                    failed++;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Crawled descriptions: {success} successful, {failed} failed. Please review and approve.";
+            return RedirectToAction(nameof(Descriptions));
+        }
+
+        #endregion
+
+        #region Auto Crawl Management
+
+        /// <summary>
+        /// List all cities with crawl status
+        /// </summary>
+        public async Task<IActionResult> Cities(string filter = "all", string region = "all", string search = "", int page = 1, int pageSize = 50)
+        {
+            var query = _context.Cities
+                .OrderBy(c => c.CrawlCount)
+                .ThenBy(c => c.Name)
+                .AsQueryable();
+
+            ViewBag.Filter = filter;
+            ViewBag.Region = region;
+            ViewBag.Search = search;
+
+            // Apply region filter
+            if (region != "all")
+            {
+                query = query.Where(c => c.Region == region);
+            }
+
+            // Apply status filter
+            switch (filter.ToLower())
+            {
+                case "never":
+                    query = query.Where(c => c.CrawlCount == 0);
+                    break;
+                case "failed":
+                    query = query.Where(c => c.LastCrawlStatus == "Failed");
+                    break;
+                case "pending":
+                    query = query.Where(c => c.NextCrawlAt != null && c.NextCrawlAt <= DateTime.UtcNow);
+                    break;
+                case "inactive":
+                    query = query.Where(c => !c.IsActive);
+                    break;
+            }
+
+            // Apply search
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var searchLower = search.ToLower();
+                query = query.Where(c => c.Name.ToLower().Contains(searchLower) ||
+                    (c.Country != null && c.Country.ToLower().Contains(searchLower)));
+            }
+
+            // Get counts
+            ViewBag.TotalCount = await _context.Cities.CountAsync();
+            ViewBag.NeverCrawledCount = await _context.Cities.CountAsync(c => c.CrawlCount == 0);
+            ViewBag.FailedCount = await _context.Cities.CountAsync(c => c.LastCrawlStatus == "Failed");
+            ViewBag.PendingCount = await _context.Cities.CountAsync(c => c.NextCrawlAt != null && c.NextCrawlAt <= DateTime.UtcNow);
+            ViewBag.USCount = await _context.Cities.CountAsync(c => c.Region == "US");
+            ViewBag.InternationalCount = await _context.Cities.CountAsync(c => c.Region == "International");
+            ViewBag.IsAutoCrawlRunning = _autoCrawlService.IsRunning;
+
+            // Pagination
+            var totalItems = await query.CountAsync();
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+
+            var cities = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return View(cities);
+        }
+
+        /// <summary>
+        /// Crawl status dashboard
+        /// </summary>
+        public async Task<IActionResult> CrawlStatus()
+        {
+            // Recent crawl history
+            var recentHistory = await _context.CrawlHistories
+                .Include(h => h.City)
+                .OrderByDescending(h => h.StartedAt)
+                .Take(50)
+                .ToListAsync();
+
+            // Statistics
+            ViewBag.TotalCities = await _context.Cities.CountAsync();
+            ViewBag.CitiesCrawled = await _context.Cities.CountAsync(c => c.CrawlCount > 0);
+            ViewBag.CitiesNeverCrawled = await _context.Cities.CountAsync(c => c.CrawlCount == 0);
+            ViewBag.CitiesFailed = await _context.Cities.CountAsync(c => c.LastCrawlStatus == "Failed");
+            ViewBag.TotalCrawls = await _context.CrawlHistories.CountAsync();
+            ViewBag.SuccessfulCrawls = await _context.CrawlHistories.CountAsync(h => h.Status == "Success");
+            ViewBag.FailedCrawls = await _context.CrawlHistories.CountAsync(h => h.Status == "Failed");
+            ViewBag.TotalCafesFound = await _context.CrawlHistories.SumAsync(h => h.CafesFound);
+            ViewBag.TotalCafesAdded = await _context.CrawlHistories.SumAsync(h => h.CafesAdded);
+            ViewBag.IsAutoCrawlRunning = _autoCrawlService.IsRunning;
+
+            // Next cities to crawl
+            var nextCities = await _autoCrawlService.GetNextCitiesToCrawlAsync(5);
+            ViewBag.NextCities = nextCities;
+
+            return View(recentHistory);
+        }
+
+        /// <summary>
+        /// Manually trigger crawl for a specific city
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> CrawlCity(int id)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return Json(new { success = false, message = "City not found." });
+            }
+
+            try
+            {
+                var result = await _autoCrawlService.CrawlCityAsync(city);
+
+                // Update city stats
+                if (result.Success)
+                {
+                    city.CrawlCount++;
+                    city.LastCrawledAt = DateTime.UtcNow;
+                    city.LastCrawlStatus = "Success";
+                    city.NextCrawlAt = null;
+                }
+                else
+                {
+                    city.LastCrawlStatus = "Failed";
+                    city.NextCrawlAt = DateTime.UtcNow.AddHours(2);
+                }
+                await _context.SaveChangesAsync();
+
+                return Json(new
+                {
+                    success = result.Success,
+                    message = result.Success
+                        ? $"Crawled {city.Name}: Found {result.CafesFound}, Added {result.CafesAdded}, Updated {result.CafesUpdated}"
+                        : $"Crawl failed for {city.Name}: {result.ErrorMessage}",
+                    cafesFound = result.CafesFound,
+                    cafesAdded = result.CafesAdded,
+                    cafesUpdated = result.CafesUpdated
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Toggle city active status
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ToggleCityActive(int id)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                TempData["ErrorMessage"] = "City not found.";
+                return RedirectToAction(nameof(Cities));
+            }
+
+            city.IsActive = !city.IsActive;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = city.IsActive
+                ? $"'{city.Name}' is now active for auto crawl."
+                : $"'{city.Name}' is now excluded from auto crawl.";
+
+            return RedirectToAction(nameof(Cities));
+        }
+
+        /// <summary>
+        /// Update city max results
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> UpdateCityMaxResults(int id, int maxResults)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return Json(new { success = false, message = "City not found." });
+            }
+
+            city.MaxResults = Math.Max(5, Math.Min(50, maxResults));
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = $"Max results for '{city.Name}' updated to {city.MaxResults}." });
+        }
+
+        /// <summary>
+        /// Add a new city
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> AddCity(string name, string? country, string region, int maxResults = 15)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                TempData["ErrorMessage"] = "City name is required.";
+                return RedirectToAction(nameof(Cities));
+            }
+
+            // Check if city already exists
+            var existing = await _context.Cities
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower().Trim() &&
+                    (c.Country == null || c.Country.ToLower() == (country ?? "").ToLower().Trim()));
+
+            if (existing != null)
+            {
+                TempData["ErrorMessage"] = $"City '{name}' already exists.";
+                return RedirectToAction(nameof(Cities));
+            }
+
+            var city = new City
+            {
+                Name = name.Trim(),
+                Country = string.IsNullOrWhiteSpace(country) ? null : country.Trim(),
+                Region = region == "International" ? "International" : "US",
+                MaxResults = Math.Max(5, Math.Min(50, maxResults)),
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Cities.Add(city);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"City '{city.Name}' added successfully.";
+            return RedirectToAction(nameof(Cities));
+        }
+
+        /// <summary>
+        /// Delete a city
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> DeleteCity(int id)
+        {
+            var city = await _context.Cities
+                .Include(c => c.CrawlHistories)
+                .FirstOrDefaultAsync(c => c.CityId == id);
+
+            if (city == null)
+            {
+                TempData["ErrorMessage"] = "City not found.";
+                return RedirectToAction(nameof(Cities));
+            }
+
+            var cityName = city.Name;
+
+            // Delete crawl history first
+            _context.CrawlHistories.RemoveRange(city.CrawlHistories);
+            _context.Cities.Remove(city);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"City '{cityName}' and its crawl history have been deleted.";
+            return RedirectToAction(nameof(Cities));
+        }
+
+        /// <summary>
+        /// Reset city crawl status (clear NextCrawlAt to allow immediate retry)
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ResetCityCrawlStatus(int id)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                TempData["ErrorMessage"] = "City not found.";
+                return RedirectToAction(nameof(Cities));
+            }
+
+            city.NextCrawlAt = null;
+            city.LastCrawlStatus = null;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Crawl status reset for '{city.Name}'.";
+            return RedirectToAction(nameof(Cities));
+        }
+
+        /// <summary>
+        /// Stop auto crawl
+        /// </summary>
+        [HttpPost]
+        public IActionResult StopAutoCrawl()
+        {
+            _autoCrawlService.Stop();
+            TempData["SuccessMessage"] = "Auto crawl stop requested.";
+            return RedirectToAction(nameof(CrawlStatus));
+        }
+
+        /// <summary>
+        /// Seed cities if not already seeded
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> SeedCities()
+        {
+            await _autoCrawlService.SeedCitiesAsync();
+            TempData["SuccessMessage"] = "Cities seeded successfully.";
+            return RedirectToAction(nameof(Cities));
+        }
+
+        /// <summary>
+        /// Bulk crawl selected cities
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> BulkCrawlCities([FromBody] int[] cityIds)
+        {
+            if (cityIds == null || cityIds.Length == 0)
+            {
+                return Json(new { success = false, message = "No cities selected." });
+            }
+
+            var cities = await _context.Cities
+                .Where(c => cityIds.Contains(c.CityId))
+                .ToListAsync();
+
+            int success = 0, failed = 0;
+            var results = new List<string>();
+
+            foreach (var city in cities)
+            {
+                try
+                {
+                    var result = await _autoCrawlService.CrawlCityAsync(city);
+
+                    if (result.Success)
+                    {
+                        city.CrawlCount++;
+                        city.LastCrawledAt = DateTime.UtcNow;
+                        city.LastCrawlStatus = "Success";
+                        city.NextCrawlAt = null;
+                        success++;
+                        results.Add($"{city.Name}: Found {result.CafesFound}, Added {result.CafesAdded}");
+                    }
+                    else
+                    {
+                        city.LastCrawlStatus = "Failed";
+                        city.NextCrawlAt = DateTime.UtcNow.AddHours(2);
+                        failed++;
+                        results.Add($"{city.Name}: Failed - {result.ErrorMessage}");
+                        break; // Stop on failure
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    // Delay between cities
+                    await Task.Delay(TimeSpan.FromSeconds(30));
+                }
+                catch (Exception ex)
+                {
+                    failed++;
+                    results.Add($"{city.Name}: Error - {ex.Message}");
+                    break;
+                }
+            }
+
+            return Json(new
+            {
+                success = failed == 0,
+                message = $"Crawled {success} cities successfully, {failed} failed.",
+                results
+            });
+        }
+
+        #endregion
+
+        #region Country Cleanup
+
+        private static readonly HashSet<string> ValidCountries = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "United States", "USA", "US",
+            "United Kingdom", "UK", "Great Britain", "England", "Scotland", "Wales", "Northern Ireland",
+            "Canada", "Australia", "Germany", "France", "Italy", "Spain", "Netherlands", "Belgium",
+            "Japan", "South Korea", "Korea", "China", "Taiwan", "Hong Kong", "Singapore", "Malaysia",
+            "Thailand", "Vietnam", "Indonesia", "Philippines", "India", "Brazil", "Mexico", "Argentina",
+            "Chile", "Colombia", "Poland", "Czech Republic", "Austria", "Switzerland", "Sweden",
+            "Norway", "Denmark", "Finland", "Ireland", "Portugal", "Greece", "Turkey", "Russia",
+            "Ukraine", "New Zealand", "South Africa"
+        };
+
+        [HttpGet]
+        public async Task<IActionResult> CleanupCountries()
+        {
+            var allCountries = await _context.Cafes
+                .Where(c => !string.IsNullOrEmpty(c.Country))
+                .Select(c => c.Country)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            var invalidCountries = allCountries
+                .Where(c => !ValidCountries.Contains(c))
+                .ToList();
+
+            var cafesWithInvalidCountry = await _context.Cafes
+                .Where(c => !string.IsNullOrEmpty(c.Country) && invalidCountries.Contains(c.Country))
+                .Select(c => new { c.CafeId, c.Name, c.Country, c.Address })
+                .ToListAsync();
+
+            ViewBag.InvalidCountries = invalidCountries;
+            ViewBag.CafesWithInvalidCountry = cafesWithInvalidCountry;
+            ViewBag.ValidCountries = ValidCountries.OrderBy(c => c).ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FixInvalidCountries()
+        {
+            var cafesWithInvalidCountry = await _context.Cafes
+                .Where(c => !string.IsNullOrEmpty(c.Country) && !ValidCountries.Contains(c.Country))
+                .ToListAsync();
+
+            int fixed_count = 0;
+            foreach (var cafe in cafesWithInvalidCountry)
+            {
+                var detectedCountry = DetectCountryFromAddress(cafe.Address);
+                if (!string.IsNullOrEmpty(detectedCountry))
+                {
+                    cafe.Country = detectedCountry;
+                    fixed_count++;
+                }
+                else
+                {
+                    // Default to United States if can't detect
+                    cafe.Country = "United States";
+                    fixed_count++;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Fixed {fixed_count} cafes with invalid country values.";
+            return RedirectToAction(nameof(CleanupCountries));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetCountryForCafes([FromBody] SetCountryRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Country) || request.CafeIds == null || !request.CafeIds.Any())
+            {
+                return Json(new { success = false, message = "Invalid request" });
+            }
+
+            var cafes = await _context.Cafes
+                .Where(c => request.CafeIds.Contains(c.CafeId))
+                .ToListAsync();
+
+            foreach (var cafe in cafes)
+            {
+                cafe.Country = request.Country;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = $"Updated {cafes.Count} cafes to {request.Country}" });
+        }
+
+        private string? DetectCountryFromAddress(string? address)
+        {
+            if (string.IsNullOrEmpty(address))
+                return null;
+
+            // Japanese address patterns
+            if (System.Text.RegularExpressions.Regex.IsMatch(address, @"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]") ||
+                System.Text.RegularExpressions.Regex.IsMatch(address, @"Chome|丁目|番地|号|〒\d{3}-\d{4}|都|道|府|県", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                return "Japan";
+            }
+
+            // Korean address patterns
+            if (System.Text.RegularExpressions.Regex.IsMatch(address, @"[\uAC00-\uD7AF]") ||
+                System.Text.RegularExpressions.Regex.IsMatch(address, @"층|동|호|로|길|구|시|도", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                return "South Korea";
+            }
+
+            // Vietnamese address patterns
+            if (System.Text.RegularExpressions.Regex.IsMatch(address, @"Việt Nam|Vietnam|Quận|Phường|Đường|Thành phố|TP\.|Hồ Chí Minh|Hà Nội", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                return "Vietnam";
+            }
+
+            // US state abbreviation patterns
+            if (System.Text.RegularExpressions.Regex.IsMatch(address, @",\s*[A-Z]{2}\s+\d{5}"))
+            {
+                return "United States";
+            }
+
+            return null;
+        }
+
+        #endregion
+    }
+
+    public class SetCountryRequest
+    {
+        public string Country { get; set; } = string.Empty;
+        public List<int> CafeIds { get; set; } = new();
     }
 
     public class GeneratePostsRequest

@@ -3,9 +3,10 @@
     ViewData["Title"] = Model.Name;
     Layout = "_UserLayout";
 
-    // SEO Meta Tags
-    var metaDescription = !string.IsNullOrEmpty(Model.Description)
-        ? Model.Description.Length > 155 ? Model.Description.Substring(0, 152) + "..." : Model.Description
+    // SEO Meta Tags - Only use description if approved
+    var hasApprovedDescription = !string.IsNullOrEmpty(Model.Description) && Model.IsDescriptionApproved;
+    var metaDescription = hasApprovedDescription
+        ? Model.Description!.Length > 155 ? Model.Description.Substring(0, 152) + "..." : Model.Description
         : $"{Model.Name} is a board game cafe in {Model.City}, {Model.State}. {(Model.TotalReviews > 0 ? $"Rated {Model.AverageRating:0.0}/5 with {Model.TotalReviews} reviews." : "")} {(Model.CafeGames?.Count > 0 ? $"Features {Model.CafeGames.Count} board games." : "")}";
 
     ViewData["MetaDescription"] = metaDescription;
@@ -36,7 +37,7 @@
         "@@type": "LocalBusiness",
         "@@id": "@($"{Context.Request.Scheme}://{Context.Request.Host}/Cafe/{Model.Slug}")",
         "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Name).ToString())",
-        "description": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Description ?? $"Board game cafe in {Model.City}").ToString())",
+        "description": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(hasApprovedDescription ? Model.Description! : $"Board game cafe in {Model.City}").ToString())",
         @if (!string.IsNullOrEmpty(ogImageUrl))
         {
             <text>"image": "@ogImageUrl",</text>
@@ -159,7 +160,7 @@
                     }
                 </p>
             }
-            @if (!string.IsNullOrEmpty(Model.Description))
+            @if (hasApprovedDescription)
             {
                 <div class="mt-4">
                     <h5>About this place</h5>

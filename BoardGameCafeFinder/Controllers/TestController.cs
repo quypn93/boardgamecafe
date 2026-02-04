@@ -1085,25 +1085,29 @@ namespace BoardGameCafeFinder.Controllers
 
                 await _context.SaveChangesAsync();
 
-                // Delete all images from wwwroot/images/cafes folder
+                // Delete all images from wwwroot/images/cafes and wwwroot/images/photos folders
                 int imagesDeleted = 0;
-                var cafesImagePath = Path.Combine(_environment.WebRootPath, "images", "cafes");
-                if (Directory.Exists(cafesImagePath))
+                var imageFolders = new[] { "cafes", "photos" };
+                foreach (var folder in imageFolders)
                 {
-                    var imageFiles = Directory.GetFiles(cafesImagePath);
-                    foreach (var file in imageFiles)
+                    var imagePath = Path.Combine(_environment.WebRootPath, "images", folder);
+                    if (Directory.Exists(imagePath))
                     {
-                        try
+                        var imageFiles = Directory.GetFiles(imagePath);
+                        foreach (var file in imageFiles)
                         {
-                            System.IO.File.Delete(file);
-                            imagesDeleted++;
+                            try
+                            {
+                                System.IO.File.Delete(file);
+                                imagesDeleted++;
+                            }
+                            catch (Exception fileEx)
+                            {
+                                _logger.LogWarning(fileEx, "Failed to delete image file: {File}", file);
+                            }
                         }
-                        catch (Exception fileEx)
-                        {
-                            _logger.LogWarning(fileEx, "Failed to delete image file: {File}", file);
-                        }
+                        _logger.LogInformation("Deleted {Count} image files from {Path}", imageFiles.Length, imagePath);
                     }
-                    _logger.LogInformation("Deleted {Count} image files from {Path}", imagesDeleted, cafesImagePath);
                 }
 
                 _logger.LogInformation("Cleared all data: {CafeCount} cafes, {ReviewCount} reviews, {PhotoCount} photos, {EventCount} events, {CafeGameCount} cafe-games, {PremiumListingCount} premium listings, {BoardGamesDeleted} board games, {ImagesDeleted} image files (preserveBoardGames: {PreserveBoardGames})",

@@ -31,6 +31,66 @@
     }
 }
 
+@section Head {
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
+        "name": "Board Game Cafe Finder",
+        "url": "@($"{Context.Request.Scheme}://{Context.Request.Host}/")",
+        "logo": "@($"{Context.Request.Scheme}://{Context.Request.Host}/logo.svg")",
+        "description": "Find the best board game cafes near you. Discover board game lounges with our interactive map and comprehensive directory."
+    }
+    </script>
+    <!-- WebSite Schema with SearchAction -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebSite",
+        "name": "Board Game Cafe Finder",
+        "url": "@($"{Context.Request.Scheme}://{Context.Request.Host}/")",
+        "potentialAction": {
+            "@@type": "SearchAction",
+            "target": {
+                "@@type": "EntryPoint",
+                "urlTemplate": "@($"{Context.Request.Scheme}://{Context.Request.Host}/")?city={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    @if (!string.IsNullOrEmpty(selectedCity))
+    {
+        <!-- BreadcrumbList Schema for filtered pages -->
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/")"
+                },
+                {
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "@selectedCountry",
+                    "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/?country={Uri.EscapeDataString(selectedCountry ?? "")}")"
+                },
+                {
+                    "@@type": "ListItem",
+                    "position": 3,
+                    "name": "@selectedCity"
+                }
+            ]
+        }
+        </script>
+    }
+}
+
 @* Hero Section - Hidden on mobile, shown on tablet and desktop *@
 <div class="hero-section py-5 mb-4 d-none d-md-block">
     <div class="container">
@@ -401,6 +461,28 @@
         </div>
     </div>
 </div>
+
+<!-- Popular Cities Section for Internal Linking & SEO -->
+@if (currentPage == 1 && string.IsNullOrEmpty(selectedCity))
+{
+    <section class="py-4 mt-4 border-top">
+        <div class="container">
+            <h3 class="h5 mb-3"><i class="bi bi-geo-alt"></i> Popular Board Game Cafe Cities</h3>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="/?city=Dallas&country=United%20States" class="btn btn-outline-primary btn-sm">Dallas</a>
+                <a href="/?city=Atlanta&country=United%20States" class="btn btn-outline-primary btn-sm">Atlanta</a>
+                <a href="/?city=Seattle&country=United%20States" class="btn btn-outline-primary btn-sm">Seattle</a>
+                <a href="/?city=Charlotte&country=United%20States" class="btn btn-outline-primary btn-sm">Charlotte</a>
+                <a href="/?city=Austin&country=United%20States" class="btn btn-outline-primary btn-sm">Austin</a>
+                <a href="/?city=Denver&country=United%20States" class="btn btn-outline-primary btn-sm">Denver</a>
+                <a href="/?city=Portland&country=United%20States" class="btn btn-outline-primary btn-sm">Portland</a>
+                <a href="/?city=Chicago&country=United%20States" class="btn btn-outline-primary btn-sm">Chicago</a>
+                <a href="/?city=Amsterdam&country=Netherlands" class="btn btn-outline-secondary btn-sm">Amsterdam</a>
+                <a href="/?city=London&country=United%20Kingdom" class="btn btn-outline-secondary btn-sm">London</a>
+            </div>
+        </div>
+    </section>
+}
 
 <!-- Why Board Game Cafes Section -->
 @if (isFirstPage)

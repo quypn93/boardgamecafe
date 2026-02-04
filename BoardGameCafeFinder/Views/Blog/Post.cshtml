@@ -132,8 +132,7 @@
             <div class="mb-5">
                 <h2 class="h4 mb-3"><i class="bi bi-info-circle me-2"></i>About Board Game Cafes in @Model.City</h2>
                 <p class="lead">
-                    @Model.City is home to <strong>@Model.TotalCafes board game @(Model.TotalCafes == 1 ? "cafe" : "cafes")</strong>,
-                    offering a combined library of over <strong>@Model.TotalGames games</strong> for visitors to enjoy.
+                    @Model.City is home to <strong>@Model.TotalCafes board game @(Model.TotalCafes == 1 ? "cafe" : "cafes")</strong>@(Model.TotalGames > 100 ? $", offering a combined library of over {Model.TotalGames} games for visitors to enjoy" : "").
                     Whether you're looking for a casual game night spot or a dedicated gaming venue, you'll find great options here.
                 </p>
             </div>

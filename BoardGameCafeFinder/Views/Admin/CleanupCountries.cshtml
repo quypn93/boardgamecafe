@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "Cleanup Countries";
+    Layout = "_AdminLayout";
+    var invalidCountries = ViewBag.InvalidCountries as List<string> ?? new List<string>();
+    var cafesWithInvalidCountry = ViewBag.CafesWithInvalidCountry as dynamic ?? new List<dynamic>();
+    var validCountries = ViewBag.ValidCountries as List<string> ?? new List<string>();
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Cleanup Invalid Countries</h1>
+        <a href="@Url.Action("Dashboard")" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (invalidCountries.Count == 0)
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> All country values are valid. No cleanup needed.
+        </div>
+    }
+    else
+    {
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <i class="bi bi-exclamation-triangle"></i> Invalid Countries Found
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>@invalidCountries.Count</strong> invalid country values</p>
+                        <ul class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+                            @foreach (var country in invalidCountries)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="text-truncate" style="max-width: 200px;" title="@country">@country</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Cafes with Invalid Countries (@((cafesWithInvalidCountry as IEnumerable<dynamic>)?.Count() ?? 0))</span>
+                            <form method="post" asp-action="FixInvalidCountries" class="d-inline">
+                                <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('This will automatically detect and fix country values. Continue?')">
+                                    <i class="bi bi-magic"></i> Auto-Fix All
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                            <table class="table table-hover table-sm mb-0">
+                                <thead class="sticky-top bg-light">
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>Cafe Name</th>
+                                        <th>Current Country</th>
+                                        <th>Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var cafe in cafesWithInvalidCountry)
+                                    {
+                                        <tr>
+                                            <td><input type="checkbox" class="cafe-checkbox" value="@cafe.CafeId"></td>
+                                            <td>@cafe.Name</td>
+                                            <td><span class="badge bg-danger">@cafe.Country</span></td>
+                                            <td class="text-truncate" style="max-width: 300px;" title="@cafe.Address">@cafe.Address</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex gap-2 align-items-center">
+                            <span>Set selected to:</span>
+                            <select id="targetCountry" class="form-select form-select-sm" style="width: auto;">
+                                <option value="">Select country...</option>
+                                @foreach (var country in validCountries)
+                                {
+                                    <option value="@country">@country</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-primary btn-sm" id="setCountryBtn">
+                                <i class="bi bi-check"></i> Apply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('selectAll')?.addEventListener('change', function() {
+            document.querySelectorAll('.cafe-checkbox').forEach(cb => cb.checked = this.checked);
+        });
+
+        document.getElementById('setCountryBtn')?.addEventListener('click', async function() {
+            const country = document.getElementById('targetCountry').value;
+            if (!country) {
+                alert('Please select a country');
+                return;
+            }
+
+            const cafeIds = Array.from(document.querySelectorAll('.cafe-checkbox:checked'))
+                .map(cb => parseInt(cb.value));
+
+            if (cafeIds.length === 0) {
+                alert('Please select at least one cafe');
+                return;
+            }
+
+            if (!confirm(`Set ${cafeIds.length} cafe(s) to "${country}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('@Url.Action("SetCountryForCafes")', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ country, cafeIds })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(result.message);
+                    location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+}

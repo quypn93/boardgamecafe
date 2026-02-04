@@ -16,6 +16,12 @@ namespace BoardGameCafeFinder.Models.Domain
         [MaxLength(2000)]
         public string? Description { get; set; }
 
+        /// <summary>
+        /// Whether the description has been approved by admin for display.
+        /// Crawled descriptions need admin approval before being shown publicly.
+        /// </summary>
+        public bool IsDescriptionApproved { get; set; } = false;
+
         // Location Data
         [Required]
         [MaxLength(500)]

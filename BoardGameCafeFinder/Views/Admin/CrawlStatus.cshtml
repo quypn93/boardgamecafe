@@ -1,0 +1,311 @@
+@model List<BoardGameCafeFinder.Models.Domain.CrawlHistory>
+@{
+    ViewData["Title"] = "Crawl Status";
+    Layout = "_AdminLayout";
+    var nextCities = ViewBag.NextCities as List<BoardGameCafeFinder.Models.Domain.City> ?? new List<BoardGameCafeFinder.Models.Domain.City>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2"><i class="bi bi-speedometer2"></i> Crawl Status Dashboard</h1>
+    <div>
+        <a asp-action="Cities" class="btn btn-primary me-2">
+            <i class="bi bi-geo-alt"></i> Manage Cities
+        </a>
+        @if (ViewBag.IsAutoCrawlRunning == true)
+        {
+            <form asp-action="StopAutoCrawl" method="post" class="d-inline">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-stop-circle"></i> Stop Auto Crawl
+                </button>
+            </form>
+        }
+    </div>
+</div>
+
+@if (ViewBag.IsAutoCrawlRunning == true)
+{
+    <div class="alert alert-info d-flex align-items-center">
+        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+        <span>Auto crawl is currently running...</span>
+    </div>
+}
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Cities</div>
+                        <div class="h3 mb-0 font-weight-bold">@ViewBag.TotalCities</div>
+                        <small class="text-muted">@ViewBag.CitiesCrawled crawled</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-geo-alt fs-1 text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-warning shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Never Crawled</div>
+                        <div class="h3 mb-0 font-weight-bold">@ViewBag.CitiesNeverCrawled</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-hourglass fs-1 text-warning opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-success shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Cafes Added</div>
+                        <div class="h3 mb-0 font-weight-bold">@ViewBag.TotalCafesAdded</div>
+                        <small class="text-muted">@ViewBag.TotalCafesFound found total</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-shop fs-1 text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-left-info shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Crawls</div>
+                        <div class="h3 mb-0 font-weight-bold">@ViewBag.TotalCrawls</div>
+                        <small class="text-success">@ViewBag.SuccessfulCrawls success</small> /
+                        <small class="text-danger">@ViewBag.FailedCrawls failed</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-cloud-download fs-1 text-info opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Next Cities to Crawl -->
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-white">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-arrow-right-circle"></i> Next Cities to Crawl
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (nextCities.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var city in nextCities)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                <div>
+                                    <strong>@city.Name</strong>
+                                    @if (!string.IsNullOrEmpty(city.Country))
+                                    {
+                                        <br><small class="text-muted">@city.Country</small>
+                                    }
+                                </div>
+                                <div class="text-end">
+                                    @if (city.CrawlCount == 0)
+                                    {
+                                        <span class="badge bg-warning">Never</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@city.CrawlCount crawls</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No cities pending.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Crawl Progress -->
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-white">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-bar-chart"></i> Crawl Progress
+                </h6>
+            </div>
+            <div class="card-body">
+                @{
+                    var totalCities = ViewBag.TotalCities as int? ?? 1;
+                    var crawledCities = ViewBag.CitiesCrawled as int? ?? 0;
+                    var progressPercent = totalCities > 0 ? (crawledCities * 100 / totalCities) : 0;
+                }
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Cities Crawled</span>
+                        <span>@crawledCities / @totalCities (@progressPercent%)</span>
+                    </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @progressPercent%">
+                            @progressPercent%
+                        </div>
+                    </div>
+                </div>
+
+                @{
+                    var successCrawls = ViewBag.SuccessfulCrawls as int? ?? 0;
+                    var failedCrawls = ViewBag.FailedCrawls as int? ?? 0;
+                    var totalCrawls = ViewBag.TotalCrawls as int? ?? 1;
+                    var successRate = totalCrawls > 0 ? (successCrawls * 100 / totalCrawls) : 0;
+                }
+                <div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Success Rate</span>
+                        <span>@successCrawls / @totalCrawls (@successRate%)</span>
+                    </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @successRate%">
+                            Success
+                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: @(100 - successRate)%">
+                            Failed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Crawl History -->
+<div class="card shadow">
+    <div class="card-header bg-white">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-clock-history"></i> Recent Crawl History
+        </h6>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>City</th>
+                            <th>Started</th>
+                            <th>Completed</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Found</th>
+                            <th>Added</th>
+                            <th>Updated</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var history in Model)
+                        {
+                            <tr class="@(history.Status == "Failed" ? "table-danger" : history.Status == "Success" ? "" : "table-warning")">
+                                <td>
+                                    <strong>@(history.City?.Name ?? "Unknown")</strong>
+                                    @if (history.City?.Country != null)
+                                    {
+                                        <br><small class="text-muted">@history.City.Country</small>
+                                    }
+                                </td>
+                                <td>
+                                    <span title="@history.StartedAt.ToString("yyyy-MM-dd HH:mm:ss")">
+                                        @history.StartedAt.ToString("MMM dd, HH:mm")
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (history.CompletedAt.HasValue)
+                                    {
+                                        <span title="@history.CompletedAt.Value.ToString("yyyy-MM-dd HH:mm:ss")">
+                                            @history.CompletedAt.Value.ToString("HH:mm:ss")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (history.CompletedAt.HasValue)
+                                    {
+                                        var duration = history.CompletedAt.Value - history.StartedAt;
+                                        <span>@duration.ToString(@"mm\:ss")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (history.Status == "Success")
+                                    {
+                                        <span class="badge bg-success">Success</span>
+                                    }
+                                    else if (history.Status == "Failed")
+                                    {
+                                        <span class="badge bg-danger">Failed</span>
+                                    }
+                                    else if (history.Status == "InProgress")
+                                    {
+                                        <span class="badge bg-warning">In Progress</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@history.Status</span>
+                                    }
+                                </td>
+                                <td>@history.CafesFound</td>
+                                <td class="text-success">+@history.CafesAdded</td>
+                                <td class="text-info">@history.CafesUpdated</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(history.ErrorMessage))
+                                    {
+                                        <span class="text-danger" title="@history.ErrorMessage">
+                                            @(history.ErrorMessage.Length > 50 ? history.ErrorMessage.Substring(0, 50) + "..." : history.ErrorMessage)
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-clock-history fs-1 text-muted"></i>
+                <p class="text-muted mt-2">No crawl history yet.</p>
+            </div>
+        }
+    </div>
+</div>

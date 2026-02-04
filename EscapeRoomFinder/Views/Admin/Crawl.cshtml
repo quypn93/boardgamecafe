@@ -310,7 +310,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0"><i class="bi bi-terminal"></i> Install Playwright</h5>
             </div>
@@ -323,6 +323,19 @@
                 <code class="d-block p-2 bg-dark text-light rounded">
                     ./bin/Debug/net8.0/playwright.sh install
                 </code>
+            </div>
+        </div>
+
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-trash"></i> Clear All Data</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">Delete all venues, rooms, reviews, photos, and images for testing.</p>
+                <button type="button" class="btn btn-danger w-100" id="clearAllBtn" onclick="clearAllData()">
+                    <i class="bi bi-trash"></i> Clear All Data
+                </button>
+                <div id="clearAllStatus" class="mt-2 small"></div>
             </div>
         </div>
     </div>
@@ -648,5 +661,59 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadVenuesWithoutRooms();
     });
+
+    // Clear All Data function
+    async function clearAllData() {
+        if (!confirm('⚠️ WARNING: This will permanently delete ALL venues, rooms, reviews, photos, and images.\n\nAre you sure you want to continue?')) {
+            return;
+        }
+
+        if (!confirm('🔴 FINAL WARNING: This action CANNOT be undone!\n\nType YES to confirm you understand.')) {
+            return;
+        }
+
+        const btn = document.getElementById('clearAllBtn');
+        const status = document.getElementById('clearAllStatus');
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Clearing...';
+        status.innerHTML = '<span class="text-warning">Deleting all data...</span>';
+
+        try {
+            const response = await fetch('/admin/crawl/clear-all', {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                status.innerHTML = `<span class="text-success">
+                    <i class="bi bi-check-circle"></i> All data cleared!<br>
+                    Deleted: ${result.deleted.venues} venues, ${result.deleted.rooms} rooms,
+                    ${result.deleted.reviews} reviews, ${result.deleted.photos} photos,
+                    ${result.deleted.imageFiles} image files
+                </span>`;
+
+                addLog('═══════════════════════════════════════════════');
+                addLog('ALL DATA CLEARED');
+                addLog(`Venues: ${result.deleted.venues}`);
+                addLog(`Rooms: ${result.deleted.rooms}`);
+                addLog(`Reviews: ${result.deleted.reviews}`);
+                addLog(`Photos: ${result.deleted.photos}`);
+                addLog(`Image Files: ${result.deleted.imageFiles}`);
+                addLog('═══════════════════════════════════════════════');
+
+                // Refresh venues list
+                loadVenuesWithoutRooms();
+            } else {
+                status.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle"></i> Error: ${result.message}</span>`;
+            }
+        } catch (error) {
+            status.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle"></i> Error: ${error.message}</span>`;
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-trash"></i> Clear All Data';
+    }
 </script>
 }

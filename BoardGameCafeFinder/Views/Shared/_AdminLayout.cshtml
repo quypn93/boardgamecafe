@@ -133,15 +133,39 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Descriptions" || ViewContext.RouteData.Values["action"]?.ToString() == "EditDescription" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Descriptions">
+                                <i class="bi bi-card-text"></i> Descriptions
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CrawlManager" ? "active" : "")"
                                href="/Test/CrawlManager">
                                 <i class="bi bi-cloud-download"></i> Crawl Manager
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Cities" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Cities">
+                                <i class="bi bi-geo-alt"></i> Auto Crawl Cities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CrawlStatus" ? "active" : "")"
+                               asp-controller="Admin" asp-action="CrawlStatus">
+                                <i class="bi bi-activity"></i> Crawl Status
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
                                asp-controller="Admin" asp-action="Index">
                                 <i class="bi bi-arrow-repeat"></i> BGG Sync
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CleanupCountries" ? "active" : "")"
+                               asp-controller="Admin" asp-action="CleanupCountries">
+                                <i class="bi bi-globe"></i> Cleanup Countries
                             </a>
                         </li>
                     </ul>
@@ -162,8 +186,14 @@
                         </li>
                     </ul>
 
-                    <div class="sidebar-heading">Tools</div>
+                    <div class="sidebar-heading">System</div>
                     <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" || ViewContext.RouteData.Values["action"]?.ToString() == "EditUser" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Users">
+                                <i class="bi bi-people"></i> Users
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/Test/Api">
                                 <i class="bi bi-bug"></i> Test Endpoints

@@ -1,0 +1,450 @@
+@model List<BoardGameCafeFinder.Models.Domain.City>
+@{
+    ViewData["Title"] = "City Management";
+    Layout = "_AdminLayout";
+    var filter = ViewBag.Filter as string ?? "all";
+    var region = ViewBag.Region as string ?? "all";
+    var search = ViewBag.Search as string ?? "";
+    var currentPage = ViewBag.CurrentPage as int? ?? 1;
+    var totalPages = ViewBag.TotalPages as int? ?? 1;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2"><i class="bi bi-geo-alt-fill"></i> City Management</h1>
+    <div>
+        <a asp-action="CrawlStatus" class="btn btn-info me-2">
+            <i class="bi bi-speedometer2"></i> Crawl Status
+        </a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCityModal">
+            <i class="bi bi-plus-circle"></i> Add City
+        </button>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-2 col-md-4 mb-3">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body py-3">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Cities</div>
+                <div class="h4 mb-0 font-weight-bold">@ViewBag.TotalCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 mb-3">
+        <div class="card border-left-warning shadow h-100">
+            <div class="card-body py-3">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Never Crawled</div>
+                <div class="h4 mb-0 font-weight-bold">@ViewBag.NeverCrawledCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 mb-3">
+        <div class="card border-left-danger shadow h-100">
+            <div class="card-body py-3">
+                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Failed</div>
+                <div class="h4 mb-0 font-weight-bold">@ViewBag.FailedCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 mb-3">
+        <div class="card border-left-info shadow h-100">
+            <div class="card-body py-3">
+                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Pending Retry</div>
+                <div class="h4 mb-0 font-weight-bold">@ViewBag.PendingCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 mb-3">
+        <div class="card shadow h-100">
+            <div class="card-body py-3">
+                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">US Cities</div>
+                <div class="h4 mb-0 font-weight-bold">@ViewBag.USCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 mb-3">
+        <div class="card shadow h-100">
+            <div class="card-body py-3">
+                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">International</div>
+                <div class="h4 mb-0 font-weight-bold">@ViewBag.InternationalCount</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.IsAutoCrawlRunning == true)
+{
+    <div class="alert alert-info">
+        <i class="bi bi-gear-wide-connected spin"></i> Auto crawl is currently running...
+    </div>
+}
+
+<!-- Filters -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select name="filter" class="form-select" onchange="this.form.submit()">
+                    <option value="all" selected="@(filter == "all")">All Cities</option>
+                    <option value="never" selected="@(filter == "never")">Never Crawled</option>
+                    <option value="failed" selected="@(filter == "failed")">Failed</option>
+                    <option value="pending" selected="@(filter == "pending")">Pending Retry</option>
+                    <option value="inactive" selected="@(filter == "inactive")">Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Region</label>
+                <select name="region" class="form-select" onchange="this.form.submit()">
+                    <option value="all" selected="@(region == "all")">All Regions</option>
+                    <option value="US" selected="@(region == "US")">US</option>
+                    <option value="International" selected="@(region == "International")">International</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Search</label>
+                <input type="text" name="search" class="form-control" value="@search" placeholder="City or country...">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Cities Table -->
+<div class="card shadow">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-list"></i> Cities (@Model.Count results)
+        </h6>
+        <div>
+            <button type="button" class="btn btn-sm btn-success" id="bulkCrawlBtn" disabled>
+                <i class="bi bi-cloud-download"></i> Crawl Selected
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>City</th>
+                            <th>Country</th>
+                            <th>Region</th>
+                            <th>Crawl Count</th>
+                            <th>Last Crawled</th>
+                            <th>Status</th>
+                            <th>Max Results</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var city in Model)
+                        {
+                            <tr class="@(!city.IsActive ? "table-secondary" : "")">
+                                <td><input type="checkbox" class="city-checkbox" value="@city.CityId"></td>
+                                <td>
+                                    <strong>@city.Name</strong>
+                                    @if (!city.IsActive)
+                                    {
+                                        <span class="badge bg-secondary ms-1">Inactive</span>
+                                    }
+                                </td>
+                                <td>@(city.Country ?? "-")</td>
+                                <td>
+                                    <span class="badge @(city.Region == "US" ? "bg-primary" : "bg-info")">@city.Region</span>
+                                </td>
+                                <td>
+                                    @if (city.CrawlCount == 0)
+                                    {
+                                        <span class="text-warning">Never</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@city.CrawlCount</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (city.LastCrawledAt.HasValue)
+                                    {
+                                        <span title="@city.LastCrawledAt.Value.ToString("yyyy-MM-dd HH:mm:ss")">
+                                            @city.LastCrawledAt.Value.ToString("MMM dd, HH:mm")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (city.LastCrawlStatus == "Success")
+                                    {
+                                        <span class="badge bg-success">Success</span>
+                                    }
+                                    else if (city.LastCrawlStatus == "Failed")
+                                    {
+                                        <span class="badge bg-danger">Failed</span>
+                                        @if (city.NextCrawlAt.HasValue)
+                                        {
+                                            <br><small class="text-muted">Retry: @city.NextCrawlAt.Value.ToString("HH:mm")</small>
+                                        }
+                                    }
+                                    else if (city.NextCrawlAt.HasValue && city.NextCrawlAt <= DateTime.UtcNow)
+                                    {
+                                        <span class="badge bg-warning">Pending</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm max-results-input"
+                                           value="@city.MaxResults" data-city-id="@city.CityId"
+                                           min="5" max="50" style="width: 70px;">
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-primary crawl-btn" data-city-id="@city.CityId" title="Crawl Now">
+                                            <i class="bi bi-cloud-download"></i>
+                                        </button>
+                                        <form asp-action="ToggleCityActive" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@city.CityId" />
+                                            <button type="submit" class="btn @(city.IsActive ? "btn-warning" : "btn-success")" title="@(city.IsActive ? "Deactivate" : "Activate")">
+                                                <i class="bi @(city.IsActive ? "bi-pause" : "bi-play")"></i>
+                                            </button>
+                                        </form>
+                                        @if (city.LastCrawlStatus == "Failed")
+                                        {
+                                            <form asp-action="ResetCityCrawlStatus" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@city.CityId" />
+                                                <button type="submit" class="btn btn-outline-info" title="Reset Status">
+                                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        <form asp-action="DeleteCity" method="post" class="d-inline" onsubmit="return confirm('Delete this city?');">
+                                            <input type="hidden" name="id" value="@city.CityId" />
+                                            <button type="submit" class="btn btn-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if (totalPages > 1)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" href="?filter=@filter&region=@region&search=@search&page=@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-geo-alt fs-1 text-muted"></i>
+                <p class="text-muted mt-2">No cities found matching your criteria.</p>
+                <form asp-action="SeedCities" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-database-add"></i> Seed Cities
+                    </button>
+                </form>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Add City Modal -->
+<div class="modal fade" id="addCityModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="AddCity" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New City</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">City Name *</label>
+                        <input type="text" name="name" class="form-control" required placeholder="e.g., Seattle, WA">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <input type="text" name="country" class="form-control" placeholder="e.g., United States">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Region *</label>
+                        <select name="region" class="form-select" required>
+                            <option value="US">US</option>
+                            <option value="International">International</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Max Results</label>
+                        <input type="number" name="maxResults" class="form-control" value="15" min="5" max="50">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add City</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Crawl Progress Modal -->
+<div class="modal fade" id="crawlProgressModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crawling...</h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary mb-3" role="status"></div>
+                <p id="crawlProgressText">Starting crawl...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Select all checkbox
+        document.getElementById('selectAll').addEventListener('change', function() {
+            document.querySelectorAll('.city-checkbox').forEach(cb => cb.checked = this.checked);
+            updateBulkButton();
+        });
+
+        // Individual checkbox change
+        document.querySelectorAll('.city-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateBulkButton);
+        });
+
+        function updateBulkButton() {
+            const checked = document.querySelectorAll('.city-checkbox:checked').length;
+            document.getElementById('bulkCrawlBtn').disabled = checked === 0;
+        }
+
+        // Single city crawl
+        document.querySelectorAll('.crawl-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const cityId = this.dataset.cityId;
+                const modal = new bootstrap.Modal(document.getElementById('crawlProgressModal'));
+                const progressText = document.getElementById('crawlProgressText');
+
+                modal.show();
+                progressText.textContent = 'Starting crawl...';
+
+                try {
+                    const response = await fetch('@Url.Action("CrawlCity")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        },
+                        body: `id=${cityId}`
+                    });
+                    const result = await response.json();
+                    progressText.textContent = result.message;
+                    setTimeout(() => {
+                        modal.hide();
+                        location.reload();
+                    }, 2000);
+                } catch (error) {
+                    progressText.textContent = 'Error: ' + error.message;
+                    setTimeout(() => modal.hide(), 3000);
+                }
+            });
+        });
+
+        // Bulk crawl
+        document.getElementById('bulkCrawlBtn').addEventListener('click', async function() {
+            const cityIds = Array.from(document.querySelectorAll('.city-checkbox:checked')).map(cb => parseInt(cb.value));
+            if (cityIds.length === 0) return;
+
+            if (!confirm(`Crawl ${cityIds.length} selected cities?`)) return;
+
+            const modal = new bootstrap.Modal(document.getElementById('crawlProgressModal'));
+            const progressText = document.getElementById('crawlProgressText');
+
+            modal.show();
+            progressText.textContent = `Crawling ${cityIds.length} cities...`;
+
+            try {
+                const response = await fetch('@Url.Action("BulkCrawlCities")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify(cityIds)
+                });
+                const result = await response.json();
+                progressText.textContent = result.message;
+                setTimeout(() => {
+                    modal.hide();
+                    location.reload();
+                }, 2000);
+            } catch (error) {
+                progressText.textContent = 'Error: ' + error.message;
+                setTimeout(() => modal.hide(), 3000);
+            }
+        });
+
+        // Max results update
+        document.querySelectorAll('.max-results-input').forEach(input => {
+            input.addEventListener('change', async function() {
+                const cityId = this.dataset.cityId;
+                const maxResults = this.value;
+
+                try {
+                    const response = await fetch('@Url.Action("UpdateCityMaxResults")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        },
+                        body: `id=${cityId}&maxResults=${maxResults}`
+                    });
+                    const result = await response.json();
+                    if (!result.success) {
+                        alert(result.message);
+                    }
+                } catch (error) {
+                    alert('Error updating max results');
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    .spin {
+        animation: spin 1s linear infinite;
+    }
+    @@keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
