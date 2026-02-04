@@ -168,6 +168,7 @@
   <data name="Blog_ViewAllCountries" xml:space="preserve"><value>Alle Länder anzeigen</value></data>
   <data name="Blog_CafesIn" xml:space="preserve"><value>Brettspiel-Cafés in {0}</value></data>
   <data name="Blog_DiscoverCafes" xml:space="preserve"><value>Entdecke {0} Brettspiel-{1} in {2} mit über {3} Spielen.</value></data>
+  <data name="Blog_DiscoverCafesSimple" xml:space="preserve"><value>Entdecke {0} Brettspiel-{1} in {2}.</value></data>
   <data name="Blog_Cafe" xml:space="preserve"><value>Café</value></data>
   <data name="Blog_Cafes" xml:space="preserve"><value>Cafés</value></data>
   <data name="Blog_ShowingPage" xml:space="preserve"><value>Zeige Seite</value></data>

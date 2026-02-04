@@ -154,7 +154,14 @@
                                         </a>
                                     </h5>
                                     <p class="card-text text-muted small">
-                                        @string.Format(SharedLocalizer["Blog_DiscoverCafes"].Value, item.CafeCount, item.CafeCount == 1 ? SharedLocalizer["Blog_Cafe"].Value : SharedLocalizer["Blog_Cafes"].Value, item.City, item.TotalGames)
+                                        @if (item.TotalGames > 10)
+                                        {
+                                            @string.Format(SharedLocalizer["Blog_DiscoverCafes"].Value, item.CafeCount, item.CafeCount == 1 ? SharedLocalizer["Blog_Cafe"].Value : SharedLocalizer["Blog_Cafes"].Value, item.City, item.TotalGames)
+                                        }
+                                        else
+                                        {
+                                            @string.Format(SharedLocalizer["Blog_DiscoverCafesSimple"].Value, item.CafeCount, item.CafeCount == 1 ? SharedLocalizer["Blog_Cafe"].Value : SharedLocalizer["Blog_Cafes"].Value, item.City)
+                                        }
                                     </p>
                                 </div>
                                 <div class="card-footer bg-transparent border-0">

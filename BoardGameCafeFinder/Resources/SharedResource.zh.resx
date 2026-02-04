@@ -168,6 +168,7 @@
   <data name="Blog_ViewAllCountries" xml:space="preserve"><value>查看所有国家</value></data>
   <data name="Blog_CafesIn" xml:space="preserve"><value>{0}的桌游吧</value></data>
   <data name="Blog_DiscoverCafes" xml:space="preserve"><value>探索{2}的{0}家桌游{1}，可玩{3}+款游戏。</value></data>
+  <data name="Blog_DiscoverCafesSimple" xml:space="preserve"><value>探索{2}的{0}家桌游{1}。</value></data>
   <data name="Blog_Cafe" xml:space="preserve"><value>吧</value></data>
   <data name="Blog_Cafes" xml:space="preserve"><value>吧</value></data>
   <data name="Blog_ShowingPage" xml:space="preserve"><value>显示第</value></data>

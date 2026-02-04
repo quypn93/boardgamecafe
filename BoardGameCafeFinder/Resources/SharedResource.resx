@@ -451,6 +451,9 @@
   <data name="Blog_DiscoverCafes" xml:space="preserve">
     <value>Discover {0} board game {1} in {2} with {3}+ games to play.</value>
   </data>
+  <data name="Blog_DiscoverCafesSimple" xml:space="preserve">
+    <value>Discover {0} board game {1} in {2}.</value>
+  </data>
   <data name="Blog_Cafe" xml:space="preserve">
     <value>cafe</value>
   </data>

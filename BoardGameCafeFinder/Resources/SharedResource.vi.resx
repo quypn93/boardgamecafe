@@ -451,6 +451,9 @@
   <data name="Blog_DiscoverCafes" xml:space="preserve">
     <value>Khám phá {0} {1} board game tại {2} với hơn {3} game để chơi.</value>
   </data>
+  <data name="Blog_DiscoverCafesSimple" xml:space="preserve">
+    <value>Khám phá {0} {1} board game tại {2}.</value>
+  </data>
   <data name="Blog_Cafe" xml:space="preserve">
     <value>quán</value>
   </data>

@@ -168,6 +168,7 @@
   <data name="Blog_ViewAllCountries" xml:space="preserve"><value>すべての国を表示</value></data>
   <data name="Blog_CafesIn" xml:space="preserve"><value>{0}のボードゲームカフェ</value></data>
   <data name="Blog_DiscoverCafes" xml:space="preserve"><value>{2}で{0}件の{1}を発見。{3}以上のゲームが遊べます。</value></data>
+  <data name="Blog_DiscoverCafesSimple" xml:space="preserve"><value>{2}で{0}件の{1}を発見。</value></data>
   <data name="Blog_Cafe" xml:space="preserve"><value>カフェ</value></data>
   <data name="Blog_Cafes" xml:space="preserve"><value>カフェ</value></data>
   <data name="Blog_ShowingPage" xml:space="preserve"><value>ページ</value></data>

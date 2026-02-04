@@ -168,6 +168,7 @@
   <data name="Blog_ViewAllCountries" xml:space="preserve"><value>ดูทุกประเทศ</value></data>
   <data name="Blog_CafesIn" xml:space="preserve"><value>ร้านบอร์ดเกมใน {0}</value></data>
   <data name="Blog_DiscoverCafes" xml:space="preserve"><value>ค้นพบ {0} {1}บอร์ดเกมใน {2} มีเกมให้เล่นมากกว่า {3} เกม</value></data>
+  <data name="Blog_DiscoverCafesSimple" xml:space="preserve"><value>ค้นพบ {0} {1}บอร์ดเกมใน {2}</value></data>
   <data name="Blog_Cafe" xml:space="preserve"><value>ร้าน</value></data>
   <data name="Blog_Cafes" xml:space="preserve"><value>ร้าน</value></data>
   <data name="Blog_ShowingPage" xml:space="preserve"><value>แสดงหน้า</value></data>
