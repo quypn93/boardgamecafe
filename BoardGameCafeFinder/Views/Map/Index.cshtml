@@ -1,4 +1,5 @@
 @model BoardGameCafeFinder.Models.DTOs.MapViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
 @{
     ViewData["Title"] = "Find Board Game Cafés Near You";
     ViewData["MetaDescription"] = "Discover board game cafes near you with our interactive map. Find locations, check opening hours, browse game libraries, and get directions.";
@@ -11,13 +12,13 @@
         <div class="container-fluid px-4 py-2">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h1 class="h4 mb-1"><i class="bi bi-map me-2"></i>Board Game Café Map</h1>
-                    <p class="mb-0 opacity-75 small">Discover board game cafes near you</p>
+                    <h1 class="h4 mb-1"><i class="bi bi-map me-2"></i>@SharedLocalizer["Map_Title"]</h1>
+                    <p class="mb-0 opacity-75 small">@SharedLocalizer["Map_Subtitle"]</p>
                 </div>
                 <div class="col-md-6 text-md-end mt-2 mt-md-0">
                     <div class="d-inline-flex align-items-center bg-white bg-opacity-10 rounded-pill px-3 py-1">
                         <span class="badge bg-success me-2" id="cafesCountBadge">0</span>
-                        <span class="small">Cafés Found</span>
+                        <span class="small">@SharedLocalizer["Map_CafesFound"]</span>
                     </div>
                 </div>
             </div>
@@ -31,7 +32,7 @@
                 <!-- Mobile Toggle Button -->
                 <button class="mobile-results-toggle" id="mobileResultsToggle">
                     <i class="bi bi-chevron-up toggle-icon"></i>
-                    <span id="toggleText">Show Results</span>
+                    <span id="toggleText">@SharedLocalizer["Map_ShowResults"]</span>
                     <span class="badge bg-white text-primary ms-2" id="mobileResultsCount">0</span>
                 </button>
 
@@ -47,9 +48,9 @@
                                 <input type="text"
                                        id="locationInput"
                                        class="form-control border-start-0 ps-0"
-                                       placeholder="Search city or address...">
+                                       placeholder="@SharedLocalizer["Map_SearchPlaceholder"]">
                                 <button class="btn btn-primary" type="button" id="searchLocationBtn">
-                                    Go
+                                    @SharedLocalizer["Map_Go"]
                                 </button>
                             </div>
                         </div>
@@ -57,20 +58,20 @@
                         <!-- Quick Actions -->
                         <div class="d-flex gap-2 mb-3">
                             <button id="useLocationBtn" class="btn btn-outline-primary btn-sm flex-grow-1">
-                                <i class="bi bi-crosshair"></i> Use My Location
+                                <i class="bi bi-crosshair"></i> @SharedLocalizer["Map_UseMyLocation"]
                             </button>
                         </div>
 
                         <!-- Filters (Always Visible) -->
                         <div class="filters-panel">
-                            <h6 class="text-muted mb-2"><i class="bi bi-funnel me-1"></i> Filters</h6>
+                            <h6 class="text-muted mb-2"><i class="bi bi-funnel me-1"></i> @SharedLocalizer["Map_Filters"]</h6>
 
                             <!-- Country & City -->
                             <div class="row g-2 mb-2">
                                 <div class="col-6">
-                                    <label class="form-label small fw-semibold">Country</label>
+                                    <label class="form-label small fw-semibold">@SharedLocalizer["Map_Country"]</label>
                                     <select id="countrySelect" class="form-select form-select-sm">
-                                        <option value="">All Countries</option>
+                                        <option value="">@SharedLocalizer["Map_AllCountries"]</option>
                                         @if (ViewBag.Countries != null)
                                         {
                                             foreach (var country in (List<string>)ViewBag.Countries)
@@ -81,9 +82,9 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label small fw-semibold">City</label>
+                                    <label class="form-label small fw-semibold">@SharedLocalizer["Map_City"]</label>
                                     <select id="citySelect" class="form-select form-select-sm">
-                                        <option value="">All Cities</option>
+                                        <option value="">@SharedLocalizer["Map_AllCities"]</option>
                                         @if (ViewBag.Cities != null)
                                         {
                                             foreach (var city in (List<string>)ViewBag.Cities)
@@ -98,7 +99,7 @@
                             <!-- Radius & Rating -->
                             <div class="row g-2 mb-2">
                                 <div class="col-6">
-                                    <label class="form-label small fw-semibold">Radius</label>
+                                    <label class="form-label small fw-semibold">@SharedLocalizer["Map_Radius"]</label>
                                     <select id="radiusSelect" class="form-select form-select-sm">
                                         <option value="5000">5 km</option>
                                         <option value="10000" selected>10 km</option>
@@ -108,9 +109,9 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label small fw-semibold">Min Rating</label>
+                                    <label class="form-label small fw-semibold">@SharedLocalizer["Map_MinRating"]</label>
                                     <select id="minRatingSelect" class="form-select form-select-sm">
-                                        <option value="">Any</option>
+                                        <option value="">@SharedLocalizer["Map_Any"]</option>
                                         <option value="4.5">4.5+ ★</option>
                                         <option value="4.0">4.0+ ★</option>
                                         <option value="3.5">3.5+ ★</option>
@@ -121,7 +122,7 @@
 
                             <!-- Game Categories (Select2 Multiselect) -->
                             <div class="mb-2">
-                                <label class="form-label small fw-semibold">Game Categories</label>
+                                <label class="form-label small fw-semibold">@SharedLocalizer["Map_GameCategories"]</label>
                                 <select id="categoriesSelect" class="form-select form-select-sm" multiple>
                                     @if (ViewBag.GameCategories != null)
                                     {
@@ -150,7 +151,7 @@
                             </div>
 
                             <button id="searchBtn" class="btn btn-primary btn-sm w-100">
-                                <i class="bi bi-search"></i> Search
+                                <i class="bi bi-search"></i> @SharedLocalizer["Map_Search"]
                             </button>
                         </div>
                     </div>
@@ -162,10 +163,10 @@
                         <div class="empty-icon mb-3">
                             <i class="bi bi-geo-alt"></i>
                         </div>
-                        <h5 class="text-muted">Find Board Game Cafés</h5>
-                        <p class="text-muted small mb-3">Enter a location or use your current position to discover cafés nearby</p>
+                        <h5 class="text-muted">@SharedLocalizer["Map_FindCafes"]</h5>
+                        <p class="text-muted small mb-3">@SharedLocalizer["Map_EmptyStateText"]</p>
                         <button id="emptyStateLocationBtn" class="btn btn-primary btn-sm">
-                            <i class="bi bi-crosshair me-1"></i> Use My Location
+                            <i class="bi bi-crosshair me-1"></i> @SharedLocalizer["Map_UseMyLocation"]
                         </button>
                     </div>
                 </div>
@@ -177,13 +178,13 @@
 
                 <!-- Map Controls Overlay -->
                 <div class="map-controls">
-                    <button id="zoomInBtn" class="map-control-btn" title="Zoom In">
+                    <button id="zoomInBtn" class="map-control-btn" title="@SharedLocalizer["Map_ZoomIn"]">
                         <i class="bi bi-plus-lg"></i>
                     </button>
-                    <button id="zoomOutBtn" class="map-control-btn" title="Zoom Out">
+                    <button id="zoomOutBtn" class="map-control-btn" title="@SharedLocalizer["Map_ZoomOut"]">
                         <i class="bi bi-dash-lg"></i>
                     </button>
-                    <button id="centerMapBtn" class="map-control-btn" title="Center on Location">
+                    <button id="centerMapBtn" class="map-control-btn" title="@SharedLocalizer["Map_CenterOnLocation"]">
                         <i class="bi bi-crosshair2"></i>
                     </button>
                 </div>
@@ -192,11 +193,11 @@
                 <div class="map-legend">
                     <div class="legend-item">
                         <span class="legend-marker" style="background: #667eea;"></span>
-                        <span class="small">Café</span>
+                        <span class="small">@SharedLocalizer["Map_Cafe"]</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-marker" style="background: #4285F4;"></span>
-                        <span class="small">Your Location</span>
+                        <span class="small">@SharedLocalizer["Map_YourLocation"]</span>
                     </div>
                 </div>
 
@@ -204,7 +205,7 @@
                 <div id="loadingOverlay" class="loading-overlay" style="display: none;">
                     <div class="loading-content">
                         <div class="spinner-border text-primary mb-2" role="status"></div>
-                        <p class="mb-0 small text-muted">Searching for cafés...</p>
+                        <p class="mb-0 small text-muted">@SharedLocalizer["Map_SearchingForCafes"]</p>
                     </div>
                 </div>
             </div>
@@ -699,11 +700,18 @@
     <script src="~/js/map.js" asp-append-version="true"></script>
 
     <script>
+        // Localized strings for JavaScript
+        var mapLocalizedStrings = {
+            selectCategories: @Html.Raw(Json.Serialize(SharedLocalizer["Map_SelectCategories"].Value)),
+            showResults: @Html.Raw(Json.Serialize(SharedLocalizer["Map_ShowResults"].Value)),
+            hideResults: @Html.Raw(Json.Serialize(SharedLocalizer["Map_HideResults"].Value))
+        };
+
         $(document).ready(function() {
             // Initialize Select2 for categories
             $('#categoriesSelect').select2({
                 theme: 'bootstrap-5',
-                placeholder: 'Select categories...',
+                placeholder: mapLocalizedStrings.selectCategories,
                 allowClear: true,
                 closeOnSelect: false
             });
@@ -722,10 +730,10 @@
 
                 if (isExpanded) {
                     sidebar.removeClass('expanded');
-                    $('#toggleText').text('Show Results');
+                    $('#toggleText').text(mapLocalizedStrings.showResults);
                 } else {
                     sidebar.addClass('expanded');
-                    $('#toggleText').text('Hide Results');
+                    $('#toggleText').text(mapLocalizedStrings.hideResults);
                 }
             });
 
@@ -733,7 +741,7 @@
             window.updateMobileResultsCount = function(count) {
                 $('#mobileResultsCount').text(count);
                 if (count > 0) {
-                    $('#toggleText').text('Show ' + count + ' Results');
+                    $('#toggleText').text(mapLocalizedStrings.showResults.replace('Results', count + ' Results'));
                 }
             };
 
@@ -741,7 +749,7 @@
             if (window.innerWidth <= 991) {
                 $('#map').on('click', function() {
                     $('#sidebarPanel').removeClass('expanded');
-                    $('#toggleText').text('Show Results');
+                    $('#toggleText').text(mapLocalizedStrings.showResults);
                 });
             }
         });

@@ -20,10 +20,10 @@ namespace BoardGameCafeFinder.Services
         Task<List<string>> GetAllCategoriesAsync();
         Task<List<string>> GetAllCitiesWithPostsAsync();
 
-        // Auto-Generation
-        Task<BlogPost> GenerateTopGamesPostAsync(string city, string? country = null);
+        // Auto-Generation (culture parameter for multi-language support)
+        Task<BlogPost> GenerateTopGamesPostAsync(string city, string? country = null, string? culture = null);
         Task<List<BlogPost>> GenerateTopGamesPostsForCitiesAsync(List<string> cities);
-        Task<BlogPost> GenerateCityGuidePostAsync(string city, string? country = null);
+        Task<BlogPost> GenerateCityGuidePostAsync(string city, string? country = null, string? culture = null);
 
         // Utilities
         Task IncrementViewCountAsync(int id);

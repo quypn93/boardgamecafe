@@ -1,6 +1,7 @@
 @model RegisterViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = SharedLocalizer["Account_Register"].Value;
     Layout = "_UserLayout";
 }
 
@@ -9,7 +10,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-success text-white text-center">
-                    <h4 class="mb-0"><i class="bi bi-person-plus"></i> Create Account</h4>
+                    <h4 class="mb-0"><i class="bi bi-person-plus"></i> @SharedLocalizer["Account_CreateAccount"]</h4>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Register" method="post">
@@ -17,19 +18,19 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="FirstName" class="form-label">First Name</label>
+                                <label asp-for="FirstName" class="form-label">@SharedLocalizer["Account_FirstName"]</label>
                                 <input asp-for="FirstName" class="form-control" placeholder="John" />
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label asp-for="LastName" class="form-label">Last Name</label>
+                                <label asp-for="LastName" class="form-label">@SharedLocalizer["Account_LastName"]</label>
                                 <input asp-for="LastName" class="form-control" placeholder="Doe" />
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
+                            <label asp-for="Email" class="form-label">@SharedLocalizer["Account_Email"]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                 <input asp-for="Email" class="form-control" placeholder="your@email.com" autocomplete="email" />
@@ -38,20 +39,20 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Password</label>
+                            <label asp-for="Password" class="form-label">@SharedLocalizer["Account_Password"]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input asp-for="Password" class="form-control" placeholder="At least 8 characters" autocomplete="new-password" />
+                                <input asp-for="Password" class="form-control" placeholder="@SharedLocalizer["Account_Password"]" autocomplete="new-password" />
                             </div>
                             <span asp-validation-for="Password" class="text-danger"></span>
-                            <small class="text-muted">Must be at least 8 characters with uppercase, lowercase, and a number.</small>
+                            <small class="text-muted">@SharedLocalizer["Account_PasswordHint"]</small>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                            <label asp-for="ConfirmPassword" class="form-label">@SharedLocalizer["Account_ConfirmPassword"]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" autocomplete="new-password" />
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="@SharedLocalizer["Account_ConfirmPassword"]" autocomplete="new-password" />
                             </div>
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
@@ -61,17 +62,17 @@
                             <div class="form-check">
                                 <input asp-for="IsCafeOwner" class="form-check-input" id="isCafeOwner" />
                                 <label asp-for="IsCafeOwner" class="form-check-label fw-bold">
-                                    <i class="bi bi-shop me-1"></i> I am a cafe owner
+                                    <i class="bi bi-shop me-1"></i> @SharedLocalizer["Account_IsCafeOwner"]
                                 </label>
                             </div>
                             <small class="text-muted d-block mt-2">
-                                Check this if you own or manage a board game cafe. You'll be able to claim and manage your cafe listing.
+                                @SharedLocalizer["Account_CafeOwnerHint"]
                             </small>
                         </div>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg">
-                                <i class="bi bi-person-plus"></i> Create Account
+                                <i class="bi bi-person-plus"></i> @SharedLocalizer["Account_CreateAccount"]
                             </button>
                         </div>
                     </form>
@@ -79,9 +80,9 @@
                     <hr class="my-4">
 
                     <div class="text-center">
-                        <p class="mb-0">Already have an account?</p>
+                        <p class="mb-0">@SharedLocalizer["Account_AlreadyHaveAccount"]</p>
                         <a asp-action="Login" class="btn btn-outline-primary mt-2">
-                            <i class="bi bi-box-arrow-in-right"></i> Login
+                            <i class="bi bi-box-arrow-in-right"></i> @SharedLocalizer["Account_Login"]
                         </a>
                     </div>
                 </div>

@@ -1,0 +1,35 @@
+@{
+    var request = Context.Request;
+    var baseUrl = $"{request.Scheme}://{request.Host}";
+    var currentPath = request.Path.Value ?? "/";
+    var queryString = request.QueryString.Value ?? "";
+
+    // Supported cultures
+    var cultures = new[] { "en", "vi", "ja", "ko", "zh", "th", "es", "de" };
+
+    // Remove culture prefix from path if exists
+    var pathWithoutCulture = currentPath;
+    foreach (var c in cultures)
+    {
+        if (currentPath.StartsWith($"/{c}/", StringComparison.OrdinalIgnoreCase))
+        {
+            pathWithoutCulture = currentPath.Substring(3);
+            break;
+        }
+        else if (currentPath.Equals($"/{c}", StringComparison.OrdinalIgnoreCase))
+        {
+            pathWithoutCulture = "/";
+            break;
+        }
+    }
+}
+
+<!-- hreflang tags for international SEO -->
+@foreach (var culture in cultures)
+{
+    var url = culture == "en"
+        ? $"{baseUrl}{pathWithoutCulture}{queryString}"
+        : $"{baseUrl}/{culture}{pathWithoutCulture}{queryString}";
+    <link rel="alternate" hreflang="@culture" href="@url" />
+}
+<link rel="alternate" hreflang="x-default" href="@($"{baseUrl}{pathWithoutCulture}{queryString}")" />

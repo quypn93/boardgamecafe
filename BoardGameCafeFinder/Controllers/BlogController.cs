@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BoardGameCafeFinder.Data;
 using BoardGameCafeFinder.Models.Domain;
+using System.Globalization;
 
 namespace BoardGameCafeFinder.Controllers
 {
@@ -9,6 +10,19 @@ namespace BoardGameCafeFinder.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<BlogController> _logger;
+
+        // Map culture codes to default countries
+        private static readonly Dictionary<string, string> CultureToCountry = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "vi", "Vietnam" },
+            { "ja", "Japan" },
+            { "ko", "South Korea" },
+            { "zh", "China" },
+            { "th", "Thailand" },
+            { "es", "Spain" },
+            { "de", "Germany" }
+            // "en" - no default country, show all
+        };
 
         public BlogController(ApplicationDbContext context, ILogger<BlogController> logger)
         {
@@ -18,20 +32,43 @@ namespace BoardGameCafeFinder.Controllers
 
         /// <summary>
         /// Blog listing page - shows cities as dynamic blog posts
+        /// Automatically filters by country based on user's language when no country specified
         /// </summary>
         public async Task<IActionResult> Index(string? country = null, int page = 1)
         {
             const int pageSize = 12;
 
+            // If no country specified, try to get default country from user's language
+            var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            string? defaultCountry = null;
+
+            if (string.IsNullOrEmpty(country) && CultureToCountry.TryGetValue(currentCulture, out var mappedCountry))
+            {
+                defaultCountry = mappedCountry;
+            }
+
             // Load cafes with game counts first (EF Core can't translate complex GroupBy with navigation)
             var cafesQuery = _context.Cafes
                 .Where(c => c.IsActive && !string.IsNullOrEmpty(c.City));
 
-            // Filter by country if specified
+            // Filter by country if specified (explicit filter takes priority)
             if (!string.IsNullOrEmpty(country))
             {
                 cafesQuery = cafesQuery.Where(c => c.Country == country);
                 ViewBag.SelectedCountry = country;
+            }
+            else if (!string.IsNullOrEmpty(defaultCountry))
+            {
+                // Check if the default country has any cafes
+                var hasDefaultCountryCafes = await _context.Cafes
+                    .AnyAsync(c => c.IsActive && c.Country == defaultCountry);
+
+                if (hasDefaultCountryCafes)
+                {
+                    cafesQuery = cafesQuery.Where(c => c.Country == defaultCountry);
+                    ViewBag.SelectedCountry = defaultCountry;
+                    ViewBag.AutoFiltered = true; // Flag to indicate auto-filtering
+                }
             }
 
             // Load data into memory, then group

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>Startseite</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>Karte</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>Blog</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>Für Unternehmen</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>Preise</value></data>
+  <data name="Nav_AddCafe" xml:space="preserve"><value>Café Hinzufügen</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>FAQ</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>Registrieren</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>Abmelden</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>Mein Profil</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>Admin-Dashboard</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>Finde Brettspiel-Cafés in Deiner Nähe</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>Entdecke die besten Brettspiel-Cafés in deiner Umgebung</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>Nach Stadt oder Name suchen...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>Suchen</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>Alle Länder</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>Alle Städte</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>Land</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>Stadt</value></data>
+  <data name="Home_CafesFound" xml:space="preserve"><value>Cafés gefunden</value></data>
+  <data name="Home_NoCafesFound" xml:space="preserve"><value>Keine Cafés gefunden, die deinen Kriterien entsprechen</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>Finde Dein Perfektes Spielcafé</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>Entdecke die besten Brettspiel-Cafés weltweit mit großen Spielesammlungen und toller Atmosphäre.</value></data>
+  <data name="Home_BrowseCafes" xml:space="preserve"><value>Cafés Durchstöbern</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>Karte Anzeigen</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>Filter</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>In Meiner Nähe</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>Radius</value></data>
+  <data name="Home_GameCategories" xml:space="preserve"><value>Spielekategorien</value></data>
+  <data name="Home_BoardGamesAvailable" xml:space="preserve"><value>Verfügbare Spiele</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>Filter Anwenden</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>Filter Löschen</value></data>
+  <data name="Home_BoardGameCafes" xml:space="preserve"><value>Brettspiel-Cafés</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>In Deiner Nähe</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>Aktive Filter</value></data>
+  <data name="Home_GamesSelected" xml:space="preserve"><value>Spiele ausgewählt</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>Karte</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>Seite</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>von</value></data>
+  <data name="Home_NoCafesTitle" xml:space="preserve"><value>Keine Cafés Gefunden</value></data>
+  <data name="Home_NoCafesMessage" xml:space="preserve"><value>Keine Brettspiel-Cafés entsprechen deiner Suche. Versuche die Filter anzupassen oder suche in einer anderen Gegend.</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>Beliebte Städte</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>Warum Ein Spielcafé Besuchen?</value></data>
+  <data name="Home_HugeLibraries" xml:space="preserve"><value>Riesige Spielebibliotheken</value></data>
+  <data name="Home_HugeLibrariesDesc" xml:space="preserve"><value>Wähle aus Hunderten von Brettspielen, von Klassikern bis zu den neuesten Erscheinungen.</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>Soziales Erlebnis</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>Verbring eine tolle Zeit mit Freunden oder lerne neue Leute am Spieltisch kennen.</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>Expertenberatung</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>Das Personal hilft dir, das perfekte Spiel für eure Gruppe zu finden und erklärt die Regeln.</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>So Findest Du Dein Perfektes Café</value></data>
+  <data name="Home_Step1Title" xml:space="preserve"><value>Suche Deinen Standort</value></data>
+  <data name="Home_Step1Desc" xml:space="preserve"><value>Suche nach Stadt oder Region, oder nutze GPS um Cafés in der Nähe zu finden.</value></data>
+  <data name="Home_Step2Title" xml:space="preserve"><value>Ergebnisse Filtern</value></data>
+  <data name="Home_Step2Desc" xml:space="preserve"><value>Verfeinere deine Suche nach Spielekategorien, Entfernung oder Bewertung.</value></data>
+  <data name="Home_Step3Title" xml:space="preserve"><value>Bewertungen Lesen</value></data>
+  <data name="Home_Step3Desc" xml:space="preserve"><value>Lies Bewertungen und Rezensionen anderer Spieler.</value></data>
+  <data name="Home_Step4Title" xml:space="preserve"><value>Besuchen und Spielen</value></data>
+  <data name="Home_Step4Desc" xml:space="preserve"><value>Besuche das Café und genieße ein tolles Brettspiel-Erlebnis!</value></data>
+  <data name="Home_GettingLocation" xml:space="preserve"><value>Standort wird ermittelt...</value></data>
+  <data name="Home_SelectCategories" xml:space="preserve"><value>Kategorien Auswählen</value></data>
+
+  <!-- Cafe Details -->
+  <data name="Cafe_Rating" xml:space="preserve"><value>Bewertung</value></data>
+  <data name="Cafe_Reviews" xml:space="preserve"><value>Bewertungen</value></data>
+  <data name="Cafe_Address" xml:space="preserve"><value>Adresse</value></data>
+  <data name="Cafe_Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Cafe_Website" xml:space="preserve"><value>Webseite</value></data>
+  <data name="Cafe_Hours" xml:space="preserve"><value>Öffnungszeiten</value></data>
+  <data name="Cafe_Games" xml:space="preserve"><value>Spielebibliothek</value></data>
+  <data name="Cafe_GamesAvailable" xml:space="preserve"><value>Spiele verfügbar</value></data>
+  <data name="Cafe_ViewOnMap" xml:space="preserve"><value>Auf Karte Anzeigen</value></data>
+  <data name="Cafe_GetDirections" xml:space="preserve"><value>Route Planen</value></data>
+  <data name="Cafe_WriteReview" xml:space="preserve"><value>Bewertung Schreiben</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>Blog</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>Mehr Lesen</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>Veröffentlicht am</value></data>
+  <data name="Blog_By" xml:space="preserve"><value>von</value></data>
+  <data name="Blog_Category" xml:space="preserve"><value>Kategorie</value></data>
+
+  <!-- Blog Templates -->
+  <data name="BlogTemplate_CityGuide_Title" xml:space="preserve"><value>Brettspiel-Cafés in {0} - Kompletter Guide</value></data>
+  <data name="BlogTemplate_CityGuide_Summary" xml:space="preserve"><value>Dein kompletter Guide zu Brettspiel-Cafés in {0}. Finde die besten Orte zum Spielen.</value></data>
+  <data name="BlogTemplate_CityGuide_Intro" xml:space="preserve"><value>Willkommen zu unserem umfassenden Guide für Brettspiel-Cafés in {0}! Ob erfahrener Spieler oder auf der Suche nach einem unterhaltsamen Abend - wir haben alles für dich.</value></data>
+  <data name="BlogTemplate_CityGuide_Overview" xml:space="preserve"><value>Übersicht</value></data>
+  <data name="BlogTemplate_CityGuide_OverviewText" xml:space="preserve"><value>{0} beherbergt {1} Brettspiel-Cafés mit Tausenden von Spielen verschiedener Genres. Von gemütlichen Orten perfekt für Dates bis zu geräumigen Locations ideal für größere Gruppen - es ist für jeden etwas dabei.</value></data>
+  <data name="BlogTemplate_CityGuide_TopRated" xml:space="preserve"><value>Top Bewertet</value></data>
+  <data name="BlogTemplate_CityGuide_Tips" xml:space="preserve"><value>Tipps für Deinen Besuch</value></data>
+  <data name="BlogTemplate_CityGuide_Tip1" xml:space="preserve"><value>Reserviere vorab: Beliebte Cafés füllen sich schnell, besonders am Wochenende.</value></data>
+  <data name="BlogTemplate_CityGuide_Tip2" xml:space="preserve"><value>Frag das Personal: Sie sind meist selbst Spieler und können das perfekte Spiel für eure Gruppe empfehlen.</value></data>
+  <data name="BlogTemplate_CityGuide_Tip3" xml:space="preserve"><value>Plane deine Zeit: Die meisten Spiele dauern 1-3 Stunden.</value></data>
+  <data name="BlogTemplate_CityGuide_Tip4" xml:space="preserve"><value>Probiere etwas Neues: Verlasse deine Komfortzone und probiere ein Spiel, das du noch nie gespielt hast!</value></data>
+  <data name="BlogTemplate_CityGuide_ExploreMore" xml:space="preserve"><value>Mehr Entdecken</value></data>
+  <data name="BlogTemplate_CityGuide_ViewAllCafes" xml:space="preserve"><value>Alle Cafés in {0} Anzeigen</value></data>
+  <data name="BlogTemplate_TopGames_Title" xml:space="preserve"><value>Top Brettspiele in Cafés in {0}</value></data>
+  <data name="BlogTemplate_TopGames_Summary" xml:space="preserve"><value>Entdecke die beliebtesten Brettspiele in den Cafés von {0}. Von Familienfavoriten bis zu strategischen Meisterwerken.</value></data>
+  <data name="BlogTemplate_TopGames_Intro" xml:space="preserve"><value>Suchst du nach den besten Brettspielen zum Spielen in {0}? Wir haben Daten von {1} Brettspiel-Cafés in der Gegend analysiert, um dir die beliebtesten Spiele der Einheimischen zu präsentieren.</value></data>
+  <data name="BlogTemplate_TopGames_WhyTheseGames" xml:space="preserve"><value>Warum Diese Spiele?</value></data>
+  <data name="BlogTemplate_TopGames_WhyText" xml:space="preserve"><value>Diese Spiele erscheinen am häufigsten in den Brettspiel-Cafés in {0}, was bedeutet, dass du sie wahrscheinlich überall finden wirst. Sie sind Publikumslieblinge, die für jeden etwas bieten.</value></data>
+  <data name="BlogTemplate_TopGames_AvailableAt" xml:space="preserve"><value>Verfügbar in {0} Cafés in {1}</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlay" xml:space="preserve"><value>Wo Spielen</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlayText" xml:space="preserve"><value>Bereit, diese Spiele auszuprobieren? Durchstöbere alle Brettspiel-Cafés in {0}, um den perfekten Ort für deinen nächsten Spieleabend zu finden.</value></data>
+  <data name="BlogTemplate_Players" xml:space="preserve"><value>{0}-{1} Spieler</value></data>
+  <data name="BlogTemplate_Minutes" xml:space="preserve"><value>{0} Min</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>Entdecke die besten Brettspiel-Cafés in deiner Nähe. Durchstöbere umfangreiche Spielebibliotheken, lies Bewertungen und finde dein nächstes Spieleziel.</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>Entdecken</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>Rechtliches</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Datenschutz</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>Nutzungsbedingungen</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>Kontakt</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>Hast du ein Brettspiel-Café, das du hinzufügen möchtest? Bist du Inhaber und möchtest deine Infos aktualisieren? Kontaktiere uns!</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Board Game Cafe Finder. Alle Rechte vorbehalten.</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>Details Anzeigen</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>Mehr Erfahren</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>Absenden</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>Speichern</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Bearbeiten</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Zurück</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>Weiter</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>Zurück</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>Lädt...</value></data>
+
+  <!-- SEO Meta -->
+  <data name="Meta_DefaultDescription" xml:space="preserve"><value>Finde die besten Brettspiel-Cafés in deiner Nähe. Entdecke Spielelounges mit unserer interaktiven Karte und umfassendem Café-Verzeichnis.</value></data>
+  <data name="Meta_DefaultKeywords" xml:space="preserve"><value>Brettspiel-Café,Spielelounge,Brettspiele,Brettspiele in meiner Nähe</value></data>
+
+  <!-- Blog Index Page -->
+  <data name="Blog_CafeGuides" xml:space="preserve"><value>Brettspiel-Café Guides</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>Erkunde Brettspiel-Cafés in {0} Städten weltweit</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>Erkunde Brettspiel-Cafés in {0} Städten in {1}</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>Alle Städte anzeigen</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>Nach Land filtern</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>Alle Länder</value></data>
+  <data name="Blog_ViewAllCountries" xml:space="preserve"><value>Alle Länder anzeigen</value></data>
+  <data name="Blog_CafesIn" xml:space="preserve"><value>Brettspiel-Cafés in {0}</value></data>
+  <data name="Blog_DiscoverCafes" xml:space="preserve"><value>Entdecke {0} Brettspiel-{1} in {2} mit über {3} Spielen.</value></data>
+  <data name="Blog_Cafe" xml:space="preserve"><value>Café</value></data>
+  <data name="Blog_Cafes" xml:space="preserve"><value>Cafés</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>Zeige Seite</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>Städte gefunden</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>Keine Städte gefunden</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>Es wurden noch keine Brettspiel-Cafés hinzugefügt.</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>Schnellstatistik</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>Städte</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>Länder</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>Nach Land durchsuchen</value></data>
+  <data name="Blog_FindCafesNearYou" xml:space="preserve"><value>Finde Cafés in deiner Nähe</value></data>
+  <data name="Blog_FindCafesDesc" xml:space="preserve"><value>Nutze unsere interaktive Karte, um Brettspiel-Cafés zu entdecken.</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>Karte öffnen</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0} mehr</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>Brettspiel-Café Karte</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>Entdecke Brettspiel-Cafés in deiner Nähe</value></data>
+  <data name="Map_CafesFound" xml:space="preserve"><value>Cafés Gefunden</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>Stadt oder Adresse suchen...</value></data>
+  <data name="Map_Go" xml:space="preserve"><value>Los</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>Meinen Standort verwenden</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>Filter</value></data>
+  <data name="Map_Country" xml:space="preserve"><value>Land</value></data>
+  <data name="Map_City" xml:space="preserve"><value>Stadt</value></data>
+  <data name="Map_AllCountries" xml:space="preserve"><value>Alle Länder</value></data>
+  <data name="Map_AllCities" xml:space="preserve"><value>Alle Städte</value></data>
+  <data name="Map_Radius" xml:space="preserve"><value>Radius</value></data>
+  <data name="Map_MinRating" xml:space="preserve"><value>Mindestbewertung</value></data>
+  <data name="Map_Any" xml:space="preserve"><value>Beliebig</value></data>
+  <data name="Map_GameCategories" xml:space="preserve"><value>Spielkategorien</value></data>
+  <data name="Map_Search" xml:space="preserve"><value>Suchen</value></data>
+  <data name="Map_FindCafes" xml:space="preserve"><value>Brettspiel-Cafés finden</value></data>
+  <data name="Map_EmptyStateText" xml:space="preserve"><value>Gib einen Ort ein oder verwende deinen Standort, um Cafés in der Nähe zu entdecken</value></data>
+  <data name="Map_SearchingForCafes" xml:space="preserve"><value>Suche nach Cafés...</value></data>
+  <data name="Map_ShowResults" xml:space="preserve"><value>Ergebnisse anzeigen</value></data>
+  <data name="Map_HideResults" xml:space="preserve"><value>Ergebnisse ausblenden</value></data>
+  <data name="Map_ZoomIn" xml:space="preserve"><value>Vergrößern</value></data>
+  <data name="Map_ZoomOut" xml:space="preserve"><value>Verkleinern</value></data>
+  <data name="Map_CenterOnLocation" xml:space="preserve"><value>Auf Standort zentrieren</value></data>
+  <data name="Map_Cafe" xml:space="preserve"><value>Café</value></data>
+  <data name="Map_YourLocation" xml:space="preserve"><value>Dein Standort</value></data>
+  <data name="Map_SelectCategories" xml:space="preserve"><value>Kategorien auswählen...</value></data>
+
+  <!-- Account Pages -->
+  <data name="Account_Login" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>E-Mail</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>Passwort</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>Angemeldet bleiben</value></data>
+  <data name="Account_LoginButton" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>Noch kein Konto?</value></data>
+  <data name="Account_CreateAccount" xml:space="preserve"><value>Konto erstellen</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>Registrieren</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>Vorname</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>Nachname</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>Passwort bestätigen</value></data>
+  <data name="Account_PasswordHint" xml:space="preserve"><value>Mindestens 8 Zeichen mit Groß-, Kleinbuchstaben und einer Zahl.</value></data>
+  <data name="Account_IsCafeOwner" xml:space="preserve"><value>Ich bin Café-Besitzer</value></data>
+  <data name="Account_CafeOwnerHint" xml:space="preserve"><value>Aktiviere dies, wenn du ein Brettspiel-Café besitzt oder betreibst. Du kannst dein Café beanspruchen und verwalten.</value></data>
+  <data name="Account_AlreadyHaveAccount" xml:space="preserve"><value>Bereits ein Konto?</value></data>
+  <data name="Account_Profile" xml:space="preserve"><value>Mein Profil</value></data>
+  <data name="Account_ProfileInfo" xml:space="preserve"><value>Profilinformationen</value></data>
+  <data name="Account_Edit" xml:space="preserve"><value>Bearbeiten</value></data>
+  <data name="Account_DisplayName" xml:space="preserve"><value>Anzeigename</value></data>
+  <data name="Account_City" xml:space="preserve"><value>Stadt</value></data>
+  <data name="Account_Country" xml:space="preserve"><value>Land</value></data>
+  <data name="Account_Bio" xml:space="preserve"><value>Über mich</value></data>
+  <data name="Account_SaveChanges" xml:space="preserve"><value>Änderungen speichern</value></data>
+  <data name="Account_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Account_ChangePassword" xml:space="preserve"><value>Passwort ändern</value></data>
+  <data name="Account_CurrentPassword" xml:space="preserve"><value>Aktuelles Passwort</value></data>
+  <data name="Account_NewPassword" xml:space="preserve"><value>Neues Passwort</value></data>
+  <data name="Account_ConfirmNewPassword" xml:space="preserve"><value>Neues Passwort bestätigen</value></data>
+  <data name="Account_Reviews" xml:space="preserve"><value>Bewertungen</value></data>
+  <data name="Account_Visits" xml:space="preserve"><value>Besuche</value></data>
+  <data name="Account_Points" xml:space="preserve"><value>Punkte</value></data>
+  <data name="Account_MemberSince" xml:space="preserve"><value>Mitglied seit</value></data>
+  <data name="Account_LastLogin" xml:space="preserve"><value>Letzte Anmeldung</value></data>
+  <data name="Account_QuickActions" xml:space="preserve"><value>Schnellaktionen</value></data>
+  <data name="Account_FindCafes" xml:space="preserve"><value>Cafés finden</value></data>
+  <data name="Account_MapView" xml:space="preserve"><value>Kartenansicht</value></data>
+  <data name="Account_ManageMyCafe" xml:space="preserve"><value>Mein Café verwalten</value></data>
+  <data name="Account_OwnBoardGameCafe" xml:space="preserve"><value>Besitzt du ein Brettspiel-Café?</value></data>
+  <data name="Account_ClaimBusiness" xml:space="preserve"><value>Beanspruche dein Geschäft und verwalte dein Profil, um mehr Kunden anzuziehen.</value></data>
+  <data name="Account_LearnPremium" xml:space="preserve"><value>Premium-Pakete kennenlernen</value></data>
+  <data name="Account_ChangeAvatar" xml:space="preserve"><value>Avatar ändern</value></data>
+  <data name="Account_SelectNewAvatar" xml:space="preserve"><value>Neuen Avatar auswählen</value></data>
+  <data name="Account_AvatarHint" xml:space="preserve"><value>Erlaubt: JPG, PNG, GIF, WebP. Max: 5MB</value></data>
+  <data name="Account_Preview" xml:space="preserve"><value>Vorschau:</value></data>
+  <data name="Account_Remove" xml:space="preserve"><value>Entfernen</value></data>
+  <data name="Account_Upload" xml:space="preserve"><value>Hochladen</value></data>
+  <data name="Account_EmailCannotChange" xml:space="preserve"><value>E-Mail kann nicht geändert werden</value></data>
+  <data name="Account_EmailNotVerified" xml:space="preserve"><value>E-Mail nicht bestätigt</value></data>
+  <data name="Account_CheckInbox" xml:space="preserve"><value>Bitte überprüfe deinen Posteingang und bestätige deine E-Mail-Adresse.</value></data>
+  <data name="Account_ResendEmail" xml:space="preserve"><value>E-Mail erneut senden</value></data>
+
+  <!-- Pricing Page -->
+  <data name="Pricing_Title" xml:space="preserve"><value>Premium-Pakete</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>Steigern Sie die Sichtbarkeit Ihres Brettspiel-Cafés und gewinnen Sie mehr Kunden</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>Beliebteste</value></data>
+  <data name="Pricing_PerMonth" xml:space="preserve"><value>/Monat</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>Loslegen</value></data>
+  <data name="Pricing_FeatureComparison" xml:space="preserve"><value>Funktionsvergleich</value></data>
+  <data name="Pricing_Feature" xml:space="preserve"><value>Funktion</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>Basis-Eintrag</value></data>
+  <data name="Pricing_ContactInfo" xml:space="preserve"><value>Kontaktinformationen</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>Öffnungszeiten</value></data>
+  <data name="Pricing_LocationOnMap" xml:space="preserve"><value>Standort auf Karte</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>Fotogalerie</value></data>
+  <data name="Pricing_UpTo" xml:space="preserve"><value>Bis zu {0}</value></data>
+  <data name="Pricing_Unlimited" xml:space="preserve"><value>Unbegrenzt</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>Veranstaltungsliste</value></data>
+  <data name="Pricing_PrioritySearch" xml:space="preserve"><value>Priorität in der Suche</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>Auf der Startseite</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>Spielebestand-Manager</value></data>
+  <data name="Pricing_Analytics" xml:space="preserve"><value>Analyse-Dashboard</value></data>
+  <data name="Pricing_FAQ" xml:space="preserve"><value>Häufig gestellte Fragen</value></data>
+  <data name="Pricing_FAQ1_Q" xml:space="preserve"><value>Wie beanspruche ich mein Café?</value></data>
+  <data name="Pricing_FAQ1_A" xml:space="preserve"><value>Suchen Sie Ihr Café auf unserer Plattform und klicken Sie auf "Dieses Geschäft beanspruchen" auf Ihrer Café-Seite. Sie müssen die Inhaberschaft verifizieren, bevor Premium-Funktionen aktiviert werden.</value></data>
+  <data name="Pricing_FAQ2_Q" xml:space="preserve"><value>Kann ich meinen Plan später ändern?</value></data>
+  <data name="Pricing_FAQ2_A" xml:space="preserve"><value>Ja! Sie können jederzeit upgraden oder downgraden. Beim Upgrade erhalten Sie sofort Zugang zu neuen Funktionen. Beim Downgrade werden Änderungen am Ende des aktuellen Abrechnungszeitraums wirksam.</value></data>
+  <data name="Pricing_FAQ3_Q" xml:space="preserve"><value>Welche Zahlungsmethoden akzeptieren Sie?</value></data>
+  <data name="Pricing_FAQ3_A" xml:space="preserve"><value>Wir akzeptieren alle gängigen Kreditkarten (Visa, Mastercard, American Express) und PayPal. Alle Zahlungen werden sicher verarbeitet.</value></data>
+  <data name="Pricing_FAQ4_Q" xml:space="preserve"><value>Gibt es einen Vertrag oder eine Verpflichtung?</value></data>
+  <data name="Pricing_FAQ4_A" xml:space="preserve"><value>Keine langfristigen Verträge! Alle Pläne sind monatlich und Sie können jederzeit kündigen. Ihr Eintrag bleibt bis zum Ende Ihres bezahlten Zeitraums aktiv.</value></data>
+  <data name="Pricing_ReadyToGrow" xml:space="preserve"><value>Bereit, Ihr Geschäft auszubauen?</value></data>
+  <data name="Pricing_JoinCafes" xml:space="preserve"><value>Schließen Sie sich Hunderten von Brettspiel-Cafés an, die unsere Plattform bereits nutzen</value></data>
+  <data name="Pricing_FindYourCafe" xml:space="preserve"><value>Finden Sie Ihr Café</value></data>
+  <data name="Pricing_AddYourCafe" xml:space="preserve"><value>Fügen Sie Ihr Café hinzu</value></data>
+  <data name="Pricing_SearchCafe" xml:space="preserve"><value>Suchen Sie Ihr Brettspiel-Café, um mit dem</value></data>
+  <data name="Pricing_Plan" xml:space="preserve"><value>Paket zu starten</value></data>
+  <data name="Pricing_SearchPlaceholder" xml:space="preserve"><value>Café-Name oder Stadt eingeben...</value></data>
+  <data name="Pricing_StartTyping" xml:space="preserve"><value>Tippen Sie, um Ihr Café zu suchen</value></data>
+  <data name="Pricing_NoCafesFound" xml:space="preserve"><value>Keine Cafés gefunden. Versuchen Sie einen anderen Suchbegriff.</value></data>
+  <data name="Pricing_CantFindCafe" xml:space="preserve"><value>Können Sie Ihr Café nicht finden?</value></data>
+  <data name="Pricing_AddItNow" xml:space="preserve"><value>Jetzt hinzufügen</value></data>
+  <data name="Pricing_SearchError" xml:space="preserve"><value>Suchfehler. Bitte versuchen Sie es erneut.</value></data>
+  <data name="Plan_Feature_BasicListing" xml:space="preserve"><value>Basis-Eintrag</value></data>
+  <data name="Plan_Feature_ContactInfo" xml:space="preserve"><value>Kontaktinformationen</value></data>
+  <data name="Plan_Feature_BusinessHours" xml:space="preserve"><value>Öffnungszeiten</value></data>
+  <data name="Plan_Feature_LocationOnMap" xml:space="preserve"><value>Standort auf der Karte</value></data>
+  <data name="Plan_Feature_EverythingInBasic" xml:space="preserve"><value>Alles in Basic enthalten</value></data>
+  <data name="Plan_Feature_PhotoGallery" xml:space="preserve"><value>Fotogalerie (bis zu 10)</value></data>
+  <data name="Plan_Feature_EventListings" xml:space="preserve"><value>Veranstaltungen veröffentlichen</value></data>
+  <data name="Plan_Feature_PrioritySearch" xml:space="preserve"><value>Priorität in Suchergebnissen</value></data>
+  <data name="Plan_Feature_EverythingInPremium" xml:space="preserve"><value>Alles in Premium enthalten</value></data>
+  <data name="Plan_Feature_FeaturedHomepage" xml:space="preserve"><value>Hervorgehobene Platzierung auf der Startseite</value></data>
+  <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>Spielbestandsverwaltung</value></data>
+  <data name="Plan_Feature_Analytics" xml:space="preserve"><value>Analyse-Dashboard</value></data>
+  <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>Unbegrenzte Fotos</value></data>
+</root>

@@ -1,6 +1,7 @@
 @model BoardGameCafeFinder.Models.Domain.User
+@inject IStringLocalizer<SharedResource> SharedLocalizer
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = SharedLocalizer["Account_Profile"].Value;
     Layout = "_UserLayout";
 }
 
@@ -29,11 +30,11 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <i class="bi bi-envelope-exclamation me-2"></i>
-                    <strong>Email not verified.</strong> Please check your inbox and confirm your email address.
+                    <strong>@SharedLocalizer["Account_EmailNotVerified"]</strong> @SharedLocalizer["Account_CheckInbox"]
                 </div>
                 <form asp-action="ResendConfirmation" method="post" class="d-inline">
                     <button type="submit" class="btn btn-warning btn-sm">
-                        <i class="bi bi-envelope me-1"></i> Resend Email
+                        <i class="bi bi-envelope me-1"></i> @SharedLocalizer["Account_ResendEmail"]
                     </button>
                 </form>
             </div>
@@ -57,7 +58,7 @@
                         }
                         <button type="button" class="btn btn-primary btn-sm rounded-circle position-absolute"
                                 style="bottom: 0; right: 0; width: 32px; height: 32px; padding: 0;"
-                                data-bs-toggle="modal" data-bs-target="#avatarModal" title="Change Avatar">
+                                data-bs-toggle="modal" data-bs-target="#avatarModal" title="@SharedLocalizer["Account_ChangeAvatar"]">
                             <i class="bi bi-camera"></i>
                         </button>
                     </div>
@@ -73,27 +74,27 @@
                     <div class="d-flex justify-content-center gap-3 mb-3">
                         <div class="text-center">
                             <h5 class="mb-0">@Model.TotalReviews</h5>
-                            <small class="text-muted">Reviews</small>
+                            <small class="text-muted">@SharedLocalizer["Account_Reviews"]</small>
                         </div>
                         <div class="text-center">
                             <h5 class="mb-0">@Model.TotalBookings</h5>
-                            <small class="text-muted">Visits</small>
+                            <small class="text-muted">@SharedLocalizer["Account_Visits"]</small>
                         </div>
                         <div class="text-center">
                             <h5 class="mb-0">@Model.ReputationScore</h5>
-                            <small class="text-muted">Points</small>
+                            <small class="text-muted">@SharedLocalizer["Account_Points"]</small>
                         </div>
                     </div>
 
                     <hr>
 
                     <p class="small text-muted mb-1">
-                        <i class="bi bi-calendar3 me-1"></i> Member since @Model.CreatedAt.ToString("MMMM yyyy")
+                        <i class="bi bi-calendar3 me-1"></i> @SharedLocalizer["Account_MemberSince"] @Model.CreatedAt.ToString("MMMM yyyy")
                     </p>
                     @if (Model.LastLoginAt.HasValue)
                     {
                         <p class="small text-muted mb-0">
-                            <i class="bi bi-clock me-1"></i> Last login @Model.LastLoginAt.Value.ToString("MMM dd, yyyy")
+                            <i class="bi bi-clock me-1"></i> @SharedLocalizer["Account_LastLogin"] @Model.LastLoginAt.Value.ToString("MMM dd, yyyy")
                         </p>
                     }
                 </div>
@@ -102,19 +103,19 @@
             <!-- Quick Actions -->
             <div class="card shadow-sm mt-3">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h6>
+                    <h6 class="mb-0"><i class="bi bi-lightning me-2"></i>@SharedLocalizer["Account_QuickActions"]</h6>
                 </div>
                 <div class="list-group list-group-flush">
                     <a href="/" class="list-group-item list-group-item-action">
-                        <i class="bi bi-search me-2"></i> Find Cafes
+                        <i class="bi bi-search me-2"></i> @SharedLocalizer["Account_FindCafes"]
                     </a>
                     <a href="/Map" class="list-group-item list-group-item-action">
-                        <i class="bi bi-map me-2"></i> Map View
+                        <i class="bi bi-map me-2"></i> @SharedLocalizer["Account_MapView"]
                     </a>
                     @if (Model.IsCafeOwner && Model.CafeId.HasValue)
                     {
                         <a href="/Listing/Admin" class="list-group-item list-group-item-action">
-                            <i class="bi bi-shop me-2"></i> Manage My Cafe
+                            <i class="bi bi-shop me-2"></i> @SharedLocalizer["Account_ManageMyCafe"]
                         </a>
                     }
                 </div>
@@ -126,54 +127,54 @@
             <!-- Edit Profile Card -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="bi bi-person me-2"></i>Profile Information</h5>
+                    <h5 class="mb-0"><i class="bi bi-person me-2"></i>@SharedLocalizer["Account_ProfileInfo"]</h5>
                     <button class="btn btn-outline-primary btn-sm" id="editProfileBtn">
-                        <i class="bi bi-pencil"></i> Edit
+                        <i class="bi bi-pencil"></i> @SharedLocalizer["Account_Edit"]
                     </button>
                 </div>
                 <div class="card-body">
                     <form id="profileForm" asp-action="UpdateProfile" method="post">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">First Name</label>
+                                <label class="form-label">@SharedLocalizer["Account_FirstName"]</label>
                                 <input type="text" class="form-control" name="FirstName" value="@Model.FirstName" readonly>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Last Name</label>
+                                <label class="form-label">@SharedLocalizer["Account_LastName"]</label>
                                 <input type="text" class="form-control" name="LastName" value="@Model.LastName" readonly>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Email</label>
+                                <label class="form-label">@SharedLocalizer["Account_Email"]</label>
                                 <input type="email" class="form-control" value="@Model.Email" readonly disabled>
-                                <small class="text-muted">Email cannot be changed</small>
+                                <small class="text-muted">@SharedLocalizer["Account_EmailCannotChange"]</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Display Name</label>
+                                <label class="form-label">@SharedLocalizer["Account_DisplayName"]</label>
                                 <input type="text" class="form-control" name="DisplayName" value="@Model.DisplayName" readonly>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">City</label>
+                                <label class="form-label">@SharedLocalizer["Account_City"]</label>
                                 <input type="text" class="form-control" name="City" value="@Model.City" readonly>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Country</label>
+                                <label class="form-label">@SharedLocalizer["Account_Country"]</label>
                                 <input type="text" class="form-control" name="Country" value="@Model.Country" readonly>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Bio</label>
+                            <label class="form-label">@SharedLocalizer["Account_Bio"]</label>
                             <textarea class="form-control" name="Bio" rows="3" readonly>@Model.Bio</textarea>
                         </div>
                         <div class="d-none" id="saveButtons">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check"></i> Save Changes
+                                <i class="bi bi-check"></i> @SharedLocalizer["Account_SaveChanges"]
                             </button>
                             <button type="button" class="btn btn-outline-secondary" id="cancelEditBtn">
-                                Cancel
+                                @SharedLocalizer["Account_Cancel"]
                             </button>
                         </div>
                     </form>
@@ -183,26 +184,26 @@
             <!-- Change Password Card -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Change Password</h5>
+                    <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>@SharedLocalizer["Account_ChangePassword"]</h5>
                 </div>
                 <div class="card-body">
                     <form asp-action="ChangePassword" method="post">
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Current Password</label>
+                                <label class="form-label">@SharedLocalizer["Account_CurrentPassword"]</label>
                                 <input type="password" class="form-control" name="CurrentPassword" required>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">New Password</label>
+                                <label class="form-label">@SharedLocalizer["Account_NewPassword"]</label>
                                 <input type="password" class="form-control" name="NewPassword" required>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Confirm New Password</label>
+                                <label class="form-label">@SharedLocalizer["Account_ConfirmNewPassword"]</label>
                                 <input type="password" class="form-control" name="ConfirmNewPassword" required>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-warning">
-                            <i class="bi bi-key"></i> Change Password
+                            <i class="bi bi-key"></i> @SharedLocalizer["Account_ChangePassword"]
                         </button>
                     </form>
                 </div>
@@ -214,10 +215,10 @@
                 <div class="card shadow-sm border-primary">
                     <div class="card-body text-center py-4">
                         <i class="bi bi-shop display-4 text-primary mb-3"></i>
-                        <h5>Own a Board Game Cafe?</h5>
-                        <p class="text-muted">Claim your business and manage your listing to attract more customers.</p>
+                        <h5>@SharedLocalizer["Account_OwnBoardGameCafe"]</h5>
+                        <p class="text-muted">@SharedLocalizer["Account_ClaimBusiness"]</p>
                         <a href="/Listing/Pricing" class="btn btn-primary">
-                            <i class="bi bi-star me-1"></i> Learn About Premium Listings
+                            <i class="bi bi-star me-1"></i> @SharedLocalizer["Account_LearnPremium"]
                         </a>
                     </div>
                 </div>
@@ -231,7 +232,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="avatarModalLabel"><i class="bi bi-image me-2"></i>Change Avatar</h5>
+                <h5 class="modal-title" id="avatarModalLabel"><i class="bi bi-image me-2"></i>@SharedLocalizer["Account_ChangeAvatar"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form asp-action="UpdateAvatar" method="post" enctype="multipart/form-data">
@@ -250,13 +251,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="avatarFile" class="form-label">Select new avatar</label>
+                        <label for="avatarFile" class="form-label">@SharedLocalizer["Account_SelectNewAvatar"]</label>
                         <input type="file" class="form-control" id="avatarFile" name="avatar" accept="image/jpeg,image/png,image/gif,image/webp" required>
-                        <div class="form-text">Allowed: JPG, PNG, GIF, WebP. Max size: 5MB</div>
+                        <div class="form-text">@SharedLocalizer["Account_AvatarHint"]</div>
                     </div>
 
                     <div id="avatarPreview" class="text-center d-none">
-                        <p class="text-muted small mb-2">Preview:</p>
+                        <p class="text-muted small mb-2">@SharedLocalizer["Account_Preview"]</p>
                         <img id="previewImg" src="" alt="Preview" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
                     </div>
                 </div>
@@ -264,12 +265,12 @@
                     @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                     {
                         <button type="button" class="btn btn-outline-danger me-auto" id="removeAvatarBtn">
-                            <i class="bi bi-trash"></i> Remove
+                            <i class="bi bi-trash"></i> @SharedLocalizer["Account_Remove"]
                         </button>
                     }
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@SharedLocalizer["Account_Cancel"]</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-upload"></i> Upload
+                        <i class="bi bi-upload"></i> @SharedLocalizer["Account_Upload"]
                     </button>
                 </div>
             </form>

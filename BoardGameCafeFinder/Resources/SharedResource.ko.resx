@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>홈</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>지도</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>블로그</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>비즈니스</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>요금제</value></data>
+  <data name="Nav_AddCafe" xml:space="preserve"><value>카페 추가</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>자주 묻는 질문</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>로그인</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>회원가입</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>로그아웃</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>내 프로필</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>관리자 대시보드</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>주변 보드게임 카페 찾기</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>내 주변 최고의 보드게임 카페를 찾아보세요</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>도시 또는 카페명으로 검색...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>검색</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>모든 국가</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>모든 도시</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>국가</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>도시</value></data>
+  <data name="Home_CafesFound" xml:space="preserve"><value>개의 카페를 찾았습니다</value></data>
+  <data name="Home_NoCafesFound" xml:space="preserve"><value>조건에 맞는 카페를 찾을 수 없습니다</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>완벽한 보드게임 카페 찾기</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>전 세계 최고의 보드게임 카페를 발견하세요. 다양한 게임과 좋은 분위기가 가득합니다.</value></data>
+  <data name="Home_BrowseCafes" xml:space="preserve"><value>카페 둘러보기</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>지도 보기</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>필터</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>내 주변</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>반경</value></data>
+  <data name="Home_GameCategories" xml:space="preserve"><value>게임 카테고리</value></data>
+  <data name="Home_BoardGamesAvailable" xml:space="preserve"><value>보드게임 보유</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>필터 적용</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>필터 초기화</value></data>
+  <data name="Home_BoardGameCafes" xml:space="preserve"><value>보드게임 카페</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>현재 위치 근처</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>활성 필터</value></data>
+  <data name="Home_GamesSelected" xml:space="preserve"><value>개 게임 선택됨</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>상세 정보</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>지도</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>페이지</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>/</value></data>
+  <data name="Home_NoCafesTitle" xml:space="preserve"><value>카페를 찾을 수 없습니다</value></data>
+  <data name="Home_NoCafesMessage" xml:space="preserve"><value>검색 조건에 맞는 보드게임 카페가 없습니다. 필터를 조정하거나 다른 지역을 검색해 보세요.</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>인기 도시</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>보드게임 카페를 방문해야 하는 이유</value></data>
+  <data name="Home_HugeLibraries" xml:space="preserve"><value>방대한 게임 라이브러리</value></data>
+  <data name="Home_HugeLibrariesDesc" xml:space="preserve"><value>클래식부터 최신 게임까지 수백 가지 보드게임을 이용하세요.</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>소셜 경험</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>친구나 새로운 사람들과 함께 테이블 주위에서 즐거운 시간을 보내세요.</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>전문가 안내</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>직원들이 그룹에 맞는 완벽한 게임을 선택하고 규칙을 설명해 드립니다.</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>완벽한 카페 찾는 방법</value></data>
+  <data name="Home_Step1Title" xml:space="preserve"><value>위치 검색</value></data>
+  <data name="Home_Step1Desc" xml:space="preserve"><value>도시나 지역으로 검색하거나 GPS를 사용해 주변 카페를 찾으세요.</value></data>
+  <data name="Home_Step2Title" xml:space="preserve"><value>결과 필터링</value></data>
+  <data name="Home_Step2Desc" xml:space="preserve"><value>게임 카테고리, 거리, 평점으로 검색 결과를 좁히세요.</value></data>
+  <data name="Home_Step3Title" xml:space="preserve"><value>리뷰 확인</value></data>
+  <data name="Home_Step3Desc" xml:space="preserve"><value>다른 게이머들의 리뷰와 평점을 읽어보세요.</value></data>
+  <data name="Home_Step4Title" xml:space="preserve"><value>방문 및 플레이</value></data>
+  <data name="Home_Step4Desc" xml:space="preserve"><value>카페를 방문하고 멋진 보드게임 경험을 즐기세요!</value></data>
+  <data name="Home_GettingLocation" xml:space="preserve"><value>위치 확인 중...</value></data>
+  <data name="Home_SelectCategories" xml:space="preserve"><value>카테고리 선택</value></data>
+
+  <!-- Cafe Details -->
+  <data name="Cafe_Rating" xml:space="preserve"><value>평점</value></data>
+  <data name="Cafe_Reviews" xml:space="preserve"><value>개의 리뷰</value></data>
+  <data name="Cafe_Address" xml:space="preserve"><value>주소</value></data>
+  <data name="Cafe_Phone" xml:space="preserve"><value>전화</value></data>
+  <data name="Cafe_Website" xml:space="preserve"><value>웹사이트</value></data>
+  <data name="Cafe_Hours" xml:space="preserve"><value>영업시간</value></data>
+  <data name="Cafe_Games" xml:space="preserve"><value>게임 라이브러리</value></data>
+  <data name="Cafe_GamesAvailable" xml:space="preserve"><value>개의 게임 보유</value></data>
+  <data name="Cafe_ViewOnMap" xml:space="preserve"><value>지도에서 보기</value></data>
+  <data name="Cafe_GetDirections" xml:space="preserve"><value>길찾기</value></data>
+  <data name="Cafe_WriteReview" xml:space="preserve"><value>리뷰 작성</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>블로그</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>더 보기</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>게시일</value></data>
+  <data name="Blog_By" xml:space="preserve"><value>작성자</value></data>
+  <data name="Blog_Category" xml:space="preserve"><value>카테고리</value></data>
+
+  <!-- Blog Templates -->
+  <data name="BlogTemplate_CityGuide_Title" xml:space="preserve"><value>{0} 보드게임 카페 - 완벽 가이드</value></data>
+  <data name="BlogTemplate_CityGuide_Summary" xml:space="preserve"><value>{0} 보드게임 카페 완벽 가이드. 최고의 장소, 게임 라인업 등을 확인하세요.</value></data>
+  <data name="BlogTemplate_CityGuide_Intro" xml:space="preserve"><value>{0} 보드게임 카페 완벽 가이드에 오신 것을 환영합니다! 베테랑 게이머든 재미있는 밤을 찾는 분이든, 모든 정보를 준비했습니다.</value></data>
+  <data name="BlogTemplate_CityGuide_Overview" xml:space="preserve"><value>개요</value></data>
+  <data name="BlogTemplate_CityGuide_OverviewText" xml:space="preserve"><value>{0}에는 {1}개의 보드게임 카페가 있으며, 다양한 장르의 수천 가지 게임을 제공합니다. 데이트에 완벽한 아늑한 장소부터 대규모 모임에 이상적인 넓은 공간까지, 모든 분을 위한 곳이 있습니다.</value></data>
+  <data name="BlogTemplate_CityGuide_TopRated" xml:space="preserve"><value>인기 카페</value></data>
+  <data name="BlogTemplate_CityGuide_Tips" xml:space="preserve"><value>방문 팁</value></data>
+  <data name="BlogTemplate_CityGuide_Tip1" xml:space="preserve"><value>예약하세요: 인기 카페는 특히 주말에 빨리 마감됩니다.</value></data>
+  <data name="BlogTemplate_CityGuide_Tip2" xml:space="preserve"><value>추천을 요청하세요: 직원들은 보통 게이머이므로 그룹에 맞는 완벽한 게임을 추천해 줄 수 있습니다.</value></data>
+  <data name="BlogTemplate_CityGuide_Tip3" xml:space="preserve"><value>시간을 계획하세요: 대부분의 게임은 1-3시간이 소요됩니다.</value></data>
+  <data name="BlogTemplate_CityGuide_Tip4" xml:space="preserve"><value>새로운 것을 시도하세요: 안전지대를 벗어나 한 번도 해본 적 없는 게임에 도전해 보세요!</value></data>
+  <data name="BlogTemplate_CityGuide_ExploreMore" xml:space="preserve"><value>더 둘러보기</value></data>
+  <data name="BlogTemplate_CityGuide_ViewAllCafes" xml:space="preserve"><value>{0}의 모든 카페 보기</value></data>
+  <data name="BlogTemplate_TopGames_Title" xml:space="preserve"><value>{0} 보드게임 카페 인기 게임</value></data>
+  <data name="BlogTemplate_TopGames_Summary" xml:space="preserve"><value>{0} 보드게임 카페에서 가장 인기 있는 게임을 발견하세요. 가족 게임부터 전략 명작까지.</value></data>
+  <data name="BlogTemplate_TopGames_Intro" xml:space="preserve"><value>{0}에서 플레이할 최고의 보드게임을 찾고 계신가요? 지역 {1}개 보드게임 카페의 데이터를 분석하여 현지인들이 사랑하는 가장 인기 있는 게임을 소개합니다.</value></data>
+  <data name="BlogTemplate_TopGames_WhyTheseGames" xml:space="preserve"><value>왜 이 게임들인가요?</value></data>
+  <data name="BlogTemplate_TopGames_WhyText" xml:space="preserve"><value>이 게임들은 {0}의 보드게임 카페에서 가장 자주 볼 수 있어, 어디를 가든 찾을 수 있습니다. 모두가 즐길 수 있는 인기 게임입니다.</value></data>
+  <data name="BlogTemplate_TopGames_AvailableAt" xml:space="preserve"><value>{1}의 {0}개 카페에서 이용 가능</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlay" xml:space="preserve"><value>어디서 플레이할까요?</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlayText" xml:space="preserve"><value>이 게임들을 시도할 준비가 되셨나요? {0}의 모든 보드게임 카페를 둘러보고 다음 게임 나이트에 완벽한 장소를 찾아보세요.</value></data>
+  <data name="BlogTemplate_Players" xml:space="preserve"><value>{0}~{1}명</value></data>
+  <data name="BlogTemplate_Minutes" xml:space="preserve"><value>{0}분</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>주변 최고의 보드게임 카페를 발견하세요. 다양한 게임 라이브러리를 둘러보고, 리뷰를 읽고, 다음 게임 목적지를 찾아보세요.</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>둘러보기</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>법적 정보</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>개인정보처리방침</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>이용약관</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>문의하기</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>추가하고 싶은 보드게임 카페가 있나요? 카페 주인으로서 정보를 업데이트하고 싶으신가요? 문의해 주세요!</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Board Game Cafe Finder. All rights reserved.</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>상세 보기</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>자세히 알아보기</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>제출</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>취소</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>저장</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>삭제</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>편집</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>뒤로</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>다음</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>이전</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>로딩 중...</value></data>
+
+  <!-- SEO Meta -->
+  <data name="Meta_DefaultDescription" xml:space="preserve"><value>주변 최고의 보드게임 카페를 찾아보세요. 인터랙티브 지도와 종합 카페 디렉토리로 보드게임 라운지를 발견하세요.</value></data>
+  <data name="Meta_DefaultKeywords" xml:space="preserve"><value>보드게임카페,보드게임라운지,보드게임,내주변보드게임,카페찾기</value></data>
+
+  <!-- Blog Index Page -->
+  <data name="Blog_CafeGuides" xml:space="preserve"><value>보드게임 카페 가이드</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>전 세계 {0}개 도시의 보드게임 카페 탐색</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>{1}의 {0}개 도시에서 보드게임 카페 탐색</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>초기화</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>모든 도시 표시</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>국가별 필터</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>모든 국가</value></data>
+  <data name="Blog_ViewAllCountries" xml:space="preserve"><value>모든 국가 보기</value></data>
+  <data name="Blog_CafesIn" xml:space="preserve"><value>{0}의 보드게임 카페</value></data>
+  <data name="Blog_DiscoverCafes" xml:space="preserve"><value>{2}에서 {0}개의 보드게임 {1}을 발견하세요. {3}개 이상의 게임을 즐길 수 있습니다.</value></data>
+  <data name="Blog_Cafe" xml:space="preserve"><value>카페</value></data>
+  <data name="Blog_Cafes" xml:space="preserve"><value>카페</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>페이지</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>개 도시 발견</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>도시를 찾을 수 없음</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>아직 추가된 보드게임 카페가 없습니다.</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>빠른 통계</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>도시</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>국가</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>국가별 탐색</value></data>
+  <data name="Blog_FindCafesNearYou" xml:space="preserve"><value>주변 카페 찾기</value></data>
+  <data name="Blog_FindCafesDesc" xml:space="preserve"><value>인터랙티브 지도로 보드게임 카페를 발견하세요.</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>지도 열기</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0}개</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>보드게임 카페 지도</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>주변 보드게임 카페 발견</value></data>
+  <data name="Map_CafesFound" xml:space="preserve"><value>카페 발견</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>도시 또는 주소 검색...</value></data>
+  <data name="Map_Go" xml:space="preserve"><value>검색</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>내 위치 사용</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>필터</value></data>
+  <data name="Map_Country" xml:space="preserve"><value>국가</value></data>
+  <data name="Map_City" xml:space="preserve"><value>도시</value></data>
+  <data name="Map_AllCountries" xml:space="preserve"><value>모든 국가</value></data>
+  <data name="Map_AllCities" xml:space="preserve"><value>모든 도시</value></data>
+  <data name="Map_Radius" xml:space="preserve"><value>반경</value></data>
+  <data name="Map_MinRating" xml:space="preserve"><value>최소 평점</value></data>
+  <data name="Map_Any" xml:space="preserve"><value>전체</value></data>
+  <data name="Map_GameCategories" xml:space="preserve"><value>게임 카테고리</value></data>
+  <data name="Map_Search" xml:space="preserve"><value>검색</value></data>
+  <data name="Map_FindCafes" xml:space="preserve"><value>보드게임 카페 찾기</value></data>
+  <data name="Map_EmptyStateText" xml:space="preserve"><value>위치를 입력하거나 현재 위치를 사용하여 주변 카페를 발견하세요</value></data>
+  <data name="Map_SearchingForCafes" xml:space="preserve"><value>카페 검색 중...</value></data>
+  <data name="Map_ShowResults" xml:space="preserve"><value>결과 표시</value></data>
+  <data name="Map_HideResults" xml:space="preserve"><value>결과 숨기기</value></data>
+  <data name="Map_ZoomIn" xml:space="preserve"><value>확대</value></data>
+  <data name="Map_ZoomOut" xml:space="preserve"><value>축소</value></data>
+  <data name="Map_CenterOnLocation" xml:space="preserve"><value>위치 중심으로</value></data>
+  <data name="Map_Cafe" xml:space="preserve"><value>카페</value></data>
+  <data name="Map_YourLocation" xml:space="preserve"><value>내 위치</value></data>
+  <data name="Map_SelectCategories" xml:space="preserve"><value>카테고리 선택...</value></data>
+
+  <!-- Account Pages -->
+  <data name="Account_Login" xml:space="preserve"><value>로그인</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>이메일</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>비밀번호</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>로그인 유지</value></data>
+  <data name="Account_LoginButton" xml:space="preserve"><value>로그인</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>계정이 없으신가요?</value></data>
+  <data name="Account_CreateAccount" xml:space="preserve"><value>계정 만들기</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>회원가입</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>이름</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>성</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>비밀번호 확인</value></data>
+  <data name="Account_PasswordHint" xml:space="preserve"><value>대문자, 소문자, 숫자를 포함한 8자 이상이어야 합니다.</value></data>
+  <data name="Account_IsCafeOwner" xml:space="preserve"><value>카페 소유자입니다</value></data>
+  <data name="Account_CafeOwnerHint" xml:space="preserve"><value>보드게임 카페를 소유하거나 운영하는 경우 체크하세요. 카페 등록 및 관리가 가능합니다.</value></data>
+  <data name="Account_AlreadyHaveAccount" xml:space="preserve"><value>이미 계정이 있으신가요?</value></data>
+  <data name="Account_Profile" xml:space="preserve"><value>내 프로필</value></data>
+  <data name="Account_ProfileInfo" xml:space="preserve"><value>프로필 정보</value></data>
+  <data name="Account_Edit" xml:space="preserve"><value>편집</value></data>
+  <data name="Account_DisplayName" xml:space="preserve"><value>표시 이름</value></data>
+  <data name="Account_City" xml:space="preserve"><value>도시</value></data>
+  <data name="Account_Country" xml:space="preserve"><value>국가</value></data>
+  <data name="Account_Bio" xml:space="preserve"><value>자기소개</value></data>
+  <data name="Account_SaveChanges" xml:space="preserve"><value>변경사항 저장</value></data>
+  <data name="Account_Cancel" xml:space="preserve"><value>취소</value></data>
+  <data name="Account_ChangePassword" xml:space="preserve"><value>비밀번호 변경</value></data>
+  <data name="Account_CurrentPassword" xml:space="preserve"><value>현재 비밀번호</value></data>
+  <data name="Account_NewPassword" xml:space="preserve"><value>새 비밀번호</value></data>
+  <data name="Account_ConfirmNewPassword" xml:space="preserve"><value>새 비밀번호 확인</value></data>
+  <data name="Account_Reviews" xml:space="preserve"><value>리뷰</value></data>
+  <data name="Account_Visits" xml:space="preserve"><value>방문</value></data>
+  <data name="Account_Points" xml:space="preserve"><value>포인트</value></data>
+  <data name="Account_MemberSince" xml:space="preserve"><value>가입일</value></data>
+  <data name="Account_LastLogin" xml:space="preserve"><value>마지막 로그인</value></data>
+  <data name="Account_QuickActions" xml:space="preserve"><value>빠른 작업</value></data>
+  <data name="Account_FindCafes" xml:space="preserve"><value>카페 찾기</value></data>
+  <data name="Account_MapView" xml:space="preserve"><value>지도 보기</value></data>
+  <data name="Account_ManageMyCafe" xml:space="preserve"><value>내 카페 관리</value></data>
+  <data name="Account_OwnBoardGameCafe" xml:space="preserve"><value>보드게임 카페를 운영하시나요?</value></data>
+  <data name="Account_ClaimBusiness" xml:space="preserve"><value>비즈니스를 등록하고 더 많은 고객을 유치하세요.</value></data>
+  <data name="Account_LearnPremium" xml:space="preserve"><value>프리미엄 등록 알아보기</value></data>
+  <data name="Account_ChangeAvatar" xml:space="preserve"><value>아바타 변경</value></data>
+  <data name="Account_SelectNewAvatar" xml:space="preserve"><value>새 아바타 선택</value></data>
+  <data name="Account_AvatarHint" xml:space="preserve"><value>허용: JPG, PNG, GIF, WebP. 최대: 5MB</value></data>
+  <data name="Account_Preview" xml:space="preserve"><value>미리보기:</value></data>
+  <data name="Account_Remove" xml:space="preserve"><value>삭제</value></data>
+  <data name="Account_Upload" xml:space="preserve"><value>업로드</value></data>
+  <data name="Account_EmailCannotChange" xml:space="preserve"><value>이메일은 변경할 수 없습니다</value></data>
+  <data name="Account_EmailNotVerified" xml:space="preserve"><value>이메일 미인증</value></data>
+  <data name="Account_CheckInbox" xml:space="preserve"><value>받은편지함을 확인하고 이메일 주소를 인증해주세요.</value></data>
+  <data name="Account_ResendEmail" xml:space="preserve"><value>이메일 재전송</value></data>
+
+  <!-- Pricing Page -->
+  <data name="Pricing_Title" xml:space="preserve"><value>프리미엄 등록 플랜</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>보드게임 카페의 가시성을 높이고 더 많은 고객을 유치하세요</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>가장 인기</value></data>
+  <data name="Pricing_PerMonth" xml:space="preserve"><value>/월</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>시작하기</value></data>
+  <data name="Pricing_FeatureComparison" xml:space="preserve"><value>기능 비교</value></data>
+  <data name="Pricing_Feature" xml:space="preserve"><value>기능</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>기본 등록</value></data>
+  <data name="Pricing_ContactInfo" xml:space="preserve"><value>연락처 정보</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>영업 시간</value></data>
+  <data name="Pricing_LocationOnMap" xml:space="preserve"><value>지도 위치</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>사진 갤러리</value></data>
+  <data name="Pricing_UpTo" xml:space="preserve"><value>최대 {0}</value></data>
+  <data name="Pricing_Unlimited" xml:space="preserve"><value>무제한</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>이벤트 등록</value></data>
+  <data name="Pricing_PrioritySearch" xml:space="preserve"><value>검색 우선 표시</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>홈페이지 노출</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>게임 재고 관리</value></data>
+  <data name="Pricing_Analytics" xml:space="preserve"><value>분석 대시보드</value></data>
+  <data name="Pricing_FAQ" xml:space="preserve"><value>자주 묻는 질문</value></data>
+  <data name="Pricing_FAQ1_Q" xml:space="preserve"><value>카페를 어떻게 등록하나요?</value></data>
+  <data name="Pricing_FAQ1_A" xml:space="preserve"><value>플랫폼에서 카페를 검색한 후, 카페 페이지에서 "비즈니스 등록"을 클릭하세요. 프리미엄 기능을 활성화하기 전에 소유권 확인이 필요합니다.</value></data>
+  <data name="Pricing_FAQ2_Q" xml:space="preserve"><value>나중에 플랜을 변경할 수 있나요?</value></data>
+  <data name="Pricing_FAQ2_A" xml:space="preserve"><value>네! 언제든지 업그레이드하거나 다운그레이드할 수 있습니다. 업그레이드 시 새 기능에 즉시 액세스할 수 있고, 다운그레이드 시 현재 청구 기간이 끝날 때 변경됩니다.</value></data>
+  <data name="Pricing_FAQ3_Q" xml:space="preserve"><value>어떤 결제 방법을 지원하나요?</value></data>
+  <data name="Pricing_FAQ3_A" xml:space="preserve"><value>주요 신용카드(Visa, Mastercard, American Express)와 PayPal을 지원합니다. 모든 결제는 안전하게 처리됩니다.</value></data>
+  <data name="Pricing_FAQ4_Q" xml:space="preserve"><value>계약이나 약정이 있나요?</value></data>
+  <data name="Pricing_FAQ4_A" xml:space="preserve"><value>장기 계약이 없습니다! 모든 플랜은 월간 결제이며 언제든지 취소할 수 있습니다. 등록은 결제 기간이 끝날 때까지 유지됩니다.</value></data>
+  <data name="Pricing_ReadyToGrow" xml:space="preserve"><value>비즈니스를 성장시킬 준비가 되셨나요?</value></data>
+  <data name="Pricing_JoinCafes" xml:space="preserve"><value>이미 많은 보드게임 카페가 플랫폼을 이용하고 있습니다</value></data>
+  <data name="Pricing_FindYourCafe" xml:space="preserve"><value>카페 찾기</value></data>
+  <data name="Pricing_AddYourCafe" xml:space="preserve"><value>카페 추가</value></data>
+  <data name="Pricing_SearchCafe" xml:space="preserve"><value>보드게임 카페를 검색하여</value></data>
+  <data name="Pricing_Plan" xml:space="preserve"><value>플랜을 시작하세요</value></data>
+  <data name="Pricing_SearchPlaceholder" xml:space="preserve"><value>카페 이름 또는 도시 입력...</value></data>
+  <data name="Pricing_StartTyping" xml:space="preserve"><value>입력하여 카페 검색</value></data>
+  <data name="Pricing_NoCafesFound" xml:space="preserve"><value>카페를 찾을 수 없습니다. 다른 검색어를 시도해 보세요.</value></data>
+  <data name="Pricing_CantFindCafe" xml:space="preserve"><value>카페를 찾을 수 없나요?</value></data>
+  <data name="Pricing_AddItNow" xml:space="preserve"><value>지금 추가</value></data>
+  <data name="Pricing_SearchError" xml:space="preserve"><value>검색 오류. 다시 시도해주세요.</value></data>
+  <data name="Plan_Feature_BasicListing" xml:space="preserve"><value>기본 등록</value></data>
+  <data name="Plan_Feature_ContactInfo" xml:space="preserve"><value>연락처 정보</value></data>
+  <data name="Plan_Feature_BusinessHours" xml:space="preserve"><value>영업 시간</value></data>
+  <data name="Plan_Feature_LocationOnMap" xml:space="preserve"><value>지도에 위치 표시</value></data>
+  <data name="Plan_Feature_EverythingInBasic" xml:space="preserve"><value>Basic의 모든 기능</value></data>
+  <data name="Plan_Feature_PhotoGallery" xml:space="preserve"><value>사진 갤러리 (최대 10장)</value></data>
+  <data name="Plan_Feature_EventListings" xml:space="preserve"><value>이벤트 등록</value></data>
+  <data name="Plan_Feature_PrioritySearch" xml:space="preserve"><value>검색 결과 우선 표시</value></data>
+  <data name="Plan_Feature_EverythingInPremium" xml:space="preserve"><value>Premium의 모든 기능</value></data>
+  <data name="Plan_Feature_FeaturedHomepage" xml:space="preserve"><value>홈페이지 추천 표시</value></data>
+  <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>게임 재고 관리</value></data>
+  <data name="Plan_Feature_Analytics" xml:space="preserve"><value>분석 대시보드</value></data>
+  <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>무제한 사진</value></data>
+</root>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>首页</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>地图</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>博客</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>商家入驻</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>价格方案</value></data>
+  <data name="Nav_AddCafe" xml:space="preserve"><value>添加您的店铺</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>常见问题</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>注册</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>登出</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>我的资料</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>管理面板</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>寻找附近的桌游吧</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>发现您所在地区最好的桌游吧、桌游馆和游戏场所</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>按城市或店名搜索...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>搜索</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>所有国家</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>所有城市</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>国家</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>城市</value></data>
+  <data name="Home_CafesFound" xml:space="preserve"><value>家店铺</value></data>
+  <data name="Home_NoCafesFound" xml:space="preserve"><value>未找到符合条件的店铺</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>寻找完美的桌游吧</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>发现世界各地最好的桌游吧，拥有丰富的游戏和美好的氛围。</value></data>
+  <data name="Home_BrowseCafes" xml:space="preserve"><value>浏览店铺</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>查看地图</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>筛选</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>附近</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>范围</value></data>
+  <data name="Home_GameCategories" xml:space="preserve"><value>游戏类别</value></data>
+  <data name="Home_BoardGamesAvailable" xml:space="preserve"><value>可用桌游</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>应用筛选</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>清除筛选</value></data>
+  <data name="Home_BoardGameCafes" xml:space="preserve"><value>桌游吧</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>您附近</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>已启用筛选</value></data>
+  <data name="Home_GamesSelected" xml:space="preserve"><value>款游戏已选</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>详情</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>地图</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>第</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>页，共</value></data>
+  <data name="Home_NoCafesTitle" xml:space="preserve"><value>未找到店铺</value></data>
+  <data name="Home_NoCafesMessage" xml:space="preserve"><value>没有符合您搜索条件的桌游吧。请尝试调整筛选条件或搜索其他地区。</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>热门城市</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>为什么要去桌游吧？</value></data>
+  <data name="Home_HugeLibraries" xml:space="preserve"><value>丰富的游戏库</value></data>
+  <data name="Home_HugeLibrariesDesc" xml:space="preserve"><value>从经典到最新发行，可选择数百种桌游。</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>社交体验</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>与朋友或新认识的人围坐桌旁享受美好时光。</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>专业指导</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>工作人员帮您选择适合您团队的完美游戏并解释规则。</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>如何找到完美的店铺</value></data>
+  <data name="Home_Step1Title" xml:space="preserve"><value>搜索位置</value></data>
+  <data name="Home_Step1Desc" xml:space="preserve"><value>按城市或地区搜索，或使用GPS查找附近店铺。</value></data>
+  <data name="Home_Step2Title" xml:space="preserve"><value>筛选结果</value></data>
+  <data name="Home_Step2Desc" xml:space="preserve"><value>按游戏类别、距离或评分缩小搜索范围。</value></data>
+  <data name="Home_Step3Title" xml:space="preserve"><value>查看评价</value></data>
+  <data name="Home_Step3Desc" xml:space="preserve"><value>阅读其他玩家的评价和评分。</value></data>
+  <data name="Home_Step4Title" xml:space="preserve"><value>到店游玩</value></data>
+  <data name="Home_Step4Desc" xml:space="preserve"><value>去店里享受精彩的桌游体验！</value></data>
+  <data name="Home_GettingLocation" xml:space="preserve"><value>正在获取位置...</value></data>
+  <data name="Home_SelectCategories" xml:space="preserve"><value>选择类别</value></data>
+
+  <!-- Cafe Details -->
+  <data name="Cafe_Rating" xml:space="preserve"><value>评分</value></data>
+  <data name="Cafe_Reviews" xml:space="preserve"><value>条评价</value></data>
+  <data name="Cafe_Address" xml:space="preserve"><value>地址</value></data>
+  <data name="Cafe_Phone" xml:space="preserve"><value>电话</value></data>
+  <data name="Cafe_Website" xml:space="preserve"><value>网站</value></data>
+  <data name="Cafe_Hours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Cafe_Games" xml:space="preserve"><value>游戏库</value></data>
+  <data name="Cafe_GamesAvailable" xml:space="preserve"><value>款游戏</value></data>
+  <data name="Cafe_ViewOnMap" xml:space="preserve"><value>在地图上查看</value></data>
+  <data name="Cafe_GetDirections" xml:space="preserve"><value>获取路线</value></data>
+  <data name="Cafe_WriteReview" xml:space="preserve"><value>写评价</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>博客</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>阅读更多</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>发布于</value></data>
+  <data name="Blog_By" xml:space="preserve"><value>作者</value></data>
+  <data name="Blog_Category" xml:space="preserve"><value>分类</value></data>
+
+  <!-- Blog Templates -->
+  <data name="BlogTemplate_CityGuide_Title" xml:space="preserve"><value>{0}桌游吧指南</value></data>
+  <data name="BlogTemplate_CityGuide_Summary" xml:space="preserve"><value>{0}桌游吧完整指南。找到最佳游戏场所，了解有哪些游戏等。</value></data>
+  <data name="BlogTemplate_CityGuide_Intro" xml:space="preserve"><value>欢迎阅读我们的{0}桌游吧完整指南！无论您是资深玩家还是想找个有趣的去处，我们都能帮到您。</value></data>
+  <data name="BlogTemplate_CityGuide_Overview" xml:space="preserve"><value>概览</value></data>
+  <data name="BlogTemplate_CityGuide_OverviewText" xml:space="preserve"><value>{0}拥有{1}家桌游吧，提供各种类型的游戏。从适合约会的温馨小店到适合大型聚会的宽敞场所，应有尽有。</value></data>
+  <data name="BlogTemplate_CityGuide_TopRated" xml:space="preserve"><value>高评分店铺</value></data>
+  <data name="BlogTemplate_CityGuide_Tips" xml:space="preserve"><value>游玩贴士</value></data>
+  <data name="BlogTemplate_CityGuide_Tip1" xml:space="preserve"><value>提前预约：热门店铺很快就会满座，尤其是周末。</value></data>
+  <data name="BlogTemplate_CityGuide_Tip2" xml:space="preserve"><value>咨询工作人员：他们通常也是游戏爱好者，可以为您推荐适合的游戏。</value></data>
+  <data name="BlogTemplate_CityGuide_Tip3" xml:space="preserve"><value>预留充足时间：大多数游戏需要1-3小时。</value></data>
+  <data name="BlogTemplate_CityGuide_Tip4" xml:space="preserve"><value>尝试新游戏：走出舒适区，尝试您从未玩过的游戏！</value></data>
+  <data name="BlogTemplate_CityGuide_ExploreMore" xml:space="preserve"><value>探索更多</value></data>
+  <data name="BlogTemplate_CityGuide_ViewAllCafes" xml:space="preserve"><value>查看{0}所有桌游吧</value></data>
+  <data name="BlogTemplate_TopGames_Title" xml:space="preserve"><value>{0}桌游吧热门游戏</value></data>
+  <data name="BlogTemplate_TopGames_Summary" xml:space="preserve"><value>探索{0}桌游吧最受欢迎的游戏。从家庭游戏到策略杰作，应有尽有。</value></data>
+  <data name="BlogTemplate_TopGames_Intro" xml:space="preserve"><value>想在{0}玩最好的桌游？我们分析了该地区{1}家桌游吧的数据，为您带来当地最受欢迎的游戏。</value></data>
+  <data name="BlogTemplate_TopGames_WhyTheseGames" xml:space="preserve"><value>为什么是这些游戏？</value></data>
+  <data name="BlogTemplate_TopGames_WhyText" xml:space="preserve"><value>这些游戏在{0}的桌游吧中出现频率最高，意味着您无论去哪家店都能找到它们。它们是适合所有人的热门游戏。</value></data>
+  <data name="BlogTemplate_TopGames_AvailableAt" xml:space="preserve"><value>在{1}的{0}家店铺有售</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlay" xml:space="preserve"><value>去哪里玩</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlayText" xml:space="preserve"><value>准备好尝试这些游戏了吗？浏览{0}的所有桌游吧，找到您下次游戏之夜的完美场所。</value></data>
+  <data name="BlogTemplate_Players" xml:space="preserve"><value>{0}-{1}人</value></data>
+  <data name="BlogTemplate_Minutes" xml:space="preserve"><value>{0}分钟</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>发现附近最好的桌游吧。浏览丰富的游戏库，阅读评价，找到您的下一个游戏目的地。</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>探索</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>法律</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>隐私政策</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>服务条款</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>联系我们</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>想添加您的桌游吧？想更新店铺信息？请联系我们！</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Board Game Cafe Finder. 版权所有。</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>查看详情</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>了解更多</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>提交</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>返回</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>下一页</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>上一页</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>加载中...</value></data>
+
+  <!-- SEO Meta -->
+  <data name="Meta_DefaultDescription" xml:space="preserve"><value>寻找附近最好的桌游吧。通过互动地图和全面的店铺目录发现桌游馆。</value></data>
+  <data name="Meta_DefaultKeywords" xml:space="preserve"><value>桌游吧,桌游馆,桌游,附近桌游,找桌游吧</value></data>
+
+  <!-- Blog Index Page -->
+  <data name="Blog_CafeGuides" xml:space="preserve"><value>桌游吧指南</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>探索全球{0}个城市的桌游吧</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>探索{1}{0}个城市的桌游吧</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>清除</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>显示所有城市</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>按国家筛选</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>所有国家</value></data>
+  <data name="Blog_ViewAllCountries" xml:space="preserve"><value>查看所有国家</value></data>
+  <data name="Blog_CafesIn" xml:space="preserve"><value>{0}的桌游吧</value></data>
+  <data name="Blog_DiscoverCafes" xml:space="preserve"><value>探索{2}的{0}家桌游{1}，可玩{3}+款游戏。</value></data>
+  <data name="Blog_Cafe" xml:space="preserve"><value>吧</value></data>
+  <data name="Blog_Cafes" xml:space="preserve"><value>吧</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>显示第</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>个城市</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>未找到城市</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>尚未添加桌游吧。</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>快速统计</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>城市</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>国家</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>按国家浏览</value></data>
+  <data name="Blog_FindCafesNearYou" xml:space="preserve"><value>查找附近的店铺</value></data>
+  <data name="Blog_FindCafesDesc" xml:space="preserve"><value>使用互动地图发现桌游吧。</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>打开地图</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0}个</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>桌游吧地图</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>发现附近的桌游吧</value></data>
+  <data name="Map_CafesFound" xml:space="preserve"><value>找到店铺</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>搜索城市或地址...</value></data>
+  <data name="Map_Go" xml:space="preserve"><value>搜索</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>使用我的位置</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>筛选</value></data>
+  <data name="Map_Country" xml:space="preserve"><value>国家</value></data>
+  <data name="Map_City" xml:space="preserve"><value>城市</value></data>
+  <data name="Map_AllCountries" xml:space="preserve"><value>所有国家</value></data>
+  <data name="Map_AllCities" xml:space="preserve"><value>所有城市</value></data>
+  <data name="Map_Radius" xml:space="preserve"><value>半径</value></data>
+  <data name="Map_MinRating" xml:space="preserve"><value>最低评分</value></data>
+  <data name="Map_Any" xml:space="preserve"><value>任意</value></data>
+  <data name="Map_GameCategories" xml:space="preserve"><value>游戏类别</value></data>
+  <data name="Map_Search" xml:space="preserve"><value>搜索</value></data>
+  <data name="Map_FindCafes" xml:space="preserve"><value>查找桌游吧</value></data>
+  <data name="Map_EmptyStateText" xml:space="preserve"><value>输入位置或使用当前位置来发现附近的店铺</value></data>
+  <data name="Map_SearchingForCafes" xml:space="preserve"><value>正在搜索店铺...</value></data>
+  <data name="Map_ShowResults" xml:space="preserve"><value>显示结果</value></data>
+  <data name="Map_HideResults" xml:space="preserve"><value>隐藏结果</value></data>
+  <data name="Map_ZoomIn" xml:space="preserve"><value>放大</value></data>
+  <data name="Map_ZoomOut" xml:space="preserve"><value>缩小</value></data>
+  <data name="Map_CenterOnLocation" xml:space="preserve"><value>定位到当前位置</value></data>
+  <data name="Map_Cafe" xml:space="preserve"><value>店铺</value></data>
+  <data name="Map_YourLocation" xml:space="preserve"><value>您的位置</value></data>
+  <data name="Map_SelectCategories" xml:space="preserve"><value>选择类别...</value></data>
+
+  <!-- Account Pages -->
+  <data name="Account_Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>邮箱</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>密码</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>记住我</value></data>
+  <data name="Account_LoginButton" xml:space="preserve"><value>登录</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>没有账号？</value></data>
+  <data name="Account_CreateAccount" xml:space="preserve"><value>创建账号</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>注册</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>名</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>姓</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>确认密码</value></data>
+  <data name="Account_PasswordHint" xml:space="preserve"><value>至少8个字符，包含大写字母、小写字母和数字。</value></data>
+  <data name="Account_IsCafeOwner" xml:space="preserve"><value>我是店主</value></data>
+  <data name="Account_CafeOwnerHint" xml:space="preserve"><value>如果您拥有或管理桌游吧，请勾选此项。您可以认领并管理店铺。</value></data>
+  <data name="Account_AlreadyHaveAccount" xml:space="preserve"><value>已有账号？</value></data>
+  <data name="Account_Profile" xml:space="preserve"><value>我的资料</value></data>
+  <data name="Account_ProfileInfo" xml:space="preserve"><value>个人信息</value></data>
+  <data name="Account_Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Account_DisplayName" xml:space="preserve"><value>显示名称</value></data>
+  <data name="Account_City" xml:space="preserve"><value>城市</value></data>
+  <data name="Account_Country" xml:space="preserve"><value>国家</value></data>
+  <data name="Account_Bio" xml:space="preserve"><value>个人简介</value></data>
+  <data name="Account_SaveChanges" xml:space="preserve"><value>保存更改</value></data>
+  <data name="Account_Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Account_ChangePassword" xml:space="preserve"><value>修改密码</value></data>
+  <data name="Account_CurrentPassword" xml:space="preserve"><value>当前密码</value></data>
+  <data name="Account_NewPassword" xml:space="preserve"><value>新密码</value></data>
+  <data name="Account_ConfirmNewPassword" xml:space="preserve"><value>确认新密码</value></data>
+  <data name="Account_Reviews" xml:space="preserve"><value>评价</value></data>
+  <data name="Account_Visits" xml:space="preserve"><value>访问</value></data>
+  <data name="Account_Points" xml:space="preserve"><value>积分</value></data>
+  <data name="Account_MemberSince" xml:space="preserve"><value>注册于</value></data>
+  <data name="Account_LastLogin" xml:space="preserve"><value>上次登录</value></data>
+  <data name="Account_QuickActions" xml:space="preserve"><value>快捷操作</value></data>
+  <data name="Account_FindCafes" xml:space="preserve"><value>查找店铺</value></data>
+  <data name="Account_MapView" xml:space="preserve"><value>地图视图</value></data>
+  <data name="Account_ManageMyCafe" xml:space="preserve"><value>管理我的店铺</value></data>
+  <data name="Account_OwnBoardGameCafe" xml:space="preserve"><value>您经营桌游吧吗？</value></data>
+  <data name="Account_ClaimBusiness" xml:space="preserve"><value>认领您的店铺，管理列表以吸引更多顾客。</value></data>
+  <data name="Account_LearnPremium" xml:space="preserve"><value>了解高级套餐</value></data>
+  <data name="Account_ChangeAvatar" xml:space="preserve"><value>更换头像</value></data>
+  <data name="Account_SelectNewAvatar" xml:space="preserve"><value>选择新头像</value></data>
+  <data name="Account_AvatarHint" xml:space="preserve"><value>支持: JPG, PNG, GIF, WebP。最大: 5MB</value></data>
+  <data name="Account_Preview" xml:space="preserve"><value>预览:</value></data>
+  <data name="Account_Remove" xml:space="preserve"><value>删除</value></data>
+  <data name="Account_Upload" xml:space="preserve"><value>上传</value></data>
+  <data name="Account_EmailCannotChange" xml:space="preserve"><value>邮箱不可更改</value></data>
+  <data name="Account_EmailNotVerified" xml:space="preserve"><value>邮箱未验证</value></data>
+  <data name="Account_CheckInbox" xml:space="preserve"><value>请检查收件箱并确认您的邮箱地址。</value></data>
+  <data name="Account_ResendEmail" xml:space="preserve"><value>重新发送邮件</value></data>
+
+  <!-- Pricing Page -->
+  <data name="Pricing_Title" xml:space="preserve"><value>高级套餐方案</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>提升桌游吧的曝光度，吸引更多顾客</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>最受欢迎</value></data>
+  <data name="Pricing_PerMonth" xml:space="preserve"><value>/月</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>立即开始</value></data>
+  <data name="Pricing_FeatureComparison" xml:space="preserve"><value>功能对比</value></data>
+  <data name="Pricing_Feature" xml:space="preserve"><value>功能</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>基础列表</value></data>
+  <data name="Pricing_ContactInfo" xml:space="preserve"><value>联系信息</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Pricing_LocationOnMap" xml:space="preserve"><value>地图定位</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>图片展示</value></data>
+  <data name="Pricing_UpTo" xml:space="preserve"><value>最多{0}张</value></data>
+  <data name="Pricing_Unlimited" xml:space="preserve"><value>无限制</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>活动列表</value></data>
+  <data name="Pricing_PrioritySearch" xml:space="preserve"><value>搜索优先</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>首页推荐</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>游戏库存管理</value></data>
+  <data name="Pricing_Analytics" xml:space="preserve"><value>数据分析面板</value></data>
+  <data name="Pricing_FAQ" xml:space="preserve"><value>常见问题</value></data>
+  <data name="Pricing_FAQ1_Q" xml:space="preserve"><value>如何认领我的店铺？</value></data>
+  <data name="Pricing_FAQ1_A" xml:space="preserve"><value>在平台上搜索您的店铺，然后在店铺页面点击"认领此店铺"。激活高级功能前需要验证所有权。</value></data>
+  <data name="Pricing_FAQ2_Q" xml:space="preserve"><value>以后可以更改套餐吗？</value></data>
+  <data name="Pricing_FAQ2_A" xml:space="preserve"><value>可以！您可以随时升级或降级套餐。升级时立即获得新功能，降级则在当前计费周期结束后生效。</value></data>
+  <data name="Pricing_FAQ3_Q" xml:space="preserve"><value>支持哪些付款方式？</value></data>
+  <data name="Pricing_FAQ3_A" xml:space="preserve"><value>我们支持主流信用卡（Visa、Mastercard、American Express）和PayPal。所有付款安全处理。</value></data>
+  <data name="Pricing_FAQ4_Q" xml:space="preserve"><value>有合同或承诺吗？</value></data>
+  <data name="Pricing_FAQ4_A" xml:space="preserve"><value>没有长期合同！所有套餐按月付费，随时可以取消。您的列表在付费期结束前保持有效。</value></data>
+  <data name="Pricing_ReadyToGrow" xml:space="preserve"><value>准备好发展您的业务了吗？</value></data>
+  <data name="Pricing_JoinCafes" xml:space="preserve"><value>加入已在使用我们平台的众多桌游吧</value></data>
+  <data name="Pricing_FindYourCafe" xml:space="preserve"><value>查找您的店铺</value></data>
+  <data name="Pricing_AddYourCafe" xml:space="preserve"><value>添加您的店铺</value></data>
+  <data name="Pricing_SearchCafe" xml:space="preserve"><value>搜索您的桌游吧，开始使用</value></data>
+  <data name="Pricing_Plan" xml:space="preserve"><value>套餐</value></data>
+  <data name="Pricing_SearchPlaceholder" xml:space="preserve"><value>输入店名或城市...</value></data>
+  <data name="Pricing_StartTyping" xml:space="preserve"><value>开始输入以搜索您的店铺</value></data>
+  <data name="Pricing_NoCafesFound" xml:space="preserve"><value>未找到店铺。请尝试其他关键词。</value></data>
+  <data name="Pricing_CantFindCafe" xml:space="preserve"><value>找不到您的店铺？</value></data>
+  <data name="Pricing_AddItNow" xml:space="preserve"><value>立即添加</value></data>
+  <data name="Pricing_SearchError" xml:space="preserve"><value>搜索错误。请重试。</value></data>
+  <data name="Plan_Feature_BasicListing" xml:space="preserve"><value>基础列表</value></data>
+  <data name="Plan_Feature_ContactInfo" xml:space="preserve"><value>联系信息</value></data>
+  <data name="Plan_Feature_BusinessHours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Plan_Feature_LocationOnMap" xml:space="preserve"><value>地图位置</value></data>
+  <data name="Plan_Feature_EverythingInBasic" xml:space="preserve"><value>包含Basic所有功能</value></data>
+  <data name="Plan_Feature_PhotoGallery" xml:space="preserve"><value>照片库（最多10张）</value></data>
+  <data name="Plan_Feature_EventListings" xml:space="preserve"><value>活动发布</value></data>
+  <data name="Plan_Feature_PrioritySearch" xml:space="preserve"><value>搜索结果优先显示</value></data>
+  <data name="Plan_Feature_EverythingInPremium" xml:space="preserve"><value>包含Premium所有功能</value></data>
+  <data name="Plan_Feature_FeaturedHomepage" xml:space="preserve"><value>首页推荐展示</value></data>
+  <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>游戏库存管理</value></data>
+  <data name="Plan_Feature_Analytics" xml:space="preserve"><value>数据分析仪表板</value></data>
+  <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>无限照片</value></data>
+</root>

@@ -1,0 +1,82 @@
+@using Microsoft.AspNetCore.Localization
+@{
+    var currentCulture = Context.Items["Culture"]?.ToString() ?? "en";
+    var currentPath = Context.Request.Path.Value ?? "/";
+
+    // Remove culture prefix from path if exists
+    var pathWithoutCulture = currentPath;
+    var cultures = new[] { "en", "vi", "ja", "ko", "zh", "th", "es", "de" };
+    foreach (var c in cultures)
+    {
+        if (currentPath.StartsWith($"/{c}/", StringComparison.OrdinalIgnoreCase))
+        {
+            pathWithoutCulture = currentPath.Substring(3);
+            break;
+        }
+        else if (currentPath.Equals($"/{c}", StringComparison.OrdinalIgnoreCase))
+        {
+            pathWithoutCulture = "/";
+            break;
+        }
+    }
+
+    // Culture display names
+    var cultureNames = new Dictionary<string, string>
+    {
+        { "en", "English" },
+        { "vi", "Tiếng Việt" },
+        { "ja", "日本語" },
+        { "ko", "한국어" },
+        { "zh", "中文" },
+        { "th", "ไทย" },
+        { "es", "Español" },
+        { "de", "Deutsch" }
+    };
+
+    var cultureFlags = new Dictionary<string, string>
+    {
+        { "en", "🇺🇸" },
+        { "vi", "🇻🇳" },
+        { "ja", "🇯🇵" },
+        { "ko", "🇰🇷" },
+        { "zh", "🇨🇳" },
+        { "th", "🇹🇭" },
+        { "es", "🇪🇸" },
+        { "de", "🇩🇪" }
+    };
+}
+
+<div class="dropdown">
+    <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" id="languageDropdown"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        <span>@cultureFlags[currentCulture]</span>
+        <span class="d-none d-md-inline ms-1">@cultureNames[currentCulture]</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+        @foreach (var culture in cultures)
+        {
+            var isActive = culture == currentCulture;
+            var newPath = culture == "en" ? pathWithoutCulture : $"/{culture}{pathWithoutCulture}";
+            if (string.IsNullOrEmpty(newPath)) newPath = "/";
+
+            <li>
+                <a class="dropdown-item language-link @(isActive ? "active" : "")"
+                   href="@newPath@(Context.Request.QueryString)"
+                   data-culture="@culture">
+                    @cultureFlags[culture] @cultureNames[culture]
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+<script>
+    // Save language preference to cookie when user selects a language
+    document.querySelectorAll('.language-link').forEach(function(link) {
+        link.addEventListener('click', function() {
+            var culture = this.getAttribute('data-culture');
+            // Set cookie for 1 year
+            document.cookie = 'UserLanguagePreference=' + culture + ';path=/;max-age=' + (365 * 24 * 60 * 60) + ';SameSite=Lax';
+        });
+    });
+</script>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>หน้าแรก</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>แผนที่</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>บล็อก</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>สำหรับธุรกิจ</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>ราคา</value></data>
+  <data name="Nav_AddCafe" xml:space="preserve"><value>เพิ่มร้านของคุณ</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>คำถามที่พบบ่อย</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>เข้าสู่ระบบ</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>สมัครสมาชิก</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>ออกจากระบบ</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>โปรไฟล์ของฉัน</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>แดชบอร์ดผู้ดูแล</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>ค้นหาร้านบอร์ดเกมใกล้คุณ</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>ค้นพบร้านบอร์ดเกมที่ดีที่สุดในพื้นที่ของคุณ</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>ค้นหาตามเมืองหรือชื่อร้าน...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>ค้นหา</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>ทุกประเทศ</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>ทุกเมือง</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>ประเทศ</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>เมือง</value></data>
+  <data name="Home_CafesFound" xml:space="preserve"><value>ร้านที่พบ</value></data>
+  <data name="Home_NoCafesFound" xml:space="preserve"><value>ไม่พบร้านที่ตรงกับเงื่อนไข</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>ค้นหาร้านบอร์ดเกมที่ใช่</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>ค้นพบร้านบอร์ดเกมที่ดีที่สุดทั่วโลก พร้อมเกมมากมายและบรรยากาศดี</value></data>
+  <data name="Home_BrowseCafes" xml:space="preserve"><value>ดูร้านทั้งหมด</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>ดูแผนที่</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>ตัวกรอง</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>ใกล้ฉัน</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>รัศมี</value></data>
+  <data name="Home_GameCategories" xml:space="preserve"><value>หมวดหมู่เกม</value></data>
+  <data name="Home_BoardGamesAvailable" xml:space="preserve"><value>บอร์ดเกมที่มี</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>ใช้ตัวกรอง</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>ล้างตัวกรอง</value></data>
+  <data name="Home_BoardGameCafes" xml:space="preserve"><value>ร้านบอร์ดเกม</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>ใกล้ตำแหน่งของคุณ</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>ตัวกรองที่ใช้</value></data>
+  <data name="Home_GamesSelected" xml:space="preserve"><value>เกมที่เลือก</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>รายละเอียด</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>แผนที่</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>หน้า</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>จาก</value></data>
+  <data name="Home_NoCafesTitle" xml:space="preserve"><value>ไม่พบร้าน</value></data>
+  <data name="Home_NoCafesMessage" xml:space="preserve"><value>ไม่มีร้านบอร์ดเกมที่ตรงกับการค้นหาของคุณ ลองปรับตัวกรองหรือค้นหาพื้นที่อื่น</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>เมืองยอดนิยม</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>ทำไมต้องไปร้านบอร์ดเกม?</value></data>
+  <data name="Home_HugeLibraries" xml:space="preserve"><value>คลังเกมขนาดใหญ่</value></data>
+  <data name="Home_HugeLibrariesDesc" xml:space="preserve"><value>เลือกจากบอร์ดเกมหลายร้อยเกม ตั้งแต่เกมคลาสสิกจนถึงเกมใหม่ล่าสุด</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>ประสบการณ์ทางสังคม</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>ใช้เวลาดีๆ กับเพื่อนหรือคนใหม่ๆ รอบโต๊ะเกม</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>คำแนะนำจากผู้เชี่ยวชาญ</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>พนักงานช่วยเลือกเกมที่เหมาะกับกลุ่มของคุณและอธิบายกฎ</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>วิธีค้นหาร้านที่ใช่</value></data>
+  <data name="Home_Step1Title" xml:space="preserve"><value>ค้นหาตำแหน่ง</value></data>
+  <data name="Home_Step1Desc" xml:space="preserve"><value>ค้นหาตามเมืองหรือภูมิภาค หรือใช้ GPS เพื่อค้นหาร้านใกล้เคียง</value></data>
+  <data name="Home_Step2Title" xml:space="preserve"><value>กรองผลลัพธ์</value></data>
+  <data name="Home_Step2Desc" xml:space="preserve"><value>จำกัดผลการค้นหาตามหมวดหมู่เกม ระยะทาง หรือคะแนน</value></data>
+  <data name="Home_Step3Title" xml:space="preserve"><value>อ่านรีวิว</value></data>
+  <data name="Home_Step3Desc" xml:space="preserve"><value>อ่านรีวิวและคะแนนจากผู้เล่นคนอื่น</value></data>
+  <data name="Home_Step4Title" xml:space="preserve"><value>ไปเยือนและเล่น</value></data>
+  <data name="Home_Step4Desc" xml:space="preserve"><value>เยี่ยมชมร้านและสนุกกับประสบการณ์บอร์ดเกมสุดเจ๋ง!</value></data>
+  <data name="Home_GettingLocation" xml:space="preserve"><value>กำลังรับตำแหน่ง...</value></data>
+  <data name="Home_SelectCategories" xml:space="preserve"><value>เลือกหมวดหมู่</value></data>
+
+  <!-- Cafe Details -->
+  <data name="Cafe_Rating" xml:space="preserve"><value>คะแนน</value></data>
+  <data name="Cafe_Reviews" xml:space="preserve"><value>รีวิว</value></data>
+  <data name="Cafe_Address" xml:space="preserve"><value>ที่อยู่</value></data>
+  <data name="Cafe_Phone" xml:space="preserve"><value>โทรศัพท์</value></data>
+  <data name="Cafe_Website" xml:space="preserve"><value>เว็บไซต์</value></data>
+  <data name="Cafe_Hours" xml:space="preserve"><value>เวลาเปิด-ปิด</value></data>
+  <data name="Cafe_Games" xml:space="preserve"><value>คลังเกม</value></data>
+  <data name="Cafe_GamesAvailable" xml:space="preserve"><value>เกมที่มี</value></data>
+  <data name="Cafe_ViewOnMap" xml:space="preserve"><value>ดูบนแผนที่</value></data>
+  <data name="Cafe_GetDirections" xml:space="preserve"><value>นำทาง</value></data>
+  <data name="Cafe_WriteReview" xml:space="preserve"><value>เขียนรีวิว</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>บล็อก</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>อ่านเพิ่มเติม</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>เผยแพร่เมื่อ</value></data>
+  <data name="Blog_By" xml:space="preserve"><value>โดย</value></data>
+  <data name="Blog_Category" xml:space="preserve"><value>หมวดหมู่</value></data>
+
+  <!-- Blog Templates -->
+  <data name="BlogTemplate_CityGuide_Title" xml:space="preserve"><value>ร้านบอร์ดเกมใน{0} - คู่มือฉบับสมบูรณ์</value></data>
+  <data name="BlogTemplate_CityGuide_Summary" xml:space="preserve"><value>คู่มือฉบับสมบูรณ์สำหรับร้านบอร์ดเกมใน{0} ค้นหาสถานที่เล่นที่ดีที่สุด</value></data>
+  <data name="BlogTemplate_CityGuide_Intro" xml:space="preserve"><value>ยินดีต้อนรับสู่คู่มือร้านบอร์ดเกมใน{0}! ไม่ว่าคุณจะเป็นนักเล่นมืออาชีพหรือแค่มองหาที่เที่ยวสนุกๆ เรามีทุกอย่างให้คุณ</value></data>
+  <data name="BlogTemplate_CityGuide_Overview" xml:space="preserve"><value>ภาพรวม</value></data>
+  <data name="BlogTemplate_CityGuide_OverviewText" xml:space="preserve"><value>{0} มีร้านบอร์ดเกม {1} ร้าน พร้อมเกมหลากหลายประเภท ตั้งแต่ร้านเล็กๆ อบอุ่นสำหรับเดท ไปจนถึงพื้นที่กว้างขวางสำหรับกลุ่มใหญ่</value></data>
+  <data name="BlogTemplate_CityGuide_TopRated" xml:space="preserve"><value>ร้านยอดนิยม</value></data>
+  <data name="BlogTemplate_CityGuide_Tips" xml:space="preserve"><value>เคล็ดลับการไปเยือน</value></data>
+  <data name="BlogTemplate_CityGuide_Tip1" xml:space="preserve"><value>จองล่วงหน้า: ร้านยอดนิยมเต็มเร็ว โดยเฉพาะวันหยุดสุดสัปดาห์</value></data>
+  <data name="BlogTemplate_CityGuide_Tip2" xml:space="preserve"><value>ถามพนักงาน: พวกเขามักเป็นนักเล่นเกมเองและสามารถแนะนำเกมที่เหมาะกับกลุ่มของคุณ</value></data>
+  <data name="BlogTemplate_CityGuide_Tip3" xml:space="preserve"><value>วางแผนเวลา: เกมส่วนใหญ่ใช้เวลา 1-3 ชั่วโมง</value></data>
+  <data name="BlogTemplate_CityGuide_Tip4" xml:space="preserve"><value>ลองสิ่งใหม่: ก้าวออกจากโซนสบายและลองเกมที่คุณไม่เคยเล่น!</value></data>
+  <data name="BlogTemplate_CityGuide_ExploreMore" xml:space="preserve"><value>สำรวจเพิ่มเติม</value></data>
+  <data name="BlogTemplate_CityGuide_ViewAllCafes" xml:space="preserve"><value>ดูร้านทั้งหมดใน{0}</value></data>
+  <data name="BlogTemplate_TopGames_Title" xml:space="preserve"><value>บอร์ดเกมยอดนิยมในร้านบอร์ดเกม{0}</value></data>
+  <data name="BlogTemplate_TopGames_Summary" xml:space="preserve"><value>ค้นพบบอร์ดเกมยอดนิยมที่สุดในร้านบอร์ดเกม{0}</value></data>
+  <data name="BlogTemplate_TopGames_Intro" xml:space="preserve"><value>กำลังมองหาบอร์ดเกมที่ดีที่สุดในการเล่นที่{0}? เราวิเคราะห์ข้อมูลจากร้านบอร์ดเกม {1} ร้านในพื้นที่เพื่อนำเสนอเกมยอดนิยมที่คนท้องถิ่นชื่นชอบ</value></data>
+  <data name="BlogTemplate_TopGames_WhyTheseGames" xml:space="preserve"><value>ทำไมต้องเกมเหล่านี้?</value></data>
+  <data name="BlogTemplate_TopGames_WhyText" xml:space="preserve"><value>เกมเหล่านี้ปรากฏบ่อยที่สุดในร้านบอร์ดเกมทั่ว{0} หมายความว่าคุณน่าจะพบเกมเหล่านี้ได้ทุกที่</value></data>
+  <data name="BlogTemplate_TopGames_AvailableAt" xml:space="preserve"><value>มีใน {0} ร้านใน{1}</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlay" xml:space="preserve"><value>เล่นได้ที่ไหน</value></data>
+  <data name="BlogTemplate_TopGames_WhereToPlayText" xml:space="preserve"><value>พร้อมลองเกมเหล่านี้แล้วหรือยัง? ดูร้านบอร์ดเกมทั้งหมดใน{0}เพื่อหาสถานที่ที่เหมาะสำหรับคืนเล่นเกมของคุณ</value></data>
+  <data name="BlogTemplate_Players" xml:space="preserve"><value>{0}-{1} ผู้เล่น</value></data>
+  <data name="BlogTemplate_Minutes" xml:space="preserve"><value>{0} นาที</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>ค้นพบร้านบอร์ดเกมที่ดีที่สุดใกล้คุณ เรียกดูคลังเกม อ่านรีวิว และค้นหาจุดหมายเล่นเกมถัดไปของคุณ</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>สำรวจ</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>กฎหมาย</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>นโยบายความเป็นส่วนตัว</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>ข้อกำหนดการใช้งาน</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>ติดต่อเรา</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>มีร้านบอร์ดเกมที่อยากเพิ่ม? เป็นเจ้าของร้านและต้องการอัพเดทข้อมูล? ติดต่อเรา!</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Board Game Cafe Finder สงวนลิขสิทธิ์</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>ดูรายละเอียด</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>เรียนรู้เพิ่มเติม</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>ส่ง</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>ยกเลิก</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>บันทึก</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>ลบ</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>แก้ไข</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>กลับ</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>ถัดไป</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>ก่อนหน้า</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>กำลังโหลด...</value></data>
+
+  <!-- SEO Meta -->
+  <data name="Meta_DefaultDescription" xml:space="preserve"><value>ค้นหาร้านบอร์ดเกมที่ดีที่สุดใกล้คุณ ค้นพบร้านบอร์ดเกมด้วยแผนที่แบบโต้ตอบและรายชื่อร้านที่ครบถ้วน</value></data>
+  <data name="Meta_DefaultKeywords" xml:space="preserve"><value>ร้านบอร์ดเกม,บอร์ดเกมคาเฟ่,บอร์ดเกม,บอร์ดเกมใกล้ฉัน</value></data>
+
+  <!-- Blog Index Page -->
+  <data name="Blog_CafeGuides" xml:space="preserve"><value>ไกด์ร้านบอร์ดเกมคาเฟ่</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>สำรวจร้านบอร์ดเกมใน {0} เมืองทั่วโลก</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>สำรวจร้านบอร์ดเกมใน {0} เมืองใน{1}</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>ล้าง</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>แสดงทุกเมือง</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>กรองตามประเทศ</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>ทุกประเทศ</value></data>
+  <data name="Blog_ViewAllCountries" xml:space="preserve"><value>ดูทุกประเทศ</value></data>
+  <data name="Blog_CafesIn" xml:space="preserve"><value>ร้านบอร์ดเกมใน {0}</value></data>
+  <data name="Blog_DiscoverCafes" xml:space="preserve"><value>ค้นพบ {0} {1}บอร์ดเกมใน {2} มีเกมให้เล่นมากกว่า {3} เกม</value></data>
+  <data name="Blog_Cafe" xml:space="preserve"><value>ร้าน</value></data>
+  <data name="Blog_Cafes" xml:space="preserve"><value>ร้าน</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>แสดงหน้า</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>เมืองที่พบ</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>ไม่พบเมือง</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>ยังไม่มีร้านบอร์ดเกมที่เพิ่มเข้ามา</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>สถิติด่วน</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>เมือง</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>ประเทศ</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>เรียกดูตามประเทศ</value></data>
+  <data name="Blog_FindCafesNearYou" xml:space="preserve"><value>ค้นหาร้านใกล้คุณ</value></data>
+  <data name="Blog_FindCafesDesc" xml:space="preserve"><value>ใช้แผนที่แบบโต้ตอบเพื่อค้นพบร้านบอร์ดเกม</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>เปิดแผนที่</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0} อื่นๆ</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>แผนที่ร้านบอร์ดเกมคาเฟ่</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>ค้นพบร้านบอร์ดเกมใกล้คุณ</value></data>
+  <data name="Map_CafesFound" xml:space="preserve"><value>พบร้าน</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>ค้นหาเมืองหรือที่อยู่...</value></data>
+  <data name="Map_Go" xml:space="preserve"><value>ค้นหา</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>ใช้ตำแหน่งของฉัน</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>ตัวกรอง</value></data>
+  <data name="Map_Country" xml:space="preserve"><value>ประเทศ</value></data>
+  <data name="Map_City" xml:space="preserve"><value>เมือง</value></data>
+  <data name="Map_AllCountries" xml:space="preserve"><value>ทุกประเทศ</value></data>
+  <data name="Map_AllCities" xml:space="preserve"><value>ทุกเมือง</value></data>
+  <data name="Map_Radius" xml:space="preserve"><value>รัศมี</value></data>
+  <data name="Map_MinRating" xml:space="preserve"><value>คะแนนขั้นต่ำ</value></data>
+  <data name="Map_Any" xml:space="preserve"><value>ทั้งหมด</value></data>
+  <data name="Map_GameCategories" xml:space="preserve"><value>หมวดหมู่เกม</value></data>
+  <data name="Map_Search" xml:space="preserve"><value>ค้นหา</value></data>
+  <data name="Map_FindCafes" xml:space="preserve"><value>ค้นหาร้านบอร์ดเกม</value></data>
+  <data name="Map_EmptyStateText" xml:space="preserve"><value>ป้อนตำแหน่งหรือใช้ตำแหน่งปัจจุบันเพื่อค้นพบร้านใกล้เคียง</value></data>
+  <data name="Map_SearchingForCafes" xml:space="preserve"><value>กำลังค้นหาร้าน...</value></data>
+  <data name="Map_ShowResults" xml:space="preserve"><value>แสดงผลลัพธ์</value></data>
+  <data name="Map_HideResults" xml:space="preserve"><value>ซ่อนผลลัพธ์</value></data>
+  <data name="Map_ZoomIn" xml:space="preserve"><value>ซูมเข้า</value></data>
+  <data name="Map_ZoomOut" xml:space="preserve"><value>ซูมออก</value></data>
+  <data name="Map_CenterOnLocation" xml:space="preserve"><value>กลับไปตำแหน่ง</value></data>
+  <data name="Map_Cafe" xml:space="preserve"><value>ร้าน</value></data>
+  <data name="Map_YourLocation" xml:space="preserve"><value>ตำแหน่งของคุณ</value></data>
+  <data name="Map_SelectCategories" xml:space="preserve"><value>เลือกหมวดหมู่...</value></data>
+
+  <!-- Account Pages -->
+  <data name="Account_Login" xml:space="preserve"><value>เข้าสู่ระบบ</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>อีเมล</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>รหัสผ่าน</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>จดจำฉัน</value></data>
+  <data name="Account_LoginButton" xml:space="preserve"><value>เข้าสู่ระบบ</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>ยังไม่มีบัญชี?</value></data>
+  <data name="Account_CreateAccount" xml:space="preserve"><value>สร้างบัญชี</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>สมัครสมาชิก</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>ชื่อ</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>นามสกุล</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>ยืนยันรหัสผ่าน</value></data>
+  <data name="Account_PasswordHint" xml:space="preserve"><value>ต้องมีอย่างน้อย 8 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก และตัวเลข</value></data>
+  <data name="Account_IsCafeOwner" xml:space="preserve"><value>ฉันเป็นเจ้าของร้าน</value></data>
+  <data name="Account_CafeOwnerHint" xml:space="preserve"><value>เลือกหากคุณเป็นเจ้าของหรือผู้จัดการร้านบอร์ดเกม คุณจะสามารถยืนยันและจัดการร้านของคุณได้</value></data>
+  <data name="Account_AlreadyHaveAccount" xml:space="preserve"><value>มีบัญชีแล้ว?</value></data>
+  <data name="Account_Profile" xml:space="preserve"><value>โปรไฟล์ของฉัน</value></data>
+  <data name="Account_ProfileInfo" xml:space="preserve"><value>ข้อมูลโปรไฟล์</value></data>
+  <data name="Account_Edit" xml:space="preserve"><value>แก้ไข</value></data>
+  <data name="Account_DisplayName" xml:space="preserve"><value>ชื่อที่แสดง</value></data>
+  <data name="Account_City" xml:space="preserve"><value>เมือง</value></data>
+  <data name="Account_Country" xml:space="preserve"><value>ประเทศ</value></data>
+  <data name="Account_Bio" xml:space="preserve"><value>ประวัติ</value></data>
+  <data name="Account_SaveChanges" xml:space="preserve"><value>บันทึกการเปลี่ยนแปลง</value></data>
+  <data name="Account_Cancel" xml:space="preserve"><value>ยกเลิก</value></data>
+  <data name="Account_ChangePassword" xml:space="preserve"><value>เปลี่ยนรหัสผ่าน</value></data>
+  <data name="Account_CurrentPassword" xml:space="preserve"><value>รหัสผ่านปัจจุบัน</value></data>
+  <data name="Account_NewPassword" xml:space="preserve"><value>รหัสผ่านใหม่</value></data>
+  <data name="Account_ConfirmNewPassword" xml:space="preserve"><value>ยืนยันรหัสผ่านใหม่</value></data>
+  <data name="Account_Reviews" xml:space="preserve"><value>รีวิว</value></data>
+  <data name="Account_Visits" xml:space="preserve"><value>การเยี่ยมชม</value></data>
+  <data name="Account_Points" xml:space="preserve"><value>คะแนน</value></data>
+  <data name="Account_MemberSince" xml:space="preserve"><value>สมาชิกตั้งแต่</value></data>
+  <data name="Account_LastLogin" xml:space="preserve"><value>เข้าสู่ระบบล่าสุด</value></data>
+  <data name="Account_QuickActions" xml:space="preserve"><value>การดำเนินการด่วน</value></data>
+  <data name="Account_FindCafes" xml:space="preserve"><value>ค้นหาร้าน</value></data>
+  <data name="Account_MapView" xml:space="preserve"><value>ดูแผนที่</value></data>
+  <data name="Account_ManageMyCafe" xml:space="preserve"><value>จัดการร้านของฉัน</value></data>
+  <data name="Account_OwnBoardGameCafe" xml:space="preserve"><value>คุณเป็นเจ้าของร้านบอร์ดเกม?</value></data>
+  <data name="Account_ClaimBusiness" xml:space="preserve"><value>ยืนยันร้านของคุณและจัดการเพื่อดึงดูดลูกค้าเพิ่มขึ้น</value></data>
+  <data name="Account_LearnPremium" xml:space="preserve"><value>เรียนรู้เกี่ยวกับแพ็กเกจพรีเมียม</value></data>
+  <data name="Account_ChangeAvatar" xml:space="preserve"><value>เปลี่ยนรูปโปรไฟล์</value></data>
+  <data name="Account_SelectNewAvatar" xml:space="preserve"><value>เลือกรูปโปรไฟล์ใหม่</value></data>
+  <data name="Account_AvatarHint" xml:space="preserve"><value>รองรับ: JPG, PNG, GIF, WebP สูงสุด: 5MB</value></data>
+  <data name="Account_Preview" xml:space="preserve"><value>ตัวอย่าง:</value></data>
+  <data name="Account_Remove" xml:space="preserve"><value>ลบ</value></data>
+  <data name="Account_Upload" xml:space="preserve"><value>อัปโหลด</value></data>
+  <data name="Account_EmailCannotChange" xml:space="preserve"><value>ไม่สามารถเปลี่ยนอีเมลได้</value></data>
+  <data name="Account_EmailNotVerified" xml:space="preserve"><value>อีเมลยังไม่ได้ยืนยัน</value></data>
+  <data name="Account_CheckInbox" xml:space="preserve"><value>กรุณาตรวจสอบกล่องจดหมายและยืนยันอีเมลของคุณ</value></data>
+  <data name="Account_ResendEmail" xml:space="preserve"><value>ส่งอีเมลอีกครั้ง</value></data>
+
+  <!-- Pricing Page -->
+  <data name="Pricing_Title" xml:space="preserve"><value>แพ็กเกจพรีเมียม</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>เพิ่มการมองเห็นร้านบอร์ดเกมของคุณและดึงดูดลูกค้าเพิ่มขึ้น</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>ยอดนิยม</value></data>
+  <data name="Pricing_PerMonth" xml:space="preserve"><value>/เดือน</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>เริ่มต้น</value></data>
+  <data name="Pricing_FeatureComparison" xml:space="preserve"><value>เปรียบเทียบฟีเจอร์</value></data>
+  <data name="Pricing_Feature" xml:space="preserve"><value>ฟีเจอร์</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>รายการพื้นฐาน</value></data>
+  <data name="Pricing_ContactInfo" xml:space="preserve"><value>ข้อมูลติดต่อ</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>เวลาทำการ</value></data>
+  <data name="Pricing_LocationOnMap" xml:space="preserve"><value>ตำแหน่งบนแผนที่</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>แกลเลอรีรูปภาพ</value></data>
+  <data name="Pricing_UpTo" xml:space="preserve"><value>สูงสุด {0}</value></data>
+  <data name="Pricing_Unlimited" xml:space="preserve"><value>ไม่จำกัด</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>รายการอีเวนต์</value></data>
+  <data name="Pricing_PrioritySearch" xml:space="preserve"><value>ลำดับความสำคัญในการค้นหา</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>แสดงบนหน้าแรก</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>จัดการคลังเกม</value></data>
+  <data name="Pricing_Analytics" xml:space="preserve"><value>แดชบอร์ดวิเคราะห์</value></data>
+  <data name="Pricing_FAQ" xml:space="preserve"><value>คำถามที่พบบ่อย</value></data>
+  <data name="Pricing_FAQ1_Q" xml:space="preserve"><value>ฉันจะยืนยันร้านของฉันได้อย่างไร?</value></data>
+  <data name="Pricing_FAQ1_A" xml:space="preserve"><value>ค้นหาร้านของคุณบนแพลตฟอร์ม จากนั้นคลิก "ยืนยันร้านนี้" ในหน้าร้าน คุณต้องยืนยันความเป็นเจ้าของก่อนเปิดใช้งานฟีเจอร์พรีเมียม</value></data>
+  <data name="Pricing_FAQ2_Q" xml:space="preserve"><value>ฉันสามารถเปลี่ยนแพ็กเกจภายหลังได้ไหม?</value></data>
+  <data name="Pricing_FAQ2_A" xml:space="preserve"><value>ได้! คุณสามารถอัปเกรดหรือดาวน์เกรดได้ทุกเมื่อ เมื่ออัปเกรดจะได้รับฟีเจอร์ใหม่ทันที เมื่อดาวน์เกรดจะมีผลเมื่อสิ้นสุดรอบบิลปัจจุบัน</value></data>
+  <data name="Pricing_FAQ3_Q" xml:space="preserve"><value>รับชำระเงินวิธีใดบ้าง?</value></data>
+  <data name="Pricing_FAQ3_A" xml:space="preserve"><value>เรารับบัตรเครดิตหลัก (Visa, Mastercard, American Express) และ PayPal การชำระเงินทั้งหมดดำเนินการอย่างปลอดภัย</value></data>
+  <data name="Pricing_FAQ4_Q" xml:space="preserve"><value>มีสัญญาหรือข้อผูกมัดไหม?</value></data>
+  <data name="Pricing_FAQ4_A" xml:space="preserve"><value>ไม่มีสัญญาระยะยาว! แพ็กเกจทั้งหมดเป็นรายเดือนและยกเลิกได้ทุกเมื่อ รายการของคุณจะยังใช้งานได้จนกว่าจะสิ้นสุดรอบชำระเงิน</value></data>
+  <data name="Pricing_ReadyToGrow" xml:space="preserve"><value>พร้อมที่จะขยายธุรกิจของคุณหรือยัง?</value></data>
+  <data name="Pricing_JoinCafes" xml:space="preserve"><value>เข้าร่วมกับร้านบอร์ดเกมหลายร้อยแห่งที่ใช้แพลตฟอร์มของเรา</value></data>
+  <data name="Pricing_FindYourCafe" xml:space="preserve"><value>ค้นหาร้านของคุณ</value></data>
+  <data name="Pricing_AddYourCafe" xml:space="preserve"><value>เพิ่มร้านของคุณ</value></data>
+  <data name="Pricing_SearchCafe" xml:space="preserve"><value>ค้นหาร้านบอร์ดเกมของคุณเพื่อเริ่มต้นกับแพ็กเกจ</value></data>
+  <data name="Pricing_Plan" xml:space="preserve"><value></value></data>
+  <data name="Pricing_SearchPlaceholder" xml:space="preserve"><value>ป้อนชื่อร้านหรือเมือง...</value></data>
+  <data name="Pricing_StartTyping" xml:space="preserve"><value>เริ่มพิมพ์เพื่อค้นหาร้านของคุณ</value></data>
+  <data name="Pricing_NoCafesFound" xml:space="preserve"><value>ไม่พบร้าน ลองคำค้นหาอื่น</value></data>
+  <data name="Pricing_CantFindCafe" xml:space="preserve"><value>หาร้านของคุณไม่เจอ?</value></data>
+  <data name="Pricing_AddItNow" xml:space="preserve"><value>เพิ่มเลย</value></data>
+  <data name="Pricing_SearchError" xml:space="preserve"><value>ข้อผิดพลาดในการค้นหา กรุณาลองอีกครั้ง</value></data>
+  <data name="Plan_Feature_BasicListing" xml:space="preserve"><value>รายการพื้นฐาน</value></data>
+  <data name="Plan_Feature_ContactInfo" xml:space="preserve"><value>ข้อมูลติดต่อ</value></data>
+  <data name="Plan_Feature_BusinessHours" xml:space="preserve"><value>เวลาทำการ</value></data>
+  <data name="Plan_Feature_LocationOnMap" xml:space="preserve"><value>ตำแหน่งบนแผนที่</value></data>
+  <data name="Plan_Feature_EverythingInBasic" xml:space="preserve"><value>ทุกอย่างใน Basic</value></data>
+  <data name="Plan_Feature_PhotoGallery" xml:space="preserve"><value>แกลเลอรีรูปภาพ (สูงสุด 10 รูป)</value></data>
+  <data name="Plan_Feature_EventListings" xml:space="preserve"><value>ลงประกาศกิจกรรม</value></data>
+  <data name="Plan_Feature_PrioritySearch" xml:space="preserve"><value>แสดงก่อนในผลการค้นหา</value></data>
+  <data name="Plan_Feature_EverythingInPremium" xml:space="preserve"><value>ทุกอย่างใน Premium</value></data>
+  <data name="Plan_Feature_FeaturedHomepage" xml:space="preserve"><value>แสดงบนหน้าแรก</value></data>
+  <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>จัดการคลังบอร์ดเกม</value></data>
+  <data name="Plan_Feature_Analytics" xml:space="preserve"><value>แดชบอร์ดวิเคราะห์</value></data>
+  <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>รูปภาพไม่จำกัด</value></data>
+</root>

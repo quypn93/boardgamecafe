@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace BoardGameCafeFinder.Controllers
 {
     [Route("[controller]")]
+    [Route("{culture:regex(^(en|vi|ja|ko|zh|th|es|de)$)}/[controller]")]
     public class ListingController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,14 +20,14 @@ namespace BoardGameCafeFinder.Controllers
         private readonly IStripeService _stripeService; // Legacy support
         private readonly IConfiguration _configuration;
 
-        // Plan definitions
+        // Plan definitions - Features use localization keys that are resolved in the view
         public static readonly Dictionary<string, ListingPlan> Plans = new()
         {
             ["Basic"] = new ListingPlan
             {
                 Name = "Basic",
                 MonthlyPrice = 29.99m,
-                Features = new[] { "Basic listing", "Contact information", "Business hours", "Location on map" },
+                Features = new[] { "Plan_Feature_BasicListing", "Plan_Feature_ContactInfo", "Plan_Feature_BusinessHours", "Plan_Feature_LocationOnMap" },
                 FeaturedPlacement = false,
                 PhotoGallery = false,
                 EventListings = false,
@@ -37,7 +38,7 @@ namespace BoardGameCafeFinder.Controllers
             {
                 Name = "Premium",
                 MonthlyPrice = 59.99m,
-                Features = new[] { "Everything in Basic", "Photo gallery (up to 10)", "Event listings", "Priority in search results" },
+                Features = new[] { "Plan_Feature_EverythingInBasic", "Plan_Feature_PhotoGallery", "Plan_Feature_EventListings", "Plan_Feature_PrioritySearch" },
                 FeaturedPlacement = false,
                 PhotoGallery = true,
                 EventListings = true,
@@ -48,7 +49,7 @@ namespace BoardGameCafeFinder.Controllers
             {
                 Name = "Featured",
                 MonthlyPrice = 99.99m,
-                Features = new[] { "Everything in Premium", "Featured placement on homepage", "Game inventory manager", "Analytics dashboard", "Unlimited photos" },
+                Features = new[] { "Plan_Feature_EverythingInPremium", "Plan_Feature_FeaturedHomepage", "Plan_Feature_GameInventory", "Plan_Feature_Analytics", "Plan_Feature_UnlimitedPhotos" },
                 FeaturedPlacement = true,
                 PhotoGallery = true,
                 EventListings = true,

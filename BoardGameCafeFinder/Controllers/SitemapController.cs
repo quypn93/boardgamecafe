@@ -10,6 +10,9 @@ namespace BoardGameCafeFinder.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<SitemapController> _logger;
 
+        // Supported languages for SEO
+        private static readonly string[] SupportedLanguages = { "en", "vi", "ja", "ko", "zh", "th", "es", "de" };
+
         public SitemapController(ApplicationDbContext context, ILogger<SitemapController> logger)
         {
             _context = context;
@@ -17,7 +20,7 @@ namespace BoardGameCafeFinder.Controllers
         }
 
         /// <summary>
-        /// Generate dynamic sitemap including all cafe pages
+        /// Generate dynamic sitemap including all cafe pages with hreflang for multi-language SEO
         /// GET: /sitemap.xml
         /// </summary>
         [HttpGet("sitemap.xml")]
@@ -28,15 +31,15 @@ namespace BoardGameCafeFinder.Controllers
             {
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
                 var sitemapXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n";
-                sitemapXml += "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r\n";
+                sitemapXml += "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\r\n";
 
-                // Static pages
-                sitemapXml += CreateSitemapEntry($"{baseUrl}/", "2026-01-20", "daily", "1.0");
-                sitemapXml += CreateSitemapEntry($"{baseUrl}/Map", "2026-01-20", "daily", "0.9");
-                sitemapXml += CreateSitemapEntry($"{baseUrl}/blog", "2026-01-20", "daily", "0.9");
-                sitemapXml += CreateSitemapEntry($"{baseUrl}/Home/Privacy", "2026-01-20", "monthly", "0.5");
+                // Static pages with hreflang
+                sitemapXml += CreateSitemapEntryWithHreflang(baseUrl, "/", "2026-01-20", "daily", "1.0");
+                sitemapXml += CreateSitemapEntryWithHreflang(baseUrl, "/Map", "2026-01-20", "daily", "0.9");
+                sitemapXml += CreateSitemapEntryWithHreflang(baseUrl, "/blog", "2026-01-20", "daily", "0.9");
+                sitemapXml += CreateSitemapEntryWithHreflang(baseUrl, "/Home/Privacy", "2026-01-20", "monthly", "0.5");
 
-                // Dynamic cafe pages
+                // Dynamic cafe pages with hreflang
                 var cafes = await _context.Cafes
                     .Where(c => c.IsActive && !string.IsNullOrEmpty(c.Slug))
                     .Select(c => new { c.Slug, c.UpdatedAt })
@@ -46,7 +49,7 @@ namespace BoardGameCafeFinder.Controllers
                 foreach (var cafe in cafes)
                 {
                     var lastMod = cafe.UpdatedAt.ToString("yyyy-MM-dd");
-                    sitemapXml += CreateSitemapEntry($"{baseUrl}/cafe/{cafe.Slug}", lastMod, "weekly", "0.8");
+                    sitemapXml += CreateSitemapEntryWithHreflang(baseUrl, $"/cafe/{cafe.Slug}", lastMod, "weekly", "0.8");
                 }
 
                 // Dynamic blog post pages from BlogPosts table
@@ -59,7 +62,7 @@ namespace BoardGameCafeFinder.Controllers
                 foreach (var post in blogPosts)
                 {
                     var lastMod = (post.UpdatedAt ?? post.PublishedAt ?? DateTime.Now).ToString("yyyy-MM-dd");
-                    sitemapXml += CreateSitemapEntry($"{baseUrl}/blog/{post.Slug}", lastMod, "weekly", "0.7");
+                    sitemapXml += CreateSitemapEntryWithHreflang(baseUrl, $"/blog/{post.Slug}", lastMod, "weekly", "0.7");
                 }
 
                 // Dynamic city blog posts (generated from Cafes table - not in BlogPosts)
@@ -80,7 +83,7 @@ namespace BoardGameCafeFinder.Controllers
                 {
                     var citySlug = cityPost.City.ToLower().Replace(" ", "-");
                     var lastMod = cityPost.LastUpdated.ToString("yyyy-MM-dd");
-                    sitemapXml += CreateSitemapEntry($"{baseUrl}/blog/{citySlug}", lastMod, "weekly", "0.7");
+                    sitemapXml += CreateSitemapEntryWithHreflang(baseUrl, $"/blog/{citySlug}", lastMod, "weekly", "0.7");
                 }
 
                 sitemapXml += "</urlset>";
@@ -123,14 +126,42 @@ namespace BoardGameCafeFinder.Controllers
             return Content(robotsTxt, "text/plain");
         }
 
-        private string CreateSitemapEntry(string url, string lastMod, string changeFreq, string priority)
+        /// <summary>
+        /// Creates a sitemap entry with hreflang tags for all supported languages.
+        /// This is important for SEO as it tells search engines about language alternatives.
+        /// </summary>
+        private string CreateSitemapEntryWithHreflang(string baseUrl, string path, string lastMod, string changeFreq, string priority)
         {
-            return $"  <url>\r\n" +
-                   $"    <loc>{System.Web.HttpUtility.HtmlEncode(url)}</loc>\r\n" +
-                   $"    <lastmod>{lastMod}</lastmod>\r\n" +
-                   $"    <changefreq>{changeFreq}</changefreq>\r\n" +
-                   $"    <priority>{priority}</priority>\r\n" +
-                   $"  </url>\r\n";
+            var sb = new System.Text.StringBuilder();
+
+            // For each supported language, create a URL entry with all hreflang alternatives
+            foreach (var lang in SupportedLanguages)
+            {
+                var langPath = lang == "en" ? path : $"/{lang}{path}";
+                var fullUrl = $"{baseUrl}{langPath}";
+
+                sb.AppendLine("  <url>");
+                sb.AppendLine($"    <loc>{System.Web.HttpUtility.HtmlEncode(fullUrl)}</loc>");
+                sb.AppendLine($"    <lastmod>{lastMod}</lastmod>");
+                sb.AppendLine($"    <changefreq>{changeFreq}</changefreq>");
+                sb.AppendLine($"    <priority>{priority}</priority>");
+
+                // Add hreflang links for all language versions
+                foreach (var altLang in SupportedLanguages)
+                {
+                    var altPath = altLang == "en" ? path : $"/{altLang}{path}";
+                    var altUrl = $"{baseUrl}{altPath}";
+                    sb.AppendLine($"    <xhtml:link rel=\"alternate\" hreflang=\"{altLang}\" href=\"{System.Web.HttpUtility.HtmlEncode(altUrl)}\" />");
+                }
+
+                // Add x-default (pointing to English version)
+                var defaultUrl = $"{baseUrl}{path}";
+                sb.AppendLine($"    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"{System.Web.HttpUtility.HtmlEncode(defaultUrl)}\" />");
+
+                sb.AppendLine("  </url>");
+            }
+
+            return sb.ToString();
         }
     }
 }

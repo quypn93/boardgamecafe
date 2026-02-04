@@ -95,23 +95,19 @@
 <div class="hero-section py-5 mb-4 d-none d-md-block">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-5 fw-bold mb-3">Find Your Perfect Board Game Cafe</h1>
+            <div class="col-12">
+                <h1 class="display-5 fw-bold mb-3">@SharedLocalizer["Home_HeroTitle"]</h1>
                 <p class="lead mb-4">
-                    Discover amazing board game cafes near you. Browse thousands of games,
-                    read reviews, and find the perfect spot for your next gaming session with friends and family.
+                    @SharedLocalizer["Home_HeroSubtitle"]
                 </p>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="#cafes" class="btn btn-light btn-lg">
-                        <i class="bi bi-search me-2"></i>Browse Cafes
+                        <i class="bi bi-search me-2"></i>@SharedLocalizer["Home_BrowseCafes"]
                     </a>
                     <a asp-controller="Map" asp-action="Index" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-map me-2"></i>View Map
+                        <i class="bi bi-map me-2"></i>@SharedLocalizer["Home_ViewMap"]
                     </a>
                 </div>
-            </div>
-            <div class="col-lg-4 d-none d-lg-block text-center">
-                <i class="bi bi-person-fill display-1 opacity-75"></i>
             </div>
         </div>
     </div>
@@ -124,22 +120,22 @@
         <div class="col-lg-3 col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-funnel"></i> Filters</h5>
+                    <h5 class="mb-0"><i class="bi bi-funnel"></i> @SharedLocalizer["Home_Filters"]</h5>
                 </div>
                 <div class="card-body">
                     <form method="get" action="/" id="searchForm">
                         <!-- Near Me Button -->
                         <div class="mb-3">
                             <button type="button" class="btn btn-outline-primary w-100" id="nearMeBtn">
-                                <i class="bi bi-geo-alt-fill"></i> Near Me
+                                <i class="bi bi-geo-alt-fill"></i> @SharedLocalizer["Home_NearMe"]
                             </button>
                         </div>
 
                         <!-- Country Filter -->
                         <div class="mb-3">
-                            <label for="country" class="form-label fw-bold">Country</label>
+                            <label for="country" class="form-label fw-bold">@SharedLocalizer["Home_FilterByCountry"]</label>
                             <select class="form-select" id="country" name="country">
-                                <option value="">All Countries</option>
+                                <option value="">@SharedLocalizer["Home_AllCountries"]</option>
                                 @foreach (var c in countries)
                                 {
                                     if (ViewBag.SelectedCountry == c)
@@ -156,9 +152,9 @@
 
                         <!-- City Filter -->
                         <div class="mb-3">
-                            <label for="city" class="form-label fw-bold">City</label>
+                            <label for="city" class="form-label fw-bold">@SharedLocalizer["Home_FilterByCity"]</label>
                             <select class="form-select" id="city" name="city">
-                                <option value="">All Cities</option>
+                                <option value="">@SharedLocalizer["Home_AllCities"]</option>
                                 @foreach (var c in cities)
                                 {
                                     if (ViewBag.SelectedCity == c)
@@ -175,7 +171,7 @@
 
                         <!-- Radius Filter -->
                         <div class="mb-3">
-                            <label for="radius" class="form-label fw-bold">Radius (km)</label>
+                            <label for="radius" class="form-label fw-bold">@SharedLocalizer["Home_Radius"]</label>
                             <select class="form-select" id="radius" name="radius">
                                 @{
                                     var radiusOptions = new[] { 10, 25, 50, 100, 500 };
@@ -198,7 +194,7 @@
                         @if (categories.Any())
                         {
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Game Categories</label>
+                                <label class="form-label fw-bold">@SharedLocalizer["Home_GameCategories"]</label>
                                 <select class="form-select" id="categoriesSelect" name="categories" multiple>
                                     @foreach (var cat in categories)
                                     {
@@ -219,7 +215,7 @@
                         @if (boardGames.Any())
                         {
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Board Games Available</label>
+                                <label class="form-label fw-bold">@SharedLocalizer["Home_BoardGamesAvailable"]</label>
                                 <div class="border rounded p-2" style="max-height: 300px; overflow-y: auto;">
                                     @foreach (var game in boardGames)
                                     {
@@ -247,10 +243,10 @@
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success">
-                                <i class="bi bi-search"></i> Apply Filters
+                                <i class="bi bi-search"></i> @SharedLocalizer["Home_ApplyFilters"]
                             </button>
                             <a href="/" class="btn btn-outline-secondary">
-                                <i class="bi bi-x-circle"></i> Clear Filters
+                                <i class="bi bi-x-circle"></i> @SharedLocalizer["Home_ClearFilters"]
                             </a>
                         </div>
                     </form>
@@ -262,13 +258,13 @@
         <div class="col-lg-9 col-md-8">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h1 class="h3">
-                    <i class="bi bi-controller"></i> Board Game Cafes
+                    <i class="bi bi-controller"></i> @SharedLocalizer["Home_BoardGameCafes"]
                     @if (ViewBag.UserLat != null)
                     {
-                        <small class="text-muted fs-6">near your location</small>
+                        <small class="text-muted fs-6">@SharedLocalizer["Home_NearYourLocation"]</small>
                     }
                 </h1>
-                <span class="badge bg-info fs-6">@totalItems cafes found</span>
+                <span class="badge bg-info fs-6">@totalItems @SharedLocalizer["Home_CafesFound"]</span>
             </div>
 
             <!-- Active Filters -->
@@ -279,26 +275,26 @@
                  ViewBag.UserLat != null)
             {
                 <div class="mb-3">
-                    <span class="text-muted me-2">Active filters:</span>
+                    <span class="text-muted me-2">@SharedLocalizer["Home_ActiveFilters"]</span>
                     @if (!string.IsNullOrEmpty(ViewBag.SelectedCountry as string))
                     {
-                        <span class="badge bg-primary me-1">Country: @ViewBag.SelectedCountry</span>
+                        <span class="badge bg-primary me-1">@SharedLocalizer["Home_FilterByCountry"]: @ViewBag.SelectedCountry</span>
                     }
                     @if (!string.IsNullOrEmpty(ViewBag.SelectedCity as string))
                     {
-                        <span class="badge bg-primary me-1">City: @ViewBag.SelectedCity</span>
+                        <span class="badge bg-primary me-1">@SharedLocalizer["Home_FilterByCity"]: @ViewBag.SelectedCity</span>
                     }
                     @if (selectedCategories.Any())
                     {
-                        <span class="badge bg-info me-1">Categories: @string.Join(", ", selectedCategories)</span>
+                        <span class="badge bg-info me-1">@SharedLocalizer["Home_GameCategories"]: @string.Join(", ", selectedCategories)</span>
                     }
                     @if (ViewBag.UserLat != null)
                     {
-                        <span class="badge bg-success me-1">Near Me (@ViewBag.Radius km)</span>
+                        <span class="badge bg-success me-1">@SharedLocalizer["Home_NearMe"] (@ViewBag.Radius km)</span>
                     }
                     @if (selectedGameIds.Length > 0)
                     {
-                        <span class="badge bg-warning text-dark me-1">@selectedGameIds.Length games selected</span>
+                        <span class="badge bg-warning text-dark me-1">@selectedGameIds.Length @SharedLocalizer["Home_GamesSelected"]</span>
                     }
                 </div>
             }
@@ -355,7 +351,7 @@
                                     {
                                         <div class="mb-2">
                                             <small class="text-muted">
-                                                <i class="bi bi-dice-5"></i> @cafe.GamesCount games available
+                                                <i class="bi bi-dice-5"></i> @cafe.GamesCount @SharedLocalizer["Cafe_GamesAvailable"]
                                             </small>
                                         </div>
                                     }
@@ -363,18 +359,18 @@
                                 <div class="card-footer bg-transparent p-2">
                                     <div class="d-flex gap-1 flex-wrap">
                                         <a href="/cafe/@cafe.Slug" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i> Details
+                                            <i class="bi bi-eye"></i> @SharedLocalizer["Home_Details"]
                                         </a>
                                         @if (!string.IsNullOrEmpty(cafe.Website))
                                         {
-                                            <a href="@cafe.Website" target="_blank" class="btn btn-sm btn-outline-success" title="Visit Website">
-                                                <i class="bi bi-globe"> Website</i>
+                                            <a href="@cafe.Website" target="_blank" class="btn btn-sm btn-outline-success" title="@SharedLocalizer["Cafe_Website"]">
+                                                <i class="bi bi-globe"></i> @SharedLocalizer["Cafe_Website"]
                                             </a>
                                         }
                                         @if (!string.IsNullOrEmpty(cafe.GoogleMapsUrl))
                                         {
-                                            <a href="@cafe.GoogleMapsUrl" target="_blank" class="btn btn-sm btn-outline-secondary" title="Open in Maps">
-                                                <i class="bi bi-map"></i> Map
+                                            <a href="@cafe.GoogleMapsUrl" target="_blank" class="btn btn-sm btn-outline-secondary" title="@SharedLocalizer["Home_Map"]">
+                                                <i class="bi bi-map"></i> @SharedLocalizer["Home_Map"]
                                             </a>
                                         }
                                     </div>
@@ -443,9 +439,9 @@
                                 </li>
                             </ul>
                             <p class="text-center pagination-info mb-0 mt-3">
-                                Showing page <strong>@currentPage</strong> of <strong>@totalPages</strong>
+                                @SharedLocalizer["Home_ShowingPage"] <strong>@currentPage</strong> @SharedLocalizer["Home_Of"] <strong>@totalPages</strong>
                                 <span class="text-muted">•</span>
-                                <strong>@totalItems</strong> cafes found
+                                <strong>@totalItems</strong> @SharedLocalizer["Home_CafesFound"]
                             </p>
                         </div>
                     </nav>
@@ -454,8 +450,8 @@
             else
             {
                 <div class="alert alert-info">
-                    <h5><i class="bi bi-info-circle me-2"></i>No cafes found</h5>
-                    <p class="mb-0">Try adjusting your filters or <a href="/">clear all filters</a> to see all cafes.</p>
+                    <h5><i class="bi bi-info-circle me-2"></i>@SharedLocalizer["Home_NoCafesTitle"]</h5>
+                    <p class="mb-0">@SharedLocalizer["Home_NoCafesMessage"]</p>
                 </div>
             }
         </div>
@@ -467,7 +463,7 @@
 {
     <section class="py-4 mt-4 border-top">
         <div class="container">
-            <h3 class="h5 mb-3"><i class="bi bi-geo-alt"></i> Popular Board Game Cafe Cities</h3>
+            <h3 class="h5 mb-3"><i class="bi bi-geo-alt"></i> @SharedLocalizer["Home_PopularCities"]</h3>
             <div class="d-flex flex-wrap gap-2">
                 <a href="/?city=Dallas&country=United%20States" class="btn btn-outline-primary btn-sm">Dallas</a>
                 <a href="/?city=Atlanta&country=United%20States" class="btn btn-outline-primary btn-sm">Atlanta</a>
@@ -489,7 +485,7 @@
 {
     <div class="bg-light py-5 mt-4">
         <div class="container">
-            <h2 class="text-center mb-4">Why Visit a Board Game Cafe?</h2>
+            <h2 class="text-center mb-4">@SharedLocalizer["Home_WhyVisit"]</h2>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card h-100 border-0 shadow-sm">
@@ -497,10 +493,9 @@
                             <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                                 <i class="bi bi-collection text-primary fs-1"></i>
                             </div>
-                            <h5 class="card-title">Huge Game Libraries</h5>
+                            <h5 class="card-title">@SharedLocalizer["Home_HugeLibraries"]</h5>
                             <p class="card-text text-muted">
-                                Access hundreds or even thousands of board games without having to buy them.
-                                Try new games before you purchase, or play classics you've always wanted to try.
+                                @SharedLocalizer["Home_HugeLibrariesDesc"]
                             </p>
                         </div>
                     </div>
@@ -511,10 +506,9 @@
                             <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                                 <i class="bi bi-people text-success fs-1"></i>
                             </div>
-                            <h5 class="card-title">Social Experience</h5>
+                            <h5 class="card-title">@SharedLocalizer["Home_SocialExperience"]</h5>
                             <p class="card-text text-muted">
-                                Meet fellow board game enthusiasts, join game nights, or bring your friends
-                                for a unique social experience away from screens.
+                                @SharedLocalizer["Home_SocialExperienceDesc"]
                             </p>
                         </div>
                     </div>
@@ -525,10 +519,9 @@
                             <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                                 <i class="bi bi-lightbulb text-warning fs-1"></i>
                             </div>
-                            <h5 class="card-title">Expert Guidance</h5>
+                            <h5 class="card-title">@SharedLocalizer["Home_ExpertGuidance"]</h5>
                             <p class="card-text text-muted">
-                                Staff at board game cafes can teach you rules, recommend games based on your
-                                preferences, and help you find the perfect game for your group.
+                                @SharedLocalizer["Home_ExpertGuidanceDesc"]
                             </p>
                         </div>
                     </div>
@@ -540,35 +533,35 @@
     <!-- How It Works Section -->
     <div class="py-5">
         <div class="container">
-            <h2 class="text-center mb-4">How to Find Your Perfect Cafe</h2>
+            <h2 class="text-center mb-4">@SharedLocalizer["Home_HowToFind"]</h2>
             <div class="row g-4 justify-content-center">
                 <div class="col-md-3 text-center">
                     <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
                         <span class="fw-bold">1</span>
                     </div>
-                    <h6>Search by Location</h6>
-                    <p class="text-muted small">Use the "Near Me" button or select your country and city to find nearby cafes.</p>
+                    <h6>@SharedLocalizer["Home_Step1Title"]</h6>
+                    <p class="text-muted small">@SharedLocalizer["Home_Step1Desc"]</p>
                 </div>
                 <div class="col-md-3 text-center">
                     <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
                         <span class="fw-bold">2</span>
                     </div>
-                    <h6>Filter by Games</h6>
-                    <p class="text-muted small">Looking for a specific game? Filter cafes by the board games they have available.</p>
+                    <h6>@SharedLocalizer["Home_Step2Title"]</h6>
+                    <p class="text-muted small">@SharedLocalizer["Home_Step2Desc"]</p>
                 </div>
                 <div class="col-md-3 text-center">
                     <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
                         <span class="fw-bold">3</span>
                     </div>
-                    <h6>Read Reviews</h6>
-                    <p class="text-muted small">Check out reviews from other visitors to find the best cafes in your area.</p>
+                    <h6>@SharedLocalizer["Home_Step3Title"]</h6>
+                    <p class="text-muted small">@SharedLocalizer["Home_Step3Desc"]</p>
                 </div>
                 <div class="col-md-3 text-center">
                     <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
                         <span class="fw-bold">4</span>
                     </div>
-                    <h6>Plan Your Visit</h6>
-                    <p class="text-muted small">Get directions, check opening hours, and visit the cafe's website to plan your trip.</p>
+                    <h6>@SharedLocalizer["Home_Step4Title"]</h6>
+                    <p class="text-muted small">@SharedLocalizer["Home_Step4Desc"]</p>
                 </div>
             </div>
         </div>
@@ -684,11 +677,19 @@
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    // Localized strings for JavaScript
+    var localizedStrings = {
+        gettingLocation: @Html.Raw(Json.Serialize(SharedLocalizer["Home_GettingLocation"].Value)),
+        nearMe: @Html.Raw(Json.Serialize(SharedLocalizer["Home_NearMe"].Value)),
+        selectCategories: @Html.Raw(Json.Serialize(SharedLocalizer["Home_SelectCategories"].Value)),
+        allCities: @Html.Raw(Json.Serialize(SharedLocalizer["Home_AllCities"].Value))
+    };
+
     $(document).ready(function() {
         // Initialize Select2 for categories
         $('#categoriesSelect').select2({
             theme: 'bootstrap-5',
-            placeholder: 'Select categories...',
+            placeholder: localizedStrings.selectCategories,
             allowClear: true,
             closeOnSelect: false
         });
@@ -696,7 +697,7 @@
         // Function to trigger geolocation
         function triggerNearMe() {
             if ("geolocation" in navigator) {
-                $('#nearMeBtn').html('<span class="spinner-border spinner-border-sm"></span> Getting location...');
+                $('#nearMeBtn').html('<span class="spinner-border spinner-border-sm"></span> ' + localizedStrings.gettingLocation);
                 $('#nearMeBtn').prop('disabled', true);
 
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -708,7 +709,7 @@
                     $('#searchForm').submit();
                 }, function(error) {
                     // On error, just reset button - don't alert on auto-trigger
-                    $('#nearMeBtn').html('<i class="bi bi-geo-alt-fill"></i> Near Me');
+                    $('#nearMeBtn').html('<i class="bi bi-geo-alt-fill"></i> ' + localizedStrings.nearMe);
                     $('#nearMeBtn').prop('disabled', false);
                 });
             }
@@ -730,10 +731,10 @@
         // Country change - reload cities
         $('#country').on('change', function() {
             var country = $(this).val();
-            $('#city').html('<option value="">Loading...</option>');
+            $('#city').html('<option value="">' + localizedStrings.gettingLocation.replace('...', '') + '...</option>');
 
             $.get('/Home/GetCitiesByCountry', { country: country }, function(cities) {
-                var options = '<option value="">All Cities</option>';
+                var options = '<option value="">' + localizedStrings.allCities + '</option>';
                 cities.forEach(function(city) {
                     options += '<option value="' + city + '">' + city + '</option>';
                 });

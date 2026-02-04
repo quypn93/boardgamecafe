@@ -1,6 +1,7 @@
 @model LoginViewModel
+@inject IStringLocalizer<SharedResource> SharedLocalizer
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = SharedLocalizer["Account_Login"].Value;
     Layout = "_UserLayout";
 }
 
@@ -9,7 +10,7 @@
         <div class="col-md-5">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Login</h4>
+                    <h4 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> @SharedLocalizer["Account_Login"]</h4>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Login" method="post">
@@ -18,7 +19,7 @@
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
+                            <label asp-for="Email" class="form-label">@SharedLocalizer["Account_Email"]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                 <input asp-for="Email" class="form-control" placeholder="your@email.com" autocomplete="email" />
@@ -27,22 +28,22 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Password</label>
+                            <label asp-for="Password" class="form-label">@SharedLocalizer["Account_Password"]</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input asp-for="Password" class="form-control" placeholder="Password" autocomplete="current-password" />
+                                <input asp-for="Password" class="form-control" placeholder="@SharedLocalizer["Account_Password"]" autocomplete="current-password" />
                             </div>
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3 form-check">
                             <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                            <label asp-for="RememberMe" class="form-check-label">@SharedLocalizer["Account_RememberMe"]</label>
                         </div>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-box-arrow-in-right"></i> Login
+                                <i class="bi bi-box-arrow-in-right"></i> @SharedLocalizer["Account_LoginButton"]
                             </button>
                         </div>
                     </form>
@@ -50,9 +51,9 @@
                     <hr class="my-4">
 
                     <div class="text-center">
-                        <p class="mb-0">Don't have an account?</p>
+                        <p class="mb-0">@SharedLocalizer["Account_NoAccount"]</p>
                         <a asp-action="Register" class="btn btn-outline-secondary mt-2">
-                            <i class="bi bi-person-plus"></i> Create Account
+                            <i class="bi bi-person-plus"></i> @SharedLocalizer["Account_CreateAccount"]
                         </a>
                     </div>
                 </div>

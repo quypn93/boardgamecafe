@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter</value>
+  </resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="Nav_MapView" xml:space="preserve">
+    <value>Bản đồ</value>
+  </data>
+  <data name="Nav_Blog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="Nav_ForBusiness" xml:space="preserve">
+    <value>Dành cho doanh nghiệp</value>
+  </data>
+  <data name="Nav_Pricing" xml:space="preserve">
+    <value>Bảng giá</value>
+  </data>
+  <data name="Nav_AddCafe" xml:space="preserve">
+    <value>Thêm quán của bạn</value>
+  </data>
+  <data name="Nav_FAQ" xml:space="preserve">
+    <value>Câu hỏi thường gặp</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Nav_Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>Hồ sơ của tôi</value>
+  </data>
+  <data name="Nav_AdminDashboard" xml:space="preserve">
+    <value>Trang quản trị</value>
+  </data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve">
+    <value>Tìm quán Board Game gần bạn</value>
+  </data>
+  <data name="Home_Subtitle" xml:space="preserve">
+    <value>Khám phá những quán board game, phòng chơi và điểm đến chơi game tốt nhất trong khu vực của bạn</value>
+  </data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm theo thành phố, tên quán...</value>
+  </data>
+  <data name="Home_SearchButton" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="Home_AllCountries" xml:space="preserve">
+    <value>Tất cả quốc gia</value>
+  </data>
+  <data name="Home_AllCities" xml:space="preserve">
+    <value>Tất cả thành phố</value>
+  </data>
+  <data name="Home_FilterByCountry" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="Home_FilterByCity" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="Home_CafesFound" xml:space="preserve">
+    <value>quán được tìm thấy</value>
+  </data>
+  <data name="Home_NoCafesFound" xml:space="preserve">
+    <value>Không tìm thấy quán nào phù hợp với tiêu chí của bạn</value>
+  </data>
+  <data name="Home_HeroTitle" xml:space="preserve">
+    <value>Tìm Quán Board Game Hoàn Hảo</value>
+  </data>
+  <data name="Home_HeroSubtitle" xml:space="preserve">
+    <value>Khám phá các quán board game tuyệt vời gần bạn. Duyệt hàng ngàn game, đọc đánh giá và tìm địa điểm hoàn hảo cho buổi chơi game tiếp theo cùng bạn bè và gia đình.</value>
+  </data>
+  <data name="Home_BrowseCafes" xml:space="preserve">
+    <value>Tìm Kiếm</value>
+  </data>
+  <data name="Home_ViewMap" xml:space="preserve">
+    <value>Xem Bản Đồ</value>
+  </data>
+  <data name="Home_Filters" xml:space="preserve">
+    <value>Bộ lọc</value>
+  </data>
+  <data name="Home_NearMe" xml:space="preserve">
+    <value>Gần Tôi</value>
+  </data>
+  <data name="Home_Radius" xml:space="preserve">
+    <value>Bán kính (km)</value>
+  </data>
+  <data name="Home_GameCategories" xml:space="preserve">
+    <value>Thể loại Game</value>
+  </data>
+  <data name="Home_BoardGamesAvailable" xml:space="preserve">
+    <value>Board Game Có Sẵn</value>
+  </data>
+  <data name="Home_ApplyFilters" xml:space="preserve">
+    <value>Áp Dụng Bộ Lọc</value>
+  </data>
+  <data name="Home_ClearFilters" xml:space="preserve">
+    <value>Xóa Bộ Lọc</value>
+  </data>
+  <data name="Home_BoardGameCafes" xml:space="preserve">
+    <value>Quán Board Game</value>
+  </data>
+  <data name="Home_NearYourLocation" xml:space="preserve">
+    <value>gần vị trí của bạn</value>
+  </data>
+  <data name="Home_ActiveFilters" xml:space="preserve">
+    <value>Bộ lọc đang áp dụng:</value>
+  </data>
+  <data name="Home_GamesSelected" xml:space="preserve">
+    <value>game đã chọn</value>
+  </data>
+  <data name="Home_Details" xml:space="preserve">
+    <value>Chi tiết</value>
+  </data>
+  <data name="Home_Map" xml:space="preserve">
+    <value>Bản đồ</value>
+  </data>
+  <data name="Home_ShowingPage" xml:space="preserve">
+    <value>Đang hiển thị trang</value>
+  </data>
+  <data name="Home_Of" xml:space="preserve">
+    <value>trên</value>
+  </data>
+  <data name="Home_NoCafesTitle" xml:space="preserve">
+    <value>Không tìm thấy quán</value>
+  </data>
+  <data name="Home_NoCafesMessage" xml:space="preserve">
+    <value>Hãy thử điều chỉnh bộ lọc hoặc xóa tất cả bộ lọc để xem tất cả các quán.</value>
+  </data>
+  <data name="Home_PopularCities" xml:space="preserve">
+    <value>Thành Phố Phổ Biến</value>
+  </data>
+  <data name="Home_WhyVisit" xml:space="preserve">
+    <value>Tại Sao Nên Đến Quán Board Game?</value>
+  </data>
+  <data name="Home_HugeLibraries" xml:space="preserve">
+    <value>Thư Viện Game Khổng Lồ</value>
+  </data>
+  <data name="Home_HugeLibrariesDesc" xml:space="preserve">
+    <value>Trải nghiệm hàng trăm, thậm chí hàng ngàn board game mà không cần mua. Thử game mới trước khi mua, hoặc chơi những game kinh điển bạn luôn muốn thử.</value>
+  </data>
+  <data name="Home_SocialExperience" xml:space="preserve">
+    <value>Trải Nghiệm Xã Hội</value>
+  </data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve">
+    <value>Gặp gỡ những người yêu board game, tham gia đêm chơi game, hoặc mang bạn bè đến cho trải nghiệm xã hội độc đáo thoát khỏi màn hình.</value>
+  </data>
+  <data name="Home_ExpertGuidance" xml:space="preserve">
+    <value>Hướng Dẫn Chuyên Nghiệp</value>
+  </data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve">
+    <value>Nhân viên quán board game có thể dạy bạn luật chơi, đề xuất game phù hợp với sở thích và giúp bạn tìm game hoàn hảo cho nhóm.</value>
+  </data>
+  <data name="Home_HowToFind" xml:space="preserve">
+    <value>Cách Tìm Quán Hoàn Hảo</value>
+  </data>
+  <data name="Home_Step1Title" xml:space="preserve">
+    <value>Tìm Theo Vị Trí</value>
+  </data>
+  <data name="Home_Step1Desc" xml:space="preserve">
+    <value>Sử dụng nút "Gần Tôi" hoặc chọn quốc gia và thành phố để tìm quán gần đó.</value>
+  </data>
+  <data name="Home_Step2Title" xml:space="preserve">
+    <value>Lọc Theo Game</value>
+  </data>
+  <data name="Home_Step2Desc" xml:space="preserve">
+    <value>Đang tìm một game cụ thể? Lọc các quán theo board game họ có.</value>
+  </data>
+  <data name="Home_Step3Title" xml:space="preserve">
+    <value>Đọc Đánh Giá</value>
+  </data>
+  <data name="Home_Step3Desc" xml:space="preserve">
+    <value>Xem đánh giá từ những khách hàng khác để tìm quán tốt nhất trong khu vực.</value>
+  </data>
+  <data name="Home_Step4Title" xml:space="preserve">
+    <value>Lên Kế Hoạch</value>
+  </data>
+  <data name="Home_Step4Desc" xml:space="preserve">
+    <value>Xem chỉ đường, kiểm tra giờ mở cửa và truy cập website của quán để lên kế hoạch.</value>
+  </data>
+  <data name="Home_GettingLocation" xml:space="preserve">
+    <value>Đang lấy vị trí...</value>
+  </data>
+  <data name="Home_SelectCategories" xml:space="preserve">
+    <value>Chọn thể loại...</value>
+  </data>
+
+  <!-- Cafe Details -->
+  <data name="Cafe_Rating" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="Cafe_Reviews" xml:space="preserve">
+    <value>đánh giá</value>
+  </data>
+  <data name="Cafe_Address" xml:space="preserve">
+    <value>Địa chỉ</value>
+  </data>
+  <data name="Cafe_Phone" xml:space="preserve">
+    <value>Điện thoại</value>
+  </data>
+  <data name="Cafe_Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="Cafe_Hours" xml:space="preserve">
+    <value>Giờ mở cửa</value>
+  </data>
+  <data name="Cafe_Games" xml:space="preserve">
+    <value>Thư viện game</value>
+  </data>
+  <data name="Cafe_GamesAvailable" xml:space="preserve">
+    <value>game có sẵn</value>
+  </data>
+  <data name="Cafe_ViewOnMap" xml:space="preserve">
+    <value>Xem trên bản đồ</value>
+  </data>
+  <data name="Cafe_GetDirections" xml:space="preserve">
+    <value>Chỉ đường</value>
+  </data>
+  <data name="Cafe_WriteReview" xml:space="preserve">
+    <value>Viết đánh giá</value>
+  </data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="Blog_ReadMore" xml:space="preserve">
+    <value>Đọc thêm</value>
+  </data>
+  <data name="Blog_PublishedOn" xml:space="preserve">
+    <value>Đăng ngày</value>
+  </data>
+  <data name="Blog_By" xml:space="preserve">
+    <value>bởi</value>
+  </data>
+  <data name="Blog_Category" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+
+  <!-- Dynamic Blog Post Templates -->
+  <data name="BlogTemplate_CityGuide_Title" xml:space="preserve">
+    <value>Các quán Board Game tại {0} - Hướng dẫn đầy đủ</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Summary" xml:space="preserve">
+    <value>Hướng dẫn đầy đủ về các quán board game tại {0}. Tìm những địa điểm chơi tốt nhất, các game có sẵn và nhiều hơn nữa.</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Intro" xml:space="preserve">
+    <value>Chào mừng bạn đến với hướng dẫn toàn diện về các quán board game tại {0}! Dù bạn là game thủ kỳ cựu hay chỉ đang tìm kiếm một đêm vui vẻ, chúng tôi đã có mọi thứ cho bạn.</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Overview" xml:space="preserve">
+    <value>Tổng quan</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_OverviewText" xml:space="preserve">
+    <value>{0} có {1} quán board game, cung cấp hàng ngàn game thuộc nhiều thể loại khác nhau. Từ những góc ấm cúng hoàn hảo cho buổi hẹn hò đến những không gian rộng rãi lý tưởng cho nhóm lớn, có thứ gì đó dành cho tất cả mọi người.</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_TopRated" xml:space="preserve">
+    <value>Các quán được đánh giá cao</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Tips" xml:space="preserve">
+    <value>Mẹo khi ghé thăm</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Tip1" xml:space="preserve">
+    <value>Đặt chỗ trước: Các quán nổi tiếng có thể đông kín nhanh chóng, đặc biệt vào cuối tuần.</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Tip2" xml:space="preserve">
+    <value>Hỏi ý kiến nhân viên: Nhân viên thường là những game thủ và có thể gợi ý game hoàn hảo cho nhóm của bạn.</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Tip3" xml:space="preserve">
+    <value>Lên kế hoạch thời gian: Hầu hết các game mất 1-3 giờ. Hãy dành đủ thời gian để tận hưởng.</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_Tip4" xml:space="preserve">
+    <value>Thử điều mới: Hãy bước ra khỏi vùng an toàn và thử một game mà bạn chưa từng chơi!</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_ExploreMore" xml:space="preserve">
+    <value>Khám phá thêm</value>
+  </data>
+  <data name="BlogTemplate_CityGuide_ViewAllCafes" xml:space="preserve">
+    <value>Xem tất cả quán tại {0}</value>
+  </data>
+  <data name="BlogTemplate_TopGames_Title" xml:space="preserve">
+    <value>Các Board Game phổ biến nhất tại {0}</value>
+  </data>
+  <data name="BlogTemplate_TopGames_Summary" xml:space="preserve">
+    <value>Khám phá những board game phổ biến nhất có sẵn tại các quán board game ở {0}. Từ game gia đình yêu thích đến những kiệt tác chiến thuật.</value>
+  </data>
+  <data name="BlogTemplate_TopGames_Intro" xml:space="preserve">
+    <value>Đang tìm những board game hay nhất để chơi tại {0}? Chúng tôi đã phân tích dữ liệu từ {1} quán board game trong khu vực để mang đến cho bạn những game phổ biến nhất mà người chơi địa phương yêu thích.</value>
+  </data>
+  <data name="BlogTemplate_TopGames_WhyTheseGames" xml:space="preserve">
+    <value>Tại sao lại là những game này?</value>
+  </data>
+  <data name="BlogTemplate_TopGames_WhyText" xml:space="preserve">
+    <value>Những game này xuất hiện thường xuyên nhất tại các quán board game ở {0}, nghĩa là bạn có thể tìm thấy chúng ở bất cứ đâu bạn đến. Đây là những game được yêu thích, phù hợp với mọi người.</value>
+  </data>
+  <data name="BlogTemplate_TopGames_AvailableAt" xml:space="preserve">
+    <value>Có sẵn tại {0} quán ở {1}</value>
+  </data>
+  <data name="BlogTemplate_TopGames_WhereToPlay" xml:space="preserve">
+    <value>Chơi ở đâu</value>
+  </data>
+  <data name="BlogTemplate_TopGames_WhereToPlayText" xml:space="preserve">
+    <value>Sẵn sàng thử những game này? Duyệt tất cả các quán board game tại {0} để tìm địa điểm hoàn hảo cho đêm chơi game tiếp theo của bạn.</value>
+  </data>
+  <data name="BlogTemplate_Players" xml:space="preserve">
+    <value>{0}-{1} Người chơi</value>
+  </data>
+  <data name="BlogTemplate_Minutes" xml:space="preserve">
+    <value>{0} phút</value>
+  </data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve">
+    <value>Khám phá những quán board game tốt nhất gần bạn. Duyệt thư viện game phong phú, đọc đánh giá và tìm điểm đến chơi game tiếp theo của bạn.</value>
+  </data>
+  <data name="Footer_Explore" xml:space="preserve">
+    <value>Khám phá</value>
+  </data>
+  <data name="Footer_Legal" xml:space="preserve">
+    <value>Pháp lý</value>
+  </data>
+  <data name="Footer_Privacy" xml:space="preserve">
+    <value>Chính sách bảo mật</value>
+  </data>
+  <data name="Footer_Terms" xml:space="preserve">
+    <value>Điều khoản dịch vụ</value>
+  </data>
+  <data name="Footer_Contact" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="Footer_ContactText" xml:space="preserve">
+    <value>Bạn có quán board game muốn thêm? Sở hữu quán và muốn cập nhật thông tin? Hãy liên hệ với chúng tôi!</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>© {0} Board Game Cafe Finder. Đã đăng ký bản quyền.</value>
+  </data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve">
+    <value>Xem chi tiết</value>
+  </data>
+  <data name="Common_LearnMore" xml:space="preserve">
+    <value>Tìm hiểu thêm</value>
+  </data>
+  <data name="Common_Submit" xml:space="preserve">
+    <value>Gửi</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Common_Edit" xml:space="preserve">
+    <value>Sửa</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="Common_Next" xml:space="preserve">
+    <value>Tiếp</value>
+  </data>
+  <data name="Common_Previous" xml:space="preserve">
+    <value>Trước</value>
+  </data>
+  <data name="Common_Loading" xml:space="preserve">
+    <value>Đang tải...</value>
+  </data>
+
+  <!-- SEO Meta -->
+  <data name="Meta_DefaultDescription" xml:space="preserve">
+    <value>Tìm những quán board game tốt nhất gần bạn. Khám phá các phòng chơi board game với bản đồ tương tác và danh bạ quán toàn diện.</value>
+  </data>
+  <data name="Meta_DefaultKeywords" xml:space="preserve">
+    <value>quán board game, phòng chơi board game, chơi game bàn, board game gần tôi, tìm quán board game</value>
+  </data>
+
+  <!-- Blog Index Page -->
+  <data name="Blog_CafeGuides" xml:space="preserve">
+    <value>Hướng Dẫn Quán Board Game</value>
+  </data>
+  <data name="Blog_ExploreCities" xml:space="preserve">
+    <value>Khám phá quán board game tại {0} thành phố trên toàn thế giới</value>
+  </data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve">
+    <value>Khám phá quán board game tại {0} thành phố ở {1}</value>
+  </data>
+  <data name="Blog_Clear" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve">
+    <value>Hiển thị tất cả thành phố</value>
+  </data>
+  <data name="Blog_FilterByCountry" xml:space="preserve">
+    <value>Lọc theo Quốc gia</value>
+  </data>
+  <data name="Blog_AllCountries" xml:space="preserve">
+    <value>Tất cả Quốc gia</value>
+  </data>
+  <data name="Blog_ViewAllCountries" xml:space="preserve">
+    <value>Xem Tất cả Quốc gia</value>
+  </data>
+  <data name="Blog_CafesIn" xml:space="preserve">
+    <value>Quán Board Game tại {0}</value>
+  </data>
+  <data name="Blog_DiscoverCafes" xml:space="preserve">
+    <value>Khám phá {0} {1} board game tại {2} với hơn {3} game để chơi.</value>
+  </data>
+  <data name="Blog_Cafe" xml:space="preserve">
+    <value>quán</value>
+  </data>
+  <data name="Blog_Cafes" xml:space="preserve">
+    <value>quán</value>
+  </data>
+  <data name="Blog_ShowingPage" xml:space="preserve">
+    <value>Đang hiển thị trang</value>
+  </data>
+  <data name="Blog_CitiesFound" xml:space="preserve">
+    <value>thành phố được tìm thấy</value>
+  </data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve">
+    <value>Không tìm thấy thành phố</value>
+  </data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve">
+    <value>Chưa có quán board game nào được thêm vào.</value>
+  </data>
+  <data name="Blog_QuickStats" xml:space="preserve">
+    <value>Thống Kê Nhanh</value>
+  </data>
+  <data name="Blog_Cities" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="Blog_Countries" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve">
+    <value>Duyệt theo Quốc gia</value>
+  </data>
+  <data name="Blog_FindCafesNearYou" xml:space="preserve">
+    <value>Tìm Quán Gần Bạn</value>
+  </data>
+  <data name="Blog_FindCafesDesc" xml:space="preserve">
+    <value>Sử dụng bản đồ tương tác để khám phá các quán board game.</value>
+  </data>
+  <data name="Blog_OpenMap" xml:space="preserve">
+    <value>Mở Bản Đồ</value>
+  </data>
+  <data name="Blog_More" xml:space="preserve">
+    <value>+{0} khác</value>
+  </data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve">
+    <value>Bản Đồ Quán Board Game</value>
+  </data>
+  <data name="Map_Subtitle" xml:space="preserve">
+    <value>Khám phá quán board game gần bạn</value>
+  </data>
+  <data name="Map_CafesFound" xml:space="preserve">
+    <value>Quán Được Tìm Thấy</value>
+  </data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm thành phố hoặc địa chỉ...</value>
+  </data>
+  <data name="Map_Go" xml:space="preserve">
+    <value>Tìm</value>
+  </data>
+  <data name="Map_UseMyLocation" xml:space="preserve">
+    <value>Dùng Vị Trí Của Tôi</value>
+  </data>
+  <data name="Map_Filters" xml:space="preserve">
+    <value>Bộ lọc</value>
+  </data>
+  <data name="Map_Country" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="Map_City" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="Map_AllCountries" xml:space="preserve">
+    <value>Tất cả Quốc gia</value>
+  </data>
+  <data name="Map_AllCities" xml:space="preserve">
+    <value>Tất cả Thành phố</value>
+  </data>
+  <data name="Map_Radius" xml:space="preserve">
+    <value>Bán kính</value>
+  </data>
+  <data name="Map_MinRating" xml:space="preserve">
+    <value>Đánh giá tối thiểu</value>
+  </data>
+  <data name="Map_Any" xml:space="preserve">
+    <value>Bất kỳ</value>
+  </data>
+  <data name="Map_GameCategories" xml:space="preserve">
+    <value>Thể loại Game</value>
+  </data>
+  <data name="Map_Search" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="Map_FindCafes" xml:space="preserve">
+    <value>Tìm Quán Board Game</value>
+  </data>
+  <data name="Map_EmptyStateText" xml:space="preserve">
+    <value>Nhập vị trí hoặc dùng vị trí hiện tại để khám phá quán gần đó</value>
+  </data>
+  <data name="Map_SearchingForCafes" xml:space="preserve">
+    <value>Đang tìm quán...</value>
+  </data>
+  <data name="Map_ShowResults" xml:space="preserve">
+    <value>Hiển thị Kết quả</value>
+  </data>
+  <data name="Map_HideResults" xml:space="preserve">
+    <value>Ẩn Kết quả</value>
+  </data>
+  <data name="Map_ZoomIn" xml:space="preserve">
+    <value>Phóng to</value>
+  </data>
+  <data name="Map_ZoomOut" xml:space="preserve">
+    <value>Thu nhỏ</value>
+  </data>
+  <data name="Map_CenterOnLocation" xml:space="preserve">
+    <value>Về vị trí</value>
+  </data>
+  <data name="Map_Cafe" xml:space="preserve">
+    <value>Quán</value>
+  </data>
+  <data name="Map_YourLocation" xml:space="preserve">
+    <value>Vị trí của bạn</value>
+  </data>
+  <data name="Map_SelectCategories" xml:space="preserve">
+    <value>Chọn thể loại...</value>
+  </data>
+
+  <!-- Account Pages -->
+  <data name="Account_Login" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>Mật khẩu</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>Ghi nhớ đăng nhập</value></data>
+  <data name="Account_LoginButton" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>Chưa có tài khoản?</value></data>
+  <data name="Account_CreateAccount" xml:space="preserve"><value>Tạo tài khoản</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>Đăng ký</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>Tên</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>Họ</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>Xác nhận mật khẩu</value></data>
+  <data name="Account_PasswordHint" xml:space="preserve"><value>Tối thiểu 8 ký tự gồm chữ hoa, chữ thường và số.</value></data>
+  <data name="Account_IsCafeOwner" xml:space="preserve"><value>Tôi là chủ quán café</value></data>
+  <data name="Account_CafeOwnerHint" xml:space="preserve"><value>Chọn nếu bạn sở hữu hoặc quản lý quán board game. Bạn sẽ có thể xác nhận và quản lý quán của mình.</value></data>
+  <data name="Account_AlreadyHaveAccount" xml:space="preserve"><value>Đã có tài khoản?</value></data>
+  <data name="Account_Profile" xml:space="preserve"><value>Hồ sơ của tôi</value></data>
+  <data name="Account_ProfileInfo" xml:space="preserve"><value>Thông tin hồ sơ</value></data>
+  <data name="Account_Edit" xml:space="preserve"><value>Sửa</value></data>
+  <data name="Account_DisplayName" xml:space="preserve"><value>Tên hiển thị</value></data>
+  <data name="Account_City" xml:space="preserve"><value>Thành phố</value></data>
+  <data name="Account_Country" xml:space="preserve"><value>Quốc gia</value></data>
+  <data name="Account_Bio" xml:space="preserve"><value>Giới thiệu</value></data>
+  <data name="Account_SaveChanges" xml:space="preserve"><value>Lưu thay đổi</value></data>
+  <data name="Account_Cancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Account_ChangePassword" xml:space="preserve"><value>Đổi mật khẩu</value></data>
+  <data name="Account_CurrentPassword" xml:space="preserve"><value>Mật khẩu hiện tại</value></data>
+  <data name="Account_NewPassword" xml:space="preserve"><value>Mật khẩu mới</value></data>
+  <data name="Account_ConfirmNewPassword" xml:space="preserve"><value>Xác nhận mật khẩu mới</value></data>
+  <data name="Account_Reviews" xml:space="preserve"><value>Đánh giá</value></data>
+  <data name="Account_Visits" xml:space="preserve"><value>Lượt ghé</value></data>
+  <data name="Account_Points" xml:space="preserve"><value>Điểm</value></data>
+  <data name="Account_MemberSince" xml:space="preserve"><value>Thành viên từ</value></data>
+  <data name="Account_LastLogin" xml:space="preserve"><value>Đăng nhập gần nhất</value></data>
+  <data name="Account_QuickActions" xml:space="preserve"><value>Thao tác nhanh</value></data>
+  <data name="Account_FindCafes" xml:space="preserve"><value>Tìm quán</value></data>
+  <data name="Account_MapView" xml:space="preserve"><value>Xem bản đồ</value></data>
+  <data name="Account_ManageMyCafe" xml:space="preserve"><value>Quản lý quán của tôi</value></data>
+  <data name="Account_OwnBoardGameCafe" xml:space="preserve"><value>Bạn sở hữu quán Board Game?</value></data>
+  <data name="Account_ClaimBusiness" xml:space="preserve"><value>Xác nhận doanh nghiệp và quản lý để thu hút thêm khách hàng.</value></data>
+  <data name="Account_LearnPremium" xml:space="preserve"><value>Tìm hiểu về gói Premium</value></data>
+  <data name="Account_ChangeAvatar" xml:space="preserve"><value>Đổi ảnh đại diện</value></data>
+  <data name="Account_SelectNewAvatar" xml:space="preserve"><value>Chọn ảnh đại diện mới</value></data>
+  <data name="Account_AvatarHint" xml:space="preserve"><value>Cho phép: JPG, PNG, GIF, WebP. Tối đa: 5MB</value></data>
+  <data name="Account_Preview" xml:space="preserve"><value>Xem trước:</value></data>
+  <data name="Account_Remove" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Account_Upload" xml:space="preserve"><value>Tải lên</value></data>
+  <data name="Account_EmailCannotChange" xml:space="preserve"><value>Email không thể thay đổi</value></data>
+  <data name="Account_EmailNotVerified" xml:space="preserve"><value>Email chưa xác thực.</value></data>
+  <data name="Account_CheckInbox" xml:space="preserve"><value>Vui lòng kiểm tra hộp thư và xác nhận địa chỉ email.</value></data>
+  <data name="Account_ResendEmail" xml:space="preserve"><value>Gửi lại Email</value></data>
+
+  <!-- Pricing Page -->
+  <data name="Pricing_Title" xml:space="preserve"><value>Gói Đăng Ký Cao Cấp</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>Tăng độ nhận diện quán board game và thu hút thêm khách hàng</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>Phổ biến nhất</value></data>
+  <data name="Pricing_PerMonth" xml:space="preserve"><value>/tháng</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>Bắt đầu</value></data>
+  <data name="Pricing_FeatureComparison" xml:space="preserve"><value>So sánh tính năng</value></data>
+  <data name="Pricing_Feature" xml:space="preserve"><value>Tính năng</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>Thông tin cơ bản</value></data>
+  <data name="Pricing_ContactInfo" xml:space="preserve"><value>Thông tin liên hệ</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>Giờ hoạt động</value></data>
+  <data name="Pricing_LocationOnMap" xml:space="preserve"><value>Vị trí trên bản đồ</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>Thư viện ảnh</value></data>
+  <data name="Pricing_UpTo" xml:space="preserve"><value>Tối đa {0}</value></data>
+  <data name="Pricing_Unlimited" xml:space="preserve"><value>Không giới hạn</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>Danh sách sự kiện</value></data>
+  <data name="Pricing_PrioritySearch" xml:space="preserve"><value>Ưu tiên tìm kiếm</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>Hiển thị trên trang chủ</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>Quản lý kho game</value></data>
+  <data name="Pricing_Analytics" xml:space="preserve"><value>Bảng thống kê</value></data>
+  <data name="Pricing_FAQ" xml:space="preserve"><value>Câu hỏi thường gặp</value></data>
+  <data name="Pricing_FAQ1_Q" xml:space="preserve"><value>Làm sao để xác nhận quán của tôi?</value></data>
+  <data name="Pricing_FAQ1_A" xml:space="preserve"><value>Tìm quán của bạn trên nền tảng, sau đó nhấn "Xác nhận doanh nghiệp" trên trang quán. Bạn cần xác minh quyền sở hữu trước khi kích hoạt tính năng cao cấp.</value></data>
+  <data name="Pricing_FAQ2_Q" xml:space="preserve"><value>Tôi có thể thay đổi gói sau không?</value></data>
+  <data name="Pricing_FAQ2_A" xml:space="preserve"><value>Có! Bạn có thể nâng cấp hoặc hạ cấp gói bất cứ lúc nào. Khi nâng cấp, bạn được truy cập ngay các tính năng mới. Khi hạ cấp, thay đổi có hiệu lực vào cuối kỳ thanh toán.</value></data>
+  <data name="Pricing_FAQ3_Q" xml:space="preserve"><value>Bạn chấp nhận phương thức thanh toán nào?</value></data>
+  <data name="Pricing_FAQ3_A" xml:space="preserve"><value>Chúng tôi chấp nhận các thẻ tín dụng chính (Visa, Mastercard, American Express) và PayPal. Mọi thanh toán được xử lý an toàn.</value></data>
+  <data name="Pricing_FAQ4_Q" xml:space="preserve"><value>Có hợp đồng hoặc cam kết không?</value></data>
+  <data name="Pricing_FAQ4_A" xml:space="preserve"><value>Không có hợp đồng dài hạn! Tất cả gói đều theo tháng và bạn có thể hủy bất cứ lúc nào. Listing của bạn vẫn hoạt động đến hết kỳ thanh toán.</value></data>
+  <data name="Pricing_ReadyToGrow" xml:space="preserve"><value>Sẵn sàng phát triển doanh nghiệp?</value></data>
+  <data name="Pricing_JoinCafes" xml:space="preserve"><value>Tham gia cùng hàng trăm quán board game đang sử dụng nền tảng của chúng tôi</value></data>
+  <data name="Pricing_FindYourCafe" xml:space="preserve"><value>Tìm quán của bạn</value></data>
+  <data name="Pricing_AddYourCafe" xml:space="preserve"><value>Thêm quán của bạn</value></data>
+  <data name="Pricing_SearchCafe" xml:space="preserve"><value>Tìm kiếm quán board game của bạn để bắt đầu với gói</value></data>
+  <data name="Pricing_Plan" xml:space="preserve"><value></value></data>
+  <data name="Pricing_SearchPlaceholder" xml:space="preserve"><value>Nhập tên quán hoặc thành phố...</value></data>
+  <data name="Pricing_StartTyping" xml:space="preserve"><value>Bắt đầu nhập để tìm kiếm quán của bạn</value></data>
+  <data name="Pricing_NoCafesFound" xml:space="preserve"><value>Không tìm thấy quán. Thử từ khóa khác.</value></data>
+  <data name="Pricing_CantFindCafe" xml:space="preserve"><value>Không tìm thấy quán của bạn?</value></data>
+  <data name="Pricing_AddItNow" xml:space="preserve"><value>Thêm ngay</value></data>
+  <data name="Pricing_SearchError" xml:space="preserve"><value>Lỗi tìm kiếm. Vui lòng thử lại.</value></data>
+  <data name="Plan_Feature_BasicListing" xml:space="preserve"><value>Danh sách cơ bản</value></data>
+  <data name="Plan_Feature_ContactInfo" xml:space="preserve"><value>Thông tin liên hệ</value></data>
+  <data name="Plan_Feature_BusinessHours" xml:space="preserve"><value>Giờ hoạt động</value></data>
+  <data name="Plan_Feature_LocationOnMap" xml:space="preserve"><value>Vị trí trên bản đồ</value></data>
+  <data name="Plan_Feature_EverythingInBasic" xml:space="preserve"><value>Tất cả trong gói Basic</value></data>
+  <data name="Plan_Feature_PhotoGallery" xml:space="preserve"><value>Thư viện ảnh (tối đa 10)</value></data>
+  <data name="Plan_Feature_EventListings" xml:space="preserve"><value>Đăng sự kiện</value></data>
+  <data name="Plan_Feature_PrioritySearch" xml:space="preserve"><value>Ưu tiên trong kết quả tìm kiếm</value></data>
+  <data name="Plan_Feature_EverythingInPremium" xml:space="preserve"><value>Tất cả trong gói Premium</value></data>
+  <data name="Plan_Feature_FeaturedHomepage" xml:space="preserve"><value>Hiển thị nổi bật trên trang chủ</value></data>
+  <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>Quản lý kho board game</value></data>
+  <data name="Plan_Feature_Analytics" xml:space="preserve"><value>Bảng thống kê phân tích</value></data>
+  <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>Ảnh không giới hạn</value></data>
+</root>

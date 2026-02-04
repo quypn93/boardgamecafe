@@ -1,7 +1,9 @@
 @model List<BoardGameCafeFinder.Controllers.CityBlogItem>
+@inject IStringLocalizer<SharedResource> SharedLocalizer
 @{
     var countries = ViewBag.Countries as List<string> ?? new List<string>();
     var selectedCountry = ViewBag.SelectedCountry as string;
+    var autoFiltered = ViewBag.AutoFiltered as bool? ?? false;
     var currentPage = (int)(ViewBag.CurrentPage ?? 1);
     var totalPages = (int)(ViewBag.TotalPages ?? 1);
     var totalItems = (int)(ViewBag.TotalItems ?? 0);
@@ -53,10 +55,17 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <h1 class="display-5 fw-bold mb-3">
-                    <i class="bi bi-journal-richtext me-3"></i>Board Game Cafe Guides
+                    <i class="bi bi-journal-richtext me-3"></i>@SharedLocalizer["Blog_CafeGuides"]
                 </h1>
                 <p class="lead opacity-90">
-                    Explore board game cafes in @totalItems cities worldwide
+                    @if (!string.IsNullOrEmpty(selectedCountry))
+                    {
+                        @string.Format(SharedLocalizer["Blog_ExploreCitiesInCountry"].Value, totalItems, selectedCountry)
+                    }
+                    else
+                    {
+                        @string.Format(SharedLocalizer["Blog_ExploreCities"].Value, totalItems)
+                    }
                 </p>
             </div>
         </div>
@@ -75,21 +84,30 @@
                         <span class="badge bg-primary fs-6 me-2">
                             <i class="bi bi-geo-alt"></i> @selectedCountry
                         </span>
-                        <a href="/Blog" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-x"></i> Clear
-                        </a>
+                        @if (autoFiltered)
+                        {
+                            <a href="/Blog?country=" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-globe"></i> @SharedLocalizer["Blog_ViewAllCountries"]
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Blog" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-x"></i> @SharedLocalizer["Blog_Clear"]
+                            </a>
+                        }
                     }
                     else
                     {
-                        <span class="text-muted">Showing all cities</span>
+                        <span class="text-muted">@SharedLocalizer["Blog_ShowingAllCities"]</span>
                     }
                 </div>
                 <div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-funnel"></i> Filter by Country
+                        <i class="bi bi-funnel"></i> @SharedLocalizer["Blog_FilterByCountry"]
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
-                        <li><a class="dropdown-item @(string.IsNullOrEmpty(selectedCountry) ? "active" : "")" href="/Blog">All Countries</a></li>
+                        <li><a class="dropdown-item @(string.IsNullOrEmpty(selectedCountry) && !autoFiltered ? "active" : "")" href="/Blog?country=">@SharedLocalizer["Blog_AllCountries"]</a></li>
                         <li><hr class="dropdown-divider"></li>
                         @foreach (var country in countries)
                         {
@@ -132,11 +150,11 @@
                                     </div>
                                     <h5 class="card-title">
                                         <a href="/blog/@item.Slug" class="text-decoration-none text-dark stretched-link">
-                                            Board Game Cafes in @item.City
+                                            @string.Format(SharedLocalizer["Blog_CafesIn"].Value, item.City)
                                         </a>
                                     </h5>
                                     <p class="card-text text-muted small">
-                                        Discover @item.CafeCount board game @(item.CafeCount == 1 ? "cafe" : "cafes") in @item.City with @item.TotalGames+ games to play.
+                                        @string.Format(SharedLocalizer["Blog_DiscoverCafes"].Value, item.CafeCount, item.CafeCount == 1 ? SharedLocalizer["Blog_Cafe"].Value : SharedLocalizer["Blog_Cafes"].Value, item.City, item.TotalGames)
                                     </p>
                                 </div>
                                 <div class="card-footer bg-transparent border-0">
@@ -224,9 +242,9 @@
                                 </li>
                             </ul>
                             <p class="text-center pagination-info mb-0 mt-3">
-                                Showing page <strong>@currentPage</strong> of <strong>@totalPages</strong>
+                                @SharedLocalizer["Blog_ShowingPage"] <strong>@currentPage</strong> @SharedLocalizer["Home_Of"] <strong>@totalPages</strong>
                                 <span class="text-muted">•</span>
-                                <strong>@totalItems</strong> cities found
+                                <strong>@totalItems</strong> @SharedLocalizer["Blog_CitiesFound"]
                             </p>
                         </div>
                     </nav>
@@ -236,9 +254,9 @@
             {
                 <div class="text-center py-5">
                     <i class="bi bi-geo-alt display-1 text-muted"></i>
-                    <h4 class="mt-3">No cities found</h4>
-                    <p class="text-muted">No board game cafes have been added yet.</p>
-                    <a href="/" class="btn btn-primary">Browse Cafes</a>
+                    <h4 class="mt-3">@SharedLocalizer["Blog_NoCitiesFound"]</h4>
+                    <p class="text-muted">@SharedLocalizer["Blog_NoCitiesMessage"]</p>
+                    <a href="/" class="btn btn-primary">@SharedLocalizer["Home_BrowseCafes"]</a>
                 </div>
             }
         </div>
@@ -248,15 +266,15 @@
             <!-- Quick Stats -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Quick Stats</h5>
+                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>@SharedLocalizer["Blog_QuickStats"]</h5>
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Cities</span>
+                        <span class="text-muted">@SharedLocalizer["Blog_Cities"]</span>
                         <strong>@totalItems</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Countries</span>
+                        <span class="text-muted">@SharedLocalizer["Blog_Countries"]</span>
                         <strong>@countries.Count</strong>
                     </div>
                 </div>
@@ -267,7 +285,7 @@
             {
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="bi bi-globe me-2"></i>Browse by Country</h5>
+                        <h5 class="mb-0"><i class="bi bi-globe me-2"></i>@SharedLocalizer["Blog_BrowseByCountry"]</h5>
                     </div>
                     <div class="card-body">
                         <div class="d-flex flex-wrap gap-2">
@@ -280,7 +298,7 @@
                             }
                             @if (countries.Count > 10)
                             {
-                                <span class="text-muted small align-self-center">+@(countries.Count - 10) more</span>
+                                <span class="text-muted small align-self-center">@string.Format(SharedLocalizer["Blog_More"].Value, countries.Count - 10)</span>
                             }
                         </div>
                     </div>
@@ -291,10 +309,10 @@
             <div class="card shadow-sm bg-gradient-primary text-white">
                 <div class="card-body text-center py-4">
                     <i class="bi bi-map display-4 mb-3"></i>
-                    <h5>Find Cafes Near You</h5>
-                    <p class="small opacity-90">Use our interactive map to discover board game cafes.</p>
+                    <h5>@SharedLocalizer["Blog_FindCafesNearYou"]</h5>
+                    <p class="small opacity-90">@SharedLocalizer["Blog_FindCafesDesc"]</p>
                     <a href="/Map" class="btn btn-light">
-                        <i class="bi bi-map me-1"></i> Open Map
+                        <i class="bi bi-map me-1"></i> @SharedLocalizer["Blog_OpenMap"]
                     </a>
                 </div>
             </div>

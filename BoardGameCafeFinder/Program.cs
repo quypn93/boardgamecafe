@@ -1,7 +1,10 @@
 using BoardGameCafeFinder.Data;
 using BoardGameCafeFinder.Models.Domain;
+using BoardGameCafeFinder.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,11 +100,49 @@ builder.Services.AddScoped<BoardGameCafeFinder.Services.IPaymentService>(sp =>
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IStripeService>(sp =>
     sp.GetRequiredService<BoardGameCafeFinder.Services.StripePaymentService>());
 
-// Add MVC Controllers and Views
-builder.Services.AddControllersWithViews();
+// Localization Configuration
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+// Supported cultures for i18n (based on countries with cafes)
+var supportedCultures = new[]
+{
+    new CultureInfo("en"),  // English (US, UK, Australia, Canada, etc.)
+    new CultureInfo("vi"),  // Vietnamese (Vietnam)
+    new CultureInfo("ja"),  // Japanese (Japan)
+    new CultureInfo("ko"),  // Korean (South Korea)
+    new CultureInfo("zh"),  // Chinese (Hong Kong, China, Taiwan)
+    new CultureInfo("th"),  // Thai (Thailand)
+    new CultureInfo("es"),  // Spanish (Spain)
+    new CultureInfo("de")   // German (Germany)
+};
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("en");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    // Order matters - first one that matches wins
+    // 1. URL path (/vi/, /ja/) - best for SEO (handled by CultureMiddleware)
+    // 2. Query string (?culture=vi) - for testing/manual override
+    // 3. Cookie - remembers user's choice
+    // 4. Accept-Language header - auto-detect from browser
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider(),
+        new AcceptLanguageHeaderRequestCultureProvider()
+    };
+});
+
+// Add MVC Controllers and Views with localization
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
 
 // Add Razor Pages (for Identity UI if needed)
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages()
+    .AddViewLocalization();
 
 var app = builder.Build();
 
@@ -137,6 +178,12 @@ app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Localization middleware - must be before routing
+app.UseRequestLocalization();
+
+// Custom culture middleware for SEO-friendly URL prefixes (/vi/, /en/, etc.)
+app.UseCultureFromUrl();
+
 app.UseRouting();
 
 // Add Session middleware
@@ -146,7 +193,11 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map routes
+// Map routes with culture prefix for SEO (e.g., /vi/cafe/123)
+app.MapControllerRoute(
+    name: "culture",
+    pattern: "{culture:regex(^(en|vi|ja|ko|zh|th|es|de)$)}/{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
