@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = $"{Model.Name} - Escape Rooms in {Model.City}";
     ViewData["Description"] = Model.MetaDescription ?? $"Find escape rooms at {Model.Name} in {Model.City}. {Model.TotalRooms} rooms available. Read reviews, compare difficulty, and book your adventure.";
+    ViewData["OgImage"] = !string.IsNullOrEmpty(Model.LocalImagePath) ? $"{Context.Request.Scheme}://{Context.Request.Host}{Model.LocalImagePath}" : null;
 }
 
 <div class="container py-4">
@@ -306,4 +307,53 @@
             color: #ffc107;
         }
     </style>
+}
+
+@section JsonLd {
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "EntertainmentBusiness",
+        "name": "@Model.Name",
+        "description": "@(Model.Description ?? $"Escape room venue in {Model.City}")",
+        "url": "@($"{Context.Request.Scheme}://{Context.Request.Host}/venue/{Model.Slug}")",
+        @if (!string.IsNullOrEmpty(Model.LocalImagePath))
+        {
+            @:"image": "@($"{Context.Request.Scheme}://{Context.Request.Host}{Model.LocalImagePath}")",
+        }
+        "address": {
+            "@@type": "PostalAddress",
+            "streetAddress": "@Model.Address",
+            "addressLocality": "@Model.City",
+            "addressCountry": "@Model.Country"
+        },
+        @if (Model.Latitude != 0 && Model.Longitude != 0)
+        {
+            @:"geo": {
+            @:    "@@type": "GeoCoordinates",
+            @:    "latitude": @Model.Latitude,
+            @:    "longitude": @Model.Longitude
+            @:},
+        }
+        @if (!string.IsNullOrEmpty(Model.Phone))
+        {
+            @:"telephone": "@Model.Phone",
+        }
+        @if (!string.IsNullOrEmpty(Model.Website))
+        {
+            @:"sameAs": "@Model.Website",
+        }
+        @if (Model.AverageRating.HasValue && Model.TotalReviews > 0)
+        {
+            @:"aggregateRating": {
+            @:    "@@type": "AggregateRating",
+            @:    "ratingValue": "@Model.AverageRating.Value.ToString("F1")",
+            @:    "reviewCount": "@Model.TotalReviews",
+            @:    "bestRating": "5",
+            @:    "worstRating": "1"
+            @:},
+        }
+        "numberOfRooms": @Model.TotalRooms
+    }
+    </script>
 }

@@ -1,0 +1,12 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+    Layout = "_Layout";
+}
+
+<div class="container my-5 text-center">
+    <h1 class="display-1 text-muted">@Model.StatusCode</h1>
+    <h2>@Model.Message</h2>
+    <p class="text-muted">We're sorry, something went wrong.</p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Go to Home</a>
+</div>

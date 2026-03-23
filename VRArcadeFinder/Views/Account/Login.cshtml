@@ -1,0 +1,47 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = SharedLocalizer["Account_Login"].Value;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4><i class="bi bi-person-circle me-2"></i>@SharedLocalizer["Account_Login"]</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">@SharedLocalizer["Account_Email"]</label>
+                            <input asp-for="Email" class="form-control" placeholder="your@email.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">@SharedLocalizer["Account_Password"]</label>
+                            <input asp-for="Password" class="form-control" type="password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label">@SharedLocalizer["Account_RememberMe"]</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">@SharedLocalizer["Account_Login"]</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">@SharedLocalizer["Account_NoAccount"] <a asp-action="Register">@SharedLocalizer["Account_Register"]</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

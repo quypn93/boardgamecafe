@@ -1,0 +1,177 @@
+@model CookingClass
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="School" asp-action="Details" asp-route-slug="@Model.School?.Slug">@Model.School?.Name</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid rounded mb-4" style="width: 100%; max-height: 400px; object-fit: cover;" alt="@Model.Name">
+            }
+
+            <h1>@Model.Name</h1>
+            <div class="mb-3">
+                <span class="badge @Model.GetDifficultyBadgeClass() me-1">@Model.DifficultyLevel</span>
+                <span class="badge bg-secondary">@Model.CuisineType</span>
+            </div>
+
+            @if (Model.AverageRating.HasValue)
+            {
+                <div class="mb-3">
+                    <span class="rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="bi @(i <= Model.AverageRating ? "bi-star-fill text-warning" : "bi-star")"></i>
+                        }
+                    </span>
+                    <span class="ms-2">@Model.AverageRating.Value.ToString("F1") (@Model.TotalReviews reviews)</span>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">About This Class</h5>
+                        <p>@Model.Description</p>
+                    </div>
+                </div>
+            }
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Class Details</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl>
+                                <dt>Duration</dt>
+                                <dd>@Model.GetDurationDisplay()</dd>
+
+                                <dt>Class Size</dt>
+                                <dd>@Model.GetStudentRange()</dd>
+
+                                @if (Model.MinAge.HasValue)
+                                {
+                                    <dt>Minimum Age</dt>
+                                    <dd>@Model.MinAge years</dd>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.InstructorName))
+                                {
+                                    <dt>Instructor</dt>
+                                    <dd>@Model.InstructorName</dd>
+                                }
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dt>What's Included</dt>
+                            <dd>
+                                <ul class="list-unstyled">
+                                    @if (Model.IngredientsProvided) { <li><i class="bi bi-check-circle text-success"></i> Ingredients Provided</li> }
+                                    @if (Model.MealIncluded) { <li><i class="bi bi-check-circle text-success"></i> Meal Included</li> }
+                                    @if (Model.TakeHomeRecipes) { <li><i class="bi bi-check-circle text-success"></i> Take-Home Recipes</li> }
+                                    @if (Model.WineParingIncluded) { <li><i class="bi bi-check-circle text-success"></i> Wine Pairing Included</li> }
+                                </ul>
+                            </dd>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.IsVegetarian || Model.IsVegan || Model.IsGlutenFree || Model.IsHalal || Model.IsKosher)
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Dietary Options</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            @if (Model.IsVegetarian) { <span class="badge bg-success">Vegetarian</span> }
+                            @if (Model.IsVegan) { <span class="badge bg-success">Vegan</span> }
+                            @if (Model.IsGlutenFree) { <span class="badge bg-info">Gluten-Free</span> }
+                            @if (Model.IsHalal) { <span class="badge bg-primary">Halal</span> }
+                            @if (Model.IsKosher) { <span class="badge bg-primary">Kosher</span> }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.WhatToBring))
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">What to Bring</h5>
+                        <p>@Model.WhatToBring</p>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.InstructorBio))
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">About the Instructor</h5>
+                        <p><strong>@Model.InstructorName</strong></p>
+                        <p>@Model.InstructorBio</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title">Booking Information</h5>
+
+                    @if (Model.PricePerPerson.HasValue)
+                    {
+                        <h3 class="text-primary mb-3">$@Model.PricePerPerson <small class="text-muted fs-6">per person</small></h3>
+                    }
+                    @if (Model.PriceForPrivateGroup.HasValue)
+                    {
+                        <p class="text-muted">Private group: $@Model.PriceForPrivateGroup</p>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.School?.BookingUrl))
+                    {
+                        <a href="@Model.School.BookingUrl" target="_blank" rel="noopener" class="btn btn-primary w-100 mb-3">
+                            Book This Class
+                        </a>
+                    }
+
+                    <hr />
+
+                    <h6>School Information</h6>
+                    <p class="mb-1"><strong>@Model.School?.Name</strong></p>
+                    <p class="text-muted small">
+                        <i class="bi bi-geo-alt"></i> @Model.School?.Address, @Model.School?.City
+                    </p>
+
+                    @if (!string.IsNullOrEmpty(Model.School?.Phone))
+                    {
+                        <p class="mb-1"><i class="bi bi-telephone me-2"></i>@Model.School.Phone</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.School?.Website))
+                    {
+                        <p class="mb-1">
+                            <i class="bi bi-globe me-2"></i>
+                            <a href="@Model.School.Website" target="_blank" rel="noopener">Visit Website</a>
+                        </p>
+                    }
+
+                    <a asp-controller="School" asp-action="Details" asp-route-slug="@Model.School?.Slug" class="btn btn-outline-secondary w-100 mt-3">
+                        View All Classes at This School
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -281,6 +281,77 @@ namespace EscapeRoomFinder.Migrations
                     b.ToTable("Bookings");
                 });
 
+            modelBuilder.Entity("EscapeRoomFinder.Models.Domain.City", b =>
+                {
+                    b.Property<int>("CityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityId"));
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasDefaultValue("United States");
+
+                    b.Property<int>("CrawlCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("LastCrawlStatus")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("LastCrawledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaxResults")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(15);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("NextCrawlAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("US");
+
+                    b.HasKey("CityId");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("LastCrawlStatus");
+
+                    b.HasIndex("NextCrawlAt");
+
+                    b.HasIndex("Name", "Country")
+                        .IsUnique();
+
+                    b.ToTable("Cities");
+                });
+
             modelBuilder.Entity("EscapeRoomFinder.Models.Domain.ClaimRequest", b =>
                 {
                     b.Property<int>("ClaimRequestId")
@@ -400,6 +471,62 @@ namespace EscapeRoomFinder.Migrations
                     b.HasIndex("VenueId");
 
                     b.ToTable("ClaimRequests");
+                });
+
+            modelBuilder.Entity("EscapeRoomFinder.Models.Domain.CrawlHistory", b =>
+                {
+                    b.Property<int>("CrawlHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CrawlHistoryId"));
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("StartedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("InProgress");
+
+                    b.Property<int>("VenuesAdded")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("VenuesFound")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("VenuesUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("CrawlHistoryId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("StartedAt");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("CrawlHistories");
                 });
 
             modelBuilder.Entity("EscapeRoomFinder.Models.Domain.EscapeRoom", b =>
@@ -1512,6 +1639,17 @@ namespace EscapeRoomFinder.Migrations
                     b.Navigation("Venue");
                 });
 
+            modelBuilder.Entity("EscapeRoomFinder.Models.Domain.CrawlHistory", b =>
+                {
+                    b.HasOne("EscapeRoomFinder.Models.Domain.City", "City")
+                        .WithMany("CrawlHistories")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("City");
+                });
+
             modelBuilder.Entity("EscapeRoomFinder.Models.Domain.EscapeRoom", b =>
                 {
                     b.HasOne("EscapeRoomFinder.Models.Domain.EscapeRoomVenue", "Venue")
@@ -1689,6 +1827,11 @@ namespace EscapeRoomFinder.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("EscapeRoomFinder.Models.Domain.City", b =>
+                {
+                    b.Navigation("CrawlHistories");
                 });
 
             modelBuilder.Entity("EscapeRoomFinder.Models.Domain.EscapeRoom", b =>

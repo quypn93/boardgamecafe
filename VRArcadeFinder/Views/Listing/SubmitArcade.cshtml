@@ -1,0 +1,278 @@
+@{
+    ViewData["Title"] = "Submit Your VR Arcade";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1><i class="bi bi-plus-circle me-2"></i>Submit Your VR Arcade</h1>
+            <p class="lead text-muted">Add your VR arcade to our directory and reach thousands of VR enthusiasts</p>
+            <hr>
+
+            <form method="post" enctype="multipart/form-data" id="submitForm">
+                <!-- Basic Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Basic Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Arcade Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required maxlength="200">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea name="description" class="form-control" rows="4" required maxlength="2000"
+                                placeholder="Describe your VR arcade, what makes it unique, and what customers can expect..."></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Website</label>
+                                <input type="url" name="website" class="form-control" placeholder="https://...">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" name="phone" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Location</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Address <span class="text-danger">*</span></label>
+                            <input type="text" name="address" class="form-control" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City <span class="text-danger">*</span></label>
+                                <input type="text" name="city" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Country <span class="text-danger">*</span></label>
+                                <select name="country" class="form-select" required>
+                                    <option value="">Select country...</option>
+                                    <option value="Vietnam">Vietnam</option>
+                                    <option value="United States">United States</option>
+                                    <option value="Japan">Japan</option>
+                                    <option value="South Korea">South Korea</option>
+                                    <option value="Singapore">Singapore</option>
+                                    <option value="Thailand">Thailand</option>
+                                    <option value="Malaysia">Malaysia</option>
+                                    <option value="Indonesia">Indonesia</option>
+                                    <option value="Philippines">Philippines</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VR Details -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">VR Equipment & Features</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">VR Platforms Available <span class="text-danger">*</span></label>
+                            <div class="row">
+                                @{
+                                    var platforms = new[] { "Meta Quest 2", "Meta Quest 3", "Meta Quest Pro", "HTC Vive", "HTC Vive Pro", "Valve Index", "PlayStation VR 2", "Pico 4", "PC VR (SteamVR)" };
+                                }
+                                @foreach (var platform in platforms)
+                                {
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="platforms" value="@platform" id="plat_@platform.Replace(" ", "_")">
+                                            <label class="form-check-label" for="plat_@platform.Replace(" ", "_")">@platform</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Total VR Stations <span class="text-danger">*</span></label>
+                                <input type="number" name="totalStations" class="form-control" min="1" max="100" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Price Range</label>
+                                <select name="priceRange" class="form-select">
+                                    <option value="$">$ - Budget Friendly</option>
+                                    <option value="$$" selected>$$ - Moderate</option>
+                                    <option value="$$$">$$$ - Premium</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Features</label>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="hasMultiplayerArea" id="hasMultiplayerArea">
+                                        <label class="form-check-label" for="hasMultiplayerArea">Multiplayer Area</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="hasPartyRooms" id="hasPartyRooms">
+                                        <label class="form-check-label" for="hasPartyRooms">Party Rooms</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="hasMotionPlatform" id="hasMotionPlatform">
+                                        <label class="form-check-label" for="hasMotionPlatform">Motion Platform</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="hasRoomScale" id="hasRoomScale">
+                                        <label class="form-check-label" for="hasRoomScale">Room-Scale VR</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="hasFullBodyTracking" id="hasFullBodyTracking">
+                                        <label class="form-check-label" for="hasFullBodyTracking">Full Body Tracking</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="hasArena" id="hasArena">
+                                        <label class="form-check-label" for="hasArena">VR Arena/Free Roam</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Hours -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Business Hours</h5>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var days = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+                        }
+                        @foreach (var day in days)
+                        {
+                            <div class="row mb-2 align-items-center">
+                                <div class="col-md-3">
+                                    <label class="form-label mb-0">@day</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="time" name="@(day.ToLower())Open" class="form-control form-control-sm" value="10:00">
+                                </div>
+                                <div class="col-md-1 text-center">to</div>
+                                <div class="col-md-3">
+                                    <input type="time" name="@(day.ToLower())Close" class="form-control form-control-sm" value="22:00">
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="@(day.ToLower())Closed" id="@(day.ToLower())Closed">
+                                        <label class="form-check-label" for="@(day.ToLower())Closed">Closed</label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Photos -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Photos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Logo</label>
+                            <input type="file" name="logo" class="form-control" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cover Photo</label>
+                            <input type="file" name="coverPhoto" class="form-control" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Gallery Photos (up to 10)</label>
+                            <input type="file" name="gallery" class="form-control" accept="image/*" multiple>
+                            <small class="text-muted">Select multiple photos of your arcade, VR equipment, and setup</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Plan -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Choose Your Plan</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check card p-3">
+                                    <input class="form-check-input" type="radio" name="plan" value="basic" id="planBasic" checked>
+                                    <label class="form-check-label" for="planBasic">
+                                        <strong>Basic - $29.99/mo</strong>
+                                        <p class="small text-muted mb-0">Standard listing with contact info</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check card p-3 border-primary">
+                                    <input class="form-check-input" type="radio" name="plan" value="premium" id="planPremium">
+                                    <label class="form-check-label" for="planPremium">
+                                        <strong>Premium - $59.99/mo</strong>
+                                        <span class="badge bg-primary ms-1">Popular</span>
+                                        <p class="small text-muted mb-0">Photo gallery + priority listing</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check card p-3">
+                                    <input class="form-check-input" type="radio" name="plan" value="featured" id="planFeatured">
+                                    <label class="form-check-label" for="planFeatured">
+                                        <strong>Featured - $99.99/mo</strong>
+                                        <p class="small text-muted mb-0">Homepage feature + analytics</p>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-muted small mt-3 mb-0">
+                            <a href="/listing/pricing" target="_blank">View full plan comparison</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                    <label class="form-check-label" for="agreeTerms">
+                        I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-lg me-2"></i>Submit Arcade
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

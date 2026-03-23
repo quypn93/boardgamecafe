@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="0" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="SiteName" xml:space="preserve">
+    <value>CookingClassFinder</value>
+  </data>
+  <data name="SiteTagline" xml:space="preserve">
+    <value>Tìm lớp học nấu ăn phù hợp gần bạn</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Giới thiệu</value>
+  </data>
+  <data name="Blog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Hồ sơ</value>
+  </data>
+  <data name="CookingSchools" xml:space="preserve">
+    <value>Trường dạy nấu ăn</value>
+  </data>
+  <data name="CookingClasses" xml:space="preserve">
+    <value>Lớp học nấu ăn</value>
+  </data>
+  <data name="Cuisines" xml:space="preserve">
+    <value>Ẩm thực</value>
+  </data>
+  <data name="Reviews" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="BookNow" xml:space="preserve">
+    <value>Đặt ngay</value>
+  </data>
+  <data name="ViewDetails" xml:space="preserve">
+    <value>Xem chi tiết</value>
+  </data>
+  <data name="AllLevels" xml:space="preserve">
+    <value>Tất cả trình độ</value>
+  </data>
+  <data name="Beginner" xml:space="preserve">
+    <value>Cơ bản</value>
+  </data>
+  <data name="Intermediate" xml:space="preserve">
+    <value>Trung cấp</value>
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Nâng cao</value>
+  </data>
+  <data name="PerPerson" xml:space="preserve">
+    <value>mỗi người</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Thời gian</value>
+  </data>
+  <data name="ClassSize" xml:space="preserve">
+    <value>Số học viên</value>
+  </data>
+  <data name="Instructor" xml:space="preserve">
+    <value>Giảng viên</value>
+  </data>
+</root>

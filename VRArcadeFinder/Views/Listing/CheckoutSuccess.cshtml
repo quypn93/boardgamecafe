@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Payment Successful";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="mb-4">
+                <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                    <i class="bi bi-check-lg" style="font-size: 3rem;"></i>
+                </div>
+            </div>
+
+            <h1 class="display-5 mb-3">Payment Successful!</h1>
+            <p class="lead text-muted">Thank you for your purchase. Your listing has been activated.</p>
+
+            @if (ViewBag.OrderId != null)
+            {
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Order ID:</strong> @ViewBag.OrderId</p>
+                        <p class="mb-1"><strong>Plan:</strong> @ViewBag.PlanName</p>
+                        <p class="mb-0"><strong>Amount:</strong> $@ViewBag.Amount</p>
+                    </div>
+                </div>
+            }
+
+            <div class="alert alert-info text-start">
+                <h6><i class="bi bi-info-circle me-2"></i>What's next?</h6>
+                <ul class="mb-0">
+                    <li>Your listing is now live and visible to users</li>
+                    <li>You can manage your listing from your <a href="/account/my-arcades">dashboard</a></li>
+                    <li>A confirmation email has been sent to your email address</li>
+                    <li>Access your analytics to track views and engagement</li>
+                </ul>
+            </div>
+
+            <div class="mt-4">
+                @if (ViewBag.ArcadeSlug != null)
+                {
+                    <a href="/arcade/@ViewBag.ArcadeSlug" class="btn btn-primary me-2">
+                        <i class="bi bi-eye me-1"></i>View Your Listing
+                    </a>
+                }
+                <a href="/account/my-arcades" class="btn btn-outline-primary">
+                    <i class="bi bi-speedometer2 me-1"></i>Go to Dashboard
+                </a>
+            </div>
+
+            <hr class="my-5">
+
+            <div class="text-muted">
+                <p>Need help? Contact us at <a href="mailto:support@vrarcadefinder.com">support@vrarcadefinder.com</a></p>
+            </div>
+        </div>
+    </div>
+</div>

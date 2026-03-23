@@ -1,0 +1,131 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin | CookingClassFinder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #e67e22;
+            --sidebar-width: 250px;
+        }
+        body { min-height: 100vh; }
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 10px;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .sidebar .nav-link i { margin-right: 10px; }
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        .top-bar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .content-wrapper { padding: 30px; }
+        .brand-logo {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand-logo h4 {
+            color: white;
+            margin: 0;
+            font-weight: bold;
+        }
+        .brand-logo small { color: var(--primary-color); }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="brand-logo">
+            <h4>🍳 CookingClass</h4>
+            <small>Admin Panel</small>
+        </div>
+        <nav class="nav flex-column mt-3">
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")" asp-controller="Admin" asp-action="Dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Schools" ? "active" : "")" asp-controller="Admin" asp-action="Schools">
+                <i class="bi bi-building"></i> Schools
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Classes" ? "active" : "")" asp-controller="Admin" asp-action="Classes">
+                <i class="bi bi-mortarboard"></i> Classes
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Reviews" ? "active" : "")" asp-controller="Admin" asp-action="Reviews">
+                <i class="bi bi-star"></i> Reviews
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "BlogPosts" ? "active" : "")" asp-controller="Admin" asp-action="BlogPosts">
+                <i class="bi bi-newspaper"></i> Blog Posts
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Cities" ? "active" : "")" asp-controller="Admin" asp-action="Cities">
+                <i class="bi bi-geo-alt"></i> Cities
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CrawlStatus" ? "active" : "")" asp-controller="Admin" asp-action="CrawlStatus">
+                <i class="bi bi-arrow-repeat"></i> Crawl Status
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")" asp-controller="Admin" asp-action="Users">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <hr class="my-3" style="border-color: rgba(255,255,255,0.1);" />
+            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-house"></i> Back to Site
+            </a>
+            <a class="nav-link" asp-controller="Account" asp-action="Logout">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">@ViewData["Title"]</h5>
+            <div class="d-flex align-items-center">
+                <span class="me-3">Welcome, @User.Identity?.Name</span>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

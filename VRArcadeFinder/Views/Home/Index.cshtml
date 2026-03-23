@@ -1,0 +1,142 @@
+@model List<ArcadeListItemDto>
+@{
+    ViewData["Title"] = SharedLocalizer["Home_Title"].Value;
+}
+
+<div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="bg-dark text-white rounded-3 p-5 mb-4" style="background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);">
+        <h1 class="display-5 fw-bold"><i class="bi bi-headset-vr me-2"></i>@SharedLocalizer["Home_HeroTitle"]</h1>
+        <p class="lead">@SharedLocalizer["Home_HeroSubtitle"]</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">@SharedLocalizer["Home_FilterByCountry"]</label>
+                    <select name="country" class="form-select" onchange="this.form.submit()">
+                        <option value="">@SharedLocalizer["Home_AllCountries"]</option>
+                        @foreach (var country in ViewBag.Countries as List<string> ?? new List<string>())
+                        {
+                            <option value="@country" selected="@(ViewBag.SelectedCountry == country)">@country</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">@SharedLocalizer["Home_FilterByCity"]</label>
+                    <select name="city" class="form-select" onchange="this.form.submit()">
+                        <option value="">@SharedLocalizer["Home_AllCities"]</option>
+                        @foreach (var city in ViewBag.Cities as List<string> ?? new List<string>())
+                        {
+                            <option value="@city" selected="@(ViewBag.SelectedCity == city)">@city</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">@SharedLocalizer["Home_VRPlatforms"]</label>
+                    <select name="vrPlatform" class="form-select" onchange="this.form.submit()">
+                        <option value="">@SharedLocalizer["Map_AllPlatforms"]</option>
+                        @foreach (var platform in ViewBag.VRPlatforms as List<string> ?? new List<string>())
+                        {
+                            <option value="@platform" selected="@(ViewBag.SelectedVRPlatform == platform)">@platform</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-1"></i>@SharedLocalizer["Home_SearchButton"]
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results -->
+    @if (Model.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var arcade in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 arcade-card">
+                        @if (!string.IsNullOrEmpty(arcade.LocalImagePath))
+                        {
+                            <img src="@arcade.LocalImagePath" class="card-img-top" alt="@arcade.Name" style="height: 200px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="bi bi-headset-vr display-1 text-white opacity-50"></i>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="/arcade/@arcade.Slug" class="text-decoration-none">@arcade.Name</a>
+                            </h5>
+                            <p class="card-text text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>@arcade.City, @arcade.Country
+                            </p>
+                            @if (arcade.AverageRating.HasValue)
+                            {
+                                <p class="mb-2">
+                                    <span class="badge bg-warning text-dark">
+                                        @arcade.AverageRating.Value.ToString("F1") <i class="bi bi-star-fill"></i>
+                                    </span>
+                                    <small class="text-muted">(@arcade.ReviewCount @SharedLocalizer["Arcade_Reviews"])</small>
+                                </p>
+                            }
+                            @if (!string.IsNullOrEmpty(arcade.VRPlatforms))
+                            {
+                                <p class="mb-2">
+                                    <small class="text-muted"><i class="bi bi-controller me-1"></i>@arcade.VRPlatforms</small>
+                                </p>
+                            }
+                            @if (arcade.GamesCount > 0)
+                            {
+                                <p class="mb-0">
+                                    <span class="badge bg-info">@arcade.GamesCount+ @SharedLocalizer["Home_GamesAvailable"]</span>
+                                </p>
+                            }
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="/arcade/@arcade.Slug" class="btn btn-outline-primary btn-sm w-100">
+                                @SharedLocalizer["Home_Details"] <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Pagination -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                            <a class="page-link" href="?page=@i&country=@ViewBag.SelectedCountry&city=@ViewBag.SelectedCity&vrPlatform=@ViewBag.SelectedVRPlatform">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>@SharedLocalizer["Home_NoArcadesMessage"]
+        </div>
+    }
+</div>
+
+<style>
+    .arcade-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+</style>

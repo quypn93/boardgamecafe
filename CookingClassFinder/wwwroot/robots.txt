@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.cookingclassfinder.com/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /Admin/
+Disallow: /Account/
+Disallow: /api/

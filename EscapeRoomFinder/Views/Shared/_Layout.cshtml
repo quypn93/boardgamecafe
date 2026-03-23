@@ -1,23 +1,91 @@
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<EscapeRoomFinder.SharedResource> SharedLocalizer
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var currentCulture = requestCulture?.RequestCulture.UICulture.Name ?? "en";
+    var cultures = new[] {
+        ("en", "English", "🇺🇸"),
+        ("vi", "Tiếng Việt", "🇻🇳"),
+        ("ja", "日本語", "🇯🇵"),
+        ("ko", "한국어", "🇰🇷"),
+        ("zh", "中文", "🇨🇳"),
+        ("th", "ไทย", "🇹🇭"),
+        ("es", "Español", "🇪🇸"),
+        ("de", "Deutsch", "🇩🇪")
+    };
+    var currentCultureDisplay = cultures.FirstOrDefault(c => c.Item1 == currentCulture);
+    var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    var canonicalUrl = ViewData["CanonicalUrl"]?.ToString() ?? $"{baseUrl}{Context.Request.Path}";
+    var pageTitle = $"{ViewData["Title"]} - Escape Room Finder";
+    var pageDescription = ViewData["Description"]?.ToString() ?? SharedLocalizer["Footer_Description"].Value;
+    var ogImage = ViewData["OgImage"]?.ToString() ?? $"{baseUrl}/images/og-image.svg";
+}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@currentCulture">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Escape Room Finder</title>
-    <meta name="description" content="@ViewData["Description"] ?? "Find the best escape rooms near you. Browse venues, read reviews, compare difficulty levels, and book your next adventure."" />
+    <title>@pageTitle</title>
+    <meta name="description" content="@pageDescription" />
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="@canonicalUrl" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:title" content="@pageTitle" />
+    <meta property="og:description" content="@pageDescription" />
+    <meta property="og:image" content="@ogImage" />
+    <meta property="og:locale" content="@currentCulture" />
+    <meta property="og:site_name" content="Escape Room Finder" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="@canonicalUrl" />
+    <meta name="twitter:title" content="@pageTitle" />
+    <meta name="twitter:description" content="@pageDescription" />
+    <meta name="twitter:image" content="@ogImage" />
+
+    <!-- Hreflang Tags for International SEO -->
+    @foreach (var (code, name, flag) in cultures)
+    {
+        <link rel="alternate" hreflang="@code" href="@canonicalUrl" />
+    }
+    <link rel="alternate" hreflang="x-default" href="@canonicalUrl" />
+
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~/images/logo-icon.svg" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
+
+    <!-- Default JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebSite",
+        "name": "Escape Room Finder",
+        "url": "@baseUrl",
+        "potentialAction": {
+            "@@type": "SearchAction",
+            "target": "@(baseUrl)/?query={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    @await RenderSectionAsync("JsonLd", required: false)
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="/">
-                    <i class="bi bi-door-open"></i> Escape Room Finder
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img src="/images/logo-icon.svg" alt="Logo" width="32" height="32" class="me-2">
+                    <span>Escape Room Finder</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
@@ -26,38 +94,51 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">
-                                <i class="bi bi-search"></i> Search
+                                <i class="bi bi-search"></i> @SharedLocalizer["Nav_Search"]
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Map" asp-action="Index">
-                                <i class="bi bi-map"></i> Map
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Venue" asp-action="Cities">
-                                <i class="bi bi-building"></i> Cities
+                                <i class="bi bi-map"></i> @SharedLocalizer["Nav_MapView"]
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Venue" asp-action="Themes">
-                                <i class="bi bi-tags"></i> Themes
+                                <i class="bi bi-tags"></i> @SharedLocalizer["Nav_Themes"]
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Blog" asp-action="Index">
-                                <i class="bi bi-journal-text"></i> Blog
+                                <i class="bi bi-journal-text"></i> @SharedLocalizer["Nav_Blog"]
                             </a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
+                        <!-- Language Switcher -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="me-1">@(currentCultureDisplay.Item3)</span> @currentCultureDisplay.Item2
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                @foreach (var (code, name, flag) in cultures)
+                                {
+                                    <li>
+                                        <a class="dropdown-item @(code == currentCulture ? "active" : "")"
+                                           href="@Context.Request.Path@Context.Request.QueryString"
+                                           onclick="setCulture('@code'); return false;">
+                                            <span class="me-2">@flag</span> @name
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
-                                        <i class="bi bi-gear"></i> Admin
+                                        <i class="bi bi-gear"></i> @SharedLocalizer["Nav_Admin"]
                                     </a>
                                 </li>
                             }
@@ -66,11 +147,11 @@
                                     <i class="bi bi-person-circle"></i> @User.Identity.Name
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">@SharedLocalizer["Nav_Profile"]</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                            <button type="submit" class="dropdown-item">Logout</button>
+                                            <button type="submit" class="dropdown-item">@SharedLocalizer["Nav_Logout"]</button>
                                         </form>
                                     </li>
                                 </ul>
@@ -79,10 +160,10 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">@SharedLocalizer["Nav_Login"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-sm ms-2" asp-controller="Account" asp-action="Register">Sign Up</a>
+                                <a class="btn btn-primary btn-sm ms-2" asp-controller="Account" asp-action="Register">@SharedLocalizer["Nav_SignUp"]</a>
                             </li>
                         }
                     </ul>
@@ -109,53 +190,65 @@
         @RenderBody()
     </main>
 
-    <footer class="bg-dark text-light py-4 mt-auto">
+    <footer class="bg-dark text-light py-5 mt-auto">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="bi bi-door-open"></i> Escape Room Finder</h5>
-                    <p class="text-muted">Find the best escape rooms near you. Discover, compare, and book your next adventure.</p>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-white"><img src="/images/logo-icon-white.svg" alt="Logo" width="24" height="24" class="me-2">Escape Room Finder</h5>
+                    <p class="text-secondary">@SharedLocalizer["Footer_Description"]</p>
                 </div>
-                <div class="col-md-2">
-                    <h6>Explore</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="/" class="text-muted">Search</a></li>
-                        <li><a href="/map" class="text-muted">Map</a></li>
-                        <li><a href="/cities" class="text-muted">Cities</a></li>
-                        <li><a href="/themes" class="text-muted">Themes</a></li>
+                <div class="col-6 col-md-2 mb-4 mb-md-0">
+                    <h6 class="text-white mb-3">@SharedLocalizer["Footer_Explore"]</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li class="mb-2"><a href="/">@SharedLocalizer["Nav_Home"]</a></li>
+                        <li class="mb-2"><a href="/map">@SharedLocalizer["Nav_MapView"]</a></li>
+                        <li class="mb-2"><a href="/blog">@SharedLocalizer["Nav_Blog"]</a></li>
+                        <li class="mb-2"><a href="/for-business">@SharedLocalizer["Nav_ForBusiness"]</a></li>
                     </ul>
                 </div>
-                <div class="col-md-2">
-                    <h6>Resources</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="/blog" class="text-muted">Blog</a></li>
-                        <li><a href="/about" class="text-muted">About</a></li>
+                <div class="col-6 col-md-2 mb-4 mb-md-0">
+                    <h6 class="text-white mb-3">@SharedLocalizer["Footer_Legal"]</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li class="mb-2"><a href="/privacy">@SharedLocalizer["Footer_Privacy"]</a></li>
+                        <li class="mb-2"><a href="/terms">@SharedLocalizer["Footer_Terms"]</a></li>
                     </ul>
                 </div>
-                <div class="col-md-2">
-                    <h6>Legal</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="/privacy" class="text-muted">Privacy</a></li>
-                        <li><a href="/terms" class="text-muted">Terms</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2">
-                    <h6>For Venues</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="/listing/claim" class="text-muted">Claim Listing</a></li>
-                        <li><a href="/listing/pricing" class="text-muted">Premium Plans</a></li>
-                    </ul>
+                <div class="col-lg-4">
+                    <h6 class="text-white mb-3">@SharedLocalizer["Footer_Contact"]</h6>
+                    <p class="text-secondary mb-2">
+                        <i class="bi bi-envelope me-2"></i> support@escaperoomfinder.com
+                    </p>
+                    <p class="text-secondary small">
+                        @SharedLocalizer["Footer_ContactText"]
+                    </p>
                 </div>
             </div>
-            <hr class="border-secondary">
-            <div class="text-center text-muted">
-                <small>&copy; @DateTime.Now.Year Escape Room Finder. All rights reserved.</small>
+            <hr class="border-secondary my-4">
+            <div class="text-center text-secondary">
+                <small>@string.Format(SharedLocalizer["Footer_Copyright"].Value, DateTime.Now.Year)</small>
             </div>
         </div>
     </footer>
 
+    <style>
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: #fff;
+        }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function setCulture(culture) {
+            document.cookie = `.AspNetCore.Culture=c=${culture}|uic=${culture};path=/;max-age=31536000`;
+            location.reload();
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

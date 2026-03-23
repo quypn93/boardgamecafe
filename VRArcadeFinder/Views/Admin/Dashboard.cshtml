@@ -1,0 +1,110 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var stats = Model as dynamic;
+}
+
+<h2><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h2>
+<hr>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h3>@stats.TotalArcades</h3>
+                    <p class="mb-0">VR Arcades</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h3>@stats.TotalGames</h3>
+                    <p class="mb-0">VR Games</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h3>@stats.TotalUsers</h3>
+                    <p class="mb-0">Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h3>@stats.PendingReviews</h3>
+                    <p class="mb-0">Pending Reviews</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Arcades -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Arcades</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    @foreach (var arcade in stats.RecentArcades)
+                    {
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span>@arcade.Name</span>
+                            <small class="text-muted">@arcade.City</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Cities -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Top Cities</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    @foreach (var city in stats.TopCities)
+                    {
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span>@city.City</span>
+                            <span class="badge bg-primary">@city.Count arcades</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="/admin/arcades" class="btn btn-outline-primary me-2">
+                        <i class="bi bi-shop me-1"></i>Manage Arcades
+                    </a>
+                    <a href="/admin/reviews?pending=true" class="btn btn-outline-warning me-2">
+                        <i class="bi bi-chat-quote me-1"></i>Pending Reviews (@stats.PendingReviews)
+                    </a>
+                    <a href="/admin/users" class="btn btn-outline-info me-2">
+                        <i class="bi bi-people me-1"></i>Manage Users
+                    </a>
+                    <a href="/admin/blog" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-journal me-1"></i>Blog Posts
+                    </a>
+                    <a href="/admin/cities" class="btn btn-outline-success me-2">
+                        <i class="bi bi-building me-1"></i>Crawl Cities
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+

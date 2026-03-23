@@ -552,6 +552,11 @@ namespace BoardGameCafeFinder.Controllers
             ViewBag.SelectedPlan = plan ?? "Premium";
             ViewBag.StripePublishableKey = _configuration["Stripe:PublishableKey"];
 
+            // Determine which payment provider to show based on user's country
+            var isVietnam = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "vi";
+            ViewBag.IsVietnam = isVietnam;
+            ViewBag.PaymentProvider = isVietnam ? _paymentServiceFactory.ActiveProvider : "LemonSqueezy";
+
             return View();
         }
 
@@ -621,15 +626,20 @@ namespace BoardGameCafeFinder.Controllers
                 _context.ClaimRequests.Add(claimRequest);
                 await _context.SaveChangesAsync();
 
-                // Create checkout session using active payment provider
+                // Select payment provider based on user country
+                var paymentService = _paymentServiceFactory.GetPaymentServiceForUser();
+
+                // Create checkout session using selected payment provider
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                // PayPal uses token param, Stripe uses session_id with placeholder
-                var successUrl = _paymentService.ProviderName == "Stripe"
-                    ? $"{baseUrl}/Listing/CheckoutSuccess?session_id={{CHECKOUT_SESSION_ID}}"
-                    : $"{baseUrl}/Listing/CheckoutSuccess?claim_id={claimRequest.ClaimRequestId}";
+                var successUrl = paymentService.ProviderName switch
+                {
+                    "Stripe" => $"{baseUrl}/Listing/CheckoutSuccess?session_id={{CHECKOUT_SESSION_ID}}",
+                    "LemonSqueezy" => $"{baseUrl}/Listing/CheckoutSuccess?claim_id={claimRequest.ClaimRequestId}&provider=lemonsqueezy",
+                    _ => $"{baseUrl}/Listing/CheckoutSuccess?claim_id={claimRequest.ClaimRequestId}"
+                };
                 var cancelUrl = $"{baseUrl}/Listing/CheckoutCancel?claim_id={claimRequest.ClaimRequestId}";
 
-                var result = await _paymentService.CreateCheckoutSessionAsync(claimRequest, successUrl, cancelUrl);
+                var result = await paymentService.CreateCheckoutSessionAsync(claimRequest, successUrl, cancelUrl);
 
                 if (!result.Success)
                 {
@@ -643,7 +653,7 @@ namespace BoardGameCafeFinder.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Created claim request {ClaimId} for cafe {CafeName}, redirecting to {Provider}",
-                    claimRequest.ClaimRequestId, cafe.Name, _paymentService.ProviderName);
+                    claimRequest.ClaimRequestId, cafe.Name, paymentService.ProviderName);
 
                 // Redirect to checkout
                 return Redirect(result.CheckoutUrl!);
@@ -666,7 +676,8 @@ namespace BoardGameCafeFinder.Controllers
             string? session_id = null,
             string? token = null,
             string? PayerID = null,
-            int? claim_id = null)
+            int? claim_id = null,
+            string? provider = null)
         {
             try
             {
@@ -688,7 +699,7 @@ namespace BoardGameCafeFinder.Controllers
                     sessionId = claimRequest?.StripeSessionId;
                 }
 
-                if (claimRequest == null || string.IsNullOrEmpty(sessionId))
+                if (claimRequest == null)
                 {
                     TempData["Error"] = "Claim request not found";
                     return RedirectToAction("Pricing");
@@ -700,8 +711,23 @@ namespace BoardGameCafeFinder.Controllers
                     ViewBag.ClaimRequest = claimRequest;
                     ViewBag.Invoice = await _context.Invoices
                         .FirstOrDefaultAsync(i => i.ClaimRequestId == claimRequest.ClaimRequestId);
-                    ViewBag.PaymentProvider = _paymentService.ProviderName;
+                    ViewBag.PaymentProvider = provider ?? _paymentService.ProviderName;
                     return View();
+                }
+
+                // LemonSqueezy: payment is confirmed via webhook, show pending message
+                if (provider == "lemonsqueezy")
+                {
+                    ViewBag.ClaimRequest = claimRequest;
+                    ViewBag.PaymentProvider = "LemonSqueezy";
+                    ViewBag.PaymentPending = true;
+                    return View();
+                }
+
+                if (string.IsNullOrEmpty(sessionId))
+                {
+                    TempData["Error"] = "Payment session not found";
+                    return RedirectToAction("Pricing");
                 }
 
                 // Get session details from payment provider
@@ -731,7 +757,7 @@ namespace BoardGameCafeFinder.Controllers
                 ViewBag.ClaimRequest = claimRequest;
                 ViewBag.Invoice = await _context.Invoices
                     .FirstOrDefaultAsync(i => i.ClaimRequestId == claimRequest.ClaimRequestId);
-                ViewBag.PaymentProvider = _paymentService.ProviderName;
+                ViewBag.PaymentProvider = provider ?? _paymentService.ProviderName;
 
                 return View();
             }
@@ -815,6 +841,75 @@ namespace BoardGameCafeFinder.Controllers
             }
         }
 
+        /// <summary>
+        /// LemonSqueezy webhook handler
+        /// POST: /Listing/LemonSqueezyWebhook
+        /// </summary>
+        [Route("LemonSqueezyWebhook")]
+        [HttpPost]
+        public async Task<IActionResult> LemonSqueezyWebhook()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            try
+            {
+                var signature = Request.Headers["X-Signature"].FirstOrDefault();
+                var webhookSecret = _configuration["LemonSqueezy:WebhookSecret"];
+
+                var lemonSqueezyService = _paymentServiceFactory.GetPaymentService("LemonSqueezy");
+                if (lemonSqueezyService == null)
+                {
+                    _logger.LogWarning("LemonSqueezy service not available for webhook processing");
+                    return BadRequest();
+                }
+
+                var webhookResult = lemonSqueezyService.ParseWebhookEvent(json, signature, webhookSecret);
+                if (!webhookResult.IsValid)
+                {
+                    _logger.LogWarning("Invalid LemonSqueezy webhook: {Error}", webhookResult.ErrorMessage);
+                    return BadRequest();
+                }
+
+                _logger.LogInformation("Received LemonSqueezy webhook: {EventType}", webhookResult.EventType);
+
+                // Handle order_created event
+                if (webhookResult.EventType == "order_created")
+                {
+                    if (webhookResult.Metadata.TryGetValue("claim_request_id", out var claimIdStr) &&
+                        int.TryParse(claimIdStr, out var claimId))
+                    {
+                        var claimRequest = await _context.ClaimRequests
+                            .Include(c => c.Cafe)
+                            .FirstOrDefaultAsync(c => c.ClaimRequestId == claimId);
+
+                        if (claimRequest != null && claimRequest.PaymentStatus != "completed")
+                        {
+                            var sessionDetails = new PaymentSessionDetails
+                            {
+                                SessionId = webhookResult.SessionId ?? claimRequest.StripeSessionId ?? "",
+                                Status = "completed",
+                                PaymentId = webhookResult.PaymentId,
+                                Metadata = webhookResult.Metadata
+                            };
+
+                            // Temporarily set payment service to LemonSqueezy for invoice
+                            var originalService = _paymentService;
+                            await ProcessSuccessfulPaymentWithProvider(claimRequest, sessionDetails, lemonSqueezyService);
+
+                            _logger.LogInformation("LemonSqueezy payment processed for ClaimRequest {ClaimId}", claimId);
+                        }
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "LemonSqueezy webhook error");
+                return BadRequest();
+            }
+        }
+
         #endregion
 
         #region Invoice
@@ -876,6 +971,77 @@ namespace BoardGameCafeFinder.Controllers
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Process successful payment with a specific provider (used by webhooks)
+        /// </summary>
+        private async Task ProcessSuccessfulPaymentWithProvider(ClaimRequest claimRequest, PaymentSessionDetails sessionDetails, IPaymentService provider)
+        {
+            claimRequest.PaymentStatus = "completed";
+            claimRequest.PaidAt = DateTime.UtcNow;
+            claimRequest.StripePaymentIntentId = sessionDetails.PaymentId;
+            claimRequest.UpdatedAt = DateTime.UtcNow;
+
+            Plans.TryGetValue(claimRequest.PlanType, out var plan);
+
+            var listing = new PremiumListing
+            {
+                CafeId = claimRequest.CafeId,
+                PlanType = claimRequest.PlanType,
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddMonths(claimRequest.DurationMonths),
+                MonthlyFee = claimRequest.MonthlyRate,
+                IsActive = true,
+                FeaturedPlacement = plan?.FeaturedPlacement ?? false,
+                PhotoGallery = plan?.PhotoGallery ?? false,
+                EventListings = plan?.EventListings ?? false,
+                GameInventoryManager = plan?.GameInventoryManager ?? false,
+                AnalyticsDashboard = plan?.AnalyticsDashboard ?? false,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.PremiumListings.Add(listing);
+            await _context.SaveChangesAsync();
+
+            claimRequest.PremiumListingId = listing.ListingId;
+
+            var cafe = await _context.Cafes.FindAsync(claimRequest.CafeId);
+            if (cafe != null)
+            {
+                cafe.IsPremium = true;
+            }
+
+            var invoiceCount = await _context.Invoices.CountAsync() + 1;
+            var invoice = new Models.Domain.Invoice
+            {
+                InvoiceNumber = Models.Domain.Invoice.GenerateInvoiceNumber(invoiceCount),
+                ClaimRequestId = claimRequest.ClaimRequestId,
+                PremiumListingId = listing.ListingId,
+                CafeId = claimRequest.CafeId,
+                BillingName = claimRequest.ContactName,
+                BillingEmail = claimRequest.ContactEmail,
+                Description = $"{claimRequest.PlanType} Plan - {claimRequest.DurationMonths} month(s)",
+                PlanType = claimRequest.PlanType,
+                PeriodMonths = claimRequest.DurationMonths,
+                PeriodStart = listing.StartDate,
+                PeriodEnd = listing.EndDate,
+                Subtotal = claimRequest.MonthlyRate * claimRequest.DurationMonths,
+                DiscountAmount = (claimRequest.MonthlyRate * claimRequest.DurationMonths) * (claimRequest.DiscountPercent / 100),
+                TaxAmount = 0,
+                TotalAmount = claimRequest.TotalAmount,
+                PaymentStatus = "paid",
+                PaymentMethod = provider.ProviderName.ToLower(),
+                StripePaymentIntentId = sessionDetails.PaymentId,
+                PaidAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Invoices.Add(invoice);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Payment processed via {Provider} for ClaimRequest {ClaimId}. Created Listing {ListingId} and Invoice {InvoiceNumber}",
+                provider.ProviderName, claimRequest.ClaimRequestId, listing.ListingId, invoice.InvoiceNumber);
+        }
 
         /// <summary>
         /// Process successful payment - provider agnostic version

@@ -1,0 +1,78 @@
+@model IEnumerable<(string Cuisine, int Count)>
+@{
+    ViewData["Title"] = "Browse by Cuisine";
+}
+
+<div class="container my-5">
+    <h1>Browse by Cuisine</h1>
+    <p class="lead text-muted">Explore cooking classes by cuisine type</p>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-lg-3 mb-4">
+                <a asp-controller="School" asp-action="ByCuisine" asp-route-cuisine="@item.Cuisine" class="text-decoration-none">
+                    <div class="card h-100 text-center cuisine-card">
+                        <div class="card-body">
+                            <div class="cuisine-icon mb-3">
+                                @switch (item.Cuisine)
+                                {
+                                    case "Italian":
+                                        <span style="font-size: 3rem;">🍝</span>
+                                        break;
+                                    case "French":
+                                        <span style="font-size: 3rem;">🥐</span>
+                                        break;
+                                    case "Japanese":
+                                        <span style="font-size: 3rem;">🍱</span>
+                                        break;
+                                    case "Chinese":
+                                        <span style="font-size: 3rem;">🥡</span>
+                                        break;
+                                    case "Thai":
+                                        <span style="font-size: 3rem;">🍜</span>
+                                        break;
+                                    case "Indian":
+                                        <span style="font-size: 3rem;">🍛</span>
+                                        break;
+                                    case "Mexican":
+                                        <span style="font-size: 3rem;">🌮</span>
+                                        break;
+                                    case "Baking":
+                                    case "Pastry":
+                                        <span style="font-size: 3rem;">🍰</span>
+                                        break;
+                                    case "BBQ":
+                                        <span style="font-size: 3rem;">🍖</span>
+                                        break;
+                                    case "Seafood":
+                                        <span style="font-size: 3rem;">🦐</span>
+                                        break;
+                                    case "Vegetarian":
+                                    case "Vegan":
+                                        <span style="font-size: 3rem;">🥗</span>
+                                        break;
+                                    default:
+                                        <span style="font-size: 3rem;">🍳</span>
+                                        break;
+                                }
+                            </div>
+                            <h5 class="card-title text-dark">@item.Cuisine</h5>
+                            <p class="text-muted mb-0">@item.Count classes</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .cuisine-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cuisine-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+</style>

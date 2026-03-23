@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = "Premium Listing Plans";
+}
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>Premium Listing Plans</h1>
+        <p class="lead text-muted">Boost your cooking school's visibility and attract more students</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-center py-4">
+                    <h5 class="mb-0">Basic</h5>
+                    <h2 class="my-3">Free</h2>
+                    <p class="text-muted mb-0">Forever</p>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Basic listing</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Contact information</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Up to 5 classes</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Customer reviews</li>
+                        <li class="mb-2 text-muted"><i class="bi bi-x-circle me-2"></i>Featured placement</li>
+                        <li class="mb-2 text-muted"><i class="bi bi-x-circle me-2"></i>Analytics dashboard</li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent text-center py-3">
+                    <a asp-action="SubmitSchool" class="btn btn-outline-primary w-100">Get Started</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-header text-center py-4 bg-primary text-white">
+                    <span class="badge bg-warning mb-2">Most Popular</span>
+                    <h5 class="mb-0">Professional</h5>
+                    <h2 class="my-3">$29<small>/month</small></h2>
+                    <p class="mb-0">Billed monthly</p>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Everything in Basic</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Unlimited classes</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Featured in search results</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Photo gallery (up to 20)</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Analytics dashboard</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Priority support</li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent text-center py-3">
+                    <a asp-action="Subscribe" asp-route-plan="professional" class="btn btn-primary w-100">Subscribe Now</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-center py-4">
+                    <h5 class="mb-0">Enterprise</h5>
+                    <h2 class="my-3">$79<small>/month</small></h2>
+                    <p class="text-muted mb-0">Billed monthly</p>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Everything in Professional</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Homepage spotlight</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>City guide feature</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Unlimited photos</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Dedicated account manager</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Custom branding</li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent text-center py-3">
+                    <a asp-action="Subscribe" asp-route-plan="enterprise" class="btn btn-outline-primary w-100">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <h4>Need help choosing?</h4>
+        <p class="text-muted">Contact us for a personalized recommendation based on your school's needs.</p>
+        <a href="mailto:sales@cookingclassfinder.com" class="btn btn-outline-secondary">Contact Sales</a>
+    </div>
+</div>

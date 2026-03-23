@@ -39,13 +39,22 @@ public class HomeController : Controller
         // SEO metadata will be set after we have cafe count
         var currentYear = DateTime.Now.Year;
 
-        // SEO: Build canonical URL with filters (exclude pagination for canonical)
+        // SEO: Canonical URL always points to page 1 (no pagination param)
         var canonicalUrl = $"{Request.Scheme}://{Request.Host}/";
-        var queryParams = new List<string>();
-        if (!string.IsNullOrEmpty(country)) queryParams.Add($"country={Uri.EscapeDataString(country)}");
-        if (!string.IsNullOrEmpty(city)) queryParams.Add($"city={Uri.EscapeDataString(city)}");
-        if (queryParams.Count > 0) canonicalUrl += "?" + string.Join("&", queryParams);
+        var canonicalParams = new List<string>();
+        if (!string.IsNullOrEmpty(country)) canonicalParams.Add($"country={Uri.EscapeDataString(country)}");
+        if (!string.IsNullOrEmpty(city)) canonicalParams.Add($"city={Uri.EscapeDataString(city)}");
+        if (canonicalParams.Count > 0) canonicalUrl += "?" + string.Join("&", canonicalParams);
         ViewData["CanonicalUrl"] = canonicalUrl;
+
+        // SEO: noindex for page 2+ and location-based/game filter pages (thin/duplicate content)
+        var hasAdvancedFilters = (gameIds != null && gameIds.Length > 0)
+                                 || (categories != null && categories.Length > 0)
+                                 || lat.HasValue || lng.HasValue;
+        if (page > 1 || hasAdvancedFilters)
+        {
+            ViewData["MetaRobots"] = "noindex, follow";
+        }
 
         // Build base query with filters (NO Include - use projection instead)
         var cafesQuery = _context.Cafes
@@ -157,7 +166,8 @@ public class HomeController : Controller
             .Where(c => c.IsActive && !string.IsNullOrEmpty(c.Country))
             .Select(c => c.Country)
             .Distinct()
-            .OrderBy(c => c)
+            .OrderBy(c => c == "United States" ? 0 : 1)
+            .ThenBy(c => c)
             .ToListAsync();
 
         var cities = await _context.Cafes
@@ -218,22 +228,40 @@ public class HomeController : Controller
 
         if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(country))
         {
-            pageTitle = $"{totalItems}+ Board Game Cafes in {city} ({currentYear}) | Reviews & Maps";
-            pageDescription = $"Find {totalItems} board game cafes in {city}, {country}. Compare ratings, browse games, get directions. Updated {DateTime.Now:MMMM yyyy}.";
+            pageTitle = $"Best Board Game Cafe in {city} ({currentYear}) - Top {totalItems} Rated";
+            pageDescription = $"Discover {totalItems} board game cafe in {city}. See ratings, photos, game libraries & opening hours. Find your perfect gaming spot today!";
         }
         else if (!string.IsNullOrEmpty(country))
         {
-            pageTitle = $"{totalItems}+ Board Game Cafes in {country} ({currentYear}) | Directory";
-            pageDescription = $"Explore {totalItems} board game cafes across {country}. Discover games, read reviews and plan your visit.";
+            pageTitle = $"Board Game Cafe in {country} - Top {totalItems} Rated ({currentYear})";
+            pageDescription = $"Browse {totalItems}+ board game cafe in {country}. Compare reviews, see game collections & find cafe near you. Updated {currentYear}.";
         }
         else
         {
-            pageTitle = $"Find Board Game Cafes Near You | {totalItems}+ Locations";
-            pageDescription = "Discover board game cafes near you. Browse games, read reviews, get directions. Find the perfect spot for your next gaming session!";
+            pageTitle = $"Board Game Cafe Near Me - {totalItems}+ Locations with Reviews";
+            pageDescription = $"Find the best board game cafe near you. {totalItems}+ locations with reviews, photos & game lists. Search by city or use our map!";
         }
 
         ViewData["Title"] = pageTitle;
         ViewData["MetaDescription"] = pageDescription;
+
+        // SEO: rel="prev"/"next" for pagination
+        var paginationBaseUrl = $"{Request.Scheme}://{Request.Host}/";
+        var paginationParams = new List<string>();
+        if (!string.IsNullOrEmpty(country)) paginationParams.Add($"country={Uri.EscapeDataString(country)}");
+        if (!string.IsNullOrEmpty(city)) paginationParams.Add($"city={Uri.EscapeDataString(city)}");
+
+        if (page > 1)
+        {
+            var prevParams = new List<string>(paginationParams);
+            if (page > 2) prevParams.Add($"page={page - 1}");
+            ViewData["PaginationPrev"] = paginationBaseUrl + (prevParams.Count > 0 ? "?" + string.Join("&", prevParams) : "");
+        }
+        if (page < totalPages)
+        {
+            var nextParams = new List<string>(paginationParams) { $"page={page + 1}" };
+            ViewData["PaginationNext"] = paginationBaseUrl + "?" + string.Join("&", nextParams);
+        }
 
         return View("Index", cafes);
     }
@@ -293,6 +321,14 @@ public class HomeController : Controller
         ViewData["Title"] = "Terms of Service";
         ViewData["MetaDescription"] = "Read the Terms of Service for Board Game Cafe Finder.";
         ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/Home/Terms";
+        return View();
+    }
+
+    public IActionResult RefundPolicy()
+    {
+        ViewData["Title"] = "Refund Policy";
+        ViewData["MetaDescription"] = "Read our refund policy for Board Game Cafe Finder premium listing subscriptions.";
+        ViewData["CanonicalUrl"] = $"{Request.Scheme}://{Request.Host}/Home/RefundPolicy";
         return View();
     }
 

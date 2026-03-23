@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>ホーム</value></data>
+  <data name="Nav_Search" xml:space="preserve"><value>検索</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>マップ</value></data>
+  <data name="Nav_Cities" xml:space="preserve"><value>都市</value></data>
+  <data name="Nav_Themes" xml:space="preserve"><value>テーマ</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>ブログ</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>ビジネス向け</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>ログイン</value></data>
+  <data name="Nav_SignUp" xml:space="preserve"><value>新規登録</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>ログアウト</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>プロフィール</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>管理者</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>近くの脱出ゲームを探す</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>次の脱出を見つけよう</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>世界中の{0}施設、{1}部屋の脱出ゲームを発見</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>最高の脱出ゲームを発見し、レビューを読み、難易度を比較し、次の冒険を予約しましょう</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>脱出ゲームを検索...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>検索</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>すべての国</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>すべての都市</value></data>
+  <data name="Home_AllThemes" xml:space="preserve"><value>すべてのテーマ</value></data>
+  <data name="Home_VenuesFound" xml:space="preserve"><value>件の施設が見つかりました</value></data>
+  <data name="Home_BrowseVenues" xml:space="preserve"><value>施設を見る</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>マップを見る</value></data>
+  <data name="Home_AdvancedFilters" xml:space="preserve"><value>詳細フィルター</value></data>
+  <data name="Home_Difficulty" xml:space="preserve"><value>難易度</value></data>
+  <data name="Home_Players" xml:space="preserve"><value>プレイヤー数</value></data>
+  <data name="Home_SortBy" xml:space="preserve"><value>並び替え</value></data>
+  <data name="Home_Apply" xml:space="preserve"><value>適用</value></data>
+  <data name="Home_Any" xml:space="preserve"><value>すべて</value></data>
+  <data name="Home_VeryEasy" xml:space="preserve"><value>とても簡単</value></data>
+  <data name="Home_Easy" xml:space="preserve"><value>簡単</value></data>
+  <data name="Home_Medium" xml:space="preserve"><value>普通</value></data>
+  <data name="Home_Hard" xml:space="preserve"><value>難しい</value></data>
+  <data name="Home_Expert" xml:space="preserve"><value>エキスパート</value></data>
+  <data name="Home_PlayersCount" xml:space="preserve"><value>{0}人</value></data>
+  <data name="Home_Recommended" xml:space="preserve"><value>おすすめ</value></data>
+  <data name="Home_Rating" xml:space="preserve"><value>評価</value></data>
+  <data name="Home_Reviews" xml:space="preserve"><value>レビュー</value></data>
+  <data name="Home_Rooms" xml:space="preserve"><value>部屋数</value></data>
+  <data name="Home_Name" xml:space="preserve"><value>名前</value></data>
+  <data name="Home_NoResults" xml:space="preserve"><value>脱出ゲームが見つかりません</value></data>
+  <data name="Home_NoResultsMessage" xml:space="preserve"><value>検索フィルターを調整するか、他の都市を探してみてください。</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>フィルターをクリア</value></data>
+  <data name="Home_Showing" xml:space="preserve"><value>{2}件中{0}-{1}を表示</value></data>
+  <data name="Home_ViewDetails" xml:space="preserve"><value>詳細を見る</value></data>
+  <data name="Home_Featured" xml:space="preserve"><value>おすすめ</value></data>
+  <data name="Home_Verified" xml:space="preserve"><value>認証済み</value></data>
+
+  <!-- Venue Details -->
+  <data name="Venue_Rating" xml:space="preserve"><value>評価</value></data>
+  <data name="Venue_Reviews" xml:space="preserve"><value>件のレビュー</value></data>
+  <data name="Venue_Address" xml:space="preserve"><value>住所</value></data>
+  <data name="Venue_Phone" xml:space="preserve"><value>電話</value></data>
+  <data name="Venue_Website" xml:space="preserve"><value>ウェブサイト</value></data>
+  <data name="Venue_Hours" xml:space="preserve"><value>営業時間</value></data>
+  <data name="Venue_Rooms" xml:space="preserve"><value>脱出ゲーム</value></data>
+  <data name="Venue_RoomsAvailable" xml:space="preserve"><value>部屋が利用可能</value></data>
+  <data name="Venue_ViewOnMap" xml:space="preserve"><value>マップで見る</value></data>
+  <data name="Venue_GetDirections" xml:space="preserve"><value>道案内</value></data>
+  <data name="Venue_Difficulty" xml:space="preserve"><value>難易度</value></data>
+  <data name="Venue_Players" xml:space="preserve"><value>プレイヤー数</value></data>
+  <data name="Venue_Duration" xml:space="preserve"><value>所要時間</value></data>
+  <data name="Venue_Theme" xml:space="preserve"><value>テーマ</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>都市別脱出ゲームガイド</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>世界{0}都市の脱出ゲームを探索</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>{1}の{0}都市の脱出ゲームを探索</value></data>
+  <data name="Blog_VenuesIn" xml:space="preserve"><value>{0}の脱出ゲーム</value></data>
+  <data name="Blog_DiscoverVenues" xml:space="preserve"><value>{2}で{0}件の{1}、{3}部屋を発見。</value></data>
+  <data name="Blog_DiscoverVenuesSimple" xml:space="preserve"><value>{2}で{0}件の脱出ゲーム{1}を発見。</value></data>
+  <data name="Blog_Venue" xml:space="preserve"><value>施設</value></data>
+  <data name="Blog_Venues" xml:space="preserve"><value>施設</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>すべての都市を表示</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>国で絞り込む</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>すべての国</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>クリア</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>ページ</value></data>
+  <data name="Blog_Of" xml:space="preserve"><value>/</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>都市が見つかりました</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>都市が見つかりません</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>まだデータを収集していません。後でもう一度お試しください！</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>統計</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>都市</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>国</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>国別に見る</value></data>
+  <data name="Blog_FindVenuesNearYou" xml:space="preserve"><value>近くの脱出ゲームを探す</value></data>
+  <data name="Blog_FindVenuesDesc" xml:space="preserve"><value>インタラクティブマップでお近くの脱出ゲームを発見。</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>マップを開く</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>他{0}件</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>近くの最高の脱出ゲームを発見。施設を閲覧し、レビューを読み、難易度を比較し、次の目的地を見つけましょう。</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>探索</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>法的情報</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>プライバシーポリシー</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>利用規約</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>お問い合わせ</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>追加したい脱出ゲームがありますか？施設をお持ちで情報を更新したいですか？お問い合わせください！</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Escape Room Finder. All rights reserved.</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>詳細を見る</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>詳しく</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>送信</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>編集</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>戻る</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>次へ</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>前へ</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>読み込み中...</value></data>
+  <data name="Common_Explore" xml:space="preserve"><value>探索</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>脱出ゲームマップ</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>近くの脱出ゲームを発見</value></data>
+  <data name="Map_VenuesFound" xml:space="preserve"><value>施設が見つかりました</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>都市または住所を検索...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>現在地を使用</value></data>
+
+  <!-- Profile Page -->
+  <data name="Profile_Title" xml:space="preserve"><value>マイプロフィール</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>プロフィール編集</value></data>
+  <data name="Profile_Stats" xml:space="preserve"><value>統計</value></data>
+  <data name="Profile_ReviewsWritten" xml:space="preserve"><value>レビュー投稿数</value></data>
+  <data name="Profile_RoomsPlayed" xml:space="preserve"><value>プレイした部屋</value></data>
+  <data name="Profile_Escapes" xml:space="preserve"><value>脱出成功数</value></data>
+  <data name="Profile_EscapeRate" xml:space="preserve"><value>脱出成功率</value></data>
+  <data name="Profile_Reputation" xml:space="preserve"><value>評判</value></data>
+  <data name="Profile_FirstName" xml:space="preserve"><value>名</value></data>
+  <data name="Profile_LastName" xml:space="preserve"><value>姓</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>表示名</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>自己紹介</value></data>
+  <data name="Profile_City" xml:space="preserve"><value>都市</value></data>
+  <data name="Profile_Country" xml:space="preserve"><value>国</value></data>
+  <data name="Profile_FavoriteThemes" xml:space="preserve"><value>お気に入りのテーマ</value></data>
+  <data name="Profile_FavoriteThemesPlaceholder" xml:space="preserve"><value>ホラー、ミステリー、アドベンチャー...</value></data>
+  <data name="Profile_SeparateWithCommas" xml:space="preserve"><value>カンマで区切ってください</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>変更を保存</value></data>
+
+  <!-- Language Names -->
+  <data name="Lang_English" xml:space="preserve"><value>English</value></data>
+  <data name="Lang_Vietnamese" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Lang_Japanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="Lang_Korean" xml:space="preserve"><value>한국어</value></data>
+  <data name="Lang_Chinese" xml:space="preserve"><value>中文</value></data>
+  <data name="Lang_Thai" xml:space="preserve"><value>ไทย</value></data>
+  <data name="Lang_Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="Lang_German" xml:space="preserve"><value>Deutsch</value></data>
+</root>

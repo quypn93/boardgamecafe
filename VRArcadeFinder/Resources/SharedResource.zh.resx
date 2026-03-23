@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>首页</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>地图视图</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>博客</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>企业服务</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>价格方案</value></data>
+  <data name="Nav_AddArcade" xml:space="preserve"><value>添加您的场馆</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>常见问题</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>注册</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>退出</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>我的资料</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>管理后台</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>查找附近的VR游戏厅</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>发现您附近最好的虚拟现实游戏厅和游戏中心</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>按城市、场馆名称搜索...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>搜索</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>所有国家</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>所有城市</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>国家</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>城市</value></data>
+  <data name="Home_ArcadesFound" xml:space="preserve"><value>个VR游戏厅</value></data>
+  <data name="Home_NoArcadesFound" xml:space="preserve"><value>未找到符合条件的VR游戏厅</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>找到您理想的VR游戏厅</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>发现您附近精彩的VR游戏厅。体验最新的虚拟现实游戏，阅读评论，为您的下一次沉浸式游戏体验找到完美的场所。</value></data>
+  <data name="Home_BrowseArcades" xml:space="preserve"><value>浏览场馆</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>查看地图</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>筛选</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>附近</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>半径 (公里)</value></data>
+  <data name="Home_VRPlatforms" xml:space="preserve"><value>VR平台</value></data>
+  <data name="Home_GamesAvailable" xml:space="preserve"><value>可用游戏</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>应用筛选</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>清除筛选</value></data>
+  <data name="Home_VRArcades" xml:space="preserve"><value>VR游戏厅</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>在您附近</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>已应用筛选:</value></data>
+  <data name="Home_PlatformsSelected" xml:space="preserve"><value>个平台已选择</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>详情</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>地图</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>显示页面</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>/</value></data>
+  <data name="Home_NoArcadesTitle" xml:space="preserve"><value>未找到VR游戏厅</value></data>
+  <data name="Home_NoArcadesMessage" xml:space="preserve"><value>尝试调整筛选条件或清除所有筛选以查看所有场馆。</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>热门VR游戏厅城市</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>为什么要去VR游戏厅？</value></data>
+  <data name="Home_LatestTechnology" xml:space="preserve"><value>最新VR技术</value></data>
+  <data name="Home_LatestTechnologyDesc" xml:space="preserve"><value>无需高额购买即可体验尖端VR设备。在购买前试用最新的游戏和硬件。</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>社交体验</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>结识VR爱好者，享受多人游戏体验，或与朋友一起进行独特的游戏冒险。</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>专家指导</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>VR游戏厅的工作人员可以帮助您设置设备、根据您的喜好推荐游戏，并确保您获得最佳体验。</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>如何找到理想的VR游戏厅</value></data>
+
+  <!-- Arcade Page -->
+  <data name="Arcade_Details" xml:space="preserve"><value>场馆详情</value></data>
+  <data name="Arcade_Rating" xml:space="preserve"><value>评分</value></data>
+  <data name="Arcade_Reviews" xml:space="preserve"><value>条评论</value></data>
+  <data name="Arcade_WriteReview" xml:space="preserve"><value>撰写评论</value></data>
+  <data name="Arcade_Address" xml:space="preserve"><value>地址</value></data>
+  <data name="Arcade_Phone" xml:space="preserve"><value>电话</value></data>
+  <data name="Arcade_Website" xml:space="preserve"><value>网站</value></data>
+  <data name="Arcade_OpeningHours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Arcade_VRPlatforms" xml:space="preserve"><value>VR平台</value></data>
+  <data name="Arcade_TotalStations" xml:space="preserve"><value>VR站点总数</value></data>
+  <data name="Arcade_Multiplayer" xml:space="preserve"><value>多人游戏区</value></data>
+  <data name="Arcade_PartyRooms" xml:space="preserve"><value>派对室</value></data>
+  <data name="Arcade_GetDirections" xml:space="preserve"><value>获取路线</value></data>
+  <data name="Arcade_OpenNow" xml:space="preserve"><value>营业中</value></data>
+  <data name="Arcade_Closed" xml:space="preserve"><value>已关闭</value></data>
+  <data name="Arcade_Verified" xml:space="preserve"><value>已认证</value></data>
+  <data name="Arcade_Premium" xml:space="preserve"><value>高级</value></data>
+  <data name="Arcade_Featured" xml:space="preserve"><value>精选</value></data>
+  <data name="Arcade_AvailableGames" xml:space="preserve"><value>可用游戏</value></data>
+  <data name="Arcade_Photos" xml:space="preserve"><value>照片</value></data>
+  <data name="Arcade_NearbyArcades" xml:space="preserve"><value>附近的VR游戏厅</value></data>
+  <data name="Arcade_Yes" xml:space="preserve"><value>是</value></data>
+  <data name="Arcade_No" xml:space="preserve"><value>否</value></data>
+
+  <!-- Reviews -->
+  <data name="Review_Title" xml:space="preserve"><value>评论</value></data>
+  <data name="Review_NoReviews" xml:space="preserve"><value>暂无评论。成为第一个评论者！</value></data>
+  <data name="Review_WriteFirst" xml:space="preserve"><value>撰写第一条评论</value></data>
+  <data name="Review_YourRating" xml:space="preserve"><value>您的评分</value></data>
+  <data name="Review_YourReview" xml:space="preserve"><value>您的评论</value></data>
+  <data name="Review_Submit" xml:space="preserve"><value>提交评论</value></data>
+  <data name="Review_Helpful" xml:space="preserve"><value>有帮助</value></data>
+  <data name="Review_VerifiedVisit" xml:space="preserve"><value>已验证到访</value></data>
+
+  <!-- Account -->
+  <data name="Account_Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>注册</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>电子邮件</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>密码</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>确认密码</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>记住我</value></data>
+  <data name="Account_ForgotPassword" xml:space="preserve"><value>忘记密码？</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>没有账户？</value></data>
+  <data name="Account_HaveAccount" xml:space="preserve"><value>已有账户？</value></data>
+  <data name="Account_SignUp" xml:space="preserve"><value>注册</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>名</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>姓</value></data>
+  <data name="Account_FullName" xml:space="preserve"><value>全名</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>VR游戏厅博客</value></data>
+  <data name="Blog_Subtitle" xml:space="preserve"><value>VR游戏新闻、技巧和指南</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>阅读更多</value></data>
+  <data name="Blog_Categories" xml:space="preserve"><value>分类</value></data>
+  <data name="Blog_RecentPosts" xml:space="preserve"><value>最新文章</value></data>
+  <data name="Blog_Author" xml:space="preserve"><value>作者</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>发布于</value></data>
+  <data name="Blog_Tags" xml:space="preserve"><value>标签</value></data>
+  <data name="Blog_Share" xml:space="preserve"><value>分享</value></data>
+  <data name="Blog_RelatedPosts" xml:space="preserve"><value>相关文章</value></data>
+
+  <!-- Pricing -->
+  <data name="Pricing_Title" xml:space="preserve"><value>价格方案</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>为您的VR游戏厅选择完美的方案</value></data>
+  <data name="Pricing_Basic" xml:space="preserve"><value>基础版</value></data>
+  <data name="Pricing_Standard" xml:space="preserve"><value>标准版</value></data>
+  <data name="Pricing_Premium" xml:space="preserve"><value>高级版</value></data>
+  <data name="Pricing_Monthly" xml:space="preserve"><value>每月</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>开始使用</value></data>
+  <data name="Pricing_ContactUs" xml:space="preserve"><value>联系我们</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>最受欢迎</value></data>
+
+  <!-- Common -->
+  <data name="Common_Loading" xml:space="preserve"><value>加载中...</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Common_View" xml:space="preserve"><value>查看</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>返回</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>下一页</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>上一页</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>提交</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>是</value></data>
+  <data name="Common_No" xml:space="preserve"><value>否</value></data>
+  <data name="Common_Error" xml:space="preserve"><value>错误</value></data>
+  <data name="Common_Success" xml:space="preserve"><value>成功</value></data>
+  <data name="Common_Warning" xml:space="preserve"><value>警告</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_About" xml:space="preserve"><value>关于我们</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>联系方式</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>隐私政策</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>服务条款</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>版权所有。</value></data>
+  <data name="Footer_Description" xml:space="preserve"><value>VR Arcade Finder帮助您发现全球最好的虚拟现实游戏中心。</value></data>
+
+  <!-- Meta/SEO -->
+  <data name="Meta_SiteTitle" xml:space="preserve"><value>VR Arcade Finder</value></data>
+  <data name="Meta_SiteDescription" xml:space="preserve"><value>查找您附近最好的VR游戏厅和虚拟现实游戏中心。浏览评论，比较价格，发现精彩的VR体验。</value></data>
+  <data name="Meta_Keywords" xml:space="preserve"><value>VR游戏厅, 虚拟现实, VR游戏, VR中心, VR体验, 游戏厅</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>我的个人资料</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>编辑资料</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>显示名称</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>简介</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>介绍一下自己...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>头像</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>喜欢的VR平台</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>首选语言</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>通知</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>接收附近新游戏厅的邮件通知</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>接收即将举行的VR活动邮件通知</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>保存更改</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>修改密码</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>当前密码</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>新密码</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>确认新密码</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>注册时间</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>收藏</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>我的评论</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>我的游戏厅</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>如需更改邮箱请联系客服</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>我收藏的游戏厅</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>从收藏中移除</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>还没有收藏</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>探索VR游戏厅并收藏您喜欢的！</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>浏览游戏厅</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>查看详情</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>从收藏中移除这个游戏厅？</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>我的评论</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>还没有评论</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>访问VR游戏厅并分享您的体验！</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>已发布</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>待审核</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>人觉得有帮助</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>编辑评论</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>删除评论</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>查找游戏厅</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>确定要删除这条评论吗？</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>访问被拒绝</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>您没有权限访问此页面。</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>如果您认为这是错误，请联系管理员或尝试使用其他账户登录。</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>返回首页</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>错误</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>哎呀！出了点问题</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>请求ID</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>返回首页</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>页面未找到</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>您查找的页面不存在。</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>VR游戏厅地图</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>查找VR游戏厅</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>输入城市...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>使用我的位置</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>筛选</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>VR平台</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>所有平台</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>有派对房间</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>多人游戏区</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>个游戏厅</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>搜索您附近的VR游戏厅</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>查看详情</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>无法获取您的位置。请手动输入城市。</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>联系信息</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>访问网站</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>在谷歌地图查看</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>您是这家游戏厅的老板吗？</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>认领列表</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>认领您的列表以获得更多曝光！</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>即将举行的活动</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>VR游戏</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>更多游戏...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>还有</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>浏览量</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>还没有博客文章。请稍后再来！</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>为您的VR游戏厅获得更多曝光</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>推荐</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>基础列表</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>联系信息</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>地图位置</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>照片库</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>活动列表</value></data>
+  <data name="Pricing_FeaturedPlacement" xml:space="preserve"><value>推荐位置</value></data>
+  <data name="Pricing_EverythingInBasic" xml:space="preserve"><value>基础版所有功能</value></data>
+  <data name="Pricing_PhotoGalleryUpTo" xml:space="preserve"><value>照片库（最多20张）</value></data>
+  <data name="Pricing_PriorityInSearch" xml:space="preserve"><value>搜索优先</value></data>
+  <data name="Pricing_VerifiedBadge" xml:space="preserve"><value>认证徽章</value></data>
+  <data name="Pricing_AnalyticsDashboard" xml:space="preserve"><value>分析仪表板</value></data>
+  <data name="Pricing_GetPremium" xml:space="preserve"><value>获取高级版</value></data>
+  <data name="Pricing_EverythingInPremium" xml:space="preserve"><value>高级版所有功能</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>首页推荐位置</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>游戏库存管理</value></data>
+  <data name="Pricing_UnlimitedPhotos" xml:space="preserve"><value>无限照片</value></data>
+  <data name="Pricing_PrioritySupport" xml:space="preserve"><value>优先支持</value></data>
+  <data name="Pricing_SocialMediaPromotion" xml:space="preserve"><value>社交媒体推广</value></data>
+  <data name="Pricing_GoFeatured" xml:space="preserve"><value>获取推荐版</value></data>
+  <data name="Pricing_AnnualDiscount" xml:space="preserve"><value>年付最高节省20%！企业方案请联系我们。</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>我的资料</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>编辑资料</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>显示名称</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>简介</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>介绍一下自己...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>头像</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>喜爱的VR平台</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>首选语言</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>通知</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>附近新店铺邮件通知</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>即将举办的VR活动邮件通知</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>保存更改</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>修改密码</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>当前密码</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>新密码</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>确认新密码</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>注册时间</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>收藏</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>我的评价</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>我的店铺</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>修改邮箱请联系客服</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>我的收藏</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>取消收藏</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>暂无收藏</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>开始探索VR店铺并添加到收藏！</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>浏览店铺</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>查看详情</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>确定要从收藏中移除此店铺吗？</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>我的评价</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>暂无评价</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>访问VR店铺并分享您的体验！</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>已发布</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>待审核</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>人觉得有帮助</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>编辑评价</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>删除评价</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>查找店铺</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>确定要删除此评价吗？</value></data>
+  <data name="MyReviews_Rating" xml:space="preserve"><value>评分</value></data>
+  <data name="MyReviews_ReviewTitle" xml:space="preserve"><value>标题</value></data>
+  <data name="MyReviews_YourReview" xml:space="preserve"><value>评价内容</value></data>
+  <data name="MyReviews_SaveChanges" xml:space="preserve"><value>保存更改</value></data>
+  <data name="MyReviews_UpdateFailed" xml:space="preserve"><value>更新评价失败</value></data>
+  <data name="MyReviews_DeleteFailed" xml:space="preserve"><value>删除评价失败</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>访问被拒绝</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>您没有权限访问此页面。</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>如果您认为这是错误，请联系管理员或尝试使用其他账户登录。</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>返回首页</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>错误</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>出了点问题</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>请求ID</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>返回首页</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>页面未找到</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>您寻找的页面不存在。</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>VR店铺地图</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>查找VR店铺</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>输入城市...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>使用我的位置</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>筛选</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>VR平台</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>所有平台</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>有派对房间</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>多人游戏区</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>家店铺</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>搜索您附近的VR店铺</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>查看详情</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>无法获取您的位置。请手动输入城市。</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>联系信息</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>访问网站</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>在谷歌地图中查看</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>您是这家店的老板吗？</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>认领店铺</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>认领您的店铺获得更多曝光！</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>即将举办的活动</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>VR游戏</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>更多游戏...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>以及</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>浏览</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>暂无博客文章。请稍后再来！</value></data>
+  <data name="Blog_SearchArticles" xml:space="preserve"><value>搜索文章</value></data>
+  <data name="Blog_SearchPlaceholder" xml:space="preserve"><value>搜索...</value></data>
+  <data name="Blog_Newsletter" xml:space="preserve"><value>订阅通讯</value></data>
+  <data name="Blog_NewsletterDesc" xml:space="preserve"><value>获取最新VR新闻和技巧。</value></data>
+  <data name="Blog_EmailPlaceholder" xml:space="preserve"><value>您的邮箱地址</value></data>
+  <data name="Blog_Subscribe" xml:space="preserve"><value>订阅</value></data>
+  <data name="Blog_ShareArticle" xml:space="preserve"><value>分享此文章：</value></data>
+  <data name="Blog_RelatedArticles" xml:space="preserve"><value>相关文章</value></data>
+  <data name="Blog_Guides" xml:space="preserve"><value>指南</value></data>
+  <data name="Blog_GameReviews" xml:space="preserve"><value>游戏评测</value></data>
+  <data name="Blog_VRNews" xml:space="preserve"><value>VR新闻</value></data>
+  <data name="Blog_TipsTricks" xml:space="preserve"><value>技巧与窍门</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>提升VR店铺的曝光度</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>推荐</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>基础列表</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>联系信息</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>地图位置</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>照片库</value></data>
+
+  <!-- About Page -->
+  <data name="About_Title" xml:space="preserve"><value>关于VR Arcade Finder</value></data>
+  <data name="About_Subtitle" xml:space="preserve"><value>沉浸式虚拟现实体验的门户</value></data>
+  <data name="About_OurMission" xml:space="preserve"><value>我们的使命</value></data>
+  <data name="About_MissionText1" xml:space="preserve"><value>VR Arcade Finder致力于将VR爱好者与全球最好的虚拟现实店铺连接起来。我们相信每个人都应该能够获得优质的VR体验，无论您是对VR感到好奇的新手还是寻找最新体验的资深玩家。</value></data>
+  <data name="About_MissionText2" xml:space="preserve"><value>我们的平台让您可以轻松发现、比较和选择基于位置、可用游戏、设备和用户评价的VR店铺。</value></data>
+  <data name="About_WhatWeOffer" xml:space="preserve"><value>我们提供</value></data>
+  <data name="About_LocationSearch" xml:space="preserve"><value>基于位置的搜索</value></data>
+  <data name="About_LocationSearchDesc" xml:space="preserve"><value>通过强大的搜索和地图功能找到附近的VR店铺。</value></data>
+  <data name="About_GameCatalog" xml:space="preserve"><value>游戏目录</value></data>
+  <data name="About_GameCatalogDesc" xml:space="preserve"><value>浏览数千款VR游戏并找到拥有它们的店铺。</value></data>
+  <data name="About_UserReviews" xml:space="preserve"><value>用户评价</value></data>
+  <data name="About_UserReviewsDesc" xml:space="preserve"><value>阅读真实VR店铺访客的真实评价。</value></data>
+  <data name="About_EventsTournaments" xml:space="preserve"><value>活动与比赛</value></data>
+  <data name="About_EventsTournamentsDesc" xml:space="preserve"><value>发现附近的VR游戏活动和比赛。</value></data>
+  <data name="About_ForArcadeOwners" xml:space="preserve"><value>店主专区</value></data>
+  <data name="About_ArcadeOwnersText" xml:space="preserve"><value>您是VR店铺老板吗？加入我们的平台，提高知名度，接触数千名正在寻找VR体验的潜在客户。</value></data>
+  <data name="About_ArcadeFeature1" xml:space="preserve"><value>创建包含照片和游戏库存的详细列表</value></data>
+  <data name="About_ArcadeFeature2" xml:space="preserve"><value>回复客户评价并建立声誉</value></data>
+  <data name="About_ArcadeFeature3" xml:space="preserve"><value>发布活动和特别促销</value></data>
+  <data name="About_ArcadeFeature4" xml:space="preserve"><value>访问分析以了解您的受众</value></data>
+  <data name="About_ArcadeFeature5" xml:space="preserve"><value>推荐位置选项以获得最大曝光</value></data>
+  <data name="About_ListYourArcade" xml:space="preserve"><value>登记您的店铺</value></data>
+  <data name="About_ContactUs" xml:space="preserve"><value>联系我们</value></data>
+  <data name="About_ContactText" xml:space="preserve"><value>有问题、反馈或合作咨询？我们很乐意听取您的意见！</value></data>
+  <data name="About_Email" xml:space="preserve"><value>邮箱：</value></data>
+  <data name="About_FollowUs" xml:space="preserve"><value>关注我们：</value></data>
+
+  <!-- Privacy Page -->
+  <data name="Privacy_Title" xml:space="preserve"><value>隐私政策</value></data>
+  <data name="Privacy_LastUpdated" xml:space="preserve"><value>最后更新：</value></data>
+  <data name="Privacy_Section1_Title" xml:space="preserve"><value>1. 我们收集的信息</value></data>
+  <data name="Privacy_Section1_Text" xml:space="preserve"><value>我们收集您直接提供的信息，例如当您：</value></data>
+  <data name="Privacy_Section1_Item1" xml:space="preserve"><value>创建账户</value></data>
+  <data name="Privacy_Section1_Item2" xml:space="preserve"><value>提交或认领VR店铺</value></data>
+  <data name="Privacy_Section1_Item3" xml:space="preserve"><value>撰写评价</value></data>
+  <data name="Privacy_Section1_Item4" xml:space="preserve"><value>联系我们</value></data>
+  <data name="Privacy_Section1_Item5" xml:space="preserve"><value>订阅我们的通讯</value></data>
+  <data name="Privacy_Section2_Title" xml:space="preserve"><value>2. 自动收集的信息</value></data>
+  <data name="Privacy_Section2_Text" xml:space="preserve"><value>使用我们的服务时，我们会自动收集某些信息，包括：</value></data>
+  <data name="Privacy_Section2_Item1" xml:space="preserve"><value>日志信息（IP地址、浏览器类型、访问时间）</value></data>
+  <data name="Privacy_Section2_Item2" xml:space="preserve"><value>设备信息</value></data>
+  <data name="Privacy_Section2_Item3" xml:space="preserve"><value>位置信息（经您同意）</value></data>
+  <data name="Privacy_Section2_Item4" xml:space="preserve"><value>Cookie和类似技术</value></data>
+  <data name="Privacy_Section3_Title" xml:space="preserve"><value>3. 我们如何使用您的信息</value></data>
+  <data name="Privacy_Section3_Text" xml:space="preserve"><value>我们使用收集的信息来：</value></data>
+  <data name="Privacy_Section3_Item1" xml:space="preserve"><value>提供、维护和改进我们的服务</value></data>
+  <data name="Privacy_Section3_Item2" xml:space="preserve"><value>处理交易并发送相关信息</value></data>
+  <data name="Privacy_Section3_Item3" xml:space="preserve"><value>发送促销信息（经您同意）</value></data>
+  <data name="Privacy_Section3_Item4" xml:space="preserve"><value>监控和分析趋势和使用情况</value></data>
+  <data name="Privacy_Section3_Item5" xml:space="preserve"><value>检测和防止欺诈活动</value></data>
+  <data name="Privacy_Section4_Title" xml:space="preserve"><value>4. 信息共享</value></data>
+  <data name="Privacy_Section4_Text" xml:space="preserve"><value>我们不出售您的个人信息。我们可能在以下情况下共享信息：</value></data>
+  <data name="Privacy_Section4_Item1" xml:space="preserve"><value>经您同意</value></data>
+  <data name="Privacy_Section4_Item2" xml:space="preserve"><value>与协助我们运营的服务提供商</value></data>
+  <data name="Privacy_Section4_Item3" xml:space="preserve"><value>遵守法律义务</value></data>
+  <data name="Privacy_Section4_Item4" xml:space="preserve"><value>与合并或收购相关</value></data>
+  <data name="Privacy_Section5_Title" xml:space="preserve"><value>5. 数据安全</value></data>
+  <data name="Privacy_Section5_Text" xml:space="preserve"><value>我们实施适当的安全措施，以保护您的个人信息免受未经授权的访问、更改、披露或销毁。</value></data>
+  <data name="Privacy_Section6_Title" xml:space="preserve"><value>6. 您的权利</value></data>
+  <data name="Privacy_Section6_Text" xml:space="preserve"><value>根据您的位置，您可能对个人信息拥有以下权利：</value></data>
+  <data name="Privacy_Section6_Item1" xml:space="preserve"><value>访问您的个人数据</value></data>
+  <data name="Privacy_Section6_Item2" xml:space="preserve"><value>更正不准确的数据</value></data>
+  <data name="Privacy_Section6_Item3" xml:space="preserve"><value>删除您的数据</value></data>
+  <data name="Privacy_Section6_Item4" xml:space="preserve"><value>数据可携带性</value></data>
+  <data name="Privacy_Section6_Item5" xml:space="preserve"><value>退出营销通信</value></data>
+  <data name="Privacy_Section7_Title" xml:space="preserve"><value>7. Cookie</value></data>
+  <data name="Privacy_Section7_Text" xml:space="preserve"><value>我们使用Cookie和类似的跟踪技术来收集有关您浏览活动的信息。您可以通过浏览器设置控制Cookie。</value></data>
+  <data name="Privacy_Section8_Title" xml:space="preserve"><value>8. 政策变更</value></data>
+  <data name="Privacy_Section8_Text" xml:space="preserve"><value>我们可能会不时更新本隐私政策。我们将通过在此页面发布新政策来通知您任何更改。</value></data>
+  <data name="Privacy_Section9_Title" xml:space="preserve"><value>9. 联系我们</value></data>
+  <data name="Privacy_Section9_Text" xml:space="preserve"><value>如果您对本隐私政策有疑问，请通过以下方式联系我们：</value></data>
+
+  <!-- Terms Page -->
+  <data name="Terms_Title" xml:space="preserve"><value>服务条款</value></data>
+  <data name="Terms_LastUpdated" xml:space="preserve"><value>最后更新：</value></data>
+  <data name="Terms_Section1_Title" xml:space="preserve"><value>1. 接受条款</value></data>
+  <data name="Terms_Section1_Text" xml:space="preserve"><value>访问或使用VR Arcade Finder即表示您同意受本服务条款的约束。如果您不同意这些条款，请不要使用我们的服务。</value></data>
+  <data name="Terms_Section2_Title" xml:space="preserve"><value>2. 服务描述</value></data>
+  <data name="Terms_Section2_Text" xml:space="preserve"><value>VR Arcade Finder提供在线平台，将用户与VR店铺连接。我们提供：</value></data>
+  <data name="Terms_Section2_Item1" xml:space="preserve"><value>VR店铺目录和搜索</value></data>
+  <data name="Terms_Section2_Item2" xml:space="preserve"><value>用户评价和评分</value></data>
+  <data name="Terms_Section2_Item3" xml:space="preserve"><value>店主商业列表服务</value></data>
+  <data name="Terms_Section2_Item4" xml:space="preserve"><value>活动列表和信息</value></data>
+  <data name="Terms_Section3_Title" xml:space="preserve"><value>3. 用户账户</value></data>
+  <data name="Terms_Section3_Text" xml:space="preserve"><value>要访问某些功能，您必须创建账户。您有责任：</value></data>
+  <data name="Terms_Section3_Item1" xml:space="preserve"><value>维护账户的机密性</value></data>
+  <data name="Terms_Section3_Item2" xml:space="preserve"><value>账户下发生的所有活动</value></data>
+  <data name="Terms_Section3_Item3" xml:space="preserve"><value>通知我们任何未经授权的使用</value></data>
+  <data name="Terms_Section4_Title" xml:space="preserve"><value>4. 用户内容</value></data>
+  <data name="Terms_Section4_Text1" xml:space="preserve"><value>您保留提交内容的所有权。通过发布内容，您授予我们非独占、免版税的许可，以在我们的平台上使用、显示和分发您的内容。</value></data>
+  <data name="Terms_Section4_Text2" xml:space="preserve"><value>您同意不发布以下内容：</value></data>
+  <data name="Terms_Section4_Item1" xml:space="preserve"><value>虚假、误导或欺诈性的</value></data>
+  <data name="Terms_Section4_Item2" xml:space="preserve"><value>侵犯知识产权的</value></data>
+  <data name="Terms_Section4_Item3" xml:space="preserve"><value>诽谤、淫秽或冒犯性的</value></data>
+  <data name="Terms_Section4_Item4" xml:space="preserve"><value>违反任何适用法律的</value></data>
+  <data name="Terms_Section5_Title" xml:space="preserve"><value>5. 商业列表</value></data>
+  <data name="Terms_Section5_Text" xml:space="preserve"><value>登记商业的店主同意：</value></data>
+  <data name="Terms_Section5_Item1" xml:space="preserve"><value>提供准确和最新的信息</value></data>
+  <data name="Terms_Section5_Item2" xml:space="preserve"><value>保持列表信息最新</value></data>
+  <data name="Terms_Section5_Item3" xml:space="preserve"><value>支付适用的订阅费用</value></data>
+  <data name="Terms_Section5_Item4" xml:space="preserve"><value>遵守所有适用的法律法规</value></data>
+  <data name="Terms_Section6_Title" xml:space="preserve"><value>6. 付款和订阅</value></data>
+  <data name="Terms_Section6_Text" xml:space="preserve"><value>高级列表需要付款。订阅费预付，除法律要求或退款政策规定外不予退还。</value></data>
+  <data name="Terms_Section7_Title" xml:space="preserve"><value>7. 知识产权</value></data>
+  <data name="Terms_Section7_Text" xml:space="preserve"><value>VR Arcade Finder上的所有内容、商标和其他知识产权均由我们或我们的许可方拥有。未经许可，您不得复制、修改或分发我们的内容。</value></data>
+  <data name="Terms_Section8_Title" xml:space="preserve"><value>8. 免责声明</value></data>
+  <data name="Terms_Section8_Text" xml:space="preserve"><value>我们的服务按"原样"提供，不提供任何形式的保证。我们不保证列表或评价的准确性。</value></data>
+  <data name="Terms_Section9_Title" xml:space="preserve"><value>9. 责任限制</value></data>
+  <data name="Terms_Section9_Text" xml:space="preserve"><value>在法律允许的最大范围内，VR Arcade Finder不对因使用我们服务而产生的任何间接、附带、特殊或后果性损害承担责任。</value></data>
+  <data name="Terms_Section10_Title" xml:space="preserve"><value>10. 赔偿</value></data>
+  <data name="Terms_Section10_Text" xml:space="preserve"><value>您同意赔偿VR Arcade Finder并使其免受因您使用我们的服务或违反这些条款而产生的任何索赔、损害或费用的损害。</value></data>
+  <data name="Terms_Section11_Title" xml:space="preserve"><value>11. 终止</value></data>
+  <data name="Terms_Section11_Text" xml:space="preserve"><value>我们保留因违反这些条款或任何其他原因而自行决定暂停或终止您账户的权利。</value></data>
+  <data name="Terms_Section12_Title" xml:space="preserve"><value>12. 条款变更</value></data>
+  <data name="Terms_Section12_Text" xml:space="preserve"><value>我们可能随时修改这些条款。更改后继续使用我们的服务即表示接受新条款。</value></data>
+  <data name="Terms_Section13_Title" xml:space="preserve"><value>13. 适用法律</value></data>
+  <data name="Terms_Section13_Text" xml:space="preserve"><value>这些条款应根据适用法律进行解释。</value></data>
+  <data name="Terms_Section14_Title" xml:space="preserve"><value>14. 联系方式</value></data>
+  <data name="Terms_Section14_Text" xml:space="preserve"><value>如对这些条款有疑问，请通过以下方式联系我们：</value></data>
+
+  <!-- Games Page -->
+  <data name="Games_Title" xml:space="preserve"><value>VR游戏</value></data>
+  <data name="Games_Subtitle" xml:space="preserve"><value>浏览店铺可用的VR游戏目录</value></data>
+  <data name="Games_SearchPlaceholder" xml:space="preserve"><value>搜索游戏...</value></data>
+  <data name="Games_AllPlatforms" xml:space="preserve"><value>所有平台</value></data>
+  <data name="Games_AllGenres" xml:space="preserve"><value>所有类型</value></data>
+  <data name="Games_AllIntensities" xml:space="preserve"><value>所有强度</value></data>
+  <data name="Games_Filter" xml:space="preserve"><value>筛选</value></data>
+  <data name="Games_Reset" xml:space="preserve"><value>重置</value></data>
+  <data name="Games_Multiplayer" xml:space="preserve"><value>多人游戏</value></data>
+  <data name="Games_CoOp" xml:space="preserve"><value>合作</value></data>
+  <data name="Games_Intensity" xml:space="preserve"><value>强度：</value></data>
+  <data name="Games_IntensityLow" xml:space="preserve"><value>低（舒适）</value></data>
+  <data name="Games_IntensityMedium" xml:space="preserve"><value>中等</value></data>
+  <data name="Games_IntensityHigh" xml:space="preserve"><value>高（激烈）</value></data>
+  <data name="Games_Arcades" xml:space="preserve"><value>家店铺</value></data>
+  <data name="Games_NoGames" xml:space="preserve"><value>未找到游戏</value></data>
+  <data name="Games_NoGamesMessage" xml:space="preserve"><value>尝试调整筛选条件或搜索词。</value></data>
+
+  <!-- Claim Page -->
+  <data name="Claim_Title" xml:space="preserve"><value>认领店铺</value></data>
+  <data name="Claim_ClaimYourArcade" xml:space="preserve"><value>认领您的VR店铺</value></data>
+  <data name="Claim_WhyClaim" xml:space="preserve"><value>为什么要认领？</value></data>
+  <data name="Claim_Benefit1" xml:space="preserve"><value>随时更新店铺信息</value></data>
+  <data name="Claim_Benefit2" xml:space="preserve"><value>回复客户评价</value></data>
+  <data name="Claim_Benefit3" xml:space="preserve"><value>添加照片和VR游戏库存</value></data>
+  <data name="Claim_Benefit4" xml:space="preserve"><value>发布活动和特别优惠</value></data>
+  <data name="Claim_Benefit5" xml:space="preserve"><value>访问分析和洞察</value></data>
+  <data name="Claim_Claiming" xml:space="preserve"><value>认领店铺：</value></data>
+  <data name="Claim_VerificationInfo" xml:space="preserve"><value>验证信息</value></data>
+  <data name="Claim_FullName" xml:space="preserve"><value>您的全名</value></data>
+  <data name="Claim_YourRole" xml:space="preserve"><value>您的职位</value></data>
+  <data name="Claim_SelectRole" xml:space="preserve"><value>选择您的职位...</value></data>
+  <data name="Claim_Owner" xml:space="preserve"><value>所有者</value></data>
+  <data name="Claim_Manager" xml:space="preserve"><value>经理</value></data>
+  <data name="Claim_MarketingManager" xml:space="preserve"><value>市场经理</value></data>
+  <data name="Claim_Other" xml:space="preserve"><value>其他</value></data>
+  <data name="Claim_BusinessEmail" xml:space="preserve"><value>商业邮箱</value></data>
+  <data name="Claim_EmailNote" xml:space="preserve"><value>我们将向此邮箱发送验证</value></data>
+  <data name="Claim_PhoneNumber" xml:space="preserve"><value>电话号码</value></data>
+  <data name="Claim_VerificationMethod" xml:space="preserve"><value>验证方式</value></data>
+  <data name="Claim_EmailVerification" xml:space="preserve"><value>邮箱验证（我们将向您的商业邮箱发送验证码）</value></data>
+  <data name="Claim_PhoneVerification" xml:space="preserve"><value>电话验证（我们将拨打登记的商业电话）</value></data>
+  <data name="Claim_DocumentVerification" xml:space="preserve"><value>文件验证（上传营业执照或水电账单）</value></data>
+  <data name="Claim_UploadDocument" xml:space="preserve"><value>上传验证文件</value></data>
+  <data name="Claim_AcceptedDocuments" xml:space="preserve"><value>接受：营业执照、水电账单或显示商业名称和地址的官方文件</value></data>
+  <data name="Claim_AdditionalNotes" xml:space="preserve"><value>附加说明</value></data>
+  <data name="Claim_NotesPlaceholder" xml:space="preserve"><value>任何有助于验证您所有权的附加信息...</value></data>
+  <data name="Claim_ConfirmAuthorized" xml:space="preserve"><value>我确认我有权代表此企业，并同意</value></data>
+  <data name="Claim_SubmitClaim" xml:space="preserve"><value>提交认领请求</value></data>
+  <data name="Claim_WhatHappensNext" xml:space="preserve"><value>接下来会发生什么？</value></data>
+  <data name="Claim_Next1" xml:space="preserve"><value>我们将在1-2个工作日内审核您的认领请求</value></data>
+  <data name="Claim_Next2" xml:space="preserve"><value>您将收到验证邮件或电话</value></data>
+  <data name="Claim_Next3" xml:space="preserve"><value>验证后，您将拥有管理列表的完全权限</value></data>
+  <data name="Claim_Next4" xml:space="preserve"><value>您可以升级到高级套餐获取更多功能</value></data>
+
+  <!-- Submit Arcade Page -->
+  <data name="Submit_Title" xml:space="preserve"><value>提交您的VR店铺</value></data>
+  <data name="Submit_Subtitle" xml:space="preserve"><value>将您的VR店铺添加到目录，触达数千名VR爱好者</value></data>
+  <data name="Submit_BasicInfo" xml:space="preserve"><value>基本信息</value></data>
+  <data name="Submit_ArcadeName" xml:space="preserve"><value>店铺名称</value></data>
+  <data name="Submit_Description" xml:space="preserve"><value>描述</value></data>
+  <data name="Submit_DescriptionPlaceholder" xml:space="preserve"><value>描述您的VR店铺，有什么独特之处，客户可以期待什么...</value></data>
+  <data name="Submit_Website" xml:space="preserve"><value>网站</value></data>
+  <data name="Submit_Phone" xml:space="preserve"><value>电话号码</value></data>
+  <data name="Submit_Email" xml:space="preserve"><value>邮箱</value></data>
+  <data name="Submit_Location" xml:space="preserve"><value>位置</value></data>
+  <data name="Submit_Address" xml:space="preserve"><value>地址</value></data>
+  <data name="Submit_City" xml:space="preserve"><value>城市</value></data>
+  <data name="Submit_Country" xml:space="preserve"><value>国家</value></data>
+  <data name="Submit_SelectCountry" xml:space="preserve"><value>选择国家...</value></data>
+  <data name="Submit_VREquipment" xml:space="preserve"><value>VR设备和功能</value></data>
+  <data name="Submit_VRPlatforms" xml:space="preserve"><value>可用VR平台</value></data>
+  <data name="Submit_TotalStations" xml:space="preserve"><value>VR站点总数</value></data>
+  <data name="Submit_PriceRange" xml:space="preserve"><value>价格范围</value></data>
+  <data name="Submit_BudgetFriendly" xml:space="preserve"><value>经济实惠</value></data>
+  <data name="Submit_Moderate" xml:space="preserve"><value>适中</value></data>
+  <data name="Submit_PremiumPrice" xml:space="preserve"><value>高端</value></data>
+  <data name="Submit_Features" xml:space="preserve"><value>功能</value></data>
+  <data name="Submit_MultiplayerArea" xml:space="preserve"><value>多人游戏区</value></data>
+  <data name="Submit_PartyRooms" xml:space="preserve"><value>派对房间</value></data>
+  <data name="Submit_MotionPlatform" xml:space="preserve"><value>动感平台</value></data>
+  <data name="Submit_RoomScaleVR" xml:space="preserve"><value>房间规模VR</value></data>
+  <data name="Submit_FullBodyTracking" xml:space="preserve"><value>全身追踪</value></data>
+  <data name="Submit_VRArena" xml:space="preserve"><value>VR竞技场/自由漫游</value></data>
+  <data name="Submit_BusinessHours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Submit_To" xml:space="preserve"><value>至</value></data>
+  <data name="Submit_Closed" xml:space="preserve"><value>休息</value></data>
+  <data name="Submit_Photos" xml:space="preserve"><value>照片</value></data>
+  <data name="Submit_Logo" xml:space="preserve"><value>Logo</value></data>
+  <data name="Submit_CoverPhoto" xml:space="preserve"><value>封面照片</value></data>
+  <data name="Submit_GalleryPhotos" xml:space="preserve"><value>图库照片（最多10张）</value></data>
+  <data name="Submit_GalleryNote" xml:space="preserve"><value>选择店铺、VR设备和设置的多张照片</value></data>
+  <data name="Submit_ChoosePlan" xml:space="preserve"><value>选择套餐</value></data>
+  <data name="Submit_ViewPlanComparison" xml:space="preserve"><value>查看完整套餐比较</value></data>
+  <data name="Submit_StandardListing" xml:space="preserve"><value>带联系信息的标准列表</value></data>
+  <data name="Submit_Popular" xml:space="preserve"><value>热门</value></data>
+  <data name="Submit_PhotoGalleryPriority" xml:space="preserve"><value>照片库 + 优先列表</value></data>
+  <data name="Submit_HomepageAnalytics" xml:space="preserve"><value>首页展示 + 分析</value></data>
+  <data name="Submit_AgreeTerms" xml:space="preserve"><value>我同意</value></data>
+  <data name="Submit_And" xml:space="preserve"><value>和</value></data>
+  <data name="Submit_SubmitArcade" xml:space="preserve"><value>提交店铺</value></data>
+
+  <!-- Checkout Success Page -->
+  <data name="Checkout_PaymentSuccessful" xml:space="preserve"><value>支付成功！</value></data>
+  <data name="Checkout_ThankYou" xml:space="preserve"><value>感谢您的购买。您的列表已激活。</value></data>
+  <data name="Checkout_OrderId" xml:space="preserve"><value>订单ID：</value></data>
+  <data name="Checkout_Plan" xml:space="preserve"><value>套餐：</value></data>
+  <data name="Checkout_Amount" xml:space="preserve"><value>金额：</value></data>
+  <data name="Checkout_WhatsNext" xml:space="preserve"><value>接下来？</value></data>
+  <data name="Checkout_Next1" xml:space="preserve"><value>您的列表现已上线，用户可以看到</value></data>
+  <data name="Checkout_Next2" xml:space="preserve"><value>您可以从以下位置管理您的列表</value></data>
+  <data name="Checkout_Dashboard" xml:space="preserve"><value>仪表板</value></data>
+  <data name="Checkout_Next3" xml:space="preserve"><value>确认邮件已发送到您的邮箱</value></data>
+  <data name="Checkout_Next4" xml:space="preserve"><value>访问分析以跟踪浏览量和参与度</value></data>
+  <data name="Checkout_ViewListing" xml:space="preserve"><value>查看您的列表</value></data>
+  <data name="Checkout_GoToDashboard" xml:space="preserve"><value>前往仪表板</value></data>
+  <data name="Checkout_NeedHelp" xml:space="preserve"><value>需要帮助？联系我们</value></data>
+
+  <!-- Days of Week -->
+  <data name="Day_Monday" xml:space="preserve"><value>星期一</value></data>
+  <data name="Day_Tuesday" xml:space="preserve"><value>星期二</value></data>
+  <data name="Day_Wednesday" xml:space="preserve"><value>星期三</value></data>
+  <data name="Day_Thursday" xml:space="preserve"><value>星期四</value></data>
+  <data name="Day_Friday" xml:space="preserve"><value>星期五</value></data>
+  <data name="Day_Saturday" xml:space="preserve"><value>星期六</value></data>
+  <data name="Day_Sunday" xml:space="preserve"><value>星期日</value></data>
+</root>

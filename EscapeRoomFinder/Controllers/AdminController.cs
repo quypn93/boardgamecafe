@@ -22,6 +22,7 @@ namespace EscapeRoomFinder.Controllers
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly ILogger<AdminController> _logger;
         private readonly IWebHostEnvironment _environment;
+        private readonly IAutoCrawlService _autoCrawlService;
 
         public AdminController(
             ApplicationDbContext context,
@@ -32,7 +33,8 @@ namespace EscapeRoomFinder.Controllers
             UserManager<User> userManager,
             RoleManager<IdentityRole<int>> roleManager,
             ILogger<AdminController> logger,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IAutoCrawlService autoCrawlService)
         {
             _context = context;
             _venueService = venueService;
@@ -43,6 +45,7 @@ namespace EscapeRoomFinder.Controllers
             _roleManager = roleManager;
             _logger = logger;
             _environment = environment;
+            _autoCrawlService = autoCrawlService;
         }
 
         [Route("")]
@@ -1538,6 +1541,301 @@ namespace EscapeRoomFinder.Controllers
             await _context.SaveChangesAsync();
 
             return Json(new { success = true, message = venue.IsPremium ? "Venue marked as premium." : "Venue premium status removed." });
+        }
+
+        #endregion
+
+        #region City Management
+
+        [Route("cities")]
+        public async Task<IActionResult> Cities(string? status, string? region, string? search, int page = 1)
+        {
+            const int pageSize = 50;
+            var query = _context.Cities.AsQueryable();
+
+            // Apply filters
+            switch (status?.ToLower())
+            {
+                case "never":
+                    query = query.Where(c => c.CrawlCount == 0);
+                    break;
+                case "failed":
+                    query = query.Where(c => c.LastCrawlStatus == "Failed");
+                    break;
+                case "pending":
+                    query = query.Where(c => c.NextCrawlAt != null && c.NextCrawlAt <= DateTime.UtcNow);
+                    break;
+                case "inactive":
+                    query = query.Where(c => !c.IsActive);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(region))
+            {
+                query = query.Where(c => c.Region == region);
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                var searchLower = search.ToLower();
+                query = query.Where(c => c.Name.ToLower().Contains(searchLower) || c.Country.ToLower().Contains(searchLower));
+            }
+
+            // Get counts
+            ViewBag.TotalCities = await _context.Cities.CountAsync();
+            ViewBag.NeverCrawled = await _context.Cities.CountAsync(c => c.CrawlCount == 0);
+            ViewBag.FailedCities = await _context.Cities.CountAsync(c => c.LastCrawlStatus == "Failed");
+            ViewBag.PendingRetry = await _context.Cities.CountAsync(c => c.NextCrawlAt != null && c.NextCrawlAt <= DateTime.UtcNow);
+            ViewBag.USCount = await _context.Cities.CountAsync(c => c.Region == "US");
+            ViewBag.InternationalCount = await _context.Cities.CountAsync(c => c.Region == "International");
+
+            ViewBag.Status = status;
+            ViewBag.Region = region;
+            ViewBag.Search = search;
+            ViewBag.CurrentPage = page;
+
+            var totalItems = await query.CountAsync();
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var cities = await query
+                .OrderBy(c => c.CrawlCount)
+                .ThenBy(c => c.LastCrawledAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return View(cities);
+        }
+
+        [Route("crawl-status")]
+        public async Task<IActionResult> CrawlStatus()
+        {
+            ViewBag.TotalCities = await _context.Cities.CountAsync();
+            ViewBag.NeverCrawled = await _context.Cities.CountAsync(c => c.CrawlCount == 0);
+            ViewBag.VenuesAdded = await _context.CrawlHistories.SumAsync(h => h.VenuesAdded);
+            ViewBag.TotalCrawls = await _context.CrawlHistories.CountAsync();
+            ViewBag.SuccessfulCrawls = await _context.CrawlHistories.CountAsync(h => h.Status == "Success");
+            ViewBag.FailedCrawls = await _context.CrawlHistories.CountAsync(h => h.Status == "Failed");
+
+            ViewBag.IsRunning = _autoCrawlService.IsRunning;
+            ViewBag.CurrentCity = _autoCrawlService.CurrentCity;
+
+            // Next cities to crawl
+            ViewBag.NextCities = await _context.Cities
+                .Where(c => c.IsActive)
+                .OrderBy(c => c.CrawlCount)
+                .ThenBy(c => c.LastCrawledAt)
+                .Take(5)
+                .ToListAsync();
+
+            // Recent history
+            ViewBag.RecentHistory = await _context.CrawlHistories
+                .Include(h => h.City)
+                .OrderByDescending(h => h.StartedAt)
+                .Take(50)
+                .ToListAsync();
+
+            return View();
+        }
+
+        [HttpPost]
+        [Route("cities/crawl/{id}")]
+        public async Task<IActionResult> CrawlCity(int id)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return Json(new { success = false, message = "City not found." });
+            }
+
+            if (_autoCrawlService.IsRunning)
+            {
+                return Json(new { success = false, message = "A crawl is already in progress." });
+            }
+
+            var (venuesFound, venuesAdded, venuesUpdated, error) = await _autoCrawlService.CrawlCityAsync(id);
+
+            if (error != null)
+            {
+                return Json(new { success = false, message = error });
+            }
+
+            return Json(new
+            {
+                success = true,
+                message = $"Crawled {city.Name}: Found {venuesFound}, Added {venuesAdded}, Updated {venuesUpdated}",
+                venuesFound,
+                venuesAdded,
+                venuesUpdated
+            });
+        }
+
+        [HttpPost]
+        [Route("cities/toggle-active/{id}")]
+        public async Task<IActionResult> ToggleCityActive(int id)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return Json(new { success = false, message = "City not found." });
+            }
+
+            city.IsActive = !city.IsActive;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, isActive = city.IsActive });
+        }
+
+        [HttpPost]
+        [Route("cities/update-max-results/{id}")]
+        public async Task<IActionResult> UpdateCityMaxResults(int id, int maxResults)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return Json(new { success = false, message = "City not found." });
+            }
+
+            city.MaxResults = Math.Clamp(maxResults, 5, 50);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, maxResults = city.MaxResults });
+        }
+
+        [HttpPost]
+        [Route("cities/add")]
+        public async Task<IActionResult> AddCity(string name, string country, string region)
+        {
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(country))
+            {
+                return Json(new { success = false, message = "Name and Country are required." });
+            }
+
+            // Check for duplicate
+            var exists = await _context.Cities.AnyAsync(c => c.Name == name && c.Country == country);
+            if (exists)
+            {
+                return Json(new { success = false, message = "City already exists." });
+            }
+
+            var city = new City
+            {
+                Name = name.Trim(),
+                Country = country.Trim(),
+                Region = region == "International" ? "International" : "US",
+                IsActive = true
+            };
+
+            _context.Cities.Add(city);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, cityId = city.CityId, message = $"Added {name}, {country}" });
+        }
+
+        [HttpPost]
+        [Route("cities/delete/{id}")]
+        public async Task<IActionResult> DeleteCity(int id)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return Json(new { success = false, message = "City not found." });
+            }
+
+            // Delete crawl history first
+            var history = await _context.CrawlHistories.Where(h => h.CityId == id).ToListAsync();
+            _context.CrawlHistories.RemoveRange(history);
+
+            _context.Cities.Remove(city);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = $"Deleted {city.Name}" });
+        }
+
+        [HttpPost]
+        [Route("cities/reset-status/{id}")]
+        public async Task<IActionResult> ResetCityCrawlStatus(int id)
+        {
+            var city = await _context.Cities.FindAsync(id);
+            if (city == null)
+            {
+                return Json(new { success = false, message = "City not found." });
+            }
+
+            city.LastCrawlStatus = null;
+            city.NextCrawlAt = null;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        [Route("cities/stop-crawl")]
+        public IActionResult StopAutoCrawl()
+        {
+            _autoCrawlService.Stop();
+            return Json(new { success = true, message = "Crawl stop requested." });
+        }
+
+        [HttpPost]
+        [Route("cities/seed")]
+        public async Task<IActionResult> SeedCities()
+        {
+            await _autoCrawlService.SeedCitiesAsync();
+            var count = await _context.Cities.CountAsync();
+            return Json(new { success = true, message = $"Cities seeded. Total: {count}" });
+        }
+
+        [HttpPost]
+        [Route("cities/bulk-crawl")]
+        public async Task<IActionResult> BulkCrawlCities(int[] cityIds)
+        {
+            if (cityIds == null || cityIds.Length == 0)
+            {
+                return Json(new { success = false, message = "No cities selected." });
+            }
+
+            if (_autoCrawlService.IsRunning)
+            {
+                return Json(new { success = false, message = "A crawl is already in progress." });
+            }
+
+            var results = new List<object>();
+            foreach (var cityId in cityIds)
+            {
+                var city = await _context.Cities.FindAsync(cityId);
+                if (city == null) continue;
+
+                var (venuesFound, venuesAdded, venuesUpdated, error) = await _autoCrawlService.CrawlCityAsync(cityId);
+                results.Add(new
+                {
+                    city = city.Name,
+                    success = error == null,
+                    venuesFound,
+                    venuesAdded,
+                    venuesUpdated,
+                    error
+                });
+
+                // Delay between cities
+                if (cityId != cityIds.Last())
+                {
+                    await Task.Delay(30000);
+                }
+            }
+
+            return Json(new { success = true, results });
+        }
+
+        [HttpGet]
+        [Route("api/crawl-status")]
+        public IActionResult GetCrawlStatus()
+        {
+            return Json(new
+            {
+                isRunning = _autoCrawlService.IsRunning,
+                currentCity = _autoCrawlService.CurrentCity
+            });
         }
 
         #endregion

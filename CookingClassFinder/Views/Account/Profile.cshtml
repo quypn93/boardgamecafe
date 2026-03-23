@@ -1,0 +1,65 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="@(Model.AvatarUrl ?? "/images/default-avatar.png")"
+                         class="rounded-circle mb-3"
+                         style="width: 120px; height: 120px; object-fit: cover;"
+                         alt="Avatar">
+                    <h4>@Model.DisplayName</h4>
+                    <p class="text-muted">@Model.CookingLevel</p>
+
+                    <div class="d-flex justify-content-around mt-4">
+                        <div>
+                            <h5 class="mb-0">@Model.TotalClassesTaken</h5>
+                            <small class="text-muted">Classes</small>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">@Model.TotalReviews</h5>
+                            <small class="text-muted">Reviews</small>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">@Model.ReputationScore</h5>
+                            <small class="text-muted">Points</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+
+                        <dt class="col-sm-4">Name</dt>
+                        <dd class="col-sm-8">@(Model.FirstName ?? "—") @Model.LastName</dd>
+
+                        <dt class="col-sm-4">Location</dt>
+                        <dd class="col-sm-8">@(Model.City ?? "—"), @(Model.Country ?? "—")</dd>
+
+                        <dt class="col-sm-4">Favorite Cuisines</dt>
+                        <dd class="col-sm-8">@(Model.FavoriteCuisines ?? "Not specified")</dd>
+
+                        <dt class="col-sm-4">Dietary Preferences</dt>
+                        <dd class="col-sm-8">@(Model.DietaryPreferences ?? "None specified")</dd>
+
+                        <dt class="col-sm-4">Bio</dt>
+                        <dd class="col-sm-8">@(Model.Bio ?? "No bio yet")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

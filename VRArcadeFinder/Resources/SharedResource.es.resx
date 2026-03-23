@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>Inicio</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>Ver Mapa</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>Blog</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>Para Empresas</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>Precios</value></data>
+  <data name="Nav_AddArcade" xml:space="preserve"><value>Añadir Tu Local</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>Preguntas Frecuentes</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>Iniciar Sesión</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>Registrarse</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>Cerrar Sesión</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>Mi Perfil</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>Panel de Admin</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>Encuentra Salas VR Cerca de Ti</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>Descubre las mejores salas de realidad virtual y centros de juegos en tu área</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>Buscar por ciudad, nombre del local...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>Buscar</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>Todos los Países</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>Todas las Ciudades</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>País</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>Ciudad</value></data>
+  <data name="Home_ArcadesFound" xml:space="preserve"><value>salas encontradas</value></data>
+  <data name="Home_NoArcadesFound" xml:space="preserve"><value>No se encontraron salas que coincidan con tus criterios</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>Encuentra Tu Sala VR Perfecta</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>Descubre increíbles salas VR cerca de ti. Experimenta los últimos juegos de realidad virtual, lee reseñas y encuentra el lugar perfecto para tu próxima sesión de juego inmersivo.</value></data>
+  <data name="Home_BrowseArcades" xml:space="preserve"><value>Explorar Salas</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>Ver Mapa</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>Filtros</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>Cerca de Mí</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>Radio (km)</value></data>
+  <data name="Home_VRPlatforms" xml:space="preserve"><value>Plataformas VR</value></data>
+  <data name="Home_GamesAvailable" xml:space="preserve"><value>Juegos Disponibles</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>Aplicar Filtros</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>Limpiar Filtros</value></data>
+  <data name="Home_VRArcades" xml:space="preserve"><value>Salas VR</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>cerca de tu ubicación</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>Filtros activos:</value></data>
+  <data name="Home_PlatformsSelected" xml:space="preserve"><value>plataformas seleccionadas</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>Detalles</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>Mapa</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>Mostrando página</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>de</value></data>
+  <data name="Home_NoArcadesTitle" xml:space="preserve"><value>No se encontraron salas</value></data>
+  <data name="Home_NoArcadesMessage" xml:space="preserve"><value>Intenta ajustar los filtros o limpiar todos los filtros para ver todas las salas.</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>Ciudades Populares para Salas VR</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>¿Por Qué Visitar una Sala VR?</value></data>
+  <data name="Home_LatestTechnology" xml:space="preserve"><value>Última Tecnología VR</value></data>
+  <data name="Home_LatestTechnologyDesc" xml:space="preserve"><value>Experimenta equipos VR de vanguardia sin el alto costo de comprar el tuyo. Prueba los últimos juegos y hardware antes de comprar.</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>Experiencia Social</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>Conoce a otros entusiastas de VR, disfruta de experiencias multijugador o trae a tus amigos para una aventura de juego única.</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>Guía Experta</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>El personal de las salas VR puede ayudarte con la configuración del equipo, recomendar juegos según tus preferencias y asegurar que tengas la mejor experiencia.</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>Cómo Encontrar Tu Sala VR Perfecta</value></data>
+
+  <!-- Arcade Page -->
+  <data name="Arcade_Details" xml:space="preserve"><value>Detalles de la Sala</value></data>
+  <data name="Arcade_Rating" xml:space="preserve"><value>Puntuación</value></data>
+  <data name="Arcade_Reviews" xml:space="preserve"><value>reseñas</value></data>
+  <data name="Arcade_WriteReview" xml:space="preserve"><value>Escribir Reseña</value></data>
+  <data name="Arcade_Address" xml:space="preserve"><value>Dirección</value></data>
+  <data name="Arcade_Phone" xml:space="preserve"><value>Teléfono</value></data>
+  <data name="Arcade_Website" xml:space="preserve"><value>Sitio Web</value></data>
+  <data name="Arcade_OpeningHours" xml:space="preserve"><value>Horario</value></data>
+  <data name="Arcade_VRPlatforms" xml:space="preserve"><value>Plataformas VR</value></data>
+  <data name="Arcade_TotalStations" xml:space="preserve"><value>Estaciones VR Totales</value></data>
+  <data name="Arcade_Multiplayer" xml:space="preserve"><value>Área Multijugador</value></data>
+  <data name="Arcade_PartyRooms" xml:space="preserve"><value>Salas de Fiestas</value></data>
+  <data name="Arcade_GetDirections" xml:space="preserve"><value>Cómo Llegar</value></data>
+  <data name="Arcade_OpenNow" xml:space="preserve"><value>Abierto Ahora</value></data>
+  <data name="Arcade_Closed" xml:space="preserve"><value>Cerrado</value></data>
+  <data name="Arcade_Verified" xml:space="preserve"><value>Verificado</value></data>
+  <data name="Arcade_Premium" xml:space="preserve"><value>Premium</value></data>
+  <data name="Arcade_Featured" xml:space="preserve"><value>Destacado</value></data>
+  <data name="Arcade_AvailableGames" xml:space="preserve"><value>Juegos Disponibles</value></data>
+  <data name="Arcade_Photos" xml:space="preserve"><value>Fotos</value></data>
+  <data name="Arcade_NearbyArcades" xml:space="preserve"><value>Salas VR Cercanas</value></data>
+  <data name="Arcade_Yes" xml:space="preserve"><value>Sí</value></data>
+  <data name="Arcade_No" xml:space="preserve"><value>No</value></data>
+
+  <!-- Reviews -->
+  <data name="Review_Title" xml:space="preserve"><value>Reseñas</value></data>
+  <data name="Review_NoReviews" xml:space="preserve"><value>Aún no hay reseñas. ¡Sé el primero!</value></data>
+  <data name="Review_WriteFirst" xml:space="preserve"><value>Escribe la Primera Reseña</value></data>
+  <data name="Review_YourRating" xml:space="preserve"><value>Tu Puntuación</value></data>
+  <data name="Review_YourReview" xml:space="preserve"><value>Tu Reseña</value></data>
+  <data name="Review_Submit" xml:space="preserve"><value>Enviar Reseña</value></data>
+  <data name="Review_Helpful" xml:space="preserve"><value>Útil</value></data>
+  <data name="Review_VerifiedVisit" xml:space="preserve"><value>Visita Verificada</value></data>
+
+  <!-- Account -->
+  <data name="Account_Login" xml:space="preserve"><value>Iniciar Sesión</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>Registrarse</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>Correo Electrónico</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>Contraseña</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>Confirmar Contraseña</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>Recuérdame</value></data>
+  <data name="Account_ForgotPassword" xml:space="preserve"><value>¿Olvidaste tu Contraseña?</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>¿No tienes cuenta?</value></data>
+  <data name="Account_HaveAccount" xml:space="preserve"><value>¿Ya tienes cuenta?</value></data>
+  <data name="Account_SignUp" xml:space="preserve"><value>Registrarse</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>Apellido</value></data>
+  <data name="Account_FullName" xml:space="preserve"><value>Nombre Completo</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>Blog de Salas VR</value></data>
+  <data name="Blog_Subtitle" xml:space="preserve"><value>Noticias, consejos y guías sobre juegos VR</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>Leer Más</value></data>
+  <data name="Blog_Categories" xml:space="preserve"><value>Categorías</value></data>
+  <data name="Blog_RecentPosts" xml:space="preserve"><value>Publicaciones Recientes</value></data>
+  <data name="Blog_Author" xml:space="preserve"><value>Autor</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>Publicado el</value></data>
+  <data name="Blog_Tags" xml:space="preserve"><value>Etiquetas</value></data>
+  <data name="Blog_Share" xml:space="preserve"><value>Compartir</value></data>
+  <data name="Blog_RelatedPosts" xml:space="preserve"><value>Publicaciones Relacionadas</value></data>
+
+  <!-- Pricing -->
+  <data name="Pricing_Title" xml:space="preserve"><value>Planes de Precios</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>Elige el plan perfecto para tu sala VR</value></data>
+  <data name="Pricing_Basic" xml:space="preserve"><value>Básico</value></data>
+  <data name="Pricing_Standard" xml:space="preserve"><value>Estándar</value></data>
+  <data name="Pricing_Premium" xml:space="preserve"><value>Premium</value></data>
+  <data name="Pricing_Monthly" xml:space="preserve"><value>por mes</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>Comenzar</value></data>
+  <data name="Pricing_ContactUs" xml:space="preserve"><value>Contáctanos</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>Más Popular</value></data>
+
+  <!-- Common -->
+  <data name="Common_Loading" xml:space="preserve"><value>Cargando...</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>Guardar</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Editar</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Common_View" xml:space="preserve"><value>Ver</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Volver</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>Siguiente</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>Anterior</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>Enviar</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>Sí</value></data>
+  <data name="Common_No" xml:space="preserve"><value>No</value></data>
+  <data name="Common_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Common_Success" xml:space="preserve"><value>Éxito</value></data>
+  <data name="Common_Warning" xml:space="preserve"><value>Advertencia</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_About" xml:space="preserve"><value>Sobre Nosotros</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>Contacto</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Política de Privacidad</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>Términos de Servicio</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>Todos los derechos reservados.</value></data>
+  <data name="Footer_Description" xml:space="preserve"><value>VR Arcade Finder te ayuda a descubrir los mejores centros de juegos de realidad virtual en todo el mundo.</value></data>
+
+  <!-- Meta/SEO -->
+  <data name="Meta_SiteTitle" xml:space="preserve"><value>VR Arcade Finder</value></data>
+  <data name="Meta_SiteDescription" xml:space="preserve"><value>Encuentra las mejores salas VR y centros de realidad virtual cerca de ti. Lee reseñas, compara precios y descubre experiencias VR increíbles.</value></data>
+  <data name="Meta_Keywords" xml:space="preserve"><value>sala VR, realidad virtual, juegos VR, centro VR, experiencia VR, arcade de juegos</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>Mi Perfil</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>Editar Perfil</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>Nombre para mostrar</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>Biografía</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>Cuéntanos sobre ti...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>Avatar</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>Plataformas VR Favoritas</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>Idioma Preferido</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>Notificaciones</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>Enviar email sobre nuevas salas en mi área</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>Enviar email sobre próximos eventos VR</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>Guardar Cambios</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>Cambiar Contraseña</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>Contraseña Actual</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>Nueva Contraseña</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>Confirmar Nueva Contraseña</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>Miembro desde</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>Favoritos</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>Mis Reseñas</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>Mis Salas</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>Configuración</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>Contacta soporte para cambiar email</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>Mis Salas Favoritas</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>Eliminar de favoritos</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>Sin favoritos aún</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>¡Empieza a explorar salas VR y guarda tus favoritas!</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>Explorar Salas</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>Ver Detalles</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>¿Eliminar esta sala de tus favoritos?</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>Mis Reseñas</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>Sin reseñas aún</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>¡Visita una sala VR y comparte tu experiencia!</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>Publicada</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>Pendiente</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>personas encontraron esto útil</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>Editar Reseña</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>Eliminar Reseña</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>Buscar Salas</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>¿Estás seguro de que quieres eliminar esta reseña?</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>Acceso Denegado</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>No tienes permiso para acceder a esta página.</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>Si crees que esto es un error, contacta al administrador o intenta iniciar sesión con otra cuenta.</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>Ir a Inicio</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>Error</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>¡Ups! Algo salió mal</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>ID de Solicitud</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>Volver a Inicio</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>Página No Encontrada</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>La página que buscas no existe.</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>Mapa de Salas VR</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>Encontrar Salas VR</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>Ingresa ciudad...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>Usar Mi Ubicación</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>Filtros</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>Plataforma VR</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>Todas las Plataformas</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>Tiene Salas de Fiestas</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>Área Multijugador</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>salas encontradas</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>Busca salas VR en tu área</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>Ver Detalles</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>No se pudo obtener tu ubicación. Ingresa una ciudad manualmente.</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>Información de Contacto</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>Visitar Sitio Web</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>Ver en Google Maps</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>¿Eres dueño de esta sala?</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>Reclamar Listado</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>¡Reclama tu listado y obtén más visibilidad!</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>Próximos Eventos</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>Juegos VR</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>juegos más...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>Y</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>vistas</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>Sin publicaciones aún. ¡Vuelve pronto!</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>Obtén más visibilidad para tu sala VR</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>Destacado</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>Listado básico</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>Información de contacto</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>Horario de atención</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>Ubicación en mapa</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>Galería de fotos</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>Listado de eventos</value></data>
+  <data name="Pricing_FeaturedPlacement" xml:space="preserve"><value>Posición destacada</value></data>
+  <data name="Pricing_EverythingInBasic" xml:space="preserve"><value>Todo en Básico</value></data>
+  <data name="Pricing_PhotoGalleryUpTo" xml:space="preserve"><value>Galería de fotos (hasta 20)</value></data>
+  <data name="Pricing_PriorityInSearch" xml:space="preserve"><value>Prioridad en búsqueda</value></data>
+  <data name="Pricing_VerifiedBadge" xml:space="preserve"><value>Insignia verificada</value></data>
+  <data name="Pricing_AnalyticsDashboard" xml:space="preserve"><value>Panel de análisis</value></data>
+  <data name="Pricing_GetPremium" xml:space="preserve"><value>Obtener Premium</value></data>
+  <data name="Pricing_EverythingInPremium" xml:space="preserve"><value>Todo en Premium</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>Posición destacada en inicio</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>Gestor de inventario de juegos</value></data>
+  <data name="Pricing_UnlimitedPhotos" xml:space="preserve"><value>Fotos ilimitadas</value></data>
+  <data name="Pricing_PrioritySupport" xml:space="preserve"><value>Soporte prioritario</value></data>
+  <data name="Pricing_SocialMediaPromotion" xml:space="preserve"><value>Promoción en redes sociales</value></data>
+  <data name="Pricing_GoFeatured" xml:space="preserve"><value>Obtener Destacado</value></data>
+  <data name="Pricing_AnnualDiscount" xml:space="preserve"><value>¡Ahorra hasta 20% con facturación anual! Contáctanos para planes empresariales.</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>Mi Perfil</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>Editar Perfil</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>Nombre para mostrar</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>Notificaciones</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>Guardar Cambios</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>Favoritos</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>Mis Reseñas</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>Configuración</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>Mis Arcades Favoritos</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>Sin favoritos aún</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>Explorar Arcades</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>Mis Reseñas</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>Sin reseñas aún</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>Publicada</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>Pendiente</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>Editar Reseña</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>Eliminar Reseña</value></data>
+  <data name="MyReviews_Rating" xml:space="preserve"><value>Calificación</value></data>
+  <data name="MyReviews_SaveChanges" xml:space="preserve"><value>Guardar Cambios</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>Acceso Denegado</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>No tienes permiso para acceder a esta página.</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>Ir al Inicio</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>Error</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>¡Ups! Algo salió mal</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>Volver al Inicio</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>Página No Encontrada</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>Mapa de Arcades VR</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>Encontrar Arcades VR</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>Ingresa ciudad...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>Usar Mi Ubicación</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>Filtros</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>Ver Detalles</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>Información de Contacto</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>Juegos VR</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>vistas</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>No hay publicaciones aún. ¡Vuelve pronto!</value></data>
+  <data name="Blog_SearchArticles" xml:space="preserve"><value>Buscar Artículos</value></data>
+  <data name="Blog_Newsletter" xml:space="preserve"><value>Boletín</value></data>
+  <data name="Blog_Subscribe" xml:space="preserve"><value>Suscribirse</value></data>
+  <data name="Blog_RelatedArticles" xml:space="preserve"><value>Artículos Relacionados</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>Obtén más visibilidad para tu arcade VR</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>Destacado</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>Listado básico</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>Galería de fotos</value></data>
+
+  <!-- About Page -->
+  <data name="About_Title" xml:space="preserve"><value>Acerca de VR Arcade Finder</value></data>
+  <data name="About_OurMission" xml:space="preserve"><value>Nuestra Misión</value></data>
+  <data name="About_WhatWeOffer" xml:space="preserve"><value>Lo Que Ofrecemos</value></data>
+  <data name="About_ForArcadeOwners" xml:space="preserve"><value>Para Propietarios de Arcades</value></data>
+  <data name="About_ContactUs" xml:space="preserve"><value>Contáctanos</value></data>
+  <data name="About_ListYourArcade" xml:space="preserve"><value>Lista Tu Arcade</value></data>
+
+  <!-- Privacy/Terms -->
+  <data name="Privacy_Title" xml:space="preserve"><value>Política de Privacidad</value></data>
+  <data name="Privacy_LastUpdated" xml:space="preserve"><value>Última actualización:</value></data>
+  <data name="Terms_Title" xml:space="preserve"><value>Términos de Servicio</value></data>
+  <data name="Terms_LastUpdated" xml:space="preserve"><value>Última actualización:</value></data>
+
+  <!-- Games Page -->
+  <data name="Games_Title" xml:space="preserve"><value>Juegos VR</value></data>
+  <data name="Games_Subtitle" xml:space="preserve"><value>Explora nuestro catálogo de juegos VR disponibles</value></data>
+  <data name="Games_SearchPlaceholder" xml:space="preserve"><value>Buscar juegos...</value></data>
+  <data name="Games_AllPlatforms" xml:space="preserve"><value>Todas las Plataformas</value></data>
+  <data name="Games_AllGenres" xml:space="preserve"><value>Todos los Géneros</value></data>
+  <data name="Games_Filter" xml:space="preserve"><value>Filtrar</value></data>
+  <data name="Games_Reset" xml:space="preserve"><value>Reiniciar</value></data>
+  <data name="Games_NoGames" xml:space="preserve"><value>No se encontraron juegos</value></data>
+
+  <!-- Claim Page -->
+  <data name="Claim_Title" xml:space="preserve"><value>Reclamar Listado</value></data>
+  <data name="Claim_ClaimYourArcade" xml:space="preserve"><value>Reclama Tu Arcade VR</value></data>
+  <data name="Claim_SubmitClaim" xml:space="preserve"><value>Enviar Solicitud de Reclamo</value></data>
+
+  <!-- Submit Arcade Page -->
+  <data name="Submit_Title" xml:space="preserve"><value>Envía Tu Arcade VR</value></data>
+  <data name="Submit_BasicInfo" xml:space="preserve"><value>Información Básica</value></data>
+  <data name="Submit_Location" xml:space="preserve"><value>Ubicación</value></data>
+  <data name="Submit_VREquipment" xml:space="preserve"><value>Equipo y Características VR</value></data>
+  <data name="Submit_BusinessHours" xml:space="preserve"><value>Horario de Atención</value></data>
+  <data name="Submit_Photos" xml:space="preserve"><value>Fotos</value></data>
+  <data name="Submit_ChoosePlan" xml:space="preserve"><value>Elige Tu Plan</value></data>
+  <data name="Submit_SubmitArcade" xml:space="preserve"><value>Enviar Arcade</value></data>
+
+  <!-- Checkout Success Page -->
+  <data name="Checkout_PaymentSuccessful" xml:space="preserve"><value>¡Pago Exitoso!</value></data>
+  <data name="Checkout_ThankYou" xml:space="preserve"><value>Gracias por tu compra. Tu listado ha sido activado.</value></data>
+  <data name="Checkout_ViewListing" xml:space="preserve"><value>Ver Tu Listado</value></data>
+  <data name="Checkout_GoToDashboard" xml:space="preserve"><value>Ir al Panel</value></data>
+
+  <!-- Days of Week -->
+  <data name="Day_Monday" xml:space="preserve"><value>Lunes</value></data>
+  <data name="Day_Tuesday" xml:space="preserve"><value>Martes</value></data>
+  <data name="Day_Wednesday" xml:space="preserve"><value>Miércoles</value></data>
+  <data name="Day_Thursday" xml:space="preserve"><value>Jueves</value></data>
+  <data name="Day_Friday" xml:space="preserve"><value>Viernes</value></data>
+  <data name="Day_Saturday" xml:space="preserve"><value>Sábado</value></data>
+  <data name="Day_Sunday" xml:space="preserve"><value>Domingo</value></data>
+</root>

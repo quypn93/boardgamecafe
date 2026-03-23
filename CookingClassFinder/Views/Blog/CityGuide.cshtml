@@ -1,0 +1,128 @@
+@model City
+@{
+    ViewData["Title"] = $"Cooking Classes in {Model.Name}";
+}
+
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-action="Cities">City Guides</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="position-relative mb-4">
+            <img src="@Model.ImageUrl" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="@Model.Name">
+            <div class="position-absolute bottom-0 start-0 w-100 p-4" style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                <h1 class="text-white mb-0">Cooking Classes in @Model.Name</h1>
+                <p class="text-white-50 mb-0">@Model.Country</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h1>Cooking Classes in @Model.Name</h1>
+        <p class="text-muted">@Model.Country</p>
+    }
+
+    <div class="row">
+        <div class="col-lg-8">
+            @if (!string.IsNullOrEmpty(Model.GuideContent))
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="h4 mb-3">City Guide</h2>
+                        <div class="guide-content">
+                            @Html.Raw(Model.GuideContent)
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <h2 class="h4 mb-3">Cooking Schools in @Model.Name (@Model.SchoolCount)</h2>
+
+            @if (ViewBag.Schools != null)
+            {
+                foreach (var school in ViewBag.Schools)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title mb-1">
+                                        <a asp-controller="School" asp-action="Details" asp-route-slug="@school.Slug" class="text-decoration-none">
+                                            @school.Name
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted mb-2">
+                                        <i class="bi bi-geo-alt"></i> @school.Address
+                                    </p>
+                                </div>
+                                <div class="text-end">
+                                    @if (school.AverageRating.HasValue)
+                                    {
+                                        <span class="badge bg-warning">
+                                            @school.AverageRating.Value.ToString("F1") <i class="bi bi-star-fill"></i>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            <p class="mb-2">@school.TotalClasses classes available</p>
+                            @if (!string.IsNullOrEmpty(school.Description))
+                            {
+                                <p class="text-muted small mb-0">
+                                    @(school.Description.Length > 200 ? school.Description.Substring(0, 200) + "..." : school.Description)
+                                </p>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Facts</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-building me-2"></i>
+                            <strong>@Model.SchoolCount</strong> cooking schools
+                        </li>
+                        @if (Model.Latitude.HasValue && Model.Longitude.HasValue)
+                        {
+                            <li class="mb-2">
+                                <i class="bi bi-map me-2"></i>
+                                <a href="https://www.google.com/maps?q=@Model.Latitude,@Model.Longitude" target="_blank" rel="noopener">
+                                    View on Map
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <hr />
+
+                    <h6>Search Cooking Classes</h6>
+                    <form asp-controller="Home" asp-action="Index" method="get">
+                        <input type="hidden" name="city" value="@Model.Name" />
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search me-2"></i>Search in @Model.Name
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .guide-content {
+        line-height: 1.8;
+    }
+    .guide-content h2, .guide-content h3 {
+        margin-top: 1.5rem;
+    }
+</style>

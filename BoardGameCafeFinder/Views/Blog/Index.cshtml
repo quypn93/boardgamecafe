@@ -10,32 +10,21 @@
 
     // SEO: Dynamic title and description based on filters
     var pageTitle = !string.IsNullOrEmpty(selectedCountry)
-        ? $"Board Game Cafes in {selectedCountry} - City Guides {DateTime.Now.Year}"
-        : $"Board Game Cafe Guides by City - {totalItems} Cities Worldwide";
+        ? string.Format(SharedLocalizer["SEO_BlogIndex_TitleCountry"].Value, selectedCountry, DateTime.Now.Year)
+        : string.Format(SharedLocalizer["SEO_BlogIndex_TitleAll"].Value, totalItems);
 
     var pageDescription = !string.IsNullOrEmpty(selectedCountry)
-        ? $"Find board game cafes in {selectedCountry}. Browse city guides, discover top games, and plan your next board game adventure."
-        : $"Discover board game cafes in {totalItems} cities around the world. Find detailed guides with top games, reviews, ratings & directions.";
+        ? string.Format(SharedLocalizer["SEO_BlogIndex_DescCountry"].Value, selectedCountry)
+        : string.Format(SharedLocalizer["SEO_BlogIndex_DescAll"].Value, totalItems);
 
     ViewData["Title"] = pageTitle;
     ViewData["MetaDescription"] = pageDescription;
     ViewData["Keywords"] = !string.IsNullOrEmpty(selectedCountry)
-        ? $"board game cafe {selectedCountry}, board game lounge {selectedCountry}, tabletop gaming {selectedCountry}"
-        : "board game cafe, board game lounge, tabletop gaming, board games near me, city guides";
+        ? string.Format(SharedLocalizer["SEO_BlogIndex_KeywordsCountry"].Value, selectedCountry)
+        : SharedLocalizer["SEO_BlogIndex_KeywordsAll"].Value;
     Layout = "_UserLayout";
 
-    // SEO: Canonical URL with pagination
-    var canonicalUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/Blog";
-    if (!string.IsNullOrEmpty(selectedCountry))
-    {
-        canonicalUrl += $"?country={Uri.EscapeDataString(selectedCountry)}";
-        if (currentPage > 1) canonicalUrl += $"&page={currentPage}";
-    }
-    else if (currentPage > 1)
-    {
-        canonicalUrl += $"?page={currentPage}";
-    }
-    ViewData["CanonicalUrl"] = canonicalUrl;
+    // Note: CanonicalUrl, MetaRobots, PaginationPrev/Next are set by BlogController
 
     // Helper function for building pagination URLs
     string BuildBlogPageUrl(int page)

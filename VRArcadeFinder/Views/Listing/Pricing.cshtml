@@ -1,0 +1,95 @@
+@{
+    ViewData["Title"] = SharedLocalizer["Pricing_Title"].Value;
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h1><i class="bi bi-star-fill text-warning me-2"></i>@SharedLocalizer["Pricing_Title"]</h1>
+        <p class="lead text-muted">@SharedLocalizer["Pricing_GetMoreVisibility"]</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <!-- Basic Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-center py-4">
+                    <h3>@SharedLocalizer["Pricing_Basic"]</h3>
+                    <div class="display-4 fw-bold">$29.99</div>
+                    <p class="text-muted mb-0">@SharedLocalizer["Pricing_Monthly"]</p>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_BasicListing"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_ContactInformation"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_BusinessHours"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_MapLocation"]</li>
+                        <li class="mb-2 text-muted"><i class="bi bi-x-circle me-2"></i>@SharedLocalizer["Pricing_PhotoGallery"]</li>
+                        <li class="mb-2 text-muted"><i class="bi bi-x-circle me-2"></i>@SharedLocalizer["Pricing_EventListings"]</li>
+                        <li class="mb-2 text-muted"><i class="bi bi-x-circle me-2"></i>@SharedLocalizer["Pricing_FeaturedPlacement"]</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="/listing/submit" class="btn btn-outline-primary w-100">@SharedLocalizer["Pricing_GetStarted"]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-header text-center py-4 bg-primary text-white">
+                    <span class="badge bg-warning text-dark mb-2">@SharedLocalizer["Pricing_MostPopular"]</span>
+                    <h3>@SharedLocalizer["Pricing_Premium"]</h3>
+                    <div class="display-4 fw-bold">$59.99</div>
+                    <p class="mb-0">@SharedLocalizer["Pricing_Monthly"]</p>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_EverythingInBasic"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_PhotoGalleryUpTo"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_EventListings"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_PriorityInSearch"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_VerifiedBadge"]</li>
+                        <li class="mb-2 text-muted"><i class="bi bi-x-circle me-2"></i>@SharedLocalizer["Pricing_FeaturedPlacement"]</li>
+                        <li class="mb-2 text-muted"><i class="bi bi-x-circle me-2"></i>@SharedLocalizer["Pricing_AnalyticsDashboard"]</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="/listing/submit" class="btn btn-primary w-100">@SharedLocalizer["Pricing_GetPremium"]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-center py-4">
+                    <h3>@SharedLocalizer["Pricing_Featured"]</h3>
+                    <div class="display-4 fw-bold">$99.99</div>
+                    <p class="text-muted mb-0">@SharedLocalizer["Pricing_Monthly"]</p>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_EverythingInPremium"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_FeaturedHomepage"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_GameInventory"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_AnalyticsDashboard"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_UnlimitedPhotos"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_PrioritySupport"]</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>@SharedLocalizer["Pricing_SocialMediaPromotion"]</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="/listing/submit" class="btn btn-outline-primary w-100">@SharedLocalizer["Pricing_GoFeatured"]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <p class="text-muted">
+            <i class="bi bi-info-circle me-1"></i>
+            @SharedLocalizer["Pricing_AnnualDiscount"]
+        </p>
+    </div>
+</div>

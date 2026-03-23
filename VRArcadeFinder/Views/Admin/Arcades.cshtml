@@ -1,0 +1,206 @@
+@model IEnumerable<Arcade>
+@{
+    ViewData["Title"] = "Manage Arcades";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-shop me-2"></i>Manage VR Arcades</h2>
+        <a href="/admin/arcades/create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Add Arcade
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Search by name..." value="@ViewBag.Search">
+                </div>
+                <div class="col-md-2">
+                    <select name="city" class="form-select">
+                        <option value="">All Cities</option>
+                        @if (ViewBag.Cities != null)
+                        {
+                            foreach (var city in (IEnumerable<string>)ViewBag.Cities)
+                            {
+                                if (ViewBag.SelectedCity == city)
+                                {
+                                    <option value="@city" selected>@city</option>
+                                }
+                                else
+                                {
+                                    <option value="@city">@city</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        @if (ViewBag.Status == "active") { <option value="active" selected>Active</option> } else { <option value="active">Active</option> }
+                        @if (ViewBag.Status == "pending") { <option value="pending" selected>Pending</option> } else { <option value="pending">Pending</option> }
+                        @if (ViewBag.Status == "inactive") { <option value="inactive" selected>Inactive</option> } else { <option value="inactive">Inactive</option> }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="premium" class="form-select">
+                        <option value="">All Types</option>
+                        @if (ViewBag.Premium == "true") { <option value="true" selected>Premium</option> } else { <option value="true">Premium</option> }
+                        @if (ViewBag.Premium == "false") { <option value="false" selected>Free</option> } else { <option value="false">Free</option> }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-outline-primary me-2">Filter</button>
+                    <a href="/admin/arcades" class="btn btn-outline-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Arcades Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Arcade</th>
+                        <th>City</th>
+                        <th>VR Stations</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Plan</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var arcade in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(arcade.LogoUrl))
+                                        {
+                                            <img src="@arcade.LogoUrl" class="rounded me-2" width="40" height="40" alt="">
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-secondary rounded me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-shop text-white"></i>
+                                            </div>
+                                        }
+                                        <div>
+                                            <a href="/arcade/@arcade.Slug" target="_blank" class="fw-bold text-decoration-none">@arcade.Name</a>
+                                            @if (arcade.IsVerified)
+                                            {
+                                                <i class="bi bi-patch-check-fill text-primary ms-1" title="Verified"></i>
+                                            }
+                                            <br>
+                                            <small class="text-muted">@arcade.Address</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@arcade.City</td>
+                                <td>@arcade.TotalVRStations</td>
+                                <td>
+                                    @if (arcade.AverageRating > 0)
+                                    {
+                                        <span class="text-warning"><i class="bi bi-star-fill"></i></span>
+                                        @arcade.AverageRating.Value.ToString("0.0")
+                                        <small class="text-muted">(@arcade.TotalReviews)</small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No reviews</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (arcade.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (arcade.IsPremium)
+                                    {
+                                        <span class="badge bg-warning text-dark">Premium</span>
+                                    }
+                                    else if (arcade.IsFeatured)
+                                    {
+                                        <span class="badge bg-primary">Featured</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-dark">Free</span>
+                                    }
+                                </td>
+                                <td>@arcade.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="/admin/arcades/edit/@arcade.Id" class="btn btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/arcade/@arcade.Slug" target="_blank" class="btn btn-outline-secondary" title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" title="Delete" onclick="deleteArcade(@arcade.Id, '@arcade.Name.Replace("'", "\\'"))')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                                No arcades found
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="?page=@i&search=@ViewBag.Search&city=@ViewBag.SelectedCity&status=@ViewBag.Status">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+@section Scripts {
+    <script>
+        function deleteArcade(id, name) {
+            if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+                fetch(`/admin/arcades/delete/${id}`, { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.reload();
+                        } else {
+                            alert('Failed to delete arcade');
+                        }
+                    });
+            }
+        }
+    </script>
+}

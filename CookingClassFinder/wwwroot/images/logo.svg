@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50">
+  <rect width="200" height="50" fill="transparent"/>
+  <circle cx="25" cy="25" r="20" fill="#e67e22"/>
+  <text x="25" y="32" font-size="20" text-anchor="middle" fill="white">🍳</text>
+  <text x="55" y="32" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#2c3e50">CookingClass</text>
+  <text x="165" y="32" font-family="Arial, sans-serif" font-size="18" font-weight="300" fill="#e67e22">Finder</text>
+</svg>

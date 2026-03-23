@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace BoardGameCafeFinder.Services
 {
     /// <summary>
@@ -14,6 +16,17 @@ namespace BoardGameCafeFinder.Services
         /// Get a specific payment service by provider name
         /// </summary>
         IPaymentService? GetPaymentService(string providerName);
+
+        /// <summary>
+        /// Get the payment service based on user's country/culture.
+        /// Non-Vietnam users → LemonSqueezy, Vietnam users → configured provider (Stripe/PayPal)
+        /// </summary>
+        IPaymentService GetPaymentServiceForUser();
+
+        /// <summary>
+        /// Check if the current user should use LemonSqueezy (non-Vietnam)
+        /// </summary>
+        bool ShouldUseLemonSqueezy();
 
         /// <summary>
         /// Get the name of the active provider
@@ -58,8 +71,37 @@ namespace BoardGameCafeFinder.Services
                 if (paypalService?.IsConfigured() == true)
                     providers.Add("PayPal");
 
+                var lemonSqueezyService = _serviceProvider.GetService<LemonSqueezyPaymentService>();
+                if (lemonSqueezyService?.IsConfigured() == true)
+                    providers.Add("LemonSqueezy");
+
                 return providers;
             }
+        }
+
+        public bool ShouldUseLemonSqueezy()
+        {
+            var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            return culture != "vi";
+        }
+
+        public IPaymentService GetPaymentServiceForUser()
+        {
+            if (ShouldUseLemonSqueezy())
+            {
+                var lemonSqueezy = _serviceProvider.GetService<LemonSqueezyPaymentService>();
+                if (lemonSqueezy?.IsConfigured() == true)
+                {
+                    _logger.LogDebug("Using LemonSqueezy for non-Vietnam user (culture: {Culture})",
+                        CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+                    return lemonSqueezy;
+                }
+
+                _logger.LogWarning("LemonSqueezy not configured, falling back to default provider");
+            }
+
+            // Vietnam users or LemonSqueezy not configured → use default provider
+            return GetPaymentService();
         }
 
         public IPaymentService GetPaymentService()
@@ -90,6 +132,7 @@ namespace BoardGameCafeFinder.Services
             {
                 "stripe" => _serviceProvider.GetService<StripePaymentService>(),
                 "paypal" => _serviceProvider.GetService<PayPalPaymentService>(),
+                "lemonsqueezy" => _serviceProvider.GetService<LemonSqueezyPaymentService>(),
                 _ => null
             };
         }

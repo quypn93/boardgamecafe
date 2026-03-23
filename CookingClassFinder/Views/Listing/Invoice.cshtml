@@ -1,0 +1,123 @@
+@model Invoice
+@{
+    ViewData["Title"] = $"Invoice #{Model.InvoiceNumber}";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body p-5">
+                    <div class="d-flex justify-content-between align-items-start mb-5">
+                        <div>
+                            <h1 class="h3">🍳 CookingClassFinder</h1>
+                            <p class="text-muted mb-0">Premium Listing Invoice</p>
+                        </div>
+                        <div class="text-end">
+                            <h2 class="h4 mb-1">Invoice</h2>
+                            <p class="mb-0"><strong>#@Model.InvoiceNumber</strong></p>
+                            <p class="text-muted mb-0">Date: @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Bill To:</h6>
+                            <p class="mb-0"><strong>@Model.User?.DisplayName</strong></p>
+                            <p class="mb-0">@Model.User?.Email</p>
+                            @if (!string.IsNullOrEmpty(Model.BillingAddress))
+                            {
+                                <p class="mb-0">@Model.BillingAddress</p>
+                            }
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <h6 class="text-muted">Status:</h6>
+                            @if (Model.Status == "Paid")
+                            {
+                                <span class="badge bg-success fs-6">Paid</span>
+                            }
+                            else if (Model.Status == "Pending")
+                            {
+                                <span class="badge bg-warning fs-6">Pending</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary fs-6">@Model.Status</span>
+                            }
+                            @if (Model.PaidAt.HasValue)
+                            {
+                                <p class="text-muted mt-2 mb-0">Paid on @Model.PaidAt.Value.ToString("MMMM dd, yyyy")</p>
+                            }
+                        </div>
+                    </div>
+
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>@Model.Description</strong>
+                                    @if (Model.PremiumListing != null)
+                                    {
+                                        <br />
+                                        <small class="text-muted">
+                                            School: @Model.PremiumListing.School?.Name
+                                            <br />
+                                            Period: @Model.PremiumListing.StartDate.ToString("MMM dd, yyyy") - @Model.PremiumListing.EndDate.ToString("MMM dd, yyyy")
+                                        </small>
+                                    }
+                                </td>
+                                <td class="text-end">$@Model.Amount.ToString("N2")</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-light">
+                                <th>Total</th>
+                                <th class="text-end">$@Model.Amount.ToString("N2")</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    @if (!string.IsNullOrEmpty(Model.Notes))
+                    {
+                        <div class="mt-4">
+                            <h6>Notes:</h6>
+                            <p class="text-muted">@Model.Notes</p>
+                        </div>
+                    }
+
+                    <hr class="my-4" />
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            @if (Model.Status == "Pending")
+                            {
+                                <a asp-action="PayInvoice" asp-route-id="@Model.Id" class="btn btn-primary">
+                                    Pay Now
+                                </a>
+                            }
+                            <button onclick="window.print()" class="btn btn-outline-secondary">
+                                <i class="bi bi-printer me-2"></i>Print
+                            </button>
+                        </div>
+                        <small class="text-muted">
+                            Payment ID: @(Model.PaymentIntentId ?? "—")
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .btn { display: none !important; }
+        .card { border: none !important; box-shadow: none !important; }
+    }
+</style>

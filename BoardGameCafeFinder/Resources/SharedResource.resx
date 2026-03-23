@@ -367,6 +367,9 @@
   <data name="Footer_Terms" xml:space="preserve">
     <value>Terms of Service</value>
   </data>
+  <data name="Footer_RefundPolicy" xml:space="preserve">
+    <value>Refund Policy</value>
+  </data>
   <data name="Footer_Contact" xml:space="preserve">
     <value>Contact Us</value>
   </data>
@@ -418,6 +421,40 @@
   </data>
   <data name="Meta_DefaultKeywords" xml:space="preserve">
     <value>board game cafe, board game lounge, tabletop gaming, board games near me, cafe finder</value>
+  </data>
+
+  <!-- SEO: Blog Post Page -->
+  <data name="SEO_BlogPost_Title" xml:space="preserve">
+    <value>Board Game Cafes in {0}, {1} - Complete Guide {2}</value>
+  </data>
+  <data name="SEO_BlogPost_Description" xml:space="preserve">
+    <value>Discover {0} board game cafes in {1}, {2}. Find the best places to play board games with {3}+ games available. Reviews, ratings &amp; directions.</value>
+  </data>
+  <data name="SEO_BlogPost_Keywords" xml:space="preserve">
+    <value>board game cafe {0}, board game lounge {0}, tabletop gaming {0}, {1} board games, where to play board games {0}</value>
+  </data>
+  <data name="SEO_BlogPost_Headline" xml:space="preserve">
+    <value>Board Game Cafes in {0} - Complete Guide</value>
+  </data>
+
+  <!-- SEO: Blog Index Page -->
+  <data name="SEO_BlogIndex_TitleCountry" xml:space="preserve">
+    <value>Board Game Cafes in {0} - City Guides {1}</value>
+  </data>
+  <data name="SEO_BlogIndex_TitleAll" xml:space="preserve">
+    <value>Board Game Cafe Guides by City - {0} Cities Worldwide</value>
+  </data>
+  <data name="SEO_BlogIndex_DescCountry" xml:space="preserve">
+    <value>Find board game cafes in {0}. Browse city guides, discover top games, and plan your next board game adventure.</value>
+  </data>
+  <data name="SEO_BlogIndex_DescAll" xml:space="preserve">
+    <value>Discover board game cafes in {0} cities around the world. Find detailed guides with top games, reviews, ratings &amp; directions.</value>
+  </data>
+  <data name="SEO_BlogIndex_KeywordsCountry" xml:space="preserve">
+    <value>board game cafe {0}, board game lounge {0}, tabletop gaming {0}</value>
+  </data>
+  <data name="SEO_BlogIndex_KeywordsAll" xml:space="preserve">
+    <value>board game cafe, board game lounge, tabletop gaming, board games near me, city guides</value>
   </data>
 
   <!-- Blog Index Page -->

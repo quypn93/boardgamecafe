@@ -1,0 +1,182 @@
+@model IEnumerable<BlogPost>
+@{
+    ViewData["Title"] = "Manage Blog";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-journal me-2"></i>Manage Blog Posts</h2>
+        <a href="/admin/blog/create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>New Post
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Search posts..." value="@ViewBag.Search">
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        @if (ViewBag.Status == "published") { <option value="published" selected>Published</option> } else { <option value="published">Published</option> }
+                        @if (ViewBag.Status == "draft") { <option value="draft" selected>Draft</option> } else { <option value="draft">Draft</option> }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        @if (ViewBag.Category == "guides") { <option value="guides" selected>Guides</option> } else { <option value="guides">Guides</option> }
+                        @if (ViewBag.Category == "reviews") { <option value="reviews" selected>Reviews</option> } else { <option value="reviews">Reviews</option> }
+                        @if (ViewBag.Category == "news") { <option value="news" selected>News</option> } else { <option value="news">News</option> }
+                        @if (ViewBag.Category == "tips") { <option value="tips" selected>Tips</option> } else { <option value="tips">Tips</option> }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-outline-primary me-2">Filter</button>
+                    <a href="/admin/blog" class="btn btn-outline-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Posts Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Author</th>
+                        <th>Views</th>
+                        <th>Status</th>
+                        <th>Published</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var post in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(post.FeaturedImage))
+                                        {
+                                            <img src="@post.FeaturedImage" class="rounded me-2" width="60" height="40" style="object-fit: cover;" alt="">
+                                        }
+                                        <div>
+                                            <a href="/blog/@post.Slug" target="_blank" class="fw-bold text-decoration-none">@post.Title</a>
+                                            <br>
+                                            <small class="text-muted">@post.Slug</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(post.Category))
+                                    {
+                                        <span class="badge bg-secondary">@post.Category</span>
+                                    }
+                                </td>
+                                <td>@post.AuthorName</td>
+                                <td>@post.ViewCount</td>
+                                <td>
+                                    @if (post.IsPublished)
+                                    {
+                                        <span class="badge bg-success">Published</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Draft</span>
+                                    }
+                                </td>
+                                <td>@post.PublishedAt?.ToString("dd/MM/yyyy") ?? "-"</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="/admin/blog/edit/@post.Id" class="btn btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/blog/@post.Slug" target="_blank" class="btn btn-outline-secondary" title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        @if (!post.IsPublished)
+                                        {
+                                            <button class="btn btn-outline-success" onclick="publishPost(@post.Id)" title="Publish">
+                                                <i class="bi bi-send"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-warning" onclick="unpublishPost(@post.Id)" title="Unpublish">
+                                                <i class="bi bi-eye-slash"></i>
+                                            </button>
+                                        }
+                                        <button class="btn btn-outline-danger" onclick="deletePost(@post.Id, '@post.Title.Replace("'", "\\'")}')" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="bi bi-journal display-6 d-block mb-2"></i>
+                                No blog posts found
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="?page=@i&search=@ViewBag.Search&status=@ViewBag.Status&category=@ViewBag.Category">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+@section Scripts {
+    <script>
+        function publishPost(id) {
+            fetch(`/admin/blog/publish/${id}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) window.location.reload();
+                    else alert('Failed to publish post');
+                });
+        }
+
+        function unpublishPost(id) {
+            fetch(`/admin/blog/unpublish/${id}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) window.location.reload();
+                    else alert('Failed to unpublish post');
+                });
+        }
+
+        function deletePost(id, title) {
+            if (confirm(`Are you sure you want to delete "${title}"?`)) {
+                fetch(`/admin/blog/delete/${id}`, { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) window.location.reload();
+                        else alert('Failed to delete post');
+                    });
+            }
+        }
+    </script>
+}

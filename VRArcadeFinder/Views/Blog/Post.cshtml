@@ -1,0 +1,397 @@
+@model VRArcadeFinder.Controllers.DynamicBlogPost
+@{
+    ViewData["Title"] = $"{SharedLocalizer["Blog_VRArcadesIn"]} {Model.City}, {Model.Country} - {SharedLocalizer["Blog_CompleteGuide"]} {DateTime.Now.Year}";
+    ViewData["MetaDescription"] = string.Format(SharedLocalizer["Blog_PostMetaDescription"].Value, Model.TotalArcades, Model.City, Model.Country, Model.TotalGames);
+
+    // Helper function to create URL-friendly slug from city name
+    string ToSlug(string cityName) => cityName.ToLower().Replace(" ", "-");
+
+    // SEO: Canonical URL
+    ViewData["CanonicalUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}/blog/{ToSlug(Model.City)}";
+
+    // SEO: Dynamic OG Image (first arcade image or default)
+    var firstArcadeImage = Model.Arcades.FirstOrDefault()?.LocalImagePath;
+    if (!string.IsNullOrEmpty(firstArcadeImage))
+    {
+        ViewData["OGImage"] = firstArcadeImage;
+    }
+
+    // SEO: Keywords
+    ViewData["Keywords"] = $"VR arcade {Model.City}, virtual reality {Model.City}, VR gaming {Model.City}, {Model.Country} VR arcades, VR experience {Model.City}";
+
+    var relatedCities = ViewBag.RelatedCities as List<string> ?? new List<string>();
+}
+
+@section Head {
+    <!-- JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Article",
+        "headline": "@SharedLocalizer["Blog_VRArcadesIn"] @Model.City - @SharedLocalizer["Blog_CompleteGuide"]",
+        "description": "@ViewData["MetaDescription"]",
+        "author": {
+            "@@type": "Organization",
+            "name": "VR Arcade Finder"
+        },
+        "publisher": {
+            "@@type": "Organization",
+            "name": "VR Arcade Finder",
+            "logo": {
+                "@@type": "ImageObject",
+                "url": "@($"{Context.Request.Scheme}://{Context.Request.Host}/logo.svg")"
+            }
+        },
+        "mainEntityOfPage": {
+            "@@type": "WebPage",
+            "@@id": "@ViewData["CanonicalUrl"]"
+        },
+        "about": {
+            "@@type": "ItemList",
+            "name": "@SharedLocalizer["Blog_VRArcadesIn"] @Model.City",
+            "numberOfItems": @Model.TotalArcades,
+            "itemListElement": [
+                @for (int i = 0; i < Math.Min(Model.Arcades.Count, 10); i++)
+                {
+                    var arcade = Model.Arcades[i];
+                    <text>
+                {
+                    "@@type": "ListItem",
+                    "position": @(i + 1),
+                    "item": {
+                        "@@type": "LocalBusiness",
+                        "name": "@arcade.Name.Replace("\"", "\\\"")",
+                        "address": {
+                            "@@type": "PostalAddress",
+                            "addressLocality": "@Model.City",
+                            "addressCountry": "@Model.Country"
+                        }@if (arcade.AverageRating.HasValue && arcade.TotalReviews > 0)
+                        {<text>,
+                        "aggregateRating": {
+                            "@@type": "AggregateRating",
+                            "ratingValue": "@arcade.AverageRating.Value.ToString("F1")",
+                            "bestRating": "5",
+                            "ratingCount": "@arcade.TotalReviews"
+                        }</text>}
+                    }
+                }@(i < Math.Min(Model.Arcades.Count, 10) - 1 ? "," : "")
+                    </text>
+                }
+            ]
+        }
+    }
+    </script>
+}
+
+<!-- Hero Section -->
+<div class="text-white py-5" style="background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/blog" class="text-white-50">@SharedLocalizer["Blog_Guides"]</a></li>
+                <li class="breadcrumb-item"><a href="/blog?country=@Uri.EscapeDataString(Model.Country)" class="text-white-50">@Model.Country</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">@Model.City</li>
+            </ol>
+        </nav>
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">
+                    @SharedLocalizer["Blog_VRArcadesIn"] @Model.City
+                </h1>
+                <p class="lead opacity-90">
+                    @string.Format(SharedLocalizer["Blog_PostHeroSubtitle"].Value, Model.TotalArcades, Model.City, Model.Country)
+                </p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <div class="bg-white bg-opacity-25 rounded px-3 py-2">
+                        <i class="bi bi-headset-vr me-1"></i>
+                        <strong>@Model.TotalArcades</strong> @SharedLocalizer["Blog_Arcades"]
+                    </div>
+                    <div class="bg-white bg-opacity-25 rounded px-3 py-2">
+                        <i class="bi bi-controller me-1"></i>
+                        <strong>@Model.TotalGames</strong> @SharedLocalizer["Blog_Games"]
+                    </div>
+                    @if (Model.AverageRating > 0)
+                    {
+                        <div class="bg-white bg-opacity-25 rounded px-3 py-2">
+                            <i class="bi bi-star-fill me-1"></i>
+                            <strong>@Model.AverageRating.ToString("F1")</strong> @SharedLocalizer["Blog_AvgRating"]
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Introduction -->
+            <div class="mb-5">
+                <h2 class="h4 mb-3"><i class="bi bi-info-circle me-2"></i>@string.Format(SharedLocalizer["Blog_AboutArcadesIn"].Value, Model.City)</h2>
+                <p class="lead">
+                    @string.Format(SharedLocalizer["Blog_PostIntro"].Value, Model.City, Model.TotalArcades, Model.TotalGames > 100 ? string.Format(SharedLocalizer["Blog_WithGamesLibrary"].Value, Model.TotalGames) : "")
+                </p>
+            </div>
+
+            <!-- Top Games Section -->
+            @if (Model.TopGames.Any())
+            {
+                <div class="mb-5">
+                    <h2 class="h4 mb-4"><i class="bi bi-trophy me-2"></i>@string.Format(SharedLocalizer["Blog_PopularGamesIn"].Value, Model.City)</h2>
+                    <p class="text-muted mb-4">@string.Format(SharedLocalizer["Blog_GamesAppearMost"].Value, Model.City)</p>
+
+                    <div class="row">
+                        @foreach (var item in Model.TopGames.Take(6))
+                        {
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="row g-0">
+                                        <div class="col-4">
+                                            @if (!string.IsNullOrEmpty(item.Game.ImageUrl))
+                                            {
+                                                <img src="@item.Game.ImageUrl" class="img-fluid rounded-start h-100" alt="@item.Game.Name"
+                                                     loading="lazy" decoding="async" style="object-fit: cover;">
+                                            }
+                                            else
+                                            {
+                                                <div class="h-100 d-flex align-items-center justify-content-center rounded-start" style="background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);">
+                                                    <i class="bi bi-headset-vr text-white display-6"></i>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="card-body py-2">
+                                                <h6 class="card-title mb-1">@item.Game.Name</h6>
+                                                <div class="small text-muted mb-2">
+                                                    @if (item.Game.MinPlayers.HasValue && item.Game.MaxPlayers.HasValue)
+                                                    {
+                                                        <span class="me-2"><i class="bi bi-people"></i> @item.Game.MinPlayers-@item.Game.MaxPlayers</span>
+                                                    }
+                                                    @if (item.Game.PlaytimeMinutes.HasValue)
+                                                    {
+                                                        <span><i class="bi bi-clock"></i> @item.Game.PlaytimeMinutes min</span>
+                                                    }
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-headset-vr"></i> @SharedLocalizer["Blog_At"] @item.ArcadeCount @(item.ArcadeCount == 1 ? SharedLocalizer["Blog_Arcade"] : SharedLocalizer["Blog_Arcades"])
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Arcades List -->
+            <div class="mb-5">
+                <h2 class="h4 mb-4"><i class="bi bi-geo-alt me-2"></i>@string.Format(SharedLocalizer["Blog_AllArcadesIn"].Value, Model.City)</h2>
+
+                @foreach (var arcade in Model.Arcades)
+                {
+                    <div class="card mb-4 shadow-sm arcade-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                @{
+                                    var photo = arcade.Photos?.OrderBy(p => p.DisplayOrder).FirstOrDefault();
+                                    var imageUrl = photo?.LocalPath ?? photo?.Url ?? arcade.LocalImagePath;
+                                }
+                                @if (!string.IsNullOrEmpty(imageUrl))
+                                {
+                                    <a href="/arcade/@arcade.Slug">
+                                        <img src="@imageUrl" class="img-fluid rounded-start h-100" alt="@arcade.Name"
+                                             loading="lazy" decoding="async" style="object-fit: cover; min-height: 200px;">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="h-100 d-flex align-items-center justify-content-center rounded-start" style="min-height: 200px; background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);">
+                                        <i class="bi bi-headset-vr text-white display-4 opacity-50"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <h5 class="card-title mb-1">
+                                            <a href="/arcade/@arcade.Slug" class="text-decoration-none">@arcade.Name</a>
+                                        </h5>
+                                        @if (arcade.AverageRating.HasValue)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-star-fill"></i> @arcade.AverageRating.Value.ToString("F1")
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <p class="text-muted small mb-2">
+                                        <i class="bi bi-geo-alt"></i> @arcade.Address
+                                    </p>
+
+                                    @if (!string.IsNullOrEmpty(arcade.Description))
+                                    {
+                                        <p class="card-text">
+                                            @(arcade.Description.Length > 150 ? arcade.Description.Substring(0, 147) + "..." : arcade.Description)
+                                        </p>
+                                    }
+
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        @{
+                                            var gameCount = arcade.ArcadeGames?.Count ?? 0;
+                                        }
+                                        @if (gameCount > 0)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-controller"></i> @gameCount @SharedLocalizer["Blog_Games"]
+                                            </span>
+                                        }
+                                        @if (arcade.IsVerified)
+                                        {
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-check-circle"></i> @SharedLocalizer["Arcade_Verified"]
+                                            </span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(arcade.PriceRange))
+                                        {
+                                            <span class="badge bg-info">@arcade.PriceRange</span>
+                                        }
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <a href="/arcade/@arcade.Slug" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-info-circle"></i> @SharedLocalizer["Blog_ViewDetails"]
+                                        </a>
+                                        @if (!string.IsNullOrEmpty(arcade.Website))
+                                        {
+                                            <a href="@arcade.Website" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-globe"></i> @SharedLocalizer["Arcade_Website"]
+                                            </a>
+                                        }
+                                        @if (!string.IsNullOrEmpty(arcade.GoogleMapsUrl))
+                                        {
+                                            <a href="@arcade.GoogleMapsUrl" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-map"></i> @SharedLocalizer["Blog_Directions"]
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Tips Section -->
+            <div class="card bg-light border-0 mb-5">
+                <div class="card-body">
+                    <h3 class="h5 mb-3"><i class="bi bi-lightbulb me-2"></i>@SharedLocalizer["Blog_TipsTitle"]</h3>
+                    <ul class="mb-0">
+                        <li><strong>@SharedLocalizer["Blog_Tip1Title"]</strong> @SharedLocalizer["Blog_Tip1Desc"]</li>
+                        <li><strong>@SharedLocalizer["Blog_Tip2Title"]</strong> @SharedLocalizer["Blog_Tip2Desc"]</li>
+                        <li><strong>@SharedLocalizer["Blog_Tip3Title"]</strong> @SharedLocalizer["Blog_Tip3Desc"]</li>
+                        <li><strong>@SharedLocalizer["Blog_Tip4Title"]</strong> @SharedLocalizer["Blog_Tip4Desc"]</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center py-4">
+                <h4>@SharedLocalizer["Blog_ReadyToPlay"]</h4>
+                <p class="text-muted">@string.Format(SharedLocalizer["Blog_FindArcadesIn"].Value, Model.City)</p>
+                <a href="/?city=@Uri.EscapeDataString(Model.City)" class="btn btn-primary btn-lg">
+                    <i class="bi bi-search me-2"></i>@string.Format(SharedLocalizer["Blog_BrowseArcadesIn"].Value, Model.City)
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Facts -->
+            <div class="card shadow-sm mb-4 sticky-top" style="top: 1rem;">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>@SharedLocalizer["Blog_QuickFacts"]</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">@SharedLocalizer["Blog_TotalArcades"]</span>
+                            <strong>@Model.TotalArcades</strong>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">@SharedLocalizer["Blog_TotalGames"]</span>
+                            <strong>@Model.TotalGames</strong>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">@SharedLocalizer["Blog_AverageRating"]</span>
+                            <strong>
+                                @if (Model.AverageRating > 0)
+                                {
+                                    <span><i class="bi bi-star-fill text-warning"></i> @Model.AverageRating.ToString("F1")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </strong>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted">@SharedLocalizer["Blog_Country"]</span>
+                            <strong>@Model.Country</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Related Cities -->
+            @if (relatedCities.Any())
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>@string.Format(SharedLocalizer["Blog_MoreCitiesIn"].Value, Model.Country)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var city in relatedCities)
+                            {
+                                <a href="/blog/@ToSlug(city)" class="btn btn-sm btn-outline-primary">
+                                    @city
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Map Link -->
+            <div class="card shadow-sm text-white" style="background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-map display-4 mb-3"></i>
+                    <h5>@SharedLocalizer["Blog_ViewOnMap"]</h5>
+                    <p class="small opacity-90">@string.Format(SharedLocalizer["Blog_SeeAllOnMap"].Value, Model.City)</p>
+                    <a href="/map?city=@Uri.EscapeDataString(Model.City)" class="btn btn-light">
+                        <i class="bi bi-map me-1"></i> @SharedLocalizer["Blog_OpenMap"]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .arcade-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .arcade-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(255, 255, 255, 0.5);
+    }
+</style>

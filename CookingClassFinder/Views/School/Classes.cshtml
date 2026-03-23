@@ -1,0 +1,96 @@
+@model CookingSchool
+@{
+    ViewData["Title"] = $"Classes at {Model.Name}";
+}
+
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="School" asp-action="Details" asp-route-slug="@Model.Slug">@Model.Name</a></li>
+            <li class="breadcrumb-item active">Classes</li>
+        </ol>
+    </nav>
+
+    <h1>Classes at @Model.Name</h1>
+    <p class="lead text-muted">@Model.Classes.Count cooking classes available</p>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select class="form-select" id="cuisineFilter">
+                <option value="">All Cuisines</option>
+                @foreach (var cuisine in Model.Classes.Select(c => c.CuisineType).Distinct().OrderBy(c => c))
+                {
+                    <option value="@cuisine">@cuisine</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select" id="levelFilter">
+                <option value="">All Levels</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+                <option value="All Levels">All Levels</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row" id="classesGrid">
+        @foreach (var cookingClass in Model.Classes)
+        {
+            <div class="col-md-6 col-lg-4 mb-4 class-card"
+                 data-cuisine="@cookingClass.CuisineType"
+                 data-level="@cookingClass.DifficultyLevel">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(cookingClass.ImageUrl))
+                    {
+                        <img src="@cookingClass.ImageUrl" class="card-img-top" style="height: 180px; object-fit: cover;" alt="@cookingClass.Name">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@cookingClass.Name</h5>
+                        <div class="mb-2">
+                            <span class="badge @cookingClass.GetDifficultyBadgeClass()">@cookingClass.DifficultyLevel</span>
+                            <span class="badge bg-secondary">@cookingClass.CuisineType</span>
+                        </div>
+                        <p class="text-muted small">
+                            <i class="bi bi-clock"></i> @cookingClass.GetDurationDisplay()
+                            <i class="bi bi-people ms-2"></i> @cookingClass.GetStudentRange()
+                        </p>
+                        @if (cookingClass.PricePerPerson.HasValue)
+                        {
+                            <h5 class="text-primary">$@cookingClass.PricePerPerson/person</h5>
+                        }
+                        <div class="d-flex flex-wrap gap-1 mb-2">
+                            @foreach (var tag in cookingClass.GetFeatureTags().Take(3))
+                            {
+                                <span class="badge bg-light text-dark">@tag</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a asp-controller="School" asp-action="ClassDetails" asp-route-slug="@cookingClass.Slug" class="btn btn-outline-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('cuisineFilter').addEventListener('change', filterClasses);
+        document.getElementById('levelFilter').addEventListener('change', filterClasses);
+
+        function filterClasses() {
+            const cuisine = document.getElementById('cuisineFilter').value;
+            const level = document.getElementById('levelFilter').value;
+
+            document.querySelectorAll('.class-card').forEach(card => {
+                const matchCuisine = !cuisine || card.dataset.cuisine === cuisine;
+                const matchLevel = !level || card.dataset.level === level;
+                card.style.display = matchCuisine && matchLevel ? '' : 'none';
+            });
+        }
+    </script>
+}

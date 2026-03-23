@@ -72,8 +72,8 @@ builder.Services.AddSession(options =>
 
 // Register Application Services
 builder.Services.AddHttpClient();
-builder.Services.AddHttpClient<BoardGameCafeFinder.Services.IBggSyncService, BoardGameCafeFinder.Services.BggSyncService>();
 builder.Services.AddHttpClient<BoardGameCafeFinder.Services.IBggXmlApiService, BoardGameCafeFinder.Services.BggXmlApiService>();
+builder.Services.AddScoped<BoardGameCafeFinder.Services.IBggSyncService, BoardGameCafeFinder.Services.BggSyncService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.ICafeService, BoardGameCafeFinder.Services.CafeService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IGoogleMapsCrawlerService, BoardGameCafeFinder.Services.GoogleMapsCrawlerService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IImageStorageService, BoardGameCafeFinder.Services.ImageStorageService>();
@@ -89,13 +89,14 @@ builder.Services.Configure<BoardGameCafeFinder.Models.CrawlSettings>(
 builder.Services.AddSingleton<BoardGameCafeFinder.Services.IAutoCrawlService, BoardGameCafeFinder.Services.AutoCrawlService>();
 builder.Services.AddHostedService(sp => (BoardGameCafeFinder.Services.AutoCrawlService)sp.GetRequiredService<BoardGameCafeFinder.Services.IAutoCrawlService>());
 
-// Payment Services - supports Stripe and PayPal with configurable switching
+// Payment Services - supports Stripe, PayPal, and LemonSqueezy with configurable switching
 builder.Services.AddScoped<BoardGameCafeFinder.Services.StripePaymentService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.PayPalPaymentService>();
+builder.Services.AddScoped<BoardGameCafeFinder.Services.LemonSqueezyPaymentService>();
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IPaymentServiceFactory, BoardGameCafeFinder.Services.PaymentServiceFactory>();
-// Register IPaymentService using factory
+// Register IPaymentService using factory - auto-selects based on user country
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IPaymentService>(sp =>
-    sp.GetRequiredService<BoardGameCafeFinder.Services.IPaymentServiceFactory>().GetPaymentService());
+    sp.GetRequiredService<BoardGameCafeFinder.Services.IPaymentServiceFactory>().GetPaymentServiceForUser());
 // Legacy Stripe interface for backward compatibility
 builder.Services.AddScoped<BoardGameCafeFinder.Services.IStripeService>(sp =>
     sp.GetRequiredService<BoardGameCafeFinder.Services.StripePaymentService>());

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin | VR Arcade Finder</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,.8);
+            padding: 0.75rem 1rem;
+            border-radius: 0.25rem;
+            margin: 0.125rem 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255,255,255,.1);
+        }
+        .sidebar .nav-link.active {
+            color: #fff;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+        }
+        .sidebar .nav-link i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar-heading {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,.4);
+            padding: 1rem 1rem 0.5rem;
+        }
+        .main-content {
+            margin-top: 56px;
+            min-height: calc(100vh - 56px);
+            background-color: #f8f9fa;
+        }
+        .admin-navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1030;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+        }
+        .vr-gradient-text {
+            background: linear-gradient(135deg, #00d4ff 0%, #7b2ff7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav.flex-column {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        .nav.flex-column .nav-item {
+            list-style: none;
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-headset-vr"></i> <span class="vr-gradient-text">VR Arcade Finder</span>
+            </a>
+            <span class="badge bg-danger ms-2">ADMIN</span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> View Site
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i> @(User.Identity?.Name ?? "Admin")
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <div class="sidebar-heading">MAIN</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Dashboard">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="sidebar-heading">CONTENT</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Arcades" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Arcades">
+                                <i class="bi bi-headset-vr"></i> VR Arcades
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Games" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Games">
+                                <i class="bi bi-controller"></i> VR Games
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateBlogPost" || ViewContext.RouteData.Values["action"]?.ToString() == "EditBlogPost" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Blog">
+                                <i class="bi bi-newspaper"></i> Blog Posts
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Reviews" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Reviews">
+                                <i class="bi bi-chat-square-text"></i> Reviews
+                                @{
+                                    var pendingReviews = ViewBag.PendingReviewCount as int?;
+                                    if (pendingReviews.HasValue && pendingReviews.Value > 0)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">@pendingReviews</span>
+                                    }
+                                }
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="sidebar-heading">CRAWLING</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Crawl" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Crawl">
+                                <i class="bi bi-cloud-download"></i> Crawl Manager
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Cities" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Cities">
+                                <i class="bi bi-geo-alt"></i> Auto Crawl Cities
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="sidebar-heading">MONETIZATION</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Listings" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Listings">
+                                <i class="bi bi-star"></i> Premium Listings
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="sidebar-heading">SYSTEM</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")"
+                               asp-controller="Admin" asp-action="Users">
+                                <i class="bi bi-people"></i> Users
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="py-4">
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

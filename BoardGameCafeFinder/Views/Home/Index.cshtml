@@ -73,17 +73,102 @@
                     "position": 1,
                     "name": "Home",
                     "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/")"
-                },
+                }@if (!string.IsNullOrEmpty(selectedCountry))
+                {<text>,
                 {
                     "@@type": "ListItem",
                     "position": 2,
-                    "name": "@selectedCountry",
-                    "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/?country={Uri.EscapeDataString(selectedCountry ?? "")}")"
+                    "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(selectedCountry).ToString())",
+                    "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/?country={Uri.EscapeDataString(selectedCountry)}")"
                 },
                 {
                     "@@type": "ListItem",
                     "position": 3,
-                    "name": "@selectedCity"
+                    "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(selectedCity).ToString())"
+                }</text>}
+                else
+                {<text>,
+                {
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(selectedCity).ToString())"
+                }</text>}
+            ]
+        }
+        </script>
+        <!-- ItemList Schema for city pages - helps with rich snippets -->
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "ItemList",
+            "name": "Board Game Cafes in @Html.Raw(System.Text.Json.JsonEncodedText.Encode(selectedCity ?? "").ToString())",
+            "description": "List of board game cafes in @Html.Raw(System.Text.Json.JsonEncodedText.Encode(selectedCity ?? "").ToString()), @Html.Raw(System.Text.Json.JsonEncodedText.Encode(selectedCountry ?? "").ToString())",
+            "numberOfItems": @totalItems,
+            "itemListElement": [
+                @for (int i = 0; i < Math.Min(Model?.Count ?? 0, 10); i++)
+                {
+                    var cafe = Model![i];
+                    <text>
+                {
+                    "@@type": "ListItem",
+                    "position": @(i + 1),
+                    "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(cafe.Name).ToString())",
+                    "item": {
+                        "@@type": "LocalBusiness",
+                        "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(cafe.Name).ToString())",
+                        "url": "@($"{Context.Request.Scheme}://{Context.Request.Host}/cafe/{cafe.Slug}")"@if (cafe.AverageRating.HasValue && cafe.ReviewCount > 0)
+                        {<text>,
+                        "aggregateRating": {
+                            "@@type": "AggregateRating",
+                            "ratingValue": "@cafe.AverageRating.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)",
+                            "reviewCount": @cafe.ReviewCount
+                        }</text>}
+                    }
+                }@(i < Math.Min(Model?.Count ?? 0, 10) - 1 ? "," : "")</text>
+                }
+            ]
+        }
+        </script>
+    }
+    @if (isFirstPage)
+    {
+        <!-- FAQ Schema for homepage - helps with FAQ rich snippets in SERP -->
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@@type": "Question",
+                    "name": "What is a board game cafe?",
+                    "acceptedAnswer": {
+                        "@@type": "Answer",
+                        "text": "A board game cafe is a coffee shop or restaurant where you can play board games from their collection while enjoying food and drinks. Most cafes have libraries of hundreds or even thousands of games, and staff who can teach you how to play."
+                    }
+                },
+                {
+                    "@@type": "Question",
+                    "name": "How much does it cost to visit a board game cafe?",
+                    "acceptedAnswer": {
+                        "@@type": "Answer",
+                        "text": "Most board game cafes charge a table fee of $5-15 per person for unlimited play time, plus food and drink purchases. Some cafes include the fee in a minimum purchase requirement. Prices vary by location and time of visit."
+                    }
+                },
+                {
+                    "@@type": "Question",
+                    "name": "Do I need to bring my own games to a board game cafe?",
+                    "acceptedAnswer": {
+                        "@@type": "Answer",
+                        "text": "No, board game cafes have extensive game libraries with hundreds or thousands of games available for you to play. Staff members can recommend games based on your group size, time available, and preferences."
+                    }
+                },
+                {
+                    "@@type": "Question",
+                    "name": "How do I find a board game cafe near me?",
+                    "acceptedAnswer": {
+                        "@@type": "Answer",
+                        "text": "Use Board Game Cafe Finder to search by city or use the 'Near Me' feature to find cafes in your area. You can filter by games available, read reviews, and get directions to plan your visit."
+                    }
                 }
             ]
         }

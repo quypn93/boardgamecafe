@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>หน้าแรก</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>ดูแผนที่</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>บล็อก</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>สำหรับธุรกิจ</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>ราคา</value></data>
+  <data name="Nav_AddArcade" xml:space="preserve"><value>เพิ่มร้านของคุณ</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>คำถามที่พบบ่อย</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>เข้าสู่ระบบ</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>ลงทะเบียน</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>ออกจากระบบ</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>โปรไฟล์ของฉัน</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>แผงควบคุม</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>ค้นหาร้าน VR Arcade ใกล้คุณ</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>ค้นพบร้าน VR Arcade และศูนย์เกมเสมือนจริงที่ดีที่สุดในพื้นที่ของคุณ</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>ค้นหาตามเมือง ชื่อร้าน...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>ค้นหา</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>ทุกประเทศ</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>ทุกเมือง</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>ประเทศ</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>เมือง</value></data>
+  <data name="Home_ArcadesFound" xml:space="preserve"><value>ร้านที่พบ</value></data>
+  <data name="Home_NoArcadesFound" xml:space="preserve"><value>ไม่พบร้านที่ตรงกับเงื่อนไข</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>ค้นหาร้าน VR Arcade ที่ใช่สำหรับคุณ</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>ค้นพบร้าน VR Arcade ที่น่าทึ่งใกล้คุณ สัมผัสประสบการณ์เกม VR ล่าสุด อ่านรีวิว และค้นหาสถานที่ที่สมบูรณ์แบบสำหรับเซสชั่นเกมแบบดื่มด่ำของคุณ</value></data>
+  <data name="Home_BrowseArcades" xml:space="preserve"><value>เรียกดูร้าน</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>ดูแผนที่</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>ตัวกรอง</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>ใกล้ฉัน</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>รัศมี (กม.)</value></data>
+  <data name="Home_VRPlatforms" xml:space="preserve"><value>แพลตฟอร์ม VR</value></data>
+  <data name="Home_GamesAvailable" xml:space="preserve"><value>เกมที่มี</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>ใช้ตัวกรอง</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>ล้างตัวกรอง</value></data>
+  <data name="Home_VRArcades" xml:space="preserve"><value>ร้าน VR Arcade</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>ใกล้ตำแหน่งของคุณ</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>ตัวกรองที่ใช้งาน:</value></data>
+  <data name="Home_PlatformsSelected" xml:space="preserve"><value>แพลตฟอร์มที่เลือก</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>รายละเอียด</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>แผนที่</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>แสดงหน้า</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>จาก</value></data>
+  <data name="Home_NoArcadesTitle" xml:space="preserve"><value>ไม่พบร้าน</value></data>
+  <data name="Home_NoArcadesMessage" xml:space="preserve"><value>ลองปรับตัวกรองหรือล้างตัวกรองทั้งหมดเพื่อดูร้านทั้งหมด</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>เมืองยอดนิยมสำหรับ VR Arcade</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>ทำไมต้องไปร้าน VR Arcade?</value></data>
+  <data name="Home_LatestTechnology" xml:space="preserve"><value>เทคโนโลยี VR ล่าสุด</value></data>
+  <data name="Home_LatestTechnologyDesc" xml:space="preserve"><value>สัมผัสประสบการณ์อุปกรณ์ VR ล้ำสมัยโดยไม่ต้องซื้อเอง ลองเกมและฮาร์ดแวร์ใหม่ล่าสุดก่อนตัดสินใจซื้อ</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>ประสบการณ์ทางสังคม</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>พบปะกับผู้ชื่นชอบ VR คนอื่นๆ เพลิดเพลินกับประสบการณ์หลายผู้เล่น หรือพาเพื่อนมาสนุกกับการผจญภัยเกมที่ไม่เหมือนใคร</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>คำแนะนำจากผู้เชี่ยวชาญ</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>พนักงานที่ร้าน VR Arcade สามารถช่วยคุณตั้งค่าอุปกรณ์ แนะนำเกมตามความชอบของคุณ และรับประกันว่าคุณจะได้รับประสบการณ์ที่ดีที่สุด</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>วิธีค้นหาร้าน VR Arcade ที่สมบูรณ์แบบ</value></data>
+
+  <!-- Arcade Page -->
+  <data name="Arcade_Details" xml:space="preserve"><value>รายละเอียดร้าน</value></data>
+  <data name="Arcade_Rating" xml:space="preserve"><value>คะแนน</value></data>
+  <data name="Arcade_Reviews" xml:space="preserve"><value>รีวิว</value></data>
+  <data name="Arcade_WriteReview" xml:space="preserve"><value>เขียนรีวิว</value></data>
+  <data name="Arcade_Address" xml:space="preserve"><value>ที่อยู่</value></data>
+  <data name="Arcade_Phone" xml:space="preserve"><value>โทรศัพท์</value></data>
+  <data name="Arcade_Website" xml:space="preserve"><value>เว็บไซต์</value></data>
+  <data name="Arcade_OpeningHours" xml:space="preserve"><value>เวลาเปิด-ปิด</value></data>
+  <data name="Arcade_VRPlatforms" xml:space="preserve"><value>แพลตฟอร์ม VR</value></data>
+  <data name="Arcade_TotalStations" xml:space="preserve"><value>จำนวนสถานี VR</value></data>
+  <data name="Arcade_Multiplayer" xml:space="preserve"><value>พื้นที่หลายผู้เล่น</value></data>
+  <data name="Arcade_PartyRooms" xml:space="preserve"><value>ห้องปาร์ตี้</value></data>
+  <data name="Arcade_GetDirections" xml:space="preserve"><value>ดูเส้นทาง</value></data>
+  <data name="Arcade_OpenNow" xml:space="preserve"><value>เปิดอยู่</value></data>
+  <data name="Arcade_Closed" xml:space="preserve"><value>ปิดแล้ว</value></data>
+  <data name="Arcade_Verified" xml:space="preserve"><value>ยืนยันแล้ว</value></data>
+  <data name="Arcade_Premium" xml:space="preserve"><value>พรีเมียม</value></data>
+  <data name="Arcade_Featured" xml:space="preserve"><value>แนะนำ</value></data>
+  <data name="Arcade_AvailableGames" xml:space="preserve"><value>เกมที่มี</value></data>
+  <data name="Arcade_Photos" xml:space="preserve"><value>รูปภาพ</value></data>
+  <data name="Arcade_NearbyArcades" xml:space="preserve"><value>ร้าน VR Arcade ใกล้เคียง</value></data>
+  <data name="Arcade_Yes" xml:space="preserve"><value>ใช่</value></data>
+  <data name="Arcade_No" xml:space="preserve"><value>ไม่</value></data>
+
+  <!-- Reviews -->
+  <data name="Review_Title" xml:space="preserve"><value>รีวิว</value></data>
+  <data name="Review_NoReviews" xml:space="preserve"><value>ยังไม่มีรีวิว เป็นคนแรกที่รีวิว!</value></data>
+  <data name="Review_WriteFirst" xml:space="preserve"><value>เขียนรีวิวแรก</value></data>
+  <data name="Review_YourRating" xml:space="preserve"><value>คะแนนของคุณ</value></data>
+  <data name="Review_YourReview" xml:space="preserve"><value>รีวิวของคุณ</value></data>
+  <data name="Review_Submit" xml:space="preserve"><value>ส่งรีวิว</value></data>
+  <data name="Review_Helpful" xml:space="preserve"><value>มีประโยชน์</value></data>
+  <data name="Review_VerifiedVisit" xml:space="preserve"><value>ยืนยันการเยี่ยมชม</value></data>
+
+  <!-- Account -->
+  <data name="Account_Login" xml:space="preserve"><value>เข้าสู่ระบบ</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>ลงทะเบียน</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>อีเมล</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>รหัสผ่าน</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>ยืนยันรหัสผ่าน</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>จดจำฉัน</value></data>
+  <data name="Account_ForgotPassword" xml:space="preserve"><value>ลืมรหัสผ่าน?</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>ยังไม่มีบัญชี?</value></data>
+  <data name="Account_HaveAccount" xml:space="preserve"><value>มีบัญชีแล้ว?</value></data>
+  <data name="Account_SignUp" xml:space="preserve"><value>สมัครสมาชิก</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>ชื่อ</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>นามสกุล</value></data>
+  <data name="Account_FullName" xml:space="preserve"><value>ชื่อ-นามสกุล</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>บล็อก VR Arcade</value></data>
+  <data name="Blog_Subtitle" xml:space="preserve"><value>ข่าว เคล็ดลับ และคู่มือเกี่ยวกับเกม VR</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>อ่านเพิ่มเติม</value></data>
+  <data name="Blog_Categories" xml:space="preserve"><value>หมวดหมู่</value></data>
+  <data name="Blog_RecentPosts" xml:space="preserve"><value>โพสต์ล่าสุด</value></data>
+  <data name="Blog_Author" xml:space="preserve"><value>ผู้เขียน</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>เผยแพร่เมื่อ</value></data>
+  <data name="Blog_Tags" xml:space="preserve"><value>แท็ก</value></data>
+  <data name="Blog_Share" xml:space="preserve"><value>แชร์</value></data>
+  <data name="Blog_RelatedPosts" xml:space="preserve"><value>โพสต์ที่เกี่ยวข้อง</value></data>
+
+  <!-- Pricing -->
+  <data name="Pricing_Title" xml:space="preserve"><value>แผนราคา</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>เลือกแผนที่เหมาะกับร้าน VR Arcade ของคุณ</value></data>
+  <data name="Pricing_Basic" xml:space="preserve"><value>พื้นฐาน</value></data>
+  <data name="Pricing_Standard" xml:space="preserve"><value>มาตรฐาน</value></data>
+  <data name="Pricing_Premium" xml:space="preserve"><value>พรีเมียม</value></data>
+  <data name="Pricing_Monthly" xml:space="preserve"><value>ต่อเดือน</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>เริ่มต้น</value></data>
+  <data name="Pricing_ContactUs" xml:space="preserve"><value>ติดต่อเรา</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>ยอดนิยม</value></data>
+
+  <!-- Common -->
+  <data name="Common_Loading" xml:space="preserve"><value>กำลังโหลด...</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>บันทึก</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>ยกเลิก</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>แก้ไข</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>ลบ</value></data>
+  <data name="Common_View" xml:space="preserve"><value>ดู</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>กลับ</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>ถัดไป</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>ก่อนหน้า</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>ส่ง</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>ปิด</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>ใช่</value></data>
+  <data name="Common_No" xml:space="preserve"><value>ไม่</value></data>
+  <data name="Common_Error" xml:space="preserve"><value>ข้อผิดพลาด</value></data>
+  <data name="Common_Success" xml:space="preserve"><value>สำเร็จ</value></data>
+  <data name="Common_Warning" xml:space="preserve"><value>คำเตือน</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_About" xml:space="preserve"><value>เกี่ยวกับเรา</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>ติดต่อ</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>นโยบายความเป็นส่วนตัว</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>ข้อกำหนดการใช้งาน</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>สงวนลิขสิทธิ์</value></data>
+  <data name="Footer_Description" xml:space="preserve"><value>VR Arcade Finder ช่วยคุณค้นพบศูนย์เกมเสมือนจริงที่ดีที่สุดทั่วโลก</value></data>
+
+  <!-- Meta/SEO -->
+  <data name="Meta_SiteTitle" xml:space="preserve"><value>VR Arcade Finder</value></data>
+  <data name="Meta_SiteDescription" xml:space="preserve"><value>ค้นหาร้าน VR Arcade และศูนย์เกมเสมือนจริงที่ดีที่สุดใกล้คุณ อ่านรีวิว เปรียบเทียบราคา และค้นพบประสบการณ์ VR ที่น่าทึ่ง</value></data>
+  <data name="Meta_Keywords" xml:space="preserve"><value>VR Arcade, เสมือนจริง, เกม VR, ศูนย์ VR, ประสบการณ์ VR, ร้านเกม</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>โปรไฟล์ของฉัน</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>แก้ไขโปรไฟล์</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>ชื่อที่แสดง</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>ประวัติ</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>บอกเล่าเกี่ยวกับตัวคุณ...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>อวาตาร์</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>แพลตฟอร์ม VR ที่ชอบ</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>ภาษาที่ต้องการ</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>การแจ้งเตือน</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>รับอีเมลเกี่ยวกับร้านใหม่ในพื้นที่</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>รับอีเมลเกี่ยวกับกิจกรรม VR ที่กำลังจะมาถึง</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>บันทึกการเปลี่ยนแปลง</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>เปลี่ยนรหัสผ่าน</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>รหัสผ่านปัจจุบัน</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>รหัสผ่านใหม่</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>ยืนยันรหัสผ่านใหม่</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>สมาชิกตั้งแต่</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>รายการโปรด</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>รีวิวของฉัน</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>ร้านของฉัน</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>การตั้งค่า</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>ติดต่อฝ่ายสนับสนุนเพื่อเปลี่ยนอีเมล</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>ร้านโปรดของฉัน</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>ลบออกจากรายการโปรด</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>ยังไม่มีรายการโปรด</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>เริ่มสำรวจร้าน VR และบันทึกร้านโปรดของคุณ!</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>สำรวจร้าน</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>ดูรายละเอียด</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>ลบร้านนี้ออกจากรายการโปรด?</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>รีวิวของฉัน</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>ยังไม่มีรีวิว</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>ไปเยือนร้าน VR และแชร์ประสบการณ์ของคุณ!</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>เผยแพร่แล้ว</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>รอดำเนินการ</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>คนพบว่ามีประโยชน์</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>แก้ไขรีวิว</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>ลบรีวิว</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>ค้นหาร้าน</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>คุณแน่ใจหรือไม่ว่าต้องการลบรีวิวนี้?</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>ไม่มีสิทธิ์เข้าถึง</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>คุณไม่มีสิทธิ์เข้าถึงหน้านี้</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>หากคุณเชื่อว่านี่คือข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบหรือลองเข้าสู่ระบบด้วยบัญชีอื่น</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>กลับหน้าหลัก</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>ข้อผิดพลาด</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>อุ๊ปส์! มีบางอย่างผิดพลาด</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>รหัสคำขอ</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>กลับหน้าหลัก</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>ไม่พบหน้า</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>หน้าที่คุณค้นหาไม่มีอยู่</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>แผนที่ร้าน VR</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>ค้นหาร้าน VR</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>ป้อนเมือง...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>ใช้ตำแหน่งของฉัน</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>ตัวกรอง</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>แพลตฟอร์ม VR</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>ทุกแพลตฟอร์ม</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>มีห้องปาร์ตี้</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>พื้นที่หลายผู้เล่น</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>ร้านที่พบ</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>ค้นหาร้าน VR ในพื้นที่ของคุณ</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>ดูรายละเอียด</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>ไม่สามารถรับตำแหน่งของคุณได้ กรุณาป้อนเมืองด้วยตนเอง</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>ข้อมูลติดต่อ</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>เยี่ยมชมเว็บไซต์</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>ดูบน Google Maps</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>คุณเป็นเจ้าของร้านนี้?</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>เคลมรายการ</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>เคลมรายการของคุณเพื่อได้รับการมองเห็นมากขึ้น!</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>กิจกรรมที่กำลังจะมาถึง</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>เกม VR</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>เกมเพิ่มเติม...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>และ</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>การดู</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>ยังไม่มีบทความ กลับมาตรวจสอบเร็วๆ นี้!</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>รับการมองเห็นมากขึ้นสำหรับร้าน VR ของคุณ</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>แนะนำ</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>รายการพื้นฐาน</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>ข้อมูลติดต่อ</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>เวลาทำการ</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>ตำแหน่งบนแผนที่</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>แกลเลอรี่รูปภาพ</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>รายการกิจกรรม</value></data>
+  <data name="Pricing_FeaturedPlacement" xml:space="preserve"><value>ตำแหน่งแนะนำ</value></data>
+  <data name="Pricing_EverythingInBasic" xml:space="preserve"><value>ทุกอย่างในแพ็คเกจพื้นฐาน</value></data>
+  <data name="Pricing_PhotoGalleryUpTo" xml:space="preserve"><value>แกลเลอรี่รูปภาพ (สูงสุด 20 รูป)</value></data>
+  <data name="Pricing_PriorityInSearch" xml:space="preserve"><value>ลำดับความสำคัญในการค้นหา</value></data>
+  <data name="Pricing_VerifiedBadge" xml:space="preserve"><value>ป้ายยืนยัน</value></data>
+  <data name="Pricing_AnalyticsDashboard" xml:space="preserve"><value>แดชบอร์ดวิเคราะห์</value></data>
+  <data name="Pricing_GetPremium" xml:space="preserve"><value>รับพรีเมียม</value></data>
+  <data name="Pricing_EverythingInPremium" xml:space="preserve"><value>ทุกอย่างในแพ็คเกจพรีเมียม</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>ตำแหน่งแนะนำหน้าหลัก</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>จัดการรายการเกม</value></data>
+  <data name="Pricing_UnlimitedPhotos" xml:space="preserve"><value>รูปภาพไม่จำกัด</value></data>
+  <data name="Pricing_PrioritySupport" xml:space="preserve"><value>สนับสนุนพิเศษ</value></data>
+  <data name="Pricing_SocialMediaPromotion" xml:space="preserve"><value>โปรโมทบนโซเชียลมีเดีย</value></data>
+  <data name="Pricing_GoFeatured" xml:space="preserve"><value>รับแพ็คเกจแนะนำ</value></data>
+  <data name="Pricing_AnnualDiscount" xml:space="preserve"><value>ประหยัดสูงสุด 20% เมื่อชำระรายปี! ติดต่อเราสำหรับแผนองค์กร</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>โปรไฟล์ของฉัน</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>แก้ไขโปรไฟล์</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>ชื่อที่แสดง</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>ประวัติ</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>เล่าเกี่ยวกับตัวคุณ...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>รูปโปรไฟล์</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>แพลตฟอร์ม VR ที่ชอบ</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>ภาษาที่ต้องการ</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>การแจ้งเตือน</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>ส่งอีเมลเมื่อมีร้านใหม่ใกล้ฉัน</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>ส่งอีเมลเกี่ยวกับกิจกรรม VR ที่จะมาถึง</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>บันทึกการเปลี่ยนแปลง</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>เปลี่ยนรหัสผ่าน</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>รหัสผ่านปัจจุบัน</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>รหัสผ่านใหม่</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>ยืนยันรหัสผ่านใหม่</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>สมาชิกตั้งแต่</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>รายการโปรด</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>รีวิวของฉัน</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>ร้านของฉัน</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>การตั้งค่า</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>ติดต่อฝ่ายสนับสนุนเพื่อเปลี่ยนอีเมล</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>ร้านที่ชื่นชอบ</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>ลบออกจากรายการโปรด</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>ยังไม่มีรายการโปรด</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>เริ่มสำรวจร้าน VR และบันทึกเป็นรายการโปรด!</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>ดูร้านทั้งหมด</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>ดูรายละเอียด</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>ลบร้านนี้ออกจากรายการโปรด?</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>รีวิวของฉัน</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>ยังไม่มีรีวิว</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>ไปเยี่ยมร้าน VR และแบ่งปันประสบการณ์ของคุณ!</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>เผยแพร่แล้ว</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>รอดำเนินการ</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>คนพบว่ามีประโยชน์</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>แก้ไขรีวิว</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>ลบรีวิว</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>ค้นหาร้าน</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>คุณแน่ใจหรือไม่ว่าต้องการลบรีวิวนี้?</value></data>
+  <data name="MyReviews_Rating" xml:space="preserve"><value>คะแนน</value></data>
+  <data name="MyReviews_ReviewTitle" xml:space="preserve"><value>หัวข้อ</value></data>
+  <data name="MyReviews_YourReview" xml:space="preserve"><value>รีวิวของคุณ</value></data>
+  <data name="MyReviews_SaveChanges" xml:space="preserve"><value>บันทึกการเปลี่ยนแปลง</value></data>
+  <data name="MyReviews_UpdateFailed" xml:space="preserve"><value>อัปเดตรีวิวล้มเหลว</value></data>
+  <data name="MyReviews_DeleteFailed" xml:space="preserve"><value>ลบรีวิวล้มเหลว</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>ปฏิเสธการเข้าถึง</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>คุณไม่มีสิทธิ์เข้าถึงหน้านี้</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>หากคุณเชื่อว่านี่คือข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบหรือลองเข้าสู่ระบบด้วยบัญชีอื่น</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>กลับหน้าหลัก</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>ข้อผิดพลาด</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>เกิดข้อผิดพลาดบางอย่าง</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>รหัสคำขอ</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>กลับหน้าหลัก</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>ไม่พบหน้า</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>หน้าที่คุณกำลังมองหาไม่มีอยู่</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>แผนที่ร้าน VR</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>ค้นหาร้าน VR</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>ใส่ชื่อเมือง...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>ใช้ตำแหน่งของฉัน</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>ตัวกรอง</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>แพลตฟอร์ม VR</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>ทุกแพลตฟอร์ม</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>มีห้องจัดปาร์ตี้</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>พื้นที่เล่นหลายคน</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>ร้านที่พบ</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>ค้นหาร้าน VR ใกล้คุณ</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>ดูรายละเอียด</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>ไม่สามารถรับตำแหน่งของคุณได้ กรุณาใส่ชื่อเมือง</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>ข้อมูลติดต่อ</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>เยี่ยมชมเว็บไซต์</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>ดูบน Google Maps</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>เป็นเจ้าของร้านนี้?</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>เคลมร้าน</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>เคลมร้านของคุณและรับการมองเห็นมากขึ้น!</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>กิจกรรมที่จะมาถึง</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>เกม VR</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>เกมอื่นๆ...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>และ</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>ครั้งดู</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>ยังไม่มีบทความ กลับมาใหม่เร็วๆ นี้!</value></data>
+  <data name="Blog_SearchArticles" xml:space="preserve"><value>ค้นหาบทความ</value></data>
+  <data name="Blog_SearchPlaceholder" xml:space="preserve"><value>ค้นหา...</value></data>
+  <data name="Blog_Newsletter" xml:space="preserve"><value>จดหมายข่าว</value></data>
+  <data name="Blog_NewsletterDesc" xml:space="preserve"><value>รับข่าวสาร VR ล่าสุดทางอีเมล</value></data>
+  <data name="Blog_EmailPlaceholder" xml:space="preserve"><value>อีเมลของคุณ</value></data>
+  <data name="Blog_Subscribe" xml:space="preserve"><value>สมัครรับข่าว</value></data>
+  <data name="Blog_ShareArticle" xml:space="preserve"><value>แชร์บทความนี้:</value></data>
+  <data name="Blog_RelatedArticles" xml:space="preserve"><value>บทความที่เกี่ยวข้อง</value></data>
+  <data name="Blog_Guides" xml:space="preserve"><value>คู่มือ</value></data>
+  <data name="Blog_GameReviews" xml:space="preserve"><value>รีวิวเกม</value></data>
+  <data name="Blog_VRNews" xml:space="preserve"><value>ข่าว VR</value></data>
+  <data name="Blog_TipsTricks" xml:space="preserve"><value>เคล็ดลับ</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>เพิ่มการมองเห็นร้าน VR ของคุณ</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>แนะนำ</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>รายชื่อพื้นฐาน</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>ข้อมูลติดต่อ</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>เวลาทำการ</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>ตำแหน่งบนแผนที่</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>แกลเลอรี่รูปภาพ</value></data>
+
+  <!-- About Page -->
+  <data name="About_Title" xml:space="preserve"><value>เกี่ยวกับ VR Arcade Finder</value></data>
+  <data name="About_Subtitle" xml:space="preserve"><value>ประตูสู่ประสบการณ์เสมือนจริงที่ดื่มด่ำ</value></data>
+  <data name="About_OurMission" xml:space="preserve"><value>พันธกิจของเรา</value></data>
+  <data name="About_MissionText1" xml:space="preserve"><value>VR Arcade Finder มุ่งมั่นที่จะเชื่อมต่อผู้ชื่นชอบ VR กับร้านเสมือนจริงที่ดีที่สุดทั่วโลก เราเชื่อว่าทุกคนควรเข้าถึงประสบการณ์ VR ระดับพรีเมียมได้ ไม่ว่าคุณจะเป็นมือใหม่ที่อยากรู้เรื่อง VR หรือเกมเมอร์ระดับสูงที่มองหาประสบการณ์ล่าสุด</value></data>
+  <data name="About_MissionText2" xml:space="preserve"><value>แพลตฟอร์มของเราช่วยให้คุณค้นพบ เปรียบเทียบ และเลือกร้าน VR ตามตำแหน่ง เกมที่มี อุปกรณ์ และรีวิวจากผู้ใช้</value></data>
+  <data name="About_WhatWeOffer" xml:space="preserve"><value>สิ่งที่เราเสนอ</value></data>
+  <data name="About_LocationSearch" xml:space="preserve"><value>ค้นหาตามตำแหน่ง</value></data>
+  <data name="About_LocationSearchDesc" xml:space="preserve"><value>ค้นหาร้าน VR ใกล้คุณด้วยฟีเจอร์ค้นหาและแผนที่ที่ทรงพลัง</value></data>
+  <data name="About_GameCatalog" xml:space="preserve"><value>แคตตาล็อกเกม</value></data>
+  <data name="About_GameCatalogDesc" xml:space="preserve"><value>ดูเกม VR หลายพันเกมและค้นหาร้านที่มี</value></data>
+  <data name="About_UserReviews" xml:space="preserve"><value>รีวิวจากผู้ใช้</value></data>
+  <data name="About_UserReviewsDesc" xml:space="preserve"><value>อ่านรีวิวจริงจากผู้เยี่ยมชมร้าน VR</value></data>
+  <data name="About_EventsTournaments" xml:space="preserve"><value>กิจกรรมและทัวร์นาเมนต์</value></data>
+  <data name="About_EventsTournamentsDesc" xml:space="preserve"><value>ค้นพบกิจกรรมและการแข่งขันเกม VR ใกล้คุณ</value></data>
+  <data name="About_ForArcadeOwners" xml:space="preserve"><value>สำหรับเจ้าของร้าน</value></data>
+  <data name="About_ArcadeOwnersText" xml:space="preserve"><value>คุณเป็นเจ้าของร้าน VR? เข้าร่วมแพลตฟอร์มของเราเพื่อเพิ่มการมองเห็นและเข้าถึงลูกค้าหลายพันคนที่กำลังค้นหาประสบการณ์ VR</value></data>
+  <data name="About_ArcadeFeature1" xml:space="preserve"><value>สร้างรายชื่อละเอียดพร้อมรูปภาพและเกมที่มี</value></data>
+  <data name="About_ArcadeFeature2" xml:space="preserve"><value>ตอบรีวิวลูกค้าและสร้างชื่อเสียง</value></data>
+  <data name="About_ArcadeFeature3" xml:space="preserve"><value>โพสต์กิจกรรมและโปรโมชั่นพิเศษ</value></data>
+  <data name="About_ArcadeFeature4" xml:space="preserve"><value>เข้าถึงการวิเคราะห์เพื่อเข้าใจลูกค้า</value></data>
+  <data name="About_ArcadeFeature5" xml:space="preserve"><value>ตัวเลือกตำแหน่งแนะนำเพื่อการมองเห็นสูงสุด</value></data>
+  <data name="About_ListYourArcade" xml:space="preserve"><value>ลงทะเบียนร้านของคุณ</value></data>
+  <data name="About_ContactUs" xml:space="preserve"><value>ติดต่อเรา</value></data>
+  <data name="About_ContactText" xml:space="preserve"><value>มีคำถาม ข้อเสนอแนะ หรือสอบถามพาร์ทเนอร์? เรายินดีรับฟัง!</value></data>
+  <data name="About_Email" xml:space="preserve"><value>อีเมล:</value></data>
+  <data name="About_FollowUs" xml:space="preserve"><value>ติดตามเรา:</value></data>
+
+  <!-- Privacy/Terms/Games/Claim/Submit/Checkout - abbreviated for Thai -->
+  <data name="Privacy_Title" xml:space="preserve"><value>นโยบายความเป็นส่วนตัว</value></data>
+  <data name="Privacy_LastUpdated" xml:space="preserve"><value>อัปเดตล่าสุด:</value></data>
+  <data name="Terms_Title" xml:space="preserve"><value>ข้อกำหนดการใช้บริการ</value></data>
+  <data name="Terms_LastUpdated" xml:space="preserve"><value>อัปเดตล่าสุด:</value></data>
+  <data name="Games_Title" xml:space="preserve"><value>เกม VR</value></data>
+  <data name="Games_Subtitle" xml:space="preserve"><value>เรียกดูแคตตาล็อกเกม VR ที่มีในร้าน</value></data>
+  <data name="Games_SearchPlaceholder" xml:space="preserve"><value>ค้นหาเกม...</value></data>
+  <data name="Games_AllPlatforms" xml:space="preserve"><value>ทุกแพลตฟอร์ม</value></data>
+  <data name="Games_AllGenres" xml:space="preserve"><value>ทุกประเภท</value></data>
+  <data name="Games_AllIntensities" xml:space="preserve"><value>ทุกระดับความเข้มข้น</value></data>
+  <data name="Games_Filter" xml:space="preserve"><value>กรอง</value></data>
+  <data name="Games_Reset" xml:space="preserve"><value>รีเซ็ต</value></data>
+  <data name="Games_Multiplayer" xml:space="preserve"><value>หลายผู้เล่น</value></data>
+  <data name="Games_CoOp" xml:space="preserve"><value>ร่วมมือ</value></data>
+  <data name="Games_Intensity" xml:space="preserve"><value>ความเข้มข้น:</value></data>
+  <data name="Games_IntensityLow" xml:space="preserve"><value>ต่ำ (สบาย)</value></data>
+  <data name="Games_IntensityMedium" xml:space="preserve"><value>กลาง</value></data>
+  <data name="Games_IntensityHigh" xml:space="preserve"><value>สูง (เข้มข้น)</value></data>
+  <data name="Games_Arcades" xml:space="preserve"><value>ร้าน</value></data>
+  <data name="Games_NoGames" xml:space="preserve"><value>ไม่พบเกม</value></data>
+  <data name="Games_NoGamesMessage" xml:space="preserve"><value>ลองปรับตัวกรองหรือคำค้นหา</value></data>
+
+  <!-- Claim Page -->
+  <data name="Claim_Title" xml:space="preserve"><value>เคลมร้าน</value></data>
+  <data name="Claim_ClaimYourArcade" xml:space="preserve"><value>เคลมร้าน VR ของคุณ</value></data>
+  <data name="Claim_WhyClaim" xml:space="preserve"><value>ทำไมต้องเคลมร้าน?</value></data>
+  <data name="Claim_SubmitClaim" xml:space="preserve"><value>ส่งคำขอเคลม</value></data>
+  <data name="Claim_WhatHappensNext" xml:space="preserve"><value>ขั้นตอนถัดไป?</value></data>
+
+  <!-- Submit Arcade Page -->
+  <data name="Submit_Title" xml:space="preserve"><value>ส่งร้าน VR ของคุณ</value></data>
+  <data name="Submit_Subtitle" xml:space="preserve"><value>เพิ่มร้าน VR ลงในไดเรกทอรีและเข้าถึงผู้ชื่นชอบ VR หลายพันคน</value></data>
+  <data name="Submit_BasicInfo" xml:space="preserve"><value>ข้อมูลพื้นฐาน</value></data>
+  <data name="Submit_ArcadeName" xml:space="preserve"><value>ชื่อร้าน</value></data>
+  <data name="Submit_Description" xml:space="preserve"><value>คำอธิบาย</value></data>
+  <data name="Submit_Location" xml:space="preserve"><value>ตำแหน่ง</value></data>
+  <data name="Submit_VREquipment" xml:space="preserve"><value>อุปกรณ์และคุณสมบัติ VR</value></data>
+  <data name="Submit_BusinessHours" xml:space="preserve"><value>เวลาทำการ</value></data>
+  <data name="Submit_Photos" xml:space="preserve"><value>รูปภาพ</value></data>
+  <data name="Submit_ChoosePlan" xml:space="preserve"><value>เลือกแผนของคุณ</value></data>
+  <data name="Submit_SubmitArcade" xml:space="preserve"><value>ส่งร้าน</value></data>
+
+  <!-- Checkout Success Page -->
+  <data name="Checkout_PaymentSuccessful" xml:space="preserve"><value>ชำระเงินสำเร็จ!</value></data>
+  <data name="Checkout_ThankYou" xml:space="preserve"><value>ขอบคุณสำหรับการซื้อ ร้านของคุณได้รับการเปิดใช้งานแล้ว</value></data>
+  <data name="Checkout_WhatsNext" xml:space="preserve"><value>ขั้นตอนถัดไป?</value></data>
+  <data name="Checkout_ViewListing" xml:space="preserve"><value>ดูร้านของคุณ</value></data>
+  <data name="Checkout_GoToDashboard" xml:space="preserve"><value>ไปที่แดชบอร์ด</value></data>
+  <data name="Checkout_NeedHelp" xml:space="preserve"><value>ต้องการความช่วยเหลือ? ติดต่อเราที่</value></data>
+
+  <!-- Days of Week -->
+  <data name="Day_Monday" xml:space="preserve"><value>วันจันทร์</value></data>
+  <data name="Day_Tuesday" xml:space="preserve"><value>วันอังคาร</value></data>
+  <data name="Day_Wednesday" xml:space="preserve"><value>วันพุธ</value></data>
+  <data name="Day_Thursday" xml:space="preserve"><value>วันพฤหัสบดี</value></data>
+  <data name="Day_Friday" xml:space="preserve"><value>วันศุกร์</value></data>
+  <data name="Day_Saturday" xml:space="preserve"><value>วันเสาร์</value></data>
+  <data name="Day_Sunday" xml:space="preserve"><value>วันอาทิตย์</value></data>
+</root>

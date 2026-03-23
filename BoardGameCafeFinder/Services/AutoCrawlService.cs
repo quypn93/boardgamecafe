@@ -187,7 +187,20 @@ namespace BoardGameCafeFinder.Services
                     : $"{city.Name}, {city.Country}";
 
                 var maxResults = city.MaxResults > 0 ? city.MaxResults : _settings.MaxResultsPerCity;
-                var crawledCafes = await crawlerService.CrawlBoardGameCafesAsync(location, maxResults);
+
+                List<CrawledCafeData> crawledCafes;
+                var queries = _settings.SearchQueries;
+                if (queries != null && queries.Length > 1)
+                {
+                    var maxPerQuery = Math.Max(5, maxResults / queries.Length + 2);
+                    _logger.LogInformation("Using multi-query crawl for {City} with {QueryCount} queries, {MaxPerQuery} results per query",
+                        city.Name, queries.Length, maxPerQuery);
+                    crawledCafes = await crawlerService.CrawlWithMultipleQueriesAsync(location, queries, maxPerQuery);
+                }
+                else
+                {
+                    crawledCafes = await crawlerService.CrawlBoardGameCafesAsync(location, maxResults);
+                }
 
                 int added = 0;
                 int updated = 0;
@@ -200,8 +213,26 @@ namespace BoardGameCafeFinder.Services
 
                     try
                     {
-                        var existingCafe = await context.Cafes
-                            .FirstOrDefaultAsync(c => c.GooglePlaceId == crawledCafe.GooglePlaceId && crawledCafe.GooglePlaceId != null, cancellationToken);
+                        // Find existing cafe: by GooglePlaceId first, then fallback to Name + approximate location
+                        Cafe? existingCafe = null;
+
+                        if (!string.IsNullOrEmpty(crawledCafe.GooglePlaceId))
+                        {
+                            existingCafe = await context.Cafes
+                                .FirstOrDefaultAsync(c => c.GooglePlaceId == crawledCafe.GooglePlaceId, cancellationToken);
+                        }
+
+                        // Fallback: match by Name + City (case-insensitive)
+                        if (existingCafe == null && !string.IsNullOrEmpty(crawledCafe.Name))
+                        {
+                            var cafeName = crawledCafe.Name.Trim();
+                            existingCafe = await context.Cafes
+                                .FirstOrDefaultAsync(c => c.Name.ToLower() == cafeName.ToLower()
+                                    && (c.City == crawledCafe.City || (crawledCafe.Latitude.HasValue && crawledCafe.Longitude.HasValue
+                                        && Math.Abs(c.Latitude - crawledCafe.Latitude.Value) < 0.01
+                                        && Math.Abs(c.Longitude - crawledCafe.Longitude.Value) < 0.01)),
+                                    cancellationToken);
+                        }
 
                         if (existingCafe != null)
                         {
@@ -222,10 +253,19 @@ namespace BoardGameCafeFinder.Services
                             existingCafe.GoogleMapsUrl = crawledCafe.GoogleMapsUrl;
                             existingCafe.LocalImagePath = crawledCafe.LocalImagePath;
                             existingCafe.BggUsername = crawledCafe.BggUsername ?? existingCafe.BggUsername;
+                            // Backfill GooglePlaceId if we matched by name but didn't have it before
+                            if (string.IsNullOrEmpty(existingCafe.GooglePlaceId) && !string.IsNullOrEmpty(crawledCafe.GooglePlaceId))
+                                existingCafe.GooglePlaceId = crawledCafe.GooglePlaceId;
                             existingCafe.UpdatedAt = DateTime.UtcNow;
 
                             if (crawledCafe.Attributes != null && crawledCafe.Attributes.Any())
                                 existingCafe.SetAttributes(crawledCafe.Attributes);
+
+                            // Save new reviews for existing cafe
+                            if (crawledCafe.Reviews != null && crawledCafe.Reviews.Any())
+                            {
+                                await SaveNewReviewsAsync(context, existingCafe.CafeId, crawledCafe.Reviews, crawlerService, cancellationToken);
+                            }
 
                             updated++;
                         }
@@ -268,6 +308,14 @@ namespace BoardGameCafeFinder.Services
                                 newCafe.SetAttributes(crawledCafe.Attributes);
 
                             context.Cafes.Add(newCafe);
+                            await context.SaveChangesAsync(cancellationToken); // Save to get CafeId
+
+                            // Save reviews for new cafe
+                            if (crawledCafe.Reviews != null && crawledCafe.Reviews.Any())
+                            {
+                                await SaveNewReviewsAsync(context, newCafe.CafeId, crawledCafe.Reviews, crawlerService, cancellationToken);
+                            }
+
                             added++;
                         }
                     }
@@ -329,7 +377,37 @@ namespace BoardGameCafeFinder.Services
 
         private async Task<List<City>> GetNextCitiesToCrawlInternalAsync(ApplicationDbContext context, int count, CancellationToken cancellationToken)
         {
-            // Priority: Never crawled (CrawlCount = 0) first, then lowest CrawlCount
+            // Priority 1: Never crawled (CrawlCount = 0) first
+            var neverCrawled = await context.Cities
+                .Where(c => c.IsActive && c.CrawlCount == 0 && (c.NextCrawlAt == null || c.NextCrawlAt <= DateTime.UtcNow))
+                .OrderBy(c => c.CreatedAt)
+                .Take(count)
+                .ToListAsync(cancellationToken);
+
+            if (neverCrawled.Any())
+                return neverCrawled;
+
+            // Priority 2: Cities that have cafes with low reviews (< 10) — re-crawl to gather more reviews
+            var citiesWithLowReviews = await context.Cafes
+                .Where(c => c.IsActive && !string.IsNullOrEmpty(c.City) && c.TotalReviews < 10)
+                .GroupBy(c => c.City)
+                .Select(g => g.Key)
+                .ToListAsync(cancellationToken);
+
+            if (citiesWithLowReviews.Any())
+            {
+                var citiesToRecrawl = await context.Cities
+                    .Where(c => c.IsActive && citiesWithLowReviews.Contains(c.Name)
+                        && (c.NextCrawlAt == null || c.NextCrawlAt <= DateTime.UtcNow))
+                    .OrderBy(c => c.LastCrawledAt ?? DateTime.MinValue)
+                    .Take(count)
+                    .ToListAsync(cancellationToken);
+
+                if (citiesToRecrawl.Any())
+                    return citiesToRecrawl;
+            }
+
+            // Priority 3: Lowest CrawlCount (general re-crawl)
             return await context.Cities
                 .Where(c => c.IsActive && (c.NextCrawlAt == null || c.NextCrawlAt <= DateTime.UtcNow))
                 .OrderBy(c => c.CrawlCount)
@@ -491,6 +569,49 @@ namespace BoardGameCafeFinder.Services
             await context.SaveChangesAsync();
 
             _logger.LogInformation("Seeded {Count} cities", cities.Count);
+        }
+
+        private async Task SaveNewReviewsAsync(ApplicationDbContext context, int cafeId, List<CrawledReviewData> crawledReviews, IGoogleMapsCrawlerService crawlerService, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var reviews = crawlerService.ConvertToReviews(cafeId, crawledReviews);
+                int newCount = 0;
+                foreach (var review in reviews)
+                {
+                    // Check if review already exists by matching author name (in Title) for this cafe
+                    var titlePattern = review.Title ?? "";
+                    var alreadyExists = await context.Reviews
+                        .AnyAsync(r => r.CafeId == cafeId && r.Title == titlePattern, cancellationToken);
+
+                    if (!alreadyExists)
+                    {
+                        review.IsApproved = true;
+                        context.Reviews.Add(review);
+                        newCount++;
+                    }
+                }
+
+                if (newCount > 0)
+                {
+                    await context.SaveChangesAsync(cancellationToken);
+
+                    // Recalculate TotalReviews from actual review count in DB
+                    var cafe = await context.Cafes.FindAsync(new object[] { cafeId }, cancellationToken);
+                    if (cafe != null)
+                    {
+                        cafe.TotalReviews = await context.Reviews.CountAsync(r => r.CafeId == cafeId && r.IsApproved, cancellationToken);
+                        await context.SaveChangesAsync(cancellationToken);
+                    }
+                }
+
+                _logger.LogInformation("Saved reviews for cafe {CafeId}: {NewCount} new out of {Total} crawled",
+                    cafeId, newCount, crawledReviews.Count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Error saving reviews for cafe {CafeId}", cafeId);
+            }
         }
 
         private async Task<string> GenerateUniqueSlugAsync(ApplicationDbContext context, string name, HashSet<string> usedSlugs, CancellationToken cancellationToken)

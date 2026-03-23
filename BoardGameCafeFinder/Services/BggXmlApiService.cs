@@ -102,15 +102,21 @@ namespace BoardGameCafeFinder.Services
                     {
                         result.GamesProcessed++;
 
+                        // Truncate values to fit database column constraints
+                        var gameName = gameInfo.Name?.Length > 200 ? gameInfo.Name.Substring(0, 200) : gameInfo.Name;
+                        var imageUrl = (gameInfo.ThumbnailUrl ?? gameInfo.ImageUrl);
+                        if (imageUrl?.Length > 500) imageUrl = imageUrl.Substring(0, 500);
+                        var description = gameInfo.Description?.Length > 4000 ? gameInfo.Description.Substring(0, 4000) : gameInfo.Description;
+
                         var game = await _context.BoardGames.FirstOrDefaultAsync(g => g.BGGId == gameInfo.BggId);
                         if (game == null)
                         {
                             game = new BoardGame
                             {
-                                Name = gameInfo.Name,
+                                Name = gameName ?? "Unknown",
                                 BGGId = gameInfo.BggId,
-                                ImageUrl = gameInfo.ThumbnailUrl ?? gameInfo.ImageUrl,
-                                Description = gameInfo.Description,
+                                ImageUrl = imageUrl,
+                                Description = description,
                                 MinPlayers = gameInfo.MinPlayers,
                                 MaxPlayers = gameInfo.MaxPlayers,
                                 PlaytimeMinutes = gameInfo.PlayingTime,
@@ -124,9 +130,9 @@ namespace BoardGameCafeFinder.Services
                         {
                             // Update if data is missing
                             bool updated = false;
-                            if (string.IsNullOrEmpty(game.ImageUrl) && !string.IsNullOrEmpty(gameInfo.ThumbnailUrl))
+                            if (string.IsNullOrEmpty(game.ImageUrl) && !string.IsNullOrEmpty(imageUrl))
                             {
-                                game.ImageUrl = gameInfo.ThumbnailUrl ?? gameInfo.ImageUrl;
+                                game.ImageUrl = imageUrl;
                                 updated = true;
                             }
                             if (game.MinPlayers == null && gameInfo.MinPlayers != null)
@@ -171,6 +177,13 @@ namespace BoardGameCafeFinder.Services
                     {
                         _logger.LogWarning(ex, "Error processing game {GameName} (BGG ID: {BggId})", gameInfo.Name, gameInfo.BggId);
                         result.Errors.Add($"Error processing {gameInfo.Name}: {ex.Message}");
+
+                        // Detach failed entities to prevent cascading save errors
+                        foreach (var entry in _context.ChangeTracker.Entries()
+                            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
+                        {
+                            entry.State = EntityState.Detached;
+                        }
                     }
                 }
 
@@ -180,8 +193,9 @@ namespace BoardGameCafeFinder.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "BGG XML API sync failed for cafe {CafeId}", cafeId);
-                result.Message = $"API Exception: {ex.Message}";
+                var innerMsg = ex.InnerException?.Message ?? ex.Message;
+                _logger.LogError(ex, "BGG XML API sync failed for cafe {CafeId}: {InnerMessage}", cafeId, innerMsg);
+                result.Message = $"API Exception: {innerMsg}";
             }
 
             return result;

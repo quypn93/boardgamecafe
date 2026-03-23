@@ -1,13 +1,47 @@
 using EscapeRoomFinder.Data;
+using EscapeRoomFinder.Models;
 using EscapeRoomFinder.Models.Domain;
 using EscapeRoomFinder.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Localization Configuration
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+// Supported cultures for i18n
+var supportedCultures = new[]
+{
+    new CultureInfo("en"),  // English
+    new CultureInfo("vi"),  // Vietnamese
+    new CultureInfo("ja"),  // Japanese
+    new CultureInfo("ko"),  // Korean
+    new CultureInfo("zh"),  // Chinese
+    new CultureInfo("th"),  // Thai
+    new CultureInfo("es"),  // Spanish
+    new CultureInfo("de")   // German
+};
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("en");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider(),
+        new AcceptLanguageHeaderRequestCultureProvider()
+    };
+});
+
+// Add MVC with localization
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
 
 // Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -73,6 +107,12 @@ builder.Services.AddScoped<PayPalPaymentService>();
 builder.Services.AddScoped<IPaymentServiceFactory, PaymentServiceFactory>();
 builder.Services.AddScoped<IPaymentService>(sp => sp.GetRequiredService<IPaymentServiceFactory>().GetPaymentService());
 
+// Crawl Settings and Auto Crawl Service
+builder.Services.Configure<CrawlSettings>(
+    builder.Configuration.GetSection("CrawlSettings"));
+builder.Services.AddSingleton<IAutoCrawlService, AutoCrawlService>();
+builder.Services.AddHostedService(sp => (AutoCrawlService)sp.GetRequiredService<IAutoCrawlService>());
+
 // HttpClient for external APIs
 builder.Services.AddHttpClient();
 
@@ -92,6 +132,9 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Request Localization
+app.UseRequestLocalization();
 
 app.UseRouting();
 

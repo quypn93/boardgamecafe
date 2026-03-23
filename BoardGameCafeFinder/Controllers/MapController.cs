@@ -45,8 +45,8 @@ namespace BoardGameCafeFinder.Controllers
 
             if (!string.IsNullOrEmpty(city))
             {
-                pageTitle = $"Board Game Cafes in {city} - Map View";
-                pageDescription = $"Interactive map of board game cafes in {city}. Discover games, hours, and reviews for each location.";
+                pageTitle = $"Board Game Cafe in {city} - Map View";
+                pageDescription = $"Interactive map of board game cafe in {city}. Discover games, hours, and reviews for each location.";
             }
 
             ViewData["Title"] = pageTitle;
@@ -61,7 +61,8 @@ namespace BoardGameCafeFinder.Controllers
                 .Where(c => c.IsActive && !string.IsNullOrEmpty(c.Country))
                 .Select(c => c.Country)
                 .Distinct()
-                .OrderBy(c => c)
+                .OrderBy(c => c == "United States" ? 0 : 1)
+                .ThenBy(c => c)
                 .ToListAsync();
 
             ViewBag.Cities = await _context.Cafes

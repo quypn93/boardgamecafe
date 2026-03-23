@@ -1,13 +1,15 @@
 @model BoardGameCafeFinder.Models.Domain.Cafe
 @{
-    ViewData["Title"] = Model.Name;
+    // Improved title with rating for better CTR
+    var ratingText = Model.AverageRating.HasValue ? $" ({Model.AverageRating:0.0}/5)" : "";
+    ViewData["Title"] = $"{Model.Name}{ratingText} - Board Game Cafe in {Model.City}";
     Layout = "_UserLayout";
 
     // SEO Meta Tags - Only use description if approved
     var hasApprovedDescription = !string.IsNullOrEmpty(Model.Description) && Model.IsDescriptionApproved;
     var metaDescription = hasApprovedDescription
         ? Model.Description!.Length > 155 ? Model.Description.Substring(0, 152) + "..." : Model.Description
-        : $"{Model.Name} is a board game cafe in {Model.City}, {Model.State}. {(Model.TotalReviews > 0 ? $"Rated {Model.AverageRating:0.0}/5 with {Model.TotalReviews} reviews." : "")} {(Model.CafeGames?.Count > 0 ? $"Features {Model.CafeGames.Count} board games." : "")}";
+        : $"Visit {Model.Name}, a top-rated board game cafe in {Model.City}. {(Model.AverageRating.HasValue ? $"Rated {Model.AverageRating:0.0}/5" : "")} {(Model.CafeGames?.Count > 0 ? $"with {Model.CafeGames.Count}+ board games." : "")} See photos, reviews & hours.";
 
     ViewData["MetaDescription"] = metaDescription;
     ViewData["Keywords"] = $"{Model.Name}, board game cafe {Model.City}, tabletop games {Model.City}, {Model.State} board game lounge, cafe with board games";
@@ -76,6 +78,41 @@
             "bestRating": "5",
             "worstRating": "1"
         },</text>
+        }
+        @{
+            var schemaReviews = Model.Reviews?
+                .Where(r => (r.UserId == null || r.IsApproved) && !string.IsNullOrEmpty(r.Content))
+                .OrderByDescending(r => r.Rating)
+                .ThenByDescending(r => r.CreatedAt)
+                .Take(5)
+                .ToList() ?? new List<BoardGameCafeFinder.Models.Domain.Review>();
+        }
+        @if (schemaReviews.Any())
+        {
+            <text>"review": [</text>
+            for (int ri = 0; ri < schemaReviews.Count; ri++)
+            {
+                var rev = schemaReviews[ri];
+                var reviewContent = rev.Content!.Length > 200 ? rev.Content.Substring(0, 197) + "..." : rev.Content;
+                var authorName = rev.User?.DisplayName ?? rev.User?.FirstName ?? "Google User";
+                var reviewDate = (rev.UserId == null && rev.VisitDate.HasValue ? rev.VisitDate.Value : rev.CreatedAt).ToString("yyyy-MM-dd");
+                <text>{
+                "@@type": "Review",
+                "reviewRating": {
+                    "@@type": "Rating",
+                    "ratingValue": "@rev.Rating",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                },
+                "author": {
+                    "@@type": "Person",
+                    "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(authorName).ToString())"
+                },
+                "datePublished": "@reviewDate",
+                "reviewBody": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(reviewContent).ToString())"
+            }@(ri < schemaReviews.Count - 1 ? "," : "")</text>
+            }
+            <text>],</text>
         }
         "additionalType": "https://schema.org/CafeOrCoffeeShop"
     }

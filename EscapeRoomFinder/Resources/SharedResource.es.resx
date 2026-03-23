@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>Inicio</value></data>
+  <data name="Nav_Search" xml:space="preserve"><value>Buscar</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>Mapa</value></data>
+  <data name="Nav_Cities" xml:space="preserve"><value>Ciudades</value></data>
+  <data name="Nav_Themes" xml:space="preserve"><value>Temas</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>Blog</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>Negocios</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>Iniciar sesión</value></data>
+  <data name="Nav_SignUp" xml:space="preserve"><value>Registrarse</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>Cerrar sesión</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>Perfil</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>Admin</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>Encuentra Escape Rooms Cerca de Ti</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>Encuentra Tu Próximo Escape</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>Descubre {0} lugares con {1} escape rooms en todo el mundo</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>Descubre los mejores escape rooms, lee reseñas, compara dificultades y reserva tu próxima aventura</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>Buscar escape rooms...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>Buscar</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>Todos los países</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>Todas las ciudades</value></data>
+  <data name="Home_AllThemes" xml:space="preserve"><value>Todos los temas</value></data>
+  <data name="Home_VenuesFound" xml:space="preserve"><value>lugares encontrados</value></data>
+  <data name="Home_BrowseVenues" xml:space="preserve"><value>Ver lugares</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>Ver mapa</value></data>
+  <data name="Home_AdvancedFilters" xml:space="preserve"><value>Filtros avanzados</value></data>
+  <data name="Home_Difficulty" xml:space="preserve"><value>Dificultad</value></data>
+  <data name="Home_Players" xml:space="preserve"><value>Jugadores</value></data>
+  <data name="Home_SortBy" xml:space="preserve"><value>Ordenar por</value></data>
+  <data name="Home_Apply" xml:space="preserve"><value>Aplicar</value></data>
+  <data name="Home_Any" xml:space="preserve"><value>Cualquiera</value></data>
+  <data name="Home_VeryEasy" xml:space="preserve"><value>Muy fácil</value></data>
+  <data name="Home_Easy" xml:space="preserve"><value>Fácil</value></data>
+  <data name="Home_Medium" xml:space="preserve"><value>Medio</value></data>
+  <data name="Home_Hard" xml:space="preserve"><value>Difícil</value></data>
+  <data name="Home_Expert" xml:space="preserve"><value>Experto</value></data>
+  <data name="Home_PlayersCount" xml:space="preserve"><value>{0} jugadores</value></data>
+  <data name="Home_Recommended" xml:space="preserve"><value>Recomendado</value></data>
+  <data name="Home_Rating" xml:space="preserve"><value>Calificación</value></data>
+  <data name="Home_Reviews" xml:space="preserve"><value>Reseñas</value></data>
+  <data name="Home_Rooms" xml:space="preserve"><value>Salas</value></data>
+  <data name="Home_Name" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Home_NoResults" xml:space="preserve"><value>No se encontraron escape rooms</value></data>
+  <data name="Home_NoResultsMessage" xml:space="preserve"><value>Intenta ajustar los filtros de búsqueda o explora otra ciudad.</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>Limpiar filtros</value></data>
+  <data name="Home_Showing" xml:space="preserve"><value>Mostrando {0}-{1} de {2} lugares</value></data>
+  <data name="Home_ViewDetails" xml:space="preserve"><value>Ver detalles</value></data>
+  <data name="Home_Featured" xml:space="preserve"><value>Destacado</value></data>
+  <data name="Home_Verified" xml:space="preserve"><value>Verificado</value></data>
+
+  <!-- Venue Details -->
+  <data name="Venue_Rating" xml:space="preserve"><value>Calificación</value></data>
+  <data name="Venue_Reviews" xml:space="preserve"><value>reseñas</value></data>
+  <data name="Venue_Address" xml:space="preserve"><value>Dirección</value></data>
+  <data name="Venue_Phone" xml:space="preserve"><value>Teléfono</value></data>
+  <data name="Venue_Website" xml:space="preserve"><value>Sitio web</value></data>
+  <data name="Venue_Hours" xml:space="preserve"><value>Horario</value></data>
+  <data name="Venue_Rooms" xml:space="preserve"><value>Escape Rooms</value></data>
+  <data name="Venue_RoomsAvailable" xml:space="preserve"><value>salas disponibles</value></data>
+  <data name="Venue_ViewOnMap" xml:space="preserve"><value>Ver en mapa</value></data>
+  <data name="Venue_GetDirections" xml:space="preserve"><value>Cómo llegar</value></data>
+  <data name="Venue_Difficulty" xml:space="preserve"><value>Dificultad</value></data>
+  <data name="Venue_Players" xml:space="preserve"><value>Jugadores</value></data>
+  <data name="Venue_Duration" xml:space="preserve"><value>Duración</value></data>
+  <data name="Venue_Theme" xml:space="preserve"><value>Tema</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>Guías de Escape Rooms por Ciudad</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>Explora escape rooms en {0} ciudades del mundo</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>Explora escape rooms en {0} ciudades de {1}</value></data>
+  <data name="Blog_VenuesIn" xml:space="preserve"><value>Escape Rooms en {0}</value></data>
+  <data name="Blog_DiscoverVenues" xml:space="preserve"><value>Descubre {0} {1} en {2} con {3} salas para explorar.</value></data>
+  <data name="Blog_DiscoverVenuesSimple" xml:space="preserve"><value>Descubre {0} escape room {1} en {2}.</value></data>
+  <data name="Blog_Venue" xml:space="preserve"><value>lugar</value></data>
+  <data name="Blog_Venues" xml:space="preserve"><value>lugares</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>Mostrando todas las ciudades</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>Filtrar por país</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>Todos los países</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>Limpiar</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>Página</value></data>
+  <data name="Blog_Of" xml:space="preserve"><value>de</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>ciudades encontradas</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>No se encontraron ciudades</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>Aún no hemos recopilado datos. ¡Vuelve pronto!</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>Estadísticas</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>Ciudades</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>Países</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>Ver por país</value></data>
+  <data name="Blog_FindVenuesNearYou" xml:space="preserve"><value>Encuentra Escape Rooms Cerca de Ti</value></data>
+  <data name="Blog_FindVenuesDesc" xml:space="preserve"><value>Usa nuestro mapa interactivo para descubrir escape rooms en tu área.</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>Abrir mapa</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0} más</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>Descubre los mejores escape rooms cerca de ti. Explora lugares, lee reseñas, compara dificultades y encuentra tu próximo destino.</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>Explorar</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>Legal</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Política de Privacidad</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>Términos de Servicio</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>Contáctanos</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>¿Tienes un escape room que te gustaría añadir? ¿Eres dueño de un lugar y quieres actualizar tu listado? ¡Contáctanos!</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Escape Room Finder. Todos los derechos reservados.</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>Ver detalles</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>Saber más</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>Enviar</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>Guardar</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Editar</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Atrás</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>Siguiente</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>Anterior</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>Cargando...</value></data>
+  <data name="Common_Explore" xml:space="preserve"><value>Explorar</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>Mapa de Escape Rooms</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>Descubre escape rooms cerca de ti</value></data>
+  <data name="Map_VenuesFound" xml:space="preserve"><value>Lugares encontrados</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>Buscar ciudad o dirección...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>Usar mi ubicación</value></data>
+
+  <!-- Profile Page -->
+  <data name="Profile_Title" xml:space="preserve"><value>Mi Perfil</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>Editar Perfil</value></data>
+  <data name="Profile_Stats" xml:space="preserve"><value>Estadísticas</value></data>
+  <data name="Profile_ReviewsWritten" xml:space="preserve"><value>Reseñas Escritas</value></data>
+  <data name="Profile_RoomsPlayed" xml:space="preserve"><value>Salas Jugadas</value></data>
+  <data name="Profile_Escapes" xml:space="preserve"><value>Escapes</value></data>
+  <data name="Profile_EscapeRate" xml:space="preserve"><value>Tasa de Escape</value></data>
+  <data name="Profile_Reputation" xml:space="preserve"><value>Reputación</value></data>
+  <data name="Profile_FirstName" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Profile_LastName" xml:space="preserve"><value>Apellido</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>Nombre para Mostrar</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>Biografía</value></data>
+  <data name="Profile_City" xml:space="preserve"><value>Ciudad</value></data>
+  <data name="Profile_Country" xml:space="preserve"><value>País</value></data>
+  <data name="Profile_FavoriteThemes" xml:space="preserve"><value>Temas Favoritos</value></data>
+  <data name="Profile_FavoriteThemesPlaceholder" xml:space="preserve"><value>Terror, Misterio, Aventura...</value></data>
+  <data name="Profile_SeparateWithCommas" xml:space="preserve"><value>Separar con comas</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>Guardar Cambios</value></data>
+
+  <!-- Language Names -->
+  <data name="Lang_English" xml:space="preserve"><value>English</value></data>
+  <data name="Lang_Vietnamese" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Lang_Japanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="Lang_Korean" xml:space="preserve"><value>한국어</value></data>
+  <data name="Lang_Chinese" xml:space="preserve"><value>中文</value></data>
+  <data name="Lang_Thai" xml:space="preserve"><value>ไทย</value></data>
+  <data name="Lang_Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="Lang_German" xml:space="preserve"><value>Deutsch</value></data>
+</root>

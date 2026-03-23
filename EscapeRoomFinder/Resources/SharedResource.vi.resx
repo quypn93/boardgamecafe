@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>Trang chủ</value></data>
+  <data name="Nav_Search" xml:space="preserve"><value>Tìm kiếm</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>Bản đồ</value></data>
+  <data name="Nav_Cities" xml:space="preserve"><value>Thành phố</value></data>
+  <data name="Nav_Themes" xml:space="preserve"><value>Chủ đề</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>Blog</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>Doanh nghiệp</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Nav_SignUp" xml:space="preserve"><value>Đăng ký</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>Đăng xuất</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>Hồ sơ</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>Quản trị</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>Tìm Phòng Escape Gần Bạn</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>Tìm Cuộc Phiêu Lưu Tiếp Theo</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>Khám phá {0} địa điểm với {1} phòng escape trên toàn thế giới</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>Khám phá các phòng escape tốt nhất, đọc đánh giá, so sánh độ khó và đặt chỗ cho cuộc phiêu lưu tiếp theo</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>Tìm phòng escape...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>Tìm kiếm</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>Tất cả quốc gia</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>Tất cả thành phố</value></data>
+  <data name="Home_AllThemes" xml:space="preserve"><value>Tất cả chủ đề</value></data>
+  <data name="Home_VenuesFound" xml:space="preserve"><value>địa điểm được tìm thấy</value></data>
+  <data name="Home_BrowseVenues" xml:space="preserve"><value>Xem địa điểm</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>Xem bản đồ</value></data>
+  <data name="Home_AdvancedFilters" xml:space="preserve"><value>Bộ lọc nâng cao</value></data>
+  <data name="Home_Difficulty" xml:space="preserve"><value>Độ khó</value></data>
+  <data name="Home_Players" xml:space="preserve"><value>Số người chơi</value></data>
+  <data name="Home_SortBy" xml:space="preserve"><value>Sắp xếp theo</value></data>
+  <data name="Home_Apply" xml:space="preserve"><value>Áp dụng</value></data>
+  <data name="Home_Any" xml:space="preserve"><value>Bất kỳ</value></data>
+  <data name="Home_VeryEasy" xml:space="preserve"><value>Rất dễ</value></data>
+  <data name="Home_Easy" xml:space="preserve"><value>Dễ</value></data>
+  <data name="Home_Medium" xml:space="preserve"><value>Trung bình</value></data>
+  <data name="Home_Hard" xml:space="preserve"><value>Khó</value></data>
+  <data name="Home_Expert" xml:space="preserve"><value>Chuyên gia</value></data>
+  <data name="Home_PlayersCount" xml:space="preserve"><value>{0} người chơi</value></data>
+  <data name="Home_Recommended" xml:space="preserve"><value>Đề xuất</value></data>
+  <data name="Home_Rating" xml:space="preserve"><value>Đánh giá</value></data>
+  <data name="Home_Reviews" xml:space="preserve"><value>Nhận xét</value></data>
+  <data name="Home_Rooms" xml:space="preserve"><value>Phòng</value></data>
+  <data name="Home_Name" xml:space="preserve"><value>Tên</value></data>
+  <data name="Home_NoResults" xml:space="preserve"><value>Không tìm thấy phòng escape</value></data>
+  <data name="Home_NoResultsMessage" xml:space="preserve"><value>Hãy thử điều chỉnh bộ lọc tìm kiếm hoặc khám phá thành phố khác.</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>Xóa bộ lọc</value></data>
+  <data name="Home_Showing" xml:space="preserve"><value>Hiển thị {0}-{1} của {2} địa điểm</value></data>
+  <data name="Home_ViewDetails" xml:space="preserve"><value>Xem chi tiết</value></data>
+  <data name="Home_Featured" xml:space="preserve"><value>Nổi bật</value></data>
+  <data name="Home_Verified" xml:space="preserve"><value>Đã xác minh</value></data>
+
+  <!-- Venue Details -->
+  <data name="Venue_Rating" xml:space="preserve"><value>Đánh giá</value></data>
+  <data name="Venue_Reviews" xml:space="preserve"><value>đánh giá</value></data>
+  <data name="Venue_Address" xml:space="preserve"><value>Địa chỉ</value></data>
+  <data name="Venue_Phone" xml:space="preserve"><value>Điện thoại</value></data>
+  <data name="Venue_Website" xml:space="preserve"><value>Website</value></data>
+  <data name="Venue_Hours" xml:space="preserve"><value>Giờ mở cửa</value></data>
+  <data name="Venue_Rooms" xml:space="preserve"><value>Phòng Escape</value></data>
+  <data name="Venue_RoomsAvailable" xml:space="preserve"><value>phòng có sẵn</value></data>
+  <data name="Venue_ViewOnMap" xml:space="preserve"><value>Xem trên bản đồ</value></data>
+  <data name="Venue_GetDirections" xml:space="preserve"><value>Chỉ đường</value></data>
+  <data name="Venue_Difficulty" xml:space="preserve"><value>Độ khó</value></data>
+  <data name="Venue_Players" xml:space="preserve"><value>Số người chơi</value></data>
+  <data name="Venue_Duration" xml:space="preserve"><value>Thời gian</value></data>
+  <data name="Venue_Theme" xml:space="preserve"><value>Chủ đề</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>Hướng dẫn Escape Room theo Thành phố</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>Khám phá phòng escape tại {0} thành phố trên thế giới</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>Khám phá phòng escape tại {0} thành phố ở {1}</value></data>
+  <data name="Blog_VenuesIn" xml:space="preserve"><value>Phòng Escape tại {0}</value></data>
+  <data name="Blog_DiscoverVenues" xml:space="preserve"><value>Khám phá {0} {1} tại {2} với {3} phòng để trải nghiệm.</value></data>
+  <data name="Blog_DiscoverVenuesSimple" xml:space="preserve"><value>Khám phá {0} {1} phòng escape tại {2}.</value></data>
+  <data name="Blog_Venue" xml:space="preserve"><value>địa điểm</value></data>
+  <data name="Blog_Venues" xml:space="preserve"><value>địa điểm</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>Hiển thị tất cả thành phố</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>Lọc theo quốc gia</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>Tất cả quốc gia</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>Trang</value></data>
+  <data name="Blog_Of" xml:space="preserve"><value>của</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>thành phố được tìm thấy</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>Không tìm thấy thành phố</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>Chúng tôi chưa thu thập dữ liệu. Vui lòng quay lại sau!</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>Thống kê nhanh</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>Thành phố</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>Quốc gia</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>Xem theo quốc gia</value></data>
+  <data name="Blog_FindVenuesNearYou" xml:space="preserve"><value>Tìm Escape Room Gần Bạn</value></data>
+  <data name="Blog_FindVenuesDesc" xml:space="preserve"><value>Sử dụng bản đồ tương tác để khám phá phòng escape trong khu vực của bạn.</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>Mở bản đồ</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0} thêm</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>Khám phá các phòng escape tốt nhất gần bạn. Xem địa điểm, đọc đánh giá, so sánh độ khó và tìm điểm đến tiếp theo.</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>Khám phá</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>Pháp lý</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Chính sách bảo mật</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>Điều khoản dịch vụ</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>Liên hệ</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>Bạn có phòng escape muốn thêm? Sở hữu địa điểm và muốn cập nhật thông tin? Hãy liên hệ với chúng tôi!</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Escape Room Finder. Bảo lưu mọi quyền.</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>Xem chi tiết</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>Tìm hiểu thêm</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>Gửi</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>Lưu</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Sửa</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Quay lại</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>Tiếp</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>Trước</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>Đang tải...</value></data>
+  <data name="Common_Explore" xml:space="preserve"><value>Khám phá</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>Bản đồ Escape Room</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>Khám phá phòng escape gần bạn</value></data>
+  <data name="Map_VenuesFound" xml:space="preserve"><value>Địa điểm tìm thấy</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>Tìm thành phố hoặc địa chỉ...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>Dùng vị trí của tôi</value></data>
+
+  <!-- Profile Page -->
+  <data name="Profile_Title" xml:space="preserve"><value>Hồ sơ của tôi</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>Chỉnh sửa hồ sơ</value></data>
+  <data name="Profile_Stats" xml:space="preserve"><value>Thống kê</value></data>
+  <data name="Profile_ReviewsWritten" xml:space="preserve"><value>Đánh giá đã viết</value></data>
+  <data name="Profile_RoomsPlayed" xml:space="preserve"><value>Phòng đã chơi</value></data>
+  <data name="Profile_Escapes" xml:space="preserve"><value>Số lần thoát</value></data>
+  <data name="Profile_EscapeRate" xml:space="preserve"><value>Tỷ lệ thoát</value></data>
+  <data name="Profile_Reputation" xml:space="preserve"><value>Điểm uy tín</value></data>
+  <data name="Profile_FirstName" xml:space="preserve"><value>Tên</value></data>
+  <data name="Profile_LastName" xml:space="preserve"><value>Họ</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>Tên hiển thị</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>Giới thiệu</value></data>
+  <data name="Profile_City" xml:space="preserve"><value>Thành phố</value></data>
+  <data name="Profile_Country" xml:space="preserve"><value>Quốc gia</value></data>
+  <data name="Profile_FavoriteThemes" xml:space="preserve"><value>Chủ đề yêu thích</value></data>
+  <data name="Profile_FavoriteThemesPlaceholder" xml:space="preserve"><value>Kinh dị, Bí ẩn, Phiêu lưu...</value></data>
+  <data name="Profile_SeparateWithCommas" xml:space="preserve"><value>Phân cách bằng dấu phẩy</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>Lưu thay đổi</value></data>
+
+  <!-- Language Names -->
+  <data name="Lang_English" xml:space="preserve"><value>English</value></data>
+  <data name="Lang_Vietnamese" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Lang_Japanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="Lang_Korean" xml:space="preserve"><value>한국어</value></data>
+  <data name="Lang_Chinese" xml:space="preserve"><value>中文</value></data>
+  <data name="Lang_Thai" xml:space="preserve"><value>ไทย</value></data>
+  <data name="Lang_Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="Lang_German" xml:space="preserve"><value>Deutsch</value></data>
+</root>

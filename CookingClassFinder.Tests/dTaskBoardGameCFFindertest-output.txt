@@ -1,0 +1,487 @@
+Build started 2/11/2026 3:01:19 AM.
+     1>Project "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" on node 1 (Restore target(s)).
+     1>_GetAllRestoreProjectPathItems:
+         Determining projects to restore...
+       Restore:
+         X.509 certificate chain validation will use the default trust store selected by .NET for code signing.
+         X.509 certificate chain validation will use the default trust store selected by .NET for timestamping.
+         Assets file has not changed. Skipping assets file writing. Path: D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\obj\project.assets.json
+         Assets file has not changed. Skipping assets file writing. Path: D:\Task\BoardGameCFFinder\CookingClassFinder\obj\project.assets.json
+         Restored D:\Task\BoardGameCFFinder\CookingClassFinder\CookingClassFinder.csproj (in 46 ms).
+         Restored D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj (in 46 ms).
+         
+         NuGet Config files used:
+             C:\Users\dell\AppData\Roaming\NuGet\NuGet.Config
+             C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.FallbackLocation.config
+             C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.Offline.config
+         
+         Feeds used:
+             https://api.nuget.org/v3/index.json
+             C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\
+             C:\Program Files\dotnet\library-packs
+         All projects are up-to-date for restore.
+     1>Done Building Project "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" (Restore target(s)).
+   1:7>Project "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" on node 1 (VSTest target(s)).
+     1>BuildProject:
+         Build started, please wait...
+   1:7>Project "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" (1:7) is building "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" (1:8) on node 1 (default targets).
+   1:8>Project "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" (1:8) is building "D:\Task\BoardGameCFFinder\CookingClassFinder\CookingClassFinder.csproj" (2:6) on node 1 (default targets).
+     2>CoreResGen:
+         No resources are out of date with respect to their source files. Skipping resource generation.
+       GenerateTargetFrameworkMonikerAttribute:
+       Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+       CoreGenerateAssemblyInfo:
+       Skipping target "CoreGenerateAssemblyInfo" because all output files are up-to-date with respect to the input files.
+       _DiscoverMvcApplicationParts:
+       Skipping target "_DiscoverMvcApplicationParts" because all output files are up-to-date with respect to the input files.
+       _CoreGenerateRazorAssemblyInfo:
+       Skipping target "_CoreGenerateRazorAssemblyInfo" because all output files are up-to-date with respect to the input files.
+       _GenerateSourceLinkFile:
+         Source Link file 'obj\Debug\net8.0\CookingClassFinder.sourcelink.json' is up-to-date.
+       CoreCompile:
+       Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+       _CreateAppHost:
+       Skipping target "_CreateAppHost" because all output files are up-to-date with respect to the input files.
+       CoreGenerateSatelliteAssemblies:
+       Skipping target "CoreGenerateSatelliteAssemblies" because all output files are up-to-date with respect to the input files.
+       CoreGenerateSatelliteAssemblies:
+       Skipping target "CoreGenerateSatelliteAssemblies" because all output files are up-to-date with respect to the input files.
+       _ProcessScopedCssFiles:
+       Skipping target "_ProcessScopedCssFiles" because it has no outputs.
+       _ProcessScopedCssFiles:
+       Skipping target "_ProcessScopedCssFiles" because it has no outputs.
+       ResolveBuildCompressedStaticWebAssetsConfiguration:
+         Resolved 0 compressed assets for 0 candidate assets.
+       _BuildCopyStaticWebAssetsPreserveNewest:
+       Skipping target "_BuildCopyStaticWebAssetsPreserveNewest" because it has no outputs.
+       _CopyOutOfDateSourceItemsToOutputDirectory:
+       Skipping target "_CopyOutOfDateSourceItemsToOutputDirectory" because all output files are up-to-date with respect to the input files.
+       GenerateBuildDependencyFile:
+       Skipping target "GenerateBuildDependencyFile" because all output files are up-to-date with respect to the input files.
+       GenerateBuildRuntimeConfigurationFiles:
+       Skipping target "GenerateBuildRuntimeConfigurationFiles" because all output files are up-to-date with respect to the input files.
+       CopyFilesToOutputDirectory:
+         CookingClassFinder -> D:\Task\BoardGameCFFinder\CookingClassFinder\bin\Debug\net8.0\CookingClassFinder.dll
+     2>Done Building Project "D:\Task\BoardGameCFFinder\CookingClassFinder\CookingClassFinder.csproj" (default targets).
+     1>GenerateTargetFrameworkMonikerAttribute:
+       Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+       CoreGenerateAssemblyInfo:
+       Skipping target "CoreGenerateAssemblyInfo" because all output files are up-to-date with respect to the input files.
+       _GenerateSourceLinkFile:
+         Source Link file 'obj\Debug\net9.0\CookingClassFinder.Tests.sourcelink.json' is up-to-date.
+       CoreCompile:
+       Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+       _CopyOutOfDateSourceItemsToOutputDirectory:
+       Building target "_CopyOutOfDateSourceItemsToOutputDirectory" partially, because some output files are out of date with respect to their input files.
+         Copying file from "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\obj\Debug\net9.0\MvcTestingAppManifest.json" to "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\bin\Debug\net9.0\MvcTestingAppManifest.json".
+       GenerateBuildDependencyFile:
+       Skipping target "GenerateBuildDependencyFile" because all output files are up-to-date with respect to the input files.
+       GenerateBuildRuntimeConfigurationFiles:
+       Skipping target "GenerateBuildRuntimeConfigurationFiles" because all output files are up-to-date with respect to the input files.
+       CopyFilesToOutputDirectory:
+         CookingClassFinder.Tests -> D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\bin\Debug\net9.0\CookingClassFinder.Tests.dll
+       _MvcCopyDependencyFiles:
+         Copying file from "D:\Task\BoardGameCFFinder\CookingClassFinder\bin\Debug\net8.0\CookingClassFinder.deps.json" to "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\bin\Debug\net9.0\CookingClassFinder.deps.json".
+     1>Done Building Project "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" (default targets).
+     1>BuildProject:
+         Build completed.
+         
+Test run for D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\bin\Debug\net9.0\CookingClassFinder.Tests.dll (.NETCoreApp,Version=v9.0)
+VSTest version 17.12.0 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.0)
+[xUnit.net 00:00:00.08]   Discovering: CookingClassFinder.Tests
+[xUnit.net 00:00:00.12]   Discovered:  CookingClassFinder.Tests
+[xUnit.net 00:00:00.12]   Starting:    CookingClassFinder.Tests
+  Passed CookingClassFinder.Tests.UnitTest1.Test1 [3 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetDurationDisplay_LessThanHour [9 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.City_DefaultValues_AreCorrect [3 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetFeatureTags_ReturnsCorrectTags [4 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.BlogPost_Aliases_WorkCorrectly [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.SchoolSearchPagedResult_HasNextPage [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetTimeAgo_DaysAgo [1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetTimeAgo_HoursAgo [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CrawlSettings_DefaultValues [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.OpeningHourPeriod_GetCloseTime_Correct [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetPriceDisplay_WithGroupPrice [2 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetStudentRange_SameMinMax [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetOpeningHours_Null_ReturnsNull [1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.User_GetFullName_UserName [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetRatingStars_OneStars [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetTimeAgo_JustNow [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetRatingStars_ReturnsCorrectStars [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CuisineTypes_GetAll_ReturnsAllTypes [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_IsOpenNow_NullHours_ReturnsFalse [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetAverageClassRating_NoClasses_ReturnsZero [2 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetTimeAgo_MonthsAgo [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetRatingStars_FullStars [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.BlogPost_DefaultValues [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CrawlHistory_DefaultValues [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetCuisineSpecialtiesList_NullJson_ReturnsEmpty [1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetCuisineSpecialtiesList_WithValidJson [20 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetDietaryTags_ReturnsCorrectTags [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.User_GetFullName_DisplayName [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.OpeningHourPeriod_GetDayName_ReturnsCorrectNames [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetDurationDisplay_HoursAndMinutes [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.SchoolSearchPagedResult_Page2_HasPreviousPage [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetOpeningHours_ValidJson_ReturnsHours [11 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.User_GetFullName_NoName_ReturnsAnonymous [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.SchoolSearchPagedResult_TotalPages_CalculatesCorrectly [< 1 ms]
+  Passed CookingClassFinder.Tests.Controllers.HomeControllerTests.Terms_ReturnsView [73 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetAverageClassRating_WithRatedClasses_CalculatesAverage [3 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.OpeningHourPeriod_GetOpenTime_Correct [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetStudentRange_DifferentMinMax [< 1 ms]
+  Passed CookingClassFinder.Tests.Controllers.HomeControllerTests.Privacy_ReturnsView [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.SchoolSearchPagedResult_LastPage_NoNextPage [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetPriceDisplay_WithPricePerPerson [< 1 ms]
+  Passed CookingClassFinder.Tests.Controllers.HomeControllerTests.About_ReturnsView [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_SetCuisineSpecialties_SerializesCorrectly [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_DefaultValues [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.User_GetFullName_FirstAndLastName [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.SchoolSearchPagedResult_FirstPage_NoPreviousPage [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetDurationDisplay_ExactHours [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetDifficultyBadgeClass_ReturnsCorrectClass [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.DifficultyLevels_GetAll_ReturnsFourLevels [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_GetPriceDisplay_NoPrice [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.City_Id_AliasMapsToCorrectProperty [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.User_GetCookingLevel_ReturnsCorrectLevels [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetAttributes_ValidJson_ReturnsDict [1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_DefaultValues_AreCorrect [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetCuisineSpecialtiesList_InvalidJson_ReturnsEmpty [2 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingClass_DefaultValues_AreCorrect [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_GetAttributes_Null_ReturnsNull [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.Review_GetTimeAgo_YearsAgo [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.User_DefaultValues_AreCorrect [< 1 ms]
+  Passed CookingClassFinder.Tests.Models.DomainModelTests.CookingSchool_IsOpenNow_InvalidJson_ReturnsFalse [< 1 ms]
+  Passed CookingClassFinder.Tests.Controllers.HomeControllerTests.Index_PassesSearchParams_ToService [55 ms]
+  Passed CookingClassFinder.Tests.Controllers.HomeControllerTests.Index_ReturnsViewWithSchools [4 ms]
+  Passed CookingClassFinder.Tests.Controllers.HomeControllerTests.Index_SetsViewBagProperties [49 ms]
+  Passed CookingClassFinder.Tests.Controllers.HomeControllerTests.ForBusiness_ReturnsView [< 1 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.UpdateCityMaxResults_ValidCity_Updates [897 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.AddReview_UserNotAuth_ReturnsUnauthorized [952 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.AddReview_SchoolNotFound_ReturnsNotFound [3 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.Details_NonExistent_ReturnsNotFound [3 ms]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.CityGuide_NonExistent_ReturnsNotFound [980 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostsByCuisineAsync_NoMatch_ReturnsEmpty [980 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.CrawlCityAsync_NonExistentCity_ReturnsFailure [980 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.AddReview_ValidReview_CreatesAndRedirects [21 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.Stop_SetsIsRunningFalse [4 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostsByCuisineAsync_ExistingCuisine_ReturnsPosts [6 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.IncrementViewCountAsync_IncrementsCount [3 ms]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.Post_DraftPost_ReturnsNotFound [10 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.GetSchool_ExistingActiveSchool_ReturnsSchool [1 s]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.Post_ExistingPublished_ReturnsView [15 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.SearchSchools_NullQuery_ReturnsEmpty [3 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPublishedPostsAsync_Pagination_SecondPage [23 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Dashboard_CountsPendingReviews [119 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_VegetarianFilter_Works [1 s]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.BulkCrawlCities_ValidIds_CrawlsEachCity [4 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.SeedCitiesAsync_EmptyDb_SeedsCities [37 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.DeletePostAsync_NonExistent_ReturnsFalse [10 ms]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.CityGuide_ExistingCity_ReturnsView [22 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.UpdateSchoolRatingAsync_NoReviews_SetsNull [8 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.CreatePostAsync_SetsCreatedAt [6 ms]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.Post_NonExistent_ReturnsNotFound [3 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.CreatePostAsync_DuplicateTitle_GeneratesUniqueSlug [9 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPublishedPostsAsync_EmptyPage_ReturnsEmpty [8 ms]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.Cities_ReturnsCitiesWithSchools [18 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.GetCuisines_ReturnsGroupedCuisines [43 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPublishedPostsAsync_ReturnsOnlyPublished [3 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.ClassDetails_InactiveClass_ReturnsNotFound [75 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetFeaturedSchoolsAsync_ReturnsPremiumSchools [27 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.UpdatePostAsync_SetsUpdatedAt [4 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.FullSchoolCRUD_CreateUpdateDelete [1 s]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.Index_WithPagination_SkipsCorrectly [9 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.Details_ExistingSchool_ReturnsView [4 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.ClassDetails_NonExistent_ReturnsNotFound [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.SearchSchools_ValidQuery_ReturnsResults [11 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.DeletePostAsync_ExistingPost_ReturnsTrue [7 ms]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.Index_ReturnsPublishedPosts [10 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.GetSchool_InactiveSchool_ReturnsNotFound [6 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.UpdatePostAsync_PublishDraft_SetsPublishedAt [7 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.ClassDetails_ExistingClass_ReturnsView [10 ms]
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.Post_ExistingPublished_IncrementsViewCount [3 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.GetSchool_NonExistent_ReturnsNotFound [2 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostByIdAsync_ExistingId_ReturnsPost [2 ms]
+[xUnit.net 00:00:01.24]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.24]       Stack Trace:
+[xUnit.net 00:00:01.24]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(334,0): at CookingClassFinder.Controllers.AdminController.DeleteCity(Int32 id)
+[xUnit.net 00:00:01.24]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(365,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.DeleteCity_ExistingCity_DeletesWithHistory()
+[xUnit.net 00:00:01.24]         --- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.SearchSchools_ShortQuery_ReturnsEmpty [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.Cuisines_ReturnsView [3 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.DeleteCity_ExistingCity_DeletesWithHistory [43 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.DeleteCity(Int32 id) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 334
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.DeleteCity_ExistingCity_DeletesWithHistory() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 365
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Controllers.BlogControllerTests.CityGuide_SetsSchoolsInViewBag [3 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPublishedPostsAsync_OrderedByPublishedDate [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.SearchSchools_EmptyQuery_ReturnsEmpty [2 ms]
+[xUnit.net 00:00:01.24]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.24]       Stack Trace:
+[xUnit.net 00:00:01.24]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(355,0): at CookingClassFinder.Controllers.AdminController.StopAutoCrawl()
+[xUnit.net 00:00:01.24]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(380,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.StopAutoCrawl_CallsServiceStop()
+[xUnit.net 00:00:01.24]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+[xUnit.net 00:00:01.24]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.CreatePostAsync_UnpublishedPost_NoPublishedAt [3 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.StopAutoCrawl_CallsServiceStop [2 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.StopAutoCrawl() in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 355
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.StopAutoCrawl_CallsServiceStop() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 380
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_SortByName_SortsCorrectly [27 ms]
+  Passed CookingClassFinder.Tests.Controllers.SchoolControllerTests.ByCuisine_ReturnsFilteredSchools [6 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.IncrementViewCountAsync_NonExistent_DoesNotThrow [3 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Dashboard_ReturnsViewWithStats [5 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.CreatePostAsync_PublishedPost_SetsPublishedAt [3 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostBySlugAsync_PublishedPost_ReturnsPost [3 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.CrawlCity_NonExistentCity_ReturnsFailure [3 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.FullSearchPipeline_CityAndCuisineFilter_WorksTogether [36 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.BulkCrawlCities_Null_ReturnsFailure [6 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.CreatePostAsync_GeneratesSlug [7 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostByIdAsync_InvalidId_ReturnsNull [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.UpdateCityMaxResults_ClampsToRange [4 ms]
+[xUnit.net 00:00:01.26]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.26]       Stack Trace:
+[xUnit.net 00:00:01.26]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(274,0): at CookingClassFinder.Controllers.AdminController.AddCity(String name, String country, String region, Int32 maxResults)
+[xUnit.net 00:00:01.26]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(305,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.AddCity_ValidCity_AddsAndRedirects()
+[xUnit.net 00:00:01.26]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.27]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.27]       Stack Trace:
+[xUnit.net 00:00:01.27]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(284,0): at CookingClassFinder.Controllers.AdminController.ToggleCityActive(Int32 id)
+[xUnit.net 00:00:01.27]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(348,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_NonExistent_RedirectsWithError()
+[xUnit.net 00:00:01.27]         --- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostBySlugAsync_DraftPost_ReturnsNull [2 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.AddCity_ValidCity_AddsAndRedirects [3 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.AddCity(String name, String country, String region, Int32 maxResults) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 274
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.AddCity_ValidCity_AddsAndRedirects() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 305
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostBySlugAsync_InvalidSlug_ReturnsNull [2 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostByIdAsync_DraftPost_ReturnsPost [2 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_NonExistent_RedirectsWithError [4 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.ToggleCityActive(Int32 id) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 284
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_NonExistent_RedirectsWithError() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 348
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.FilterSchoolsAsync_ByMaxPrice_ReturnsAffordable [30 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.RecordAffiliateClick_NullClickType_DefaultsToWebsite [35 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostsByCityAsync_ExistingCity_ReturnsPosts [8 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.RecordAffiliateClick_ValidRequest_SavesClick [5 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPublishedPostsAsync_Pagination_FirstPage [3 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.FullSearchPipeline_TextSearch_ReturnsCorrectResults [28 ms]
+  Passed CookingClassFinder.Tests.Services.BlogServiceTests.GetPostsByCityAsync_NoMatch_ReturnsEmpty [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.ApiControllerTests.GetNearbySchools_CallsSchoolService [5 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.City_HasCrawlHistories_RelationshipWorks [15 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.UpdateSchoolAsync_UpdatesTimestamp [28 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.SlugUniqueness_Schools [5 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.ReviewPipeline_AddAndUpdateRating [7 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.FilterSchoolsAsync_ByMinRating_ReturnsHighRated [21 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Reviews_NoFilter_ReturnsAll [55 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.School_HasClasses_RelationshipWorks [18 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetAllCitiesAsync_ReturnsDistinctActiveCities [11 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Classes_ReturnsAllClasses [30 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.Class_BelongsToSchool [29 ms]
+[xUnit.net 00:00:01.39]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.39]       Stack Trace:
+[xUnit.net 00:00:01.39]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(363,0): at CookingClassFinder.Controllers.AdminController.SeedCities()
+[xUnit.net 00:00:01.39]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(394,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.SeedCities_CallsServiceSeedCities()
+[xUnit.net 00:00:01.39]         --- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetBySlugAsync_InvalidSlug_ReturnsNull [35 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.AllActiveSchools_HaveRequiredFields [12 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.FullBlogPipeline_CreatePublishView [5 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Cities_ReturnsAllCities [30 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.BulkCrawlCities_EmptyArray_ReturnsFailure [2 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.School_HasReviews_RelationshipWorks [14 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.SeedCities_CallsServiceSeedCities [3 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.SeedCities() in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 363
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.SeedCities_CallsServiceSeedCities() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 394
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.SlugUniqueness_Cities [4 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_OnlineFilter_Works [26 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.SlugUniqueness_BlogPosts [3 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.AllActiveCities_HaveRequiredFields [6 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.DeleteSchoolAsync_NonExistent_ReturnsFalse [11 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_InactiveSchool_ReturnsNull [13 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Reviews_ApprovedFilter_ReturnsApproved [50 ms]
+[xUnit.net 00:00:01.45]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:01.45]       Expected: 2
+[xUnit.net 00:00:01.45]       Actual:   3
+[xUnit.net 00:00:01.45]       Stack Trace:
+[xUnit.net 00:00:01.45]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Services\SchoolServiceTests.cs(70,0): at CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_IncludesApprovedReviewsOnly()
+[xUnit.net 00:00:01.45]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.45]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.45]       Stack Trace:
+[xUnit.net 00:00:01.45]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(121,0): at CookingClassFinder.Controllers.AdminController.DeleteReview(Int32 id)
+[xUnit.net 00:00:01.45]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(158,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.DeleteReview_ExistingReview_DeletesAndRedirects()
+[xUnit.net 00:00:01.45]         --- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchByTextAsync_PremiumSchoolsFirst [21 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_DefaultRequest_ReturnsAllActive [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.ApproveReview_NonExistent_StillRedirects [7 ms]
+  Failed CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_IncludesApprovedReviewsOnly [3 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   3
+  Stack Trace:
+     at CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_IncludesApprovedReviewsOnly() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Services\SchoolServiceTests.cs:line 70
+--- End of stack trace from previous location ---
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.DeleteReview_ExistingReview_DeletesAndRedirects [3 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.DeleteReview(Int32 id) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 121
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.DeleteReview_ExistingReview_DeletesAndRedirects() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 158
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_NonExistentId_ReturnsNull [2 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.FullSearchPipeline_PaginationThroughAllPages [49 ms]
+[xUnit.net 00:00:01.47]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.47]       Stack Trace:
+[xUnit.net 00:00:01.47]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(109,0): at CookingClassFinder.Controllers.AdminController.ApproveReview(Int32 id)
+[xUnit.net 00:00:01.47]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(133,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.ApproveReview_ExistingReview_ApprovesAndRedirects()
+[xUnit.net 00:00:01.47]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.47]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.47]       Stack Trace:
+[xUnit.net 00:00:01.47]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(258,0): at CookingClassFinder.Controllers.AdminController.AddCity(String name, String country, String region, Int32 maxResults)
+[xUnit.net 00:00:01.47]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(317,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.AddCity_EmptyName_RedirectsWithError()
+[xUnit.net 00:00:01.47]         --- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Cities_USRegionFilter_Works [11 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.ApproveReview_ExistingReview_ApprovesAndRedirects [2 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.ApproveReview(Int32 id) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 109
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.ApproveReview_ExistingReview_ApprovesAndRedirects() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 133
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.CrawlCity_ValidCity_CallsCrawlService [3 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetNearbySchoolsAsync_EmptyForRemoteLocation [17 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.AddCity_EmptyName_RedirectsWithError [2 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.AddCity(String name, String country, String region, Int32 maxResults) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 258
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.AddCity_EmptyName_RedirectsWithError() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 317
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_ClassSummariesIncluded [3 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchByTextAsync_MatchingName_ReturnsSchools [4 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Cities_SearchFilter_Works [13 ms]
+[xUnit.net 00:00:01.50]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.50]       Stack Trace:
+[xUnit.net 00:00:01.50]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(291,0): at CookingClassFinder.Controllers.AdminController.ToggleCityActive(Int32 id)
+[xUnit.net 00:00:01.50]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(330,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_ActiveCity_DeactivatesIt()
+[xUnit.net 00:00:01.50]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:01.50]       System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:01.51]       Stack Trace:
+[xUnit.net 00:00:01.51]         D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs(291,0): at CookingClassFinder.Controllers.AdminController.ToggleCityActive(Int32 id)
+[xUnit.net 00:00:01.51]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs(339,0): at CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_InactiveCity_ActivatesIt()
+[xUnit.net 00:00:01.51]         --- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Cities_FailedFilter_Works [10 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_ActiveCity_DeactivatesIt [3 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.ToggleCityActive(Int32 id) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 291
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_ActiveCity_DeactivatesIt() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 330
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_KidsFriendlyFilter_Works [24 ms]
+  Failed CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_InactiveCity_ActivatesIt [2 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at CookingClassFinder.Controllers.AdminController.ToggleCityActive(Int32 id) in D:\Task\BoardGameCFFinder\CookingClassFinder\Controllers\AdminController.cs:line 291
+   at CookingClassFinder.Tests.Controllers.AdminControllerTests.ToggleCityActive_InactiveCity_ActivatesIt() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Controllers\AdminControllerTests.cs:line 339
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_Pagination_WorksCorrectly [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetFeaturedSchoolsAsync_RespectsCount [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchByTextAsync_MatchingCity_ReturnsSchools [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Cities_NeverCrawledFilter_Works [9 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetNearbySchoolsAsync_OrderedByDistance [7 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchByTextAsync_RespectsLimit [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_Page2_ReturnsRemainder [2 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Schools_ReturnsAllSchools [9 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Index_RedirectsToDashboard [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_SortByRating_SortsCorrectly [20 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetAllCuisineTypesAsync_ReturnsDistinctActiveCuisines [5 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.CreateSchoolAsync_SetsTimestamps [2 ms]
+[xUnit.net 00:00:01.56]       Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:01.56]       Expected: 2
+[xUnit.net 00:00:01.56]       Actual:   3
+[xUnit.net 00:00:01.56]       Stack Trace:
+[xUnit.net 00:00:01.56]         D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Services\SchoolServiceTests.cs(59,0): at CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_IncludesActiveClassesOnly()
+[xUnit.net 00:00:01.56]         --- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetBySlugAsync_InactiveSchoolSlug_ReturnsNull [2 ms]
+  Failed CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_IncludesActiveClassesOnly [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 2
+Actual:   3
+  Stack Trace:
+     at CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_IncludesActiveClassesOnly() in D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\Services\SchoolServiceTests.cs:line 59
+--- End of stack trace from previous location ---
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetTotalClassCountAsync_CountsActiveOnly [4 ms]
+  Passed CookingClassFinder.Tests.Controllers.AdminControllerTests.Reviews_PendingFilter_ReturnsPending [39 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.FilterSchoolsAsync_ByCity_ReturnsMatchingSchools [20 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.UpdateSchoolRatingAsync_NonExistentSchool_DoesNotThrow [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.DeleteSchoolAsync_SoftDeletes [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchByTextAsync_ExcludesInactiveSchools [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.FilterSchoolsAsync_ByCuisine_ReturnsMatchingSchools [22 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.UpdateSchoolRatingAsync_RecalculatesFromApprovedReviews [3 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchByTextAsync_NoMatch_ReturnsEmpty [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.FilterSchoolsAsync_MultipleFilters_CombinesCorrectly [21 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetNearbySchoolsAsync_ExcludesInactive [3 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_WithQuery_FiltersResults [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.FilterSchoolsAsync_ByDifficulty_ReturnsMatching [23 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchByTextAsync_CaseInsensitive [2 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_VeganFilter_Works [24 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetTotalSchoolCountAsync_CountsActiveOnly [4 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.CrawlCityAsync_ValidCity_UpdatesCityMetadata [533 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.GetNextCitiesToCrawlAsync_ReturnsActiveCitiesDueForCrawl [3 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetBySlugAsync_ValidSlug_ReturnsSchool [11 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_PriceRange_CalculatedCorrectly [3 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetNearbySchoolsAsync_FindsSchoolsInRadius [3 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.CreateSchoolAsync_CreatesWithSlug [4 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.SearchSchoolsPagedAsync_WithCityFilter_FiltersResults [23 ms]
+  Passed CookingClassFinder.Tests.Services.SchoolServiceTests.GetByIdAsync_ExistingActiveSchool_ReturnsSchool [2 ms]
+  Passed CookingClassFinder.Tests.Integration.DatabaseIntegrationTests.FullCrawlPipeline_CrawlCity_CompleteWorkflow [529 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.CrawlCityAsync_ValidCity_CreatesCrawlHistory [516 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.GetNextCitiesToCrawlAsync_ExcludesInactiveCities [5 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.GetNextCitiesToCrawlAsync_OrderedByCrawlCount [5 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.CrawlCityAsync_ValidCity_ReturnsSuccess [511 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.CrawlCityAsync_SetsNextCrawlAt_7DaysLater [520 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.GetNextCitiesToCrawlAsync_RespectsCount [2 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.SeedCitiesAsync_IncludesUSAndInternationalCities [9 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.GetNextCitiesToCrawlAsync_ExcludesFutureCrawlSchedule [3 ms]
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.SeedCitiesAsync_WhenCitiesExist_DoesNotDuplicate [2 ms]
+[xUnit.net 00:00:03.30]   Finished:    CookingClassFinder.Tests
+  Passed CookingClassFinder.Tests.Services.AutoCrawlServiceTests.IsRunning_InitiallyFalse [1 ms]
+
+Total tests: 235
+     Passed: 223
+     Failed: 12
+ Total time: 3.7687 Seconds
+       _VSTestConsole:
+         MSB4181: The "VSTestTask" task returned false but did not log an error.
+     1>Done Building Project "D:\Task\BoardGameCFFinder\CookingClassFinder.Tests\CookingClassFinder.Tests.csproj" (VSTest target(s)) -- FAILED.
+
+Build FAILED.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:06.58
+
+Workload updates are available. Run `dotnet workload list` for more information.

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(del:*)",
+      "Bash(dotnet build:*)",
+      "Bash(pwsh -Command \"& { $env:PLAYWRIGHT_BROWSERS_PATH=''0''; dotnet tool list -g | Select-String playwright }\")",
+      "Bash(where:*)",
+      "Bash(dotnet test:*)"
+    ]
+  }
+}

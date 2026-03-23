@@ -1,0 +1,100 @@
+@model IEnumerable<BlogPost>
+@{
+    ViewData["Title"] = "Cooking Blog";
+}
+
+<div class="container my-5">
+    <h1>Cooking Blog</h1>
+    <p class="lead text-muted">Tips, recipes, and insights from the culinary world</p>
+
+    <div class="row">
+        <div class="col-lg-8">
+            @foreach (var post in Model)
+            {
+                <article class="card mb-4">
+                    @if (!string.IsNullOrEmpty(post.FeaturedImageUrl))
+                    {
+                        <img src="@post.FeaturedImageUrl" class="card-img-top" style="height: 250px; object-fit: cover;" alt="@post.Title">
+                    }
+                    <div class="card-body">
+                        <div class="mb-2">
+                            @if (post.IsFeatured)
+                            {
+                                <span class="badge bg-warning me-1">Featured</span>
+                            }
+                            @if (!string.IsNullOrEmpty(post.RelatedCuisine))
+                            {
+                                <span class="badge bg-secondary">@post.RelatedCuisine</span>
+                            }
+                        </div>
+                        <h2 class="card-title h4">
+                            <a asp-action="Post" asp-route-slug="@post.Slug" class="text-decoration-none text-dark">@post.Title</a>
+                        </h2>
+                        <p class="text-muted small">
+                            <i class="bi bi-person"></i> @post.Author
+                            <span class="mx-2">|</span>
+                            <i class="bi bi-calendar"></i> @post.PublishedAt?.ToString("MMMM dd, yyyy")
+                            <span class="mx-2">|</span>
+                            <i class="bi bi-eye"></i> @post.ViewCount views
+                        </p>
+                        <p class="card-text">@post.Excerpt</p>
+                        <a asp-action="Post" asp-route-slug="@post.Slug" class="btn btn-outline-primary">Read More</a>
+                    </div>
+                </article>
+            }
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-newspaper display-1 text-muted"></i>
+                    <p class="text-muted mt-3">No blog posts yet. Check back soon!</p>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Popular Cuisines</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">Italian</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">French</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">Japanese</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">Thai</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">Mexican</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">Baking</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">Pastry</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">City Guides</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><a asp-action="Cities">Browse all city guides</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Newsletter</h5>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">Get the latest cooking tips and class recommendations.</p>
+                    <form>
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Your email">
+                            <button class="btn btn-primary" type="submit">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

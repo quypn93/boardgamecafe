@@ -1,0 +1,137 @@
+@model IEnumerable<VRGame>
+@{
+    ViewData["Title"] = "Manage VR Games";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-controller me-2"></i>Manage VR Games</h2>
+        <a href="/admin/games/create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Add Game
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Search games..." value="@ViewBag.Search">
+                </div>
+                <div class="col-md-2">
+                    <select name="platform" class="form-select">
+                        <option value="">All Platforms</option>
+                        @if (ViewBag.Platform == "Quest") { <option value="Quest" selected>Meta Quest</option> } else { <option value="Quest">Meta Quest</option> }
+                        @if (ViewBag.Platform == "PCVR") { <option value="PCVR" selected>PC VR</option> } else { <option value="PCVR">PC VR</option> }
+                        @if (ViewBag.Platform == "PSVR") { <option value="PSVR" selected>PlayStation VR</option> } else { <option value="PSVR">PlayStation VR</option> }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="genre" class="form-select">
+                        <option value="">All Genres</option>
+                        @if (ViewBag.Genre == "Action") { <option value="Action" selected>Action</option> } else { <option value="Action">Action</option> }
+                        @if (ViewBag.Genre == "Adventure") { <option value="Adventure" selected>Adventure</option> } else { <option value="Adventure">Adventure</option> }
+                        @if (ViewBag.Genre == "Horror") { <option value="Horror" selected>Horror</option> } else { <option value="Horror">Horror</option> }
+                        @if (ViewBag.Genre == "Puzzle") { <option value="Puzzle" selected>Puzzle</option> } else { <option value="Puzzle">Puzzle</option> }
+                        @if (ViewBag.Genre == "Sports") { <option value="Sports" selected>Sports</option> } else { <option value="Sports">Sports</option> }
+                        @if (ViewBag.Genre == "Simulation") { <option value="Simulation" selected>Simulation</option> } else { <option value="Simulation">Simulation</option> }
+                        @if (ViewBag.Genre == "Social") { <option value="Social" selected>Social</option> } else { <option value="Social">Social</option> }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="multiplayer" class="form-select">
+                        <option value="">All Types</option>
+                        @if (ViewBag.Multiplayer == "true") { <option value="true" selected>Multiplayer</option> } else { <option value="true">Multiplayer</option> }
+                        @if (ViewBag.Multiplayer == "coop") { <option value="coop" selected>Co-op</option> } else { <option value="coop">Co-op</option> }
+                        @if (ViewBag.Multiplayer == "false") { <option value="false" selected>Single Player</option> } else { <option value="false">Single Player</option> }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-outline-primary me-2">Filter</button>
+                    <a href="/admin/games" class="btn btn-outline-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Games Grid -->
+    <div class="row">
+        @if (Model.Any())
+        {
+            foreach (var game in Model)
+            {
+                <div class="col-md-3 col-lg-2 mb-4">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(game.ImageUrl))
+                        {
+                            <img src="@game.ImageUrl" class="card-img-top" alt="@game.Name" style="height: 150px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 150px;">
+                                <i class="bi bi-controller text-white" style="font-size: 3rem;"></i>
+                            </div>
+                        }
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1" title="@game.Name">
+                                @(game.Name.Length > 20 ? game.Name.Substring(0, 20) + "..." : game.Name)
+                            </h6>
+                            <div class="mb-1">
+                                <span class="badge bg-primary" style="font-size: 0.7rem;">@game.VRPlatform</span>
+                                @if (game.IsMultiplayer)
+                                {
+                                    <span class="badge bg-success" style="font-size: 0.7rem;">MP</span>
+                                }
+                            </div>
+                            <small class="text-muted">@game.Genre</small>
+                        </div>
+                        <div class="card-footer p-2">
+                            <div class="btn-group btn-group-sm w-100">
+                                <a href="/admin/games/edit/@game.Id" class="btn btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-outline-danger" onclick="deleteGame(@game.Id, '@game.Name.Replace("'", "\\'"))')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5 text-muted">
+                <i class="bi bi-controller display-4 d-block mb-2"></i>
+                <p>No games found</p>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="?page=@i&search=@ViewBag.Search&platform=@ViewBag.Platform&genre=@ViewBag.Genre">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+@section Scripts {
+    <script>
+        function deleteGame(id, name) {
+            if (confirm(`Are you sure you want to delete "${name}"?`)) {
+                fetch(`/admin/games/delete/${id}`, { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) window.location.reload();
+                        else alert('Failed to delete game');
+                    });
+            }
+        }
+    </script>
+}

@@ -5,6 +5,8 @@
     var cafe = ViewBag.Cafe as BoardGameCafeFinder.Models.Domain.Cafe;
     var plans = ViewBag.Plans as Dictionary<string, BoardGameCafeFinder.Controllers.ListingPlan>;
     var selectedPlan = ViewBag.SelectedPlan as string ?? "Premium";
+    var isVietnam = (bool)(ViewBag.IsVietnam ?? false);
+    var paymentProvider = ViewBag.PaymentProvider as string ?? "LemonSqueezy";
 }
 
 <!-- Hero Section -->
@@ -300,6 +302,22 @@
                     </div>
                 </div>
                 <div class="card-footer bg-light">
+                    <div class="d-flex align-items-center mb-1">
+                        @if (isVietnam)
+                        {
+                            <small class="text-muted">
+                                <i class="bi bi-credit-card me-1"></i>
+                                Payment via @paymentProvider
+                            </small>
+                        }
+                        else
+                        {
+                            <small class="text-muted">
+                                <i class="bi bi-credit-card me-1"></i>
+                                Payment via LemonSqueezy
+                            </small>
+                        }
+                    </div>
                     <small class="text-muted">
                         <i class="bi bi-shield-check me-1"></i>
                         Secure payment processing

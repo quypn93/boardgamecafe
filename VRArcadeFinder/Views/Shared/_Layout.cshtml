@@ -1,0 +1,142 @@
+@{
+    var currentCulture = Context.Items["Culture"]?.ToString() ?? "en";
+}
+<!DOCTYPE html>
+<html lang="@currentCulture">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @SharedLocalizer["Meta_SiteTitle"]</title>
+    <meta name="description" content="@(ViewBag.MetaDescription ?? SharedLocalizer["Meta_SiteDescription"].Value)" />
+    <meta name="keywords" content="@SharedLocalizer["Meta_Keywords"]" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="apple-touch-icon" href="~/images/logo.svg" />
+
+    <!-- hreflang for SEO -->
+    @await Html.PartialAsync("_HreflangTags")
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="@(currentCulture == "en" ? "/" : $"/{currentCulture}")">
+                    <img src="~/images/logo-white.svg" alt="@SharedLocalizer["Meta_SiteTitle"]" height="36" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-search me-1"></i>@SharedLocalizer["Home_BrowseArcades"]
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Map" asp-action="Index">
+                                <i class="bi bi-map me-1"></i>@SharedLocalizer["Nav_MapView"]
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Blog" asp-action="Index">
+                                <i class="bi bi-journal-text me-1"></i>@SharedLocalizer["Nav_Blog"]
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Listing" asp-action="Pricing">
+                                <i class="bi bi-star me-1"></i>@SharedLocalizer["Nav_AddArcade"]
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav align-items-center">
+                        <!-- Language Switcher -->
+                        <li class="nav-item me-2">
+                            @await Html.PartialAsync("_LanguageSwitcher")
+                        </li>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
+                                        <i class="bi bi-gear me-1"></i>@SharedLocalizer["Nav_AdminDashboard"]
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle me-1"></i>@User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">@SharedLocalizer["Nav_Profile"]</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item">@SharedLocalizer["Nav_Logout"]</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">@SharedLocalizer["Nav_Login"]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">@SharedLocalizer["Nav_Register"]</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="~/images/logo-white.svg" alt="@SharedLocalizer["Meta_SiteTitle"]" height="40" class="mb-3" />
+                    <p class="text-muted">@SharedLocalizer["Footer_Description"]</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>@SharedLocalizer["Nav_Home"]</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="@(currentCulture == "en" ? "/" : $"/{currentCulture}")" class="text-muted">@SharedLocalizer["Home_BrowseArcades"]</a></li>
+                        <li><a asp-controller="Map" asp-action="Index" class="text-muted">@SharedLocalizer["Nav_MapView"]</a></li>
+                        <li><a asp-controller="Blog" asp-action="Index" class="text-muted">@SharedLocalizer["Nav_Blog"]</a></li>
+                        <li><a asp-controller="Listing" asp-action="SubmitArcade" class="text-muted">@SharedLocalizer["Nav_AddArcade"]</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>@SharedLocalizer["Footer_About"]</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-controller="Home" asp-action="Privacy" class="text-muted">@SharedLocalizer["Footer_Privacy"]</a></li>
+                        <li><a asp-controller="Home" asp-action="Terms" class="text-muted">@SharedLocalizer["Footer_Terms"]</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact" class="text-muted">@SharedLocalizer["Footer_Contact"]</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-3" />
+            <p class="text-center text-muted mb-0">&copy; @DateTime.Now.Year @SharedLocalizer["Meta_SiteTitle"]. @SharedLocalizer["Footer_Copyright"]</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

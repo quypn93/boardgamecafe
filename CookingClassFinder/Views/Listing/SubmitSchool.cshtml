@@ -1,0 +1,134 @@
+@{
+    ViewData["Title"] = "Submit Your Cooking School";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1>Submit Your Cooking School</h1>
+            <p class="lead text-muted">Get your cooking school listed on CookingClassFinder</p>
+
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="SubmitSchool" method="post">
+                        <h5 class="mb-3">Basic Information</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">School Name *</label>
+                            <input type="text" name="Name" class="form-control" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" name="Email" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" name="Phone" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" name="Website" class="form-control" placeholder="https://" />
+                        </div>
+
+                        <hr class="my-4" />
+                        <h5 class="mb-3">Location</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address *</label>
+                            <input type="text" name="Address" class="form-control" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">City *</label>
+                                <input type="text" name="City" class="form-control" required />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">State/Province</label>
+                                <input type="text" name="State" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Country *</label>
+                                <input type="text" name="Country" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+                        <h5 class="mb-3">School Details</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="Description" class="form-control" rows="4" placeholder="Tell us about your cooking school..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cuisine Specialties</label>
+                            <input type="text" name="CuisineSpecialties" class="form-control" placeholder="e.g., Italian, French, Asian" />
+                            <small class="text-muted">Separate multiple cuisines with commas</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input type="checkbox" name="HasProfessionalKitchen" class="form-check-input" id="hasProfessionalKitchen" />
+                                    <label class="form-check-label" for="hasProfessionalKitchen">Professional Kitchen</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="OffersPrivateClasses" class="form-check-input" id="offersPrivateClasses" />
+                                    <label class="form-check-label" for="offersPrivateClasses">Private Classes Available</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="OffersCorporateEvents" class="form-check-input" id="offersCorporateEvents" />
+                                    <label class="form-check-label" for="offersCorporateEvents">Corporate Events</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input type="checkbox" name="OffersKidsClasses" class="form-check-input" id="offersKidsClasses" />
+                                    <label class="form-check-label" for="offersKidsClasses">Kids Classes</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="HasParking" class="form-check-input" id="hasParking" />
+                                    <label class="form-check-label" for="hasParking">Parking Available</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="IsWheelchairAccessible" class="form-check-input" id="isWheelchairAccessible" />
+                                    <label class="form-check-label" for="isWheelchairAccessible">Wheelchair Accessible</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg mt-3">Submit School</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Why List Your School?</h5>
+                    <ul class="mb-0">
+                        <li class="mb-2">Reach thousands of potential students</li>
+                        <li class="mb-2">Showcase your classes and specialties</li>
+                        <li class="mb-2">Collect and display reviews</li>
+                        <li class="mb-2">Free basic listing</li>
+                        <li>Premium options for more visibility</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Already Listed?</h5>
+                    <p class="card-text">If your school is already on our site and you want to manage it:</p>
+                    <a asp-action="Claim" class="btn btn-outline-primary w-100">Claim Your Listing</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -70,5 +70,82 @@ public static class AdminSeeder
                 logger.LogInformation("Added Admin role to existing user: {Email}", adminEmail);
             }
         }
+
+        // Create test CafeOwner user
+        const string ownerEmail = "owner@bgcfinder.com";
+        const string ownerPassword = "Owner@123";
+
+        var ownerUser = await userManager.FindByEmailAsync(ownerEmail);
+        if (ownerUser == null)
+        {
+            ownerUser = new User
+            {
+                UserName = ownerEmail,
+                Email = ownerEmail,
+                FirstName = "Cafe",
+                LastName = "Owner",
+                DisplayName = "Test Cafe Owner",
+                IsCafeOwner = true,
+                EmailConfirmed = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var result = await userManager.CreateAsync(ownerUser, ownerPassword);
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(ownerUser, "CafeOwner");
+                logger.LogInformation("Created cafe owner user: {Email}", ownerEmail);
+            }
+            else
+            {
+                logger.LogError("Failed to create cafe owner user: {Errors}",
+                    string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+        else
+        {
+            if (!await userManager.IsInRoleAsync(ownerUser, "CafeOwner"))
+            {
+                await userManager.AddToRoleAsync(ownerUser, "CafeOwner");
+            }
+        }
+
+        // Create test regular User
+        const string userEmail = "user@bgcfinder.com";
+        const string userPassword = "User@123";
+
+        var regularUser = await userManager.FindByEmailAsync(userEmail);
+        if (regularUser == null)
+        {
+            regularUser = new User
+            {
+                UserName = userEmail,
+                Email = userEmail,
+                FirstName = "Test",
+                LastName = "User",
+                DisplayName = "Test User",
+                EmailConfirmed = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var result = await userManager.CreateAsync(regularUser, userPassword);
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(regularUser, "User");
+                logger.LogInformation("Created regular user: {Email}", userEmail);
+            }
+            else
+            {
+                logger.LogError("Failed to create regular user: {Errors}",
+                    string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+        else
+        {
+            if (!await userManager.IsInRoleAsync(regularUser, "User"))
+            {
+                await userManager.AddToRoleAsync(regularUser, "User");
+            }
+        }
     }
 }

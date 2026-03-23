@@ -1,97 +1,362 @@
-@model List<BlogPost>
+@model List<EscapeRoomFinder.Models.ViewModels.CityBlogItem>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<EscapeRoomFinder.SharedResource> SharedLocalizer
 @{
-    ViewData["Title"] = "Blog - Escape Room Tips & Guides";
+    var countries = ViewBag.Countries as List<string> ?? new List<string>();
+    var selectedCountry = ViewBag.SelectedCountry as string;
+    var currentPage = (int)(ViewBag.Page ?? 1);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var totalItems = (int)(ViewBag.TotalCities ?? 0);
+
+    var pageTitle = !string.IsNullOrEmpty(selectedCountry)
+        ? string.Format(SharedLocalizer["Blog_ExploreCitiesInCountry"].Value, totalItems, selectedCountry)
+        : SharedLocalizer["Blog_Title"].Value;
+
+    var pageDescription = !string.IsNullOrEmpty(selectedCountry)
+        ? string.Format(SharedLocalizer["Blog_ExploreCitiesInCountry"].Value, totalItems, selectedCountry)
+        : string.Format(SharedLocalizer["Blog_ExploreCities"].Value, totalItems);
+
+    ViewData["Title"] = pageTitle;
+    ViewData["Description"] = pageDescription;
+
+    string BuildPageUrl(int page)
+    {
+        var url = $"/blog?page={page}";
+        if (!string.IsNullOrEmpty(selectedCountry))
+        {
+            url += $"&country={Uri.EscapeDataString(selectedCountry)}";
+        }
+        return url;
+    }
 }
 
-<div class="container py-4">
-    <h1 class="mb-4"><i class="bi bi-journal-text"></i> Escape Room Blog</h1>
-
-    @if (ViewBag.City != null)
-    {
-        <div class="alert alert-info">
-            Showing posts about <strong>@ViewBag.City</strong>
-            <a href="/blog" class="ms-2">Clear filter</a>
+<!-- Hero Section -->
+<div class="bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">
+                    <i class="bi bi-journal-richtext me-3"></i>@SharedLocalizer["Blog_Title"]
+                </h1>
+                <p class="lead opacity-90">
+                    @if (!string.IsNullOrEmpty(selectedCountry))
+                    {
+                        @string.Format(SharedLocalizer["Blog_ExploreCitiesInCountry"].Value, totalItems, selectedCountry)
+                    }
+                    else
+                    {
+                        @string.Format(SharedLocalizer["Blog_ExploreCities"].Value, totalItems)
+                    }
+                </p>
+            </div>
         </div>
-    }
+    </div>
+</div>
 
-    @if (ViewBag.Category != null)
-    {
-        <div class="alert alert-info">
-            Category: <strong>@ViewBag.Category</strong>
-            <a href="/blog" class="ms-2">Clear filter</a>
-        </div>
-    }
-
-    @if (Model.Any())
-    {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var post in Model)
-            {
-                <div class="col">
-                    <div class="card h-100">
-                        @if (!string.IsNullOrEmpty(post.FeaturedImage))
+<div class="container py-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Country Filter -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    @if (!string.IsNullOrEmpty(selectedCountry))
+                    {
+                        <span class="badge bg-primary fs-6 me-2">
+                            <i class="bi bi-geo-alt"></i> @selectedCountry
+                        </span>
+                        <a href="/blog" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-x"></i> @SharedLocalizer["Blog_Clear"]
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">@SharedLocalizer["Blog_ShowingAllCities"]</span>
+                    }
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-funnel"></i> @SharedLocalizer["Blog_FilterByCountry"]
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
+                        <li><a class="dropdown-item @(string.IsNullOrEmpty(selectedCountry) ? "active" : "")" href="/blog">@SharedLocalizer["Blog_AllCountries"]</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        @foreach (var country in countries)
                         {
-                            <img src="@post.FeaturedImage" class="card-img-top" alt="@post.Title" style="height: 180px; object-fit: cover;">
+                            <li>
+                                <a class="dropdown-item @(selectedCountry == country ? "active" : "")" href="/blog?country=@Uri.EscapeDataString(country)">
+                                    @country
+                                </a>
+                            </li>
                         }
-                        <div class="card-body">
-                            <div class="mb-2">
-                                @if (!string.IsNullOrEmpty(post.Category))
+                    </ul>
+                </div>
+            </div>
+
+            @if (Model.Any())
+            {
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm blog-card">
+                                @if (!string.IsNullOrEmpty(item.SampleImageUrl))
                                 {
-                                    <a href="/blog/category/@post.Category" class="badge bg-primary text-decoration-none">@post.Category</a>
+                                    <img src="@item.SampleImageUrl" class="card-img-top" alt="Escape Rooms in @item.City"
+                                         loading="lazy" decoding="async" style="height: 180px; object-fit: cover;">
                                 }
-                                @if (!string.IsNullOrEmpty(post.RelatedCity))
+                                else
                                 {
-                                    <a href="/blog/city/@post.RelatedCity" class="badge bg-secondary text-decoration-none">@post.RelatedCity</a>
+                                    <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center text-white" style="height: 180px;">
+                                        <div class="text-center">
+                                            <i class="bi bi-door-closed-fill display-4 opacity-75"></i>
+                                            <div class="mt-2 fw-bold">@item.City</div>
+                                        </div>
+                                    </div>
                                 }
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-globe"></i> @item.Country
+                                        </span>
+                                    </div>
+                                    <h5 class="card-title">
+                                        <a href="/blog/@item.Slug" class="text-decoration-none text-dark stretched-link">
+                                            @string.Format(SharedLocalizer["Blog_VenuesIn"].Value, item.City)
+                                        </a>
+                                    </h5>
+                                    <p class="card-text text-muted small">
+                                        @if (item.TotalRooms > 0)
+                                        {
+                                            @string.Format(SharedLocalizer["Blog_DiscoverVenues"].Value, item.VenueCount, item.VenueCount == 1 ? SharedLocalizer["Blog_Venue"].Value : SharedLocalizer["Blog_Venues"].Value, item.City, item.TotalRooms)
+                                        }
+                                        else
+                                        {
+                                            @string.Format(SharedLocalizer["Blog_DiscoverVenuesSimple"].Value, item.VenueCount, item.VenueCount == 1 ? SharedLocalizer["Blog_Venue"].Value : SharedLocalizer["Blog_Venues"].Value, item.City)
+                                        }
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="badge bg-success me-1">
+                                                <i class="bi bi-building"></i> @item.VenueCount
+                                            </span>
+                                            @if (item.TotalRooms > 0)
+                                            {
+                                                <span class="badge bg-info">
+                                                    <i class="bi bi-door-open"></i> @item.TotalRooms
+                                                </span>
+                                            }
+                                        </div>
+                                        @if (item.AverageRating.HasValue && item.AverageRating > 0)
+                                        {
+                                            <span class="text-warning">
+                                                <i class="bi bi-star-fill"></i> @item.AverageRating.Value.ToString("F1")
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
                             </div>
-                            <h5 class="card-title">
-                                <a href="/blog/@post.Slug" class="text-decoration-none text-dark">@post.Title</a>
-                            </h5>
-                            @if (!string.IsNullOrEmpty(post.Summary))
-                            {
-                                <p class="card-text text-muted">@post.Summary</p>
-                            }
                         </div>
-                        <div class="card-footer bg-transparent">
-                            <small class="text-muted">
-                                <i class="bi bi-calendar"></i> @(post.PublishedAt?.ToString("MMM d, yyyy") ?? "Draft")
-                                @if (post.ViewCount > 0)
-                                {
-                                    <span class="ms-2"><i class="bi bi-eye"></i> @post.ViewCount views</span>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (totalPages > 1)
+                {
+                    <nav aria-label="Blog pagination" class="mt-4">
+                        <div class="pagination-wrapper">
+                            <ul class="pagination pagination-custom justify-content-center flex-wrap">
+                                <li class="page-item @(currentPage == 1 ? "disabled" : "")" title="First page">
+                                    <a class="page-link" href="@BuildPageUrl(1)" aria-label="First">
+                                        <i class="bi bi-chevron-double-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item @(currentPage == 1 ? "disabled" : "")" title="Previous page">
+                                    <a class="page-link" href="@BuildPageUrl(currentPage - 1)" aria-label="Previous">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                                </li>
+
+                                @{
+                                    var startPage = Math.Max(1, currentPage - 2);
+                                    var endPage = Math.Min(totalPages, currentPage + 2);
+
+                                    if (startPage > 1)
+                                    {
+                                        <li class="page-item"><a class="page-link" href="@BuildPageUrl(1)">1</a></li>
+                                        if (startPage > 2)
+                                        {
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        }
+                                    }
+
+                                    for (int i = startPage; i <= endPage; i++)
+                                    {
+                                        <li class="page-item @(i == currentPage ? "active" : "")">
+                                            <a class="page-link" href="@BuildPageUrl(i)">@i</a>
+                                        </li>
+                                    }
+
+                                    if (endPage < totalPages)
+                                    {
+                                        if (endPage < totalPages - 1)
+                                        {
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        }
+                                        <li class="page-item"><a class="page-link" href="@BuildPageUrl(totalPages)">@totalPages</a></li>
+                                    }
                                 }
-                            </small>
+
+                                <li class="page-item @(currentPage == totalPages ? "disabled" : "")" title="Next page">
+                                    <a class="page-link" href="@BuildPageUrl(currentPage + 1)" aria-label="Next">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item @(currentPage == totalPages ? "disabled" : "")" title="Last page">
+                                    <a class="page-link" href="@BuildPageUrl(totalPages)" aria-label="Last">
+                                        <i class="bi bi-chevron-double-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <p class="text-center pagination-info mb-0 mt-3">
+                                @SharedLocalizer["Blog_ShowingPage"] <strong>@currentPage</strong> @SharedLocalizer["Blog_Of"] <strong>@totalPages</strong>
+                                <span class="text-muted">|</span>
+                                <strong>@totalItems</strong> @SharedLocalizer["Blog_CitiesFound"]
+                            </p>
                         </div>
-                    </div>
+                    </nav>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-geo-alt display-1 text-muted"></i>
+                    <h4 class="mt-3">@SharedLocalizer["Blog_NoCitiesFound"]</h4>
+                    <p class="text-muted">@SharedLocalizer["Blog_NoCitiesMessage"]</p>
+                    <a href="/" class="btn btn-primary">@SharedLocalizer["Home_BrowseVenues"]</a>
                 </div>
             }
         </div>
 
-        @if ((int)ViewBag.TotalPages > 1)
-        {
-            <nav class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item @((int)ViewBag.Page <= 1 ? "disabled" : "")">
-                        <a class="page-link" href="/blog?page=@((int)ViewBag.Page - 1)">Previous</a>
-                    </li>
-                    @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == (int)ViewBag.Page ? "active" : "")">
-                            <a class="page-link" href="/blog?page=@i">@i</a>
-                        </li>
-                    }
-                    <li class="page-item @((int)ViewBag.Page >= (int)ViewBag.TotalPages ? "disabled" : "")">
-                        <a class="page-link" href="/blog?page=@((int)ViewBag.Page + 1)">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        }
-    }
-    else
-    {
-        <div class="text-center py-5">
-            <i class="bi bi-journal display-1 text-muted"></i>
-            <h3 class="mt-3">No posts yet</h3>
-            <p class="text-muted">Check back soon for escape room tips and guides!</p>
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <!-- Quick Stats -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>@SharedLocalizer["Blog_QuickStats"]</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">@SharedLocalizer["Blog_Cities"]</span>
+                        <strong>@totalItems</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">@SharedLocalizer["Blog_Countries"]</span>
+                        <strong>@countries.Count</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Countries -->
+            @if (countries.Any())
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-globe me-2"></i>@SharedLocalizer["Blog_BrowseByCountry"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var country in countries.Take(10))
+                            {
+                                <a href="/blog?country=@Uri.EscapeDataString(country)"
+                                   class="btn btn-sm @(selectedCountry == country ? "btn-primary" : "btn-outline-primary")">
+                                    @country
+                                </a>
+                            }
+                            @if (countries.Count > 10)
+                            {
+                                <span class="text-muted small align-self-center">@string.Format(SharedLocalizer["Blog_More"].Value, countries.Count - 10)</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- CTA -->
+            <div class="card shadow-sm bg-gradient-primary text-white">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-map display-4 mb-3"></i>
+                    <h5>@SharedLocalizer["Blog_FindVenuesNearYou"]</h5>
+                    <p class="small opacity-90">@SharedLocalizer["Blog_FindVenuesDesc"]</p>
+                    <a href="/map" class="btn btn-light">
+                        <i class="bi bi-map me-1"></i> @SharedLocalizer["Blog_OpenMap"]
+                    </a>
+                </div>
+            </div>
         </div>
-    }
+    </div>
 </div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    }
+
+    .blog-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Pagination Styles */
+    .pagination-wrapper {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .pagination-custom {
+        gap: 0.35rem;
+        margin-bottom: 0;
+    }
+    .pagination-custom .page-item .page-link {
+        border: none;
+        border-radius: 10px;
+        padding: 0.5rem 0.85rem;
+        font-weight: 500;
+        color: #495057;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        transition: all 0.2s ease;
+        min-width: 40px;
+        text-align: center;
+    }
+    .pagination-custom .page-item .page-link:hover {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+    }
+    .pagination-custom .page-item.active .page-link {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+    }
+    .pagination-custom .page-item.disabled .page-link {
+        background: #f1f3f4;
+        color: #adb5bd;
+        box-shadow: none;
+    }
+    .pagination-custom .page-item.disabled .page-link:hover {
+        transform: none;
+    }
+    .pagination-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>

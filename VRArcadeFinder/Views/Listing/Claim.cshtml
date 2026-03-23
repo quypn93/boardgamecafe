@@ -1,0 +1,149 @@
+@model Arcade
+@{
+    ViewData["Title"] = "Claim " + Model.Name;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/arcade/@Model.Slug">@Model.Name</a></li>
+                    <li class="breadcrumb-item active">Claim Listing</li>
+                </ol>
+            </nav>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-patch-check me-2"></i>Claim Your VR Arcade</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Why claim your listing?</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Update your arcade's information anytime</li>
+                            <li>Respond to customer reviews</li>
+                            <li>Add photos and VR game inventory</li>
+                            <li>Post events and special offers</li>
+                            <li>Access analytics and insights</li>
+                        </ul>
+                    </div>
+
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h6>Claiming:</h6>
+                            <h5>@Model.Name</h5>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-geo-alt me-1"></i>@Model.Address, @Model.City
+                            </p>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        <input type="hidden" name="arcadeId" value="@Model.Id">
+
+                        <h5 class="mb-3">Verification Information</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Your Full Name <span class="text-danger">*</span></label>
+                                <input type="text" name="fullName" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Your Role <span class="text-danger">*</span></label>
+                                <select name="role" class="form-select" required>
+                                    <option value="">Select your role...</option>
+                                    <option value="owner">Owner</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="marketing">Marketing Manager</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Business Email <span class="text-danger">*</span></label>
+                                <input type="email" name="businessEmail" class="form-control" required>
+                                <small class="text-muted">We'll send verification to this email</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" name="phone" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Verification Method <span class="text-danger">*</span></label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="verificationMethod" value="email" id="verifyEmail" checked>
+                                <label class="form-check-label" for="verifyEmail">
+                                    Email verification (we'll send a code to your business email)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="verificationMethod" value="phone" id="verifyPhone">
+                                <label class="form-check-label" for="verifyPhone">
+                                    Phone verification (we'll call the listed business number)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="verificationMethod" value="document" id="verifyDocument">
+                                <label class="form-check-label" for="verifyDocument">
+                                    Document verification (upload business license or utility bill)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3" id="documentUpload" style="display: none;">
+                            <label class="form-label">Upload Verification Document</label>
+                            <input type="file" name="document" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                            <small class="text-muted">Accepted: Business license, utility bill, or official document showing business name and address</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Additional Notes</label>
+                            <textarea name="notes" class="form-control" rows="3" placeholder="Any additional information that helps verify your ownership..."></textarea>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I confirm that I am authorized to represent this business and agree to the <a href="/terms" target="_blank">Terms of Service</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-send me-2"></i>Submit Claim Request
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h6><i class="bi bi-question-circle me-2"></i>What happens next?</h6>
+                    <ol class="mb-0">
+                        <li>We'll review your claim request within 1-2 business days</li>
+                        <li>You'll receive a verification email or phone call</li>
+                        <li>Once verified, you'll have full access to manage your listing</li>
+                        <li>You can upgrade to a premium plan for additional features</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('input[name="verificationMethod"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('documentUpload').style.display =
+                    this.value === 'document' ? 'block' : 'none';
+            });
+        });
+    </script>
+}

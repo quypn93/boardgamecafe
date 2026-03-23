@@ -114,13 +114,60 @@ namespace BoardGameCafeFinder.Controllers
                 .Where(c => c.IsActive && !string.IsNullOrEmpty(c.Country))
                 .Select(c => c.Country)
                 .Distinct()
-                .OrderBy(c => c)
+                .OrderBy(c => c == "United States" ? 0 : 1)
+                .ThenBy(c => c)
                 .ToListAsync();
 
             ViewBag.Countries = countries;
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
             ViewBag.TotalItems = totalItems;
+
+            // SEO: Canonical URL always points to page 1 (no pagination)
+            var canonicalUrl = $"{Request.Scheme}://{Request.Host}/Blog";
+            if (!string.IsNullOrEmpty(ViewBag.SelectedCountry as string))
+            {
+                canonicalUrl += $"?country={Uri.EscapeDataString((string)ViewBag.SelectedCountry)}";
+            }
+            ViewData["CanonicalUrl"] = canonicalUrl;
+
+            // SEO: noindex for page 2+ (thin/duplicate paginated content)
+            if (page > 1)
+            {
+                ViewData["MetaRobots"] = "noindex, follow";
+            }
+
+            // SEO: rel="prev"/"next" for pagination
+            var paginationBase = $"{Request.Scheme}://{Request.Host}/Blog";
+            var selectedCountryVal = ViewBag.SelectedCountry as string;
+
+            if (page > 1)
+            {
+                var prevUrl = paginationBase;
+                if (!string.IsNullOrEmpty(selectedCountryVal))
+                {
+                    prevUrl += $"?country={Uri.EscapeDataString(selectedCountryVal)}";
+                    if (page > 2) prevUrl += $"&page={page - 1}";
+                }
+                else if (page > 2)
+                {
+                    prevUrl += $"?page={page - 1}";
+                }
+                ViewData["PaginationPrev"] = prevUrl;
+            }
+            if (page < totalPages)
+            {
+                var nextUrl = paginationBase;
+                if (!string.IsNullOrEmpty(selectedCountryVal))
+                {
+                    nextUrl += $"?country={Uri.EscapeDataString(selectedCountryVal)}&page={page + 1}";
+                }
+                else
+                {
+                    nextUrl += $"?page={page + 1}";
+                }
+                ViewData["PaginationNext"] = nextUrl;
+            }
 
             return View(cities);
         }
@@ -218,6 +265,12 @@ namespace BoardGameCafeFinder.Controllers
                 .ToListAsync();
 
             ViewBag.RelatedCities = relatedCities.Select(r => r.City).ToList();
+
+            // SEO: noindex for thin city pages with fewer than 3 cafes
+            if (cafes.Count < 3)
+            {
+                ViewData["MetaRobots"] = "noindex, follow";
+            }
 
             return View(postData);
         }

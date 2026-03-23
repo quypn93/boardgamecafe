@@ -1,0 +1,147 @@
+@model IEnumerable<Arcade>
+@{
+    ViewData["Title"] = "Premium Listings";
+}
+
+<h2><i class="bi bi-star me-2"></i>Premium Listings</h2>
+<hr>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h3>@Model.Count()</h3>
+                <p class="mb-0">Active Premium Listings</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h3>@Model.Count(a => a.PremiumExpiresAt > DateTime.UtcNow.AddDays(30))</h3>
+                <p class="mb-0">Expiring &gt; 30 days</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h3>@Model.Count(a => a.PremiumExpiresAt <= DateTime.UtcNow.AddDays(7))</h3>
+                <p class="mb-0">Expiring within 7 days</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Arcade</th>
+                    <th>City</th>
+                    <th>Plan</th>
+                    <th>Started</th>
+                    <th>Expires</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var arcade in Model)
+                    {
+                        var isExpiringSoon = arcade.PremiumExpiresAt <= DateTime.UtcNow.AddDays(7);
+                        var isExpired = arcade.PremiumExpiresAt <= DateTime.UtcNow;
+
+                        <tr class="@(isExpired ? "table-danger" : (isExpiringSoon ? "table-warning" : ""))">
+                            <td>
+                                <a href="/arcade/@arcade.Slug" target="_blank" class="text-decoration-none fw-bold">
+                                    @arcade.Name
+                                </a>
+                                <br>
+                                <small class="text-muted">@arcade.Address</small>
+                            </td>
+                            <td>@arcade.City</td>
+                            <td>
+                                @if (arcade.PremiumTier == "basic")
+                                {
+                                    <span class="badge bg-secondary">Basic</span>
+                                }
+                                else if (arcade.PremiumTier == "standard")
+                                {
+                                    <span class="badge bg-primary">Standard</span>
+                                }
+                                else if (arcade.PremiumTier == "premium")
+                                {
+                                    <span class="badge bg-warning text-dark">Premium</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">@arcade.PremiumTier</span>
+                                }
+                            </td>
+                            <td>@arcade.PremiumStartedAt?.ToString("dd/MM/yyyy")</td>
+                            <td>@arcade.PremiumExpiresAt?.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (isExpired)
+                                {
+                                    <span class="badge bg-danger">Expired</span>
+                                }
+                                else if (isExpiringSoon)
+                                {
+                                    <span class="badge bg-warning text-dark">Expiring Soon</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="/arcade/@arcade.Slug" target="_blank" class="btn btn-outline-primary" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <button class="btn btn-outline-success" onclick="extendListing(@arcade.ArcadeId)" title="Extend">
+                                        <i class="bi bi-calendar-plus"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" onclick="cancelListing(@arcade.ArcadeId)" title="Cancel">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            <i class="bi bi-star display-6 d-block mb-2"></i>
+                            <p>No premium listings yet</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function extendListing(id) {
+            alert('Extend listing functionality coming soon');
+        }
+
+        function cancelListing(id) {
+            if (confirm('Are you sure you want to cancel this premium listing?')) {
+                fetch(`/admin/listings/cancel/${id}`, { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) window.location.reload();
+                        else alert('Failed to cancel listing');
+                    });
+            }
+        }
+    </script>
+}

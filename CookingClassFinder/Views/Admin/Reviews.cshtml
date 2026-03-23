@@ -1,0 +1,102 @@
+@model IEnumerable<Review>
+@{
+    ViewData["Title"] = "Reviews";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0">Moderate Reviews</h4>
+    </div>
+    <div class="btn-group">
+        <a asp-action="Reviews" class="btn btn-outline-primary @(ViewBag.Status == null ? "active" : "")">All</a>
+        <a asp-action="Reviews" asp-route-status="pending" class="btn btn-outline-primary @(ViewBag.Status == "pending" ? "active" : "")">Pending</a>
+        <a asp-action="Reviews" asp-route-status="approved" class="btn btn-outline-primary @(ViewBag.Status == "approved" ? "active" : "")">Approved</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-star display-1 text-muted"></i>
+                <p class="text-muted mt-3">No reviews found</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>School</th>
+                            <th>User</th>
+                            <th>Rating</th>
+                            <th>Review</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var review in Model)
+                        {
+                            <tr>
+                                <td>@review.School?.Name</td>
+                                <td>@review.User?.DisplayName</td>
+                                <td>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi @(i <= review.Rating ? "bi-star-fill text-warning" : "bi-star")"></i>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(review.Title))
+                                    {
+                                        <strong>@review.Title</strong><br />
+                                    }
+                                    <span class="text-muted">@(review.Content?.Length > 100 ? review.Content.Substring(0, 100) + "..." : review.Content)</span>
+                                </td>
+                                <td>@review.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    @if (review.IsApproved)
+                                    {
+                                        <span class="badge bg-success">Approved</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">Pending</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        @if (!review.IsApproved)
+                                        {
+                                            <a asp-action="ApproveReview" asp-route-id="@review.ReviewId" class="btn btn-outline-success" title="Approve">
+                                                <i class="bi bi-check-lg"></i>
+                                            </a>
+                                        }
+                                        <button type="button" class="btn btn-outline-danger" onclick="confirmDelete(@review.ReviewId)" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(id) {
+            if (confirm('Are you sure you want to delete this review?')) {
+                window.location.href = `/Admin/DeleteReview/${id}`;
+            }
+        }
+    </script>
+}

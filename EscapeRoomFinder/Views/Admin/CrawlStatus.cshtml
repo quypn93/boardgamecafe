@@ -1,0 +1,263 @@
+@{
+    ViewData["Title"] = "Crawl Status";
+    Layout = "_AdminLayout";
+    var recentHistory = ViewBag.RecentHistory as List<EscapeRoomFinder.Models.Domain.CrawlHistory>;
+    var nextCities = ViewBag.NextCities as List<EscapeRoomFinder.Models.Domain.City>;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-speedometer2 me-2"></i>Crawl Status Dashboard</h1>
+    <div>
+        <a href="/admin/cities" class="btn btn-outline-primary me-2">
+            <i class="bi bi-geo-alt"></i> Manage Cities
+        </a>
+        @if ((bool)ViewBag.IsRunning)
+        {
+            <button type="button" class="btn btn-danger" onclick="stopCrawl()">
+                <i class="bi bi-stop-fill"></i> Stop Crawl
+            </button>
+        }
+    </div>
+</div>
+
+<!-- Running Status -->
+@if ((bool)ViewBag.IsRunning)
+{
+    <div class="alert alert-info d-flex align-items-center mb-4">
+        <div class="spinner-border spinner-border-sm me-3" role="status"></div>
+        <div>
+            <strong>Crawl in Progress:</strong> Currently crawling <strong>@ViewBag.CurrentCity</strong>
+        </div>
+    </div>
+}
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h2>@ViewBag.TotalCities</h2>
+                <small>Total Cities</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <h2>@ViewBag.NeverCrawled</h2>
+                <small>Never Crawled</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h2>@ViewBag.VenuesAdded</h2>
+                <small>Venues Added</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h2>@ViewBag.TotalCrawls</h2>
+                <small>Total Crawls</small>
+                <br />
+                <small class="opacity-75">
+                    <i class="bi bi-check-circle"></i> @ViewBag.SuccessfulCrawls |
+                    <i class="bi bi-x-circle"></i> @ViewBag.FailedCrawls
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-graph-up"></i> Crawl Progress
+            </div>
+            <div class="card-body">
+                @{
+                    var totalCities = (int)ViewBag.TotalCities;
+                    var neverCrawled = (int)ViewBag.NeverCrawled;
+                    var crawledPercent = totalCities > 0 ? (int)((totalCities - neverCrawled) * 100.0 / totalCities) : 0;
+
+                    var totalCrawls = (int)ViewBag.TotalCrawls;
+                    var successfulCrawls = (int)ViewBag.SuccessfulCrawls;
+                    var successRate = totalCrawls > 0 ? (int)(successfulCrawls * 100.0 / totalCrawls) : 0;
+                }
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Cities Crawled</span>
+                        <span>@crawledPercent%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: @crawledPercent%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Success Rate</span>
+                        <span>@successRate%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar @(successRate >= 80 ? "bg-success" : successRate >= 50 ? "bg-warning" : "bg-danger")" style="width: @successRate%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-clock"></i> Next Cities to Crawl
+            </div>
+            <div class="card-body">
+                @if (nextCities != null && nextCities.Any())
+                {
+                    <ol class="mb-0">
+                        @foreach (var city in nextCities)
+                        {
+                            <li>
+                                <strong>@city.Name</strong>, @city.Country
+                                <span class="badge @(city.Region == "US" ? "bg-primary" : "bg-info") ms-1">@city.Region</span>
+                                @if (city.CrawlCount == 0)
+                                {
+                                    <span class="badge bg-warning ms-1">Never Crawled</span>
+                                }
+                            </li>
+                        }
+                    </ol>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No cities pending.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent History -->
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-clock-history"></i> Recent Crawl History
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Started</th>
+                    <th>Completed</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Found</th>
+                    <th>Added</th>
+                    <th>Updated</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (recentHistory != null && recentHistory.Any())
+                {
+                    @foreach (var history in recentHistory)
+                    {
+                        var duration = history.CompletedAt.HasValue
+                            ? (history.CompletedAt.Value - history.StartedAt)
+                            : TimeSpan.Zero;
+                        <tr>
+                            <td>@history.City?.Name</td>
+                            <td>@history.City?.Country</td>
+                            <td>@history.StartedAt.ToString("MMM dd HH:mm")</td>
+                            <td>
+                                @if (history.CompletedAt.HasValue)
+                                {
+                                    @history.CompletedAt.Value.ToString("HH:mm:ss")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.CompletedAt.HasValue)
+                                {
+                                    @($"{(int)duration.TotalMinutes}:{duration.Seconds:D2}")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.Status == "Success")
+                                {
+                                    <span class="badge bg-success">Success</span>
+                                }
+                                else if (history.Status == "Failed")
+                                {
+                                    <span class="badge bg-danger">Failed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">In Progress</span>
+                                }
+                            </td>
+                            <td>@history.VenuesFound</td>
+                            <td class="text-success">+@history.VenuesAdded</td>
+                            <td class="text-info">@history.VenuesUpdated</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(history.ErrorMessage))
+                                {
+                                    <span class="text-danger" title="@history.ErrorMessage">
+                                        @(history.ErrorMessage.Length > 50 ? history.ErrorMessage.Substring(0, 50) + "..." : history.ErrorMessage)
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10" class="text-center text-muted py-4">
+                            No crawl history yet. <a href="/admin/cities">Start crawling cities</a>.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    async function stopCrawl() {
+        if (!confirm('Stop the current crawl?')) return;
+
+        try {
+            const response = await fetch('/admin/cities/stop-crawl', { method: 'POST' });
+            const result = await response.json();
+            alert(result.message);
+            location.reload();
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+
+    // Auto-refresh if crawl is running
+    @if ((bool)ViewBag.IsRunning)
+    {
+        <text>
+        setTimeout(() => location.reload(), 30000);
+        </text>
+    }
+</script>
+}

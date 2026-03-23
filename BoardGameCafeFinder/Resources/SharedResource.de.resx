@@ -136,6 +136,7 @@
   <data name="Footer_Legal" xml:space="preserve"><value>Rechtliches</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>Datenschutz</value></data>
   <data name="Footer_Terms" xml:space="preserve"><value>Nutzungsbedingungen</value></data>
+  <data name="Footer_RefundPolicy" xml:space="preserve"><value>Rückerstattungsrichtlinie</value></data>
   <data name="Footer_Contact" xml:space="preserve"><value>Kontakt</value></data>
   <data name="Footer_ContactText" xml:space="preserve"><value>Hast du ein Brettspiel-Café, das du hinzufügen möchtest? Bist du Inhaber und möchtest deine Infos aktualisieren? Kontaktiere uns!</value></data>
   <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Board Game Cafe Finder. Alle Rechte vorbehalten.</value></data>
@@ -156,6 +157,19 @@
   <!-- SEO Meta -->
   <data name="Meta_DefaultDescription" xml:space="preserve"><value>Finde die besten Brettspiel-Cafés in deiner Nähe. Entdecke Spielelounges mit unserer interaktiven Karte und umfassendem Café-Verzeichnis.</value></data>
   <data name="Meta_DefaultKeywords" xml:space="preserve"><value>Brettspiel-Café,Spielelounge,Brettspiele,Brettspiele in meiner Nähe</value></data>
+
+  <!-- SEO: Blog Post Page -->
+  <data name="SEO_BlogPost_Title" xml:space="preserve"><value>Brettspiel-Cafés in {0}, {1} - Kompletter Guide {2}</value></data>
+  <data name="SEO_BlogPost_Description" xml:space="preserve"><value>Entdecke {0} Brettspiel-Cafés in {1}, {2}. Finde die besten Orte zum Spielen mit über {3} verfügbaren Spielen. Bewertungen, Ratings und Wegbeschreibungen.</value></data>
+  <data name="SEO_BlogPost_Keywords" xml:space="preserve"><value>Brettspiel-Café {0},Spielelounge {0},Brettspiele {0},Brettspiele {1}</value></data>
+  <data name="SEO_BlogPost_Headline" xml:space="preserve"><value>Brettspiel-Cafés in {0} - Kompletter Guide</value></data>
+  <!-- SEO: Blog Index Page -->
+  <data name="SEO_BlogIndex_TitleCountry" xml:space="preserve"><value>Brettspiel-Cafés in {0} - Stadtführer {1}</value></data>
+  <data name="SEO_BlogIndex_TitleAll" xml:space="preserve"><value>Brettspiel-Café Guides - {0} Städte weltweit</value></data>
+  <data name="SEO_BlogIndex_DescCountry" xml:space="preserve"><value>Finde Brettspiel-Cafés in {0}. Durchsuche Stadtführer, entdecke Top-Spiele und plane dein nächstes Brettspiel-Abenteuer.</value></data>
+  <data name="SEO_BlogIndex_DescAll" xml:space="preserve"><value>Entdecke Brettspiel-Cafés in {0} Städten weltweit. Detaillierte Guides mit Top-Spielen, Bewertungen, Ratings und Wegbeschreibungen.</value></data>
+  <data name="SEO_BlogIndex_KeywordsCountry" xml:space="preserve"><value>Brettspiel-Café {0},Spielelounge {0},Brettspiele {0}</value></data>
+  <data name="SEO_BlogIndex_KeywordsAll" xml:space="preserve"><value>Brettspiel-Café,Spielelounge,Brettspiele,Brettspiele in meiner Nähe,Stadtführer</value></data>
 
   <!-- Blog Index Page -->
   <data name="Blog_CafeGuides" xml:space="preserve"><value>Brettspiel-Café Guides</value></data>

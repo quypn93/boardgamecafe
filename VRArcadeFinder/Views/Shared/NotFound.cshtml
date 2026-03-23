@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = SharedLocalizer["NotFound_Title"].Value;
+}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-1 text-warning">404</h1>
+        <h2>@SharedLocalizer["NotFound_Title"]</h2>
+        <p class="lead text-muted">@ViewBag.ErrorMessage</p>
+        <a href="/" class="btn btn-primary mt-3">
+            <i class="bi bi-house me-1"></i>@SharedLocalizer["Error_BackHome"]
+        </a>
+    </div>
+</div>

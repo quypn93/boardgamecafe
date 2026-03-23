@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>ホーム</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>マップ表示</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>ブログ</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>ビジネス向け</value></data>
+  <data name="Nav_Pricing" xml:space="preserve"><value>料金プラン</value></data>
+  <data name="Nav_AddArcade" xml:space="preserve"><value>アーケードを追加</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>よくある質問</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>ログイン</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>登録</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>ログアウト</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>マイプロフィール</value></data>
+  <data name="Nav_AdminDashboard" xml:space="preserve"><value>管理画面</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>お近くのVRアーケードを探す</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>お近くの最高のバーチャルリアリティアーケードとゲームセンターを発見</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>都市名、アーケード名で検索...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>検索</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>すべての国</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>すべての都市</value></data>
+  <data name="Home_FilterByCountry" xml:space="preserve"><value>国</value></data>
+  <data name="Home_FilterByCity" xml:space="preserve"><value>都市</value></data>
+  <data name="Home_ArcadesFound" xml:space="preserve"><value>件のアーケードが見つかりました</value></data>
+  <data name="Home_NoArcadesFound" xml:space="preserve"><value>条件に一致するアーケードが見つかりません</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>理想のVRアーケードを見つけよう</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>お近くの素晴らしいVRアーケードを発見。最新のバーチャルリアリティゲームを体験し、レビューを読んで、次の没入型ゲーム体験に最適な場所を見つけましょう。</value></data>
+  <data name="Home_BrowseArcades" xml:space="preserve"><value>アーケードを探す</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>マップを見る</value></data>
+  <data name="Home_Filters" xml:space="preserve"><value>フィルター</value></data>
+  <data name="Home_NearMe" xml:space="preserve"><value>近くで探す</value></data>
+  <data name="Home_Radius" xml:space="preserve"><value>半径 (km)</value></data>
+  <data name="Home_VRPlatforms" xml:space="preserve"><value>VRプラットフォーム</value></data>
+  <data name="Home_GamesAvailable" xml:space="preserve"><value>利用可能なゲーム</value></data>
+  <data name="Home_ApplyFilters" xml:space="preserve"><value>フィルターを適用</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>フィルターをクリア</value></data>
+  <data name="Home_VRArcades" xml:space="preserve"><value>VRアーケード</value></data>
+  <data name="Home_NearYourLocation" xml:space="preserve"><value>あなたの近く</value></data>
+  <data name="Home_ActiveFilters" xml:space="preserve"><value>適用中のフィルター:</value></data>
+  <data name="Home_PlatformsSelected" xml:space="preserve"><value>プラットフォームを選択</value></data>
+  <data name="Home_Details" xml:space="preserve"><value>詳細</value></data>
+  <data name="Home_Map" xml:space="preserve"><value>マップ</value></data>
+  <data name="Home_ShowingPage" xml:space="preserve"><value>ページ</value></data>
+  <data name="Home_Of" xml:space="preserve"><value>/</value></data>
+  <data name="Home_NoArcadesTitle" xml:space="preserve"><value>アーケードが見つかりません</value></data>
+  <data name="Home_NoArcadesMessage" xml:space="preserve"><value>フィルターを調整するか、すべてのフィルターをクリアしてください。</value></data>
+  <data name="Home_PopularCities" xml:space="preserve"><value>人気のVRアーケード都市</value></data>
+  <data name="Home_WhyVisit" xml:space="preserve"><value>VRアーケードを訪れる理由</value></data>
+  <data name="Home_LatestTechnology" xml:space="preserve"><value>最新のVR技術</value></data>
+  <data name="Home_LatestTechnologyDesc" xml:space="preserve"><value>高額な購入なしで最先端のVR機器を体験。購入前に最新のゲームとハードウェアをお試しください。</value></data>
+  <data name="Home_SocialExperience" xml:space="preserve"><value>ソーシャル体験</value></data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve"><value>VR愛好家と出会い、マルチプレイヤー体験を楽しみ、友達とユニークなゲーム冒険を体験。</value></data>
+  <data name="Home_ExpertGuidance" xml:space="preserve"><value>専門家のガイダンス</value></data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve"><value>VRアーケードのスタッフが機器のセットアップ、好みに合わせたゲームの推薦、最高の体験をサポートします。</value></data>
+  <data name="Home_HowToFind" xml:space="preserve"><value>理想のVRアーケードの見つけ方</value></data>
+
+  <!-- Arcade Page -->
+  <data name="Arcade_Details" xml:space="preserve"><value>アーケード詳細</value></data>
+  <data name="Arcade_Rating" xml:space="preserve"><value>評価</value></data>
+  <data name="Arcade_Reviews" xml:space="preserve"><value>レビュー</value></data>
+  <data name="Arcade_WriteReview" xml:space="preserve"><value>レビューを書く</value></data>
+  <data name="Arcade_Address" xml:space="preserve"><value>住所</value></data>
+  <data name="Arcade_Phone" xml:space="preserve"><value>電話番号</value></data>
+  <data name="Arcade_Website" xml:space="preserve"><value>ウェブサイト</value></data>
+  <data name="Arcade_OpeningHours" xml:space="preserve"><value>営業時間</value></data>
+  <data name="Arcade_VRPlatforms" xml:space="preserve"><value>VRプラットフォーム</value></data>
+  <data name="Arcade_TotalStations" xml:space="preserve"><value>VRステーション数</value></data>
+  <data name="Arcade_Multiplayer" xml:space="preserve"><value>マルチプレイヤーエリア</value></data>
+  <data name="Arcade_PartyRooms" xml:space="preserve"><value>パーティールーム</value></data>
+  <data name="Arcade_GetDirections" xml:space="preserve"><value>道順を取得</value></data>
+  <data name="Arcade_OpenNow" xml:space="preserve"><value>営業中</value></data>
+  <data name="Arcade_Closed" xml:space="preserve"><value>閉店</value></data>
+  <data name="Arcade_Verified" xml:space="preserve"><value>認証済み</value></data>
+  <data name="Arcade_Premium" xml:space="preserve"><value>プレミアム</value></data>
+  <data name="Arcade_Featured" xml:space="preserve"><value>注目</value></data>
+  <data name="Arcade_AvailableGames" xml:space="preserve"><value>利用可能なゲーム</value></data>
+  <data name="Arcade_Photos" xml:space="preserve"><value>写真</value></data>
+  <data name="Arcade_NearbyArcades" xml:space="preserve"><value>近くのVRアーケード</value></data>
+  <data name="Arcade_Yes" xml:space="preserve"><value>はい</value></data>
+  <data name="Arcade_No" xml:space="preserve"><value>いいえ</value></data>
+
+  <!-- Reviews -->
+  <data name="Review_Title" xml:space="preserve"><value>レビュー</value></data>
+  <data name="Review_NoReviews" xml:space="preserve"><value>まだレビューがありません。最初のレビューを書きましょう！</value></data>
+  <data name="Review_WriteFirst" xml:space="preserve"><value>最初のレビューを書く</value></data>
+  <data name="Review_YourRating" xml:space="preserve"><value>あなたの評価</value></data>
+  <data name="Review_YourReview" xml:space="preserve"><value>あなたのレビュー</value></data>
+  <data name="Review_Submit" xml:space="preserve"><value>レビューを送信</value></data>
+  <data name="Review_Helpful" xml:space="preserve"><value>役に立った</value></data>
+  <data name="Review_VerifiedVisit" xml:space="preserve"><value>訪問確認済み</value></data>
+
+  <!-- Account -->
+  <data name="Account_Login" xml:space="preserve"><value>ログイン</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>登録</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>メールアドレス</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>パスワード</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>パスワード確認</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>ログイン状態を保持</value></data>
+  <data name="Account_ForgotPassword" xml:space="preserve"><value>パスワードをお忘れですか？</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>アカウントをお持ちでないですか？</value></data>
+  <data name="Account_HaveAccount" xml:space="preserve"><value>すでにアカウントをお持ちですか？</value></data>
+  <data name="Account_SignUp" xml:space="preserve"><value>新規登録</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>名</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>姓</value></data>
+  <data name="Account_FullName" xml:space="preserve"><value>氏名</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>VRアーケードブログ</value></data>
+  <data name="Blog_Subtitle" xml:space="preserve"><value>VRゲームに関するニュース、ヒント、ガイド</value></data>
+  <data name="Blog_ReadMore" xml:space="preserve"><value>続きを読む</value></data>
+  <data name="Blog_Categories" xml:space="preserve"><value>カテゴリー</value></data>
+  <data name="Blog_RecentPosts" xml:space="preserve"><value>最新の投稿</value></data>
+  <data name="Blog_Author" xml:space="preserve"><value>著者</value></data>
+  <data name="Blog_PublishedOn" xml:space="preserve"><value>公開日</value></data>
+  <data name="Blog_Tags" xml:space="preserve"><value>タグ</value></data>
+  <data name="Blog_Share" xml:space="preserve"><value>シェア</value></data>
+  <data name="Blog_RelatedPosts" xml:space="preserve"><value>関連記事</value></data>
+
+  <!-- Pricing -->
+  <data name="Pricing_Title" xml:space="preserve"><value>料金プラン</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>VRアーケードに最適なプランをお選びください</value></data>
+  <data name="Pricing_Basic" xml:space="preserve"><value>ベーシック</value></data>
+  <data name="Pricing_Standard" xml:space="preserve"><value>スタンダード</value></data>
+  <data name="Pricing_Premium" xml:space="preserve"><value>プレミアム</value></data>
+  <data name="Pricing_Monthly" xml:space="preserve"><value>月額</value></data>
+  <data name="Pricing_GetStarted" xml:space="preserve"><value>始める</value></data>
+  <data name="Pricing_ContactUs" xml:space="preserve"><value>お問い合わせ</value></data>
+  <data name="Pricing_MostPopular" xml:space="preserve"><value>人気No.1</value></data>
+
+  <!-- Common -->
+  <data name="Common_Loading" xml:space="preserve"><value>読み込み中...</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>編集</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="Common_View" xml:space="preserve"><value>表示</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>戻る</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>次へ</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>前へ</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>送信</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>閉じる</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>はい</value></data>
+  <data name="Common_No" xml:space="preserve"><value>いいえ</value></data>
+  <data name="Common_Error" xml:space="preserve"><value>エラー</value></data>
+  <data name="Common_Success" xml:space="preserve"><value>成功</value></data>
+  <data name="Common_Warning" xml:space="preserve"><value>警告</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_About" xml:space="preserve"><value>私たちについて</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>お問い合わせ</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>プライバシーポリシー</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>利用規約</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>全著作権所有。</value></data>
+  <data name="Footer_Description" xml:space="preserve"><value>VR Arcade Finderは、世界中の最高のバーチャルリアリティゲームセンターを発見するお手伝いをします。</value></data>
+
+  <!-- Meta/SEO -->
+  <data name="Meta_SiteTitle" xml:space="preserve"><value>VR Arcade Finder</value></data>
+  <data name="Meta_SiteDescription" xml:space="preserve"><value>お近くの最高のVRアーケードとバーチャルリアリティゲームセンターを見つけましょう。レビューを読んで、価格を比較し、素晴らしいVR体験を発見。</value></data>
+  <data name="Meta_Keywords" xml:space="preserve"><value>VRアーケード, バーチャルリアリティ, VRゲーム, VRセンター, VR体験, ゲームアーケード</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>マイプロフィール</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>プロフィール編集</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>表示名</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>自己紹介</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>自己紹介を入力...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>アバター</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>お気に入りのVRプラットフォーム</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>希望言語</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>通知</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>近くの新しいアーケードについてメールを受け取る</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>今後のVRイベントについてメールを受け取る</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>変更を保存</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>パスワード変更</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>現在のパスワード</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>新しいパスワード</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>新しいパスワードを確認</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>登録日</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>お気に入り</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>マイレビュー</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>マイアーケード</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>設定</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>メール変更はサポートにお問い合わせください</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>お気に入りのアーケード</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>お気に入りから削除</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>お気に入りはまだありません</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>VRアーケードを探索してお気に入りを保存しましょう！</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>アーケードを探す</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>詳細を見る</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>このアーケードをお気に入りから削除しますか？</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>マイレビュー</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>レビューはまだありません</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>VRアーケードを訪れて体験を共有しましょう！</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>公開済み</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>審査中</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>人がこれを役立つと評価</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>レビューを編集</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>レビューを削除</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>アーケードを探す</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>このレビューを削除してもよろしいですか？</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>アクセス拒否</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>このページへのアクセス権限がありません。</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>エラーと思われる場合は、管理者に連絡するか、別のアカウントでログインしてください。</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>ホームへ戻る</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>エラー</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>申し訳ありません！問題が発生しました</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>リクエストID</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>ホームに戻る</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>ページが見つかりません</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>お探しのページは存在しません。</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>VRアーケードマップ</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>VRアーケードを探す</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>都市を入力...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>現在地を使用</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>フィルター</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>VRプラットフォーム</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>すべてのプラットフォーム</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>パーティールームあり</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>マルチプレイヤーエリア</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>件のアーケードが見つかりました</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>お近くのVRアーケードを検索</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>詳細を見る</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>現在地を取得できません。都市名を手動で入力してください。</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>連絡先情報</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>ウェブサイトを見る</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>Googleマップで見る</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>このアーケードのオーナーですか？</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>掲載を申請</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>掲載を申請してもっと注目を集めましょう！</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>今後のイベント</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>VRゲーム</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>その他のゲーム...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>他</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>閲覧数</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>まだ投稿がありません。後でまたご確認ください！</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>VRアーケードの露出を増やす</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>注目</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>基本掲載</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>連絡先情報</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>営業時間</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>マップ上の位置</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>フォトギャラリー</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>イベント掲載</value></data>
+  <data name="Pricing_FeaturedPlacement" xml:space="preserve"><value>注目の掲載位置</value></data>
+  <data name="Pricing_EverythingInBasic" xml:space="preserve"><value>ベーシックのすべて</value></data>
+  <data name="Pricing_PhotoGalleryUpTo" xml:space="preserve"><value>フォトギャラリー（最大20枚）</value></data>
+  <data name="Pricing_PriorityInSearch" xml:space="preserve"><value>検索優先表示</value></data>
+  <data name="Pricing_VerifiedBadge" xml:space="preserve"><value>認証バッジ</value></data>
+  <data name="Pricing_AnalyticsDashboard" xml:space="preserve"><value>分析ダッシュボード</value></data>
+  <data name="Pricing_GetPremium" xml:space="preserve"><value>プレミアムを取得</value></data>
+  <data name="Pricing_EverythingInPremium" xml:space="preserve"><value>プレミアムのすべて</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>ホームページ注目掲載</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>ゲーム在庫管理</value></data>
+  <data name="Pricing_UnlimitedPhotos" xml:space="preserve"><value>写真無制限</value></data>
+  <data name="Pricing_PrioritySupport" xml:space="preserve"><value>優先サポート</value></data>
+  <data name="Pricing_SocialMediaPromotion" xml:space="preserve"><value>SNSプロモーション</value></data>
+  <data name="Pricing_GoFeatured" xml:space="preserve"><value>注目プランを取得</value></data>
+  <data name="Pricing_AnnualDiscount" xml:space="preserve"><value>年払いで最大20%節約！企業プランについてはお問い合わせください。</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>マイプロフィール</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>プロフィール編集</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>表示名</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>自己紹介</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>自己紹介を書いてください...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>アバター</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>お気に入りのVRプラットフォーム</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>使用言語</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>通知</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>近くの新しいアーケードをメールで通知</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>今後のVRイベントをメールで通知</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>変更を保存</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>パスワード変更</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>現在のパスワード</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>新しいパスワード</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>新しいパスワードの確認</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>登録日</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>お気に入り</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>マイレビュー</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>マイアーケード</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>設定</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>メール変更はサポートにお問い合わせください</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>お気に入りアーケード</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>お気に入りから削除</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>お気に入りがありません</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>VRアーケードを探して、お気に入りに追加しましょう！</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>アーケードを探す</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>詳細を見る</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>このアーケードをお気に入りから削除しますか？</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>マイレビュー</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>レビューがありません</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>VRアーケードを訪れて、体験を共有しましょう！</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>公開済み</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>審査中</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>人が参考になったと評価</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>レビューを編集</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>レビューを削除</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>アーケードを探す</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>このレビューを削除してもよろしいですか？</value></data>
+  <data name="MyReviews_Rating" xml:space="preserve"><value>評価</value></data>
+  <data name="MyReviews_ReviewTitle" xml:space="preserve"><value>タイトル</value></data>
+  <data name="MyReviews_YourReview" xml:space="preserve"><value>レビュー内容</value></data>
+  <data name="MyReviews_SaveChanges" xml:space="preserve"><value>変更を保存</value></data>
+  <data name="MyReviews_UpdateFailed" xml:space="preserve"><value>レビューの更新に失敗しました</value></data>
+  <data name="MyReviews_DeleteFailed" xml:space="preserve"><value>レビューの削除に失敗しました</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>アクセス拒否</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>このページにアクセスする権限がありません。</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>エラーと思われる場合は、管理者に連絡するか、別のアカウントでログインしてください。</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>ホームへ戻る</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>エラー</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>問題が発生しました</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>リクエストID</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>ホームに戻る</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>ページが見つかりません</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>お探しのページは存在しません。</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>VRアーケードマップ</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>VRアーケードを探す</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>都市を入力...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>現在地を使用</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>フィルター</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>VRプラットフォーム</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>すべてのプラットフォーム</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>パーティールームあり</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>マルチプレイヤーエリア</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>件のアーケード</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>お近くのVRアーケードを検索</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>詳細を見る</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>位置情報を取得できません。都市名を入力してください。</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>連絡先情報</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>ウェブサイトを見る</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>Googleマップで見る</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>このアーケードのオーナーですか？</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>掲載を申請</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>掲載を申請してより多くの露出を！</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>今後のイベント</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>VRゲーム</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>他のゲーム...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>および</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>閲覧</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>ブログ記事がまだありません。後でまたお越しください！</value></data>
+  <data name="Blog_SearchArticles" xml:space="preserve"><value>記事を検索</value></data>
+  <data name="Blog_SearchPlaceholder" xml:space="preserve"><value>検索...</value></data>
+  <data name="Blog_Newsletter" xml:space="preserve"><value>ニュースレター</value></data>
+  <data name="Blog_NewsletterDesc" xml:space="preserve"><value>最新のVRニュースとヒントをお届けします。</value></data>
+  <data name="Blog_EmailPlaceholder" xml:space="preserve"><value>メールアドレス</value></data>
+  <data name="Blog_Subscribe" xml:space="preserve"><value>登録</value></data>
+  <data name="Blog_ShareArticle" xml:space="preserve"><value>この記事を共有:</value></data>
+  <data name="Blog_RelatedArticles" xml:space="preserve"><value>関連記事</value></data>
+  <data name="Blog_Guides" xml:space="preserve"><value>ガイド</value></data>
+  <data name="Blog_GameReviews" xml:space="preserve"><value>ゲームレビュー</value></data>
+  <data name="Blog_VRNews" xml:space="preserve"><value>VRニュース</value></data>
+  <data name="Blog_TipsTricks" xml:space="preserve"><value>ヒントとコツ</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>VRアーケードの露出を増やしましょう</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>注目</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>基本掲載</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>連絡先情報</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>営業時間</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>地図表示</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>フォトギャラリー</value></data>
+
+  <!-- About Page -->
+  <data name="About_Title" xml:space="preserve"><value>VR Arcade Finderについて</value></data>
+  <data name="About_Subtitle" xml:space="preserve"><value>没入型バーチャルリアリティ体験へのゲートウェイ</value></data>
+  <data name="About_OurMission" xml:space="preserve"><value>私たちの使命</value></data>
+  <data name="About_MissionText1" xml:space="preserve"><value>VR Arcade Finderは、VR愛好家を世界中の最高のバーチャルリアリティアーケードとつなげることに専念しています。VRに興味を持ち始めた初心者も、最新の体験を探しているベテランゲーマーも、誰もがプレミアムなVR体験にアクセスできるべきだと信じています。</value></data>
+  <data name="About_MissionText2" xml:space="preserve"><value>私たちのプラットフォームを使えば、場所、利用可能なゲーム、機器、ユーザーレビューに基づいてVRアーケードを簡単に発見、比較、選択できます。</value></data>
+  <data name="About_WhatWeOffer" xml:space="preserve"><value>提供するもの</value></data>
+  <data name="About_LocationSearch" xml:space="preserve"><value>位置ベースの検索</value></data>
+  <data name="About_LocationSearchDesc" xml:space="preserve"><value>強力な検索とマップ機能で近くのVRアーケードを見つけましょう。</value></data>
+  <data name="About_GameCatalog" xml:space="preserve"><value>ゲームカタログ</value></data>
+  <data name="About_GameCatalogDesc" xml:space="preserve"><value>数千のVRゲームを閲覧し、それらを持っているアーケードを見つけましょう。</value></data>
+  <data name="About_UserReviews" xml:space="preserve"><value>ユーザーレビュー</value></data>
+  <data name="About_UserReviewsDesc" xml:space="preserve"><value>実際のVRアーケード訪問者からの正直なレビューを読みましょう。</value></data>
+  <data name="About_EventsTournaments" xml:space="preserve"><value>イベント＆トーナメント</value></data>
+  <data name="About_EventsTournamentsDesc" xml:space="preserve"><value>近くのVRゲームイベントや大会を発見しましょう。</value></data>
+  <data name="About_ForArcadeOwners" xml:space="preserve"><value>アーケードオーナー向け</value></data>
+  <data name="About_ArcadeOwnersText" xml:space="preserve"><value>VRアーケードのオーナーですか？私たちのプラットフォームに参加して、VR体験を積極的に探している数千の潜在顧客にリーチし、露出を増やしましょう。</value></data>
+  <data name="About_ArcadeFeature1" xml:space="preserve"><value>写真とゲームインベントリを含む詳細なリスティングを作成</value></data>
+  <data name="About_ArcadeFeature2" xml:space="preserve"><value>顧客レビューに返信し、評判を築く</value></data>
+  <data name="About_ArcadeFeature3" xml:space="preserve"><value>イベントや特別プロモーションを投稿</value></data>
+  <data name="About_ArcadeFeature4" xml:space="preserve"><value>分析にアクセスしてオーディエンスを理解</value></data>
+  <data name="About_ArcadeFeature5" xml:space="preserve"><value>最大露出のための注目掲載オプション</value></data>
+  <data name="About_ListYourArcade" xml:space="preserve"><value>アーケードを登録</value></data>
+  <data name="About_ContactUs" xml:space="preserve"><value>お問い合わせ</value></data>
+  <data name="About_ContactText" xml:space="preserve"><value>ご質問、フィードバック、または提携のお問い合わせがありますか？ぜひご連絡ください！</value></data>
+  <data name="About_Email" xml:space="preserve"><value>メール:</value></data>
+  <data name="About_FollowUs" xml:space="preserve"><value>フォローしてください:</value></data>
+
+  <!-- Privacy Page -->
+  <data name="Privacy_Title" xml:space="preserve"><value>プライバシーポリシー</value></data>
+  <data name="Privacy_LastUpdated" xml:space="preserve"><value>最終更新:</value></data>
+  <data name="Privacy_Section1_Title" xml:space="preserve"><value>1. 収集する情報</value></data>
+  <data name="Privacy_Section1_Text" xml:space="preserve"><value>お客様が直接提供する情報を収集します。例:</value></data>
+  <data name="Privacy_Section1_Item1" xml:space="preserve"><value>アカウント作成</value></data>
+  <data name="Privacy_Section1_Item2" xml:space="preserve"><value>VRアーケードリスティングの提出または申請</value></data>
+  <data name="Privacy_Section1_Item3" xml:space="preserve"><value>レビューの投稿</value></data>
+  <data name="Privacy_Section1_Item4" xml:space="preserve"><value>お問い合わせ</value></data>
+  <data name="Privacy_Section1_Item5" xml:space="preserve"><value>ニュースレターの購読</value></data>
+  <data name="Privacy_Section2_Title" xml:space="preserve"><value>2. 自動収集する情報</value></data>
+  <data name="Privacy_Section2_Text" xml:space="preserve"><value>サービス利用時に自動的に収集する情報:</value></data>
+  <data name="Privacy_Section2_Item1" xml:space="preserve"><value>ログ情報（IPアドレス、ブラウザの種類、アクセス時間）</value></data>
+  <data name="Privacy_Section2_Item2" xml:space="preserve"><value>デバイス情報</value></data>
+  <data name="Privacy_Section2_Item3" xml:space="preserve"><value>位置情報（同意を得た場合）</value></data>
+  <data name="Privacy_Section2_Item4" xml:space="preserve"><value>Cookieおよび類似技術</value></data>
+  <data name="Privacy_Section3_Title" xml:space="preserve"><value>3. 情報の使用方法</value></data>
+  <data name="Privacy_Section3_Text" xml:space="preserve"><value>収集した情報は以下の目的で使用します:</value></data>
+  <data name="Privacy_Section3_Item1" xml:space="preserve"><value>サービスの提供、維持、改善</value></data>
+  <data name="Privacy_Section3_Item2" xml:space="preserve"><value>取引の処理と関連情報の送信</value></data>
+  <data name="Privacy_Section3_Item3" xml:space="preserve"><value>プロモーション通信の送信（同意を得た場合）</value></data>
+  <data name="Privacy_Section3_Item4" xml:space="preserve"><value>トレンドと使用状況の監視と分析</value></data>
+  <data name="Privacy_Section3_Item5" xml:space="preserve"><value>不正行為の検出と防止</value></data>
+  <data name="Privacy_Section4_Title" xml:space="preserve"><value>4. 情報の共有</value></data>
+  <data name="Privacy_Section4_Text" xml:space="preserve"><value>個人情報を販売することはありません。以下の場合に情報を共有することがあります:</value></data>
+  <data name="Privacy_Section4_Item1" xml:space="preserve"><value>お客様の同意がある場合</value></data>
+  <data name="Privacy_Section4_Item2" xml:space="preserve"><value>運営を支援するサービスプロバイダーとの共有</value></data>
+  <data name="Privacy_Section4_Item3" xml:space="preserve"><value>法的義務の遵守</value></data>
+  <data name="Privacy_Section4_Item4" xml:space="preserve"><value>合併または買収に関連して</value></data>
+  <data name="Privacy_Section5_Title" xml:space="preserve"><value>5. データセキュリティ</value></data>
+  <data name="Privacy_Section5_Text" xml:space="preserve"><value>不正アクセス、改ざん、開示、破壊から個人情報を保護するため、適切なセキュリティ対策を実施しています。</value></data>
+  <data name="Privacy_Section6_Title" xml:space="preserve"><value>6. お客様の権利</value></data>
+  <data name="Privacy_Section6_Text" xml:space="preserve"><value>お住まいの地域によっては、個人情報に関する以下の権利があります:</value></data>
+  <data name="Privacy_Section6_Item1" xml:space="preserve"><value>個人データへのアクセス</value></data>
+  <data name="Privacy_Section6_Item2" xml:space="preserve"><value>不正確なデータの訂正</value></data>
+  <data name="Privacy_Section6_Item3" xml:space="preserve"><value>データの削除</value></data>
+  <data name="Privacy_Section6_Item4" xml:space="preserve"><value>データポータビリティ</value></data>
+  <data name="Privacy_Section6_Item5" xml:space="preserve"><value>マーケティング通信のオプトアウト</value></data>
+  <data name="Privacy_Section7_Title" xml:space="preserve"><value>7. Cookie</value></data>
+  <data name="Privacy_Section7_Text" xml:space="preserve"><value>閲覧活動に関する情報を収集するためにCookieや類似の追跡技術を使用しています。ブラウザ設定でCookieを制御できます。</value></data>
+  <data name="Privacy_Section8_Title" xml:space="preserve"><value>8. ポリシーの変更</value></data>
+  <data name="Privacy_Section8_Text" xml:space="preserve"><value>このプライバシーポリシーは随時更新される場合があります。変更がある場合は、このページに新しいポリシーを掲載してお知らせします。</value></data>
+  <data name="Privacy_Section9_Title" xml:space="preserve"><value>9. お問い合わせ</value></data>
+  <data name="Privacy_Section9_Text" xml:space="preserve"><value>このプライバシーポリシーに関するご質問は、こちらまでご連絡ください:</value></data>
+
+  <!-- Terms Page -->
+  <data name="Terms_Title" xml:space="preserve"><value>利用規約</value></data>
+  <data name="Terms_LastUpdated" xml:space="preserve"><value>最終更新:</value></data>
+  <data name="Terms_Section1_Title" xml:space="preserve"><value>1. 規約への同意</value></data>
+  <data name="Terms_Section1_Text" xml:space="preserve"><value>VR Arcade Finderにアクセスまたは使用することにより、この利用規約に拘束されることに同意したものとみなされます。これらの条件に同意しない場合は、サービスを使用しないでください。</value></data>
+  <data name="Terms_Section2_Title" xml:space="preserve"><value>2. サービスの説明</value></data>
+  <data name="Terms_Section2_Text" xml:space="preserve"><value>VR Arcade Finderは、ユーザーとVRアーケードを結びつけるオンラインプラットフォームを提供します。提供内容:</value></data>
+  <data name="Terms_Section2_Item1" xml:space="preserve"><value>VRアーケードディレクトリと検索</value></data>
+  <data name="Terms_Section2_Item2" xml:space="preserve"><value>ユーザーレビューと評価</value></data>
+  <data name="Terms_Section2_Item3" xml:space="preserve"><value>アーケードオーナー向けビジネスリスティングサービス</value></data>
+  <data name="Terms_Section2_Item4" xml:space="preserve"><value>イベントリストと情報</value></data>
+  <data name="Terms_Section3_Title" xml:space="preserve"><value>3. ユーザーアカウント</value></data>
+  <data name="Terms_Section3_Text" xml:space="preserve"><value>特定の機能にアクセスするには、アカウントを作成する必要があります。以下について責任を負います:</value></data>
+  <data name="Terms_Section3_Item1" xml:space="preserve"><value>アカウントの機密保持</value></data>
+  <data name="Terms_Section3_Item2" xml:space="preserve"><value>アカウントで発生するすべての活動</value></data>
+  <data name="Terms_Section3_Item3" xml:space="preserve"><value>不正使用の通知</value></data>
+  <data name="Terms_Section4_Title" xml:space="preserve"><value>4. ユーザーコンテンツ</value></data>
+  <data name="Terms_Section4_Text1" xml:space="preserve"><value>提出したコンテンツの所有権は保持されます。コンテンツを投稿することにより、プラットフォーム上でコンテンツを使用、表示、配布する非独占的でロイヤリティフリーのライセンスを当社に付与します。</value></data>
+  <data name="Terms_Section4_Text2" xml:space="preserve"><value>以下のコンテンツを投稿しないことに同意します:</value></data>
+  <data name="Terms_Section4_Item1" xml:space="preserve"><value>虚偽、誤解を招く、または詐欺的なもの</value></data>
+  <data name="Terms_Section4_Item2" xml:space="preserve"><value>知的財産権を侵害するもの</value></data>
+  <data name="Terms_Section4_Item3" xml:space="preserve"><value>名誉毀損、わいせつ、または不快なもの</value></data>
+  <data name="Terms_Section4_Item4" xml:space="preserve"><value>適用法に違反するもの</value></data>
+  <data name="Terms_Section5_Title" xml:space="preserve"><value>5. ビジネスリスティング</value></data>
+  <data name="Terms_Section5_Text" xml:space="preserve"><value>ビジネスを掲載するアーケードオーナーは以下に同意します:</value></data>
+  <data name="Terms_Section5_Item1" xml:space="preserve"><value>正確で最新の情報を提供する</value></data>
+  <data name="Terms_Section5_Item2" xml:space="preserve"><value>リスティング情報を最新に保つ</value></data>
+  <data name="Terms_Section5_Item3" xml:space="preserve"><value>該当するサブスクリプション料金を支払う</value></data>
+  <data name="Terms_Section5_Item4" xml:space="preserve"><value>すべての適用法規を遵守する</value></data>
+  <data name="Terms_Section6_Title" xml:space="preserve"><value>6. 支払いとサブスクリプション</value></data>
+  <data name="Terms_Section6_Text" xml:space="preserve"><value>プレミアムリスティングには支払いが必要です。サブスクリプション料金は前払いで、法律で要求される場合または返金ポリシーに明記されている場合を除き、返金されません。</value></data>
+  <data name="Terms_Section7_Title" xml:space="preserve"><value>7. 知的財産</value></data>
+  <data name="Terms_Section7_Text" xml:space="preserve"><value>VR Arcade Finder上のすべてのコンテンツ、商標、その他の知的財産は、当社またはライセンサーが所有しています。許可なくコンテンツをコピー、変更、配布することはできません。</value></data>
+  <data name="Terms_Section8_Title" xml:space="preserve"><value>8. 保証の免責</value></data>
+  <data name="Terms_Section8_Text" xml:space="preserve"><value>サービスは「現状のまま」提供され、いかなる種類の保証もありません。リスティングやレビューの正確性を保証しません。</value></data>
+  <data name="Terms_Section9_Title" xml:space="preserve"><value>9. 責任の制限</value></data>
+  <data name="Terms_Section9_Text" xml:space="preserve"><value>法律で許可される最大限の範囲で、VR Arcade Finderは、サービスの使用から生じる間接的、偶発的、特別、または結果的な損害について責任を負いません。</value></data>
+  <data name="Terms_Section10_Title" xml:space="preserve"><value>10. 補償</value></data>
+  <data name="Terms_Section10_Text" xml:space="preserve"><value>サービスの使用またはこれらの条件の違反から生じるいかなる請求、損害、または費用からもVR Arcade Finderを補償し、免責することに同意します。</value></data>
+  <data name="Terms_Section11_Title" xml:space="preserve"><value>11. 終了</value></data>
+  <data name="Terms_Section11_Text" xml:space="preserve"><value>これらの条件への違反またはその他の理由により、当社の裁量でアカウントを停止または終了する権利を留保します。</value></data>
+  <data name="Terms_Section12_Title" xml:space="preserve"><value>12. 条件の変更</value></data>
+  <data name="Terms_Section12_Text" xml:space="preserve"><value>これらの条件はいつでも変更される場合があります。変更後もサービスを継続して使用することは、新しい条件を受け入れたものとみなされます。</value></data>
+  <data name="Terms_Section13_Title" xml:space="preserve"><value>13. 準拠法</value></data>
+  <data name="Terms_Section13_Text" xml:space="preserve"><value>これらの条件は、適用法に従って解釈されます。</value></data>
+  <data name="Terms_Section14_Title" xml:space="preserve"><value>14. お問い合わせ</value></data>
+  <data name="Terms_Section14_Text" xml:space="preserve"><value>これらの条件に関するご質問は、こちらまでご連絡ください:</value></data>
+
+  <!-- Games Page -->
+  <data name="Games_Title" xml:space="preserve"><value>VRゲーム</value></data>
+  <data name="Games_Subtitle" xml:space="preserve"><value>アーケードで遊べるVRゲームカタログを閲覧</value></data>
+  <data name="Games_SearchPlaceholder" xml:space="preserve"><value>ゲームを検索...</value></data>
+  <data name="Games_AllPlatforms" xml:space="preserve"><value>すべてのプラットフォーム</value></data>
+  <data name="Games_AllGenres" xml:space="preserve"><value>すべてのジャンル</value></data>
+  <data name="Games_AllIntensities" xml:space="preserve"><value>すべての強度</value></data>
+  <data name="Games_Filter" xml:space="preserve"><value>フィルター</value></data>
+  <data name="Games_Reset" xml:space="preserve"><value>リセット</value></data>
+  <data name="Games_Multiplayer" xml:space="preserve"><value>マルチプレイヤー</value></data>
+  <data name="Games_CoOp" xml:space="preserve"><value>協力プレイ</value></data>
+  <data name="Games_Intensity" xml:space="preserve"><value>強度:</value></data>
+  <data name="Games_IntensityLow" xml:space="preserve"><value>低（快適）</value></data>
+  <data name="Games_IntensityMedium" xml:space="preserve"><value>中</value></data>
+  <data name="Games_IntensityHigh" xml:space="preserve"><value>高（激しい）</value></data>
+  <data name="Games_Arcades" xml:space="preserve"><value>アーケード</value></data>
+  <data name="Games_NoGames" xml:space="preserve"><value>ゲームが見つかりません</value></data>
+  <data name="Games_NoGamesMessage" xml:space="preserve"><value>フィルターや検索条件を調整してみてください。</value></data>
+
+  <!-- Claim Page -->
+  <data name="Claim_Title" xml:space="preserve"><value>掲載を申請</value></data>
+  <data name="Claim_ClaimYourArcade" xml:space="preserve"><value>VRアーケードを申請</value></data>
+  <data name="Claim_WhyClaim" xml:space="preserve"><value>なぜ掲載を申請するのですか？</value></data>
+  <data name="Claim_Benefit1" xml:space="preserve"><value>いつでもアーケード情報を更新</value></data>
+  <data name="Claim_Benefit2" xml:space="preserve"><value>顧客レビューに返信</value></data>
+  <data name="Claim_Benefit3" xml:space="preserve"><value>写真とVRゲームインベントリを追加</value></data>
+  <data name="Claim_Benefit4" xml:space="preserve"><value>イベントや特別オファーを投稿</value></data>
+  <data name="Claim_Benefit5" xml:space="preserve"><value>分析とインサイトにアクセス</value></data>
+  <data name="Claim_Claiming" xml:space="preserve"><value>申請対象:</value></data>
+  <data name="Claim_VerificationInfo" xml:space="preserve"><value>確認情報</value></data>
+  <data name="Claim_FullName" xml:space="preserve"><value>フルネーム</value></data>
+  <data name="Claim_YourRole" xml:space="preserve"><value>あなたの役職</value></data>
+  <data name="Claim_SelectRole" xml:space="preserve"><value>役職を選択...</value></data>
+  <data name="Claim_Owner" xml:space="preserve"><value>オーナー</value></data>
+  <data name="Claim_Manager" xml:space="preserve"><value>マネージャー</value></data>
+  <data name="Claim_MarketingManager" xml:space="preserve"><value>マーケティングマネージャー</value></data>
+  <data name="Claim_Other" xml:space="preserve"><value>その他</value></data>
+  <data name="Claim_BusinessEmail" xml:space="preserve"><value>ビジネスメール</value></data>
+  <data name="Claim_EmailNote" xml:space="preserve"><value>このメールに確認を送信します</value></data>
+  <data name="Claim_PhoneNumber" xml:space="preserve"><value>電話番号</value></data>
+  <data name="Claim_VerificationMethod" xml:space="preserve"><value>確認方法</value></data>
+  <data name="Claim_EmailVerification" xml:space="preserve"><value>メール確認（ビジネスメールにコードを送信）</value></data>
+  <data name="Claim_PhoneVerification" xml:space="preserve"><value>電話確認（登録されたビジネス番号に電話）</value></data>
+  <data name="Claim_DocumentVerification" xml:space="preserve"><value>書類確認（営業許可証または公共料金請求書をアップロード）</value></data>
+  <data name="Claim_UploadDocument" xml:space="preserve"><value>確認書類をアップロード</value></data>
+  <data name="Claim_AcceptedDocuments" xml:space="preserve"><value>受付可能: 営業許可証、公共料金請求書、または事業名と住所が記載された公式文書</value></data>
+  <data name="Claim_AdditionalNotes" xml:space="preserve"><value>追加メモ</value></data>
+  <data name="Claim_NotesPlaceholder" xml:space="preserve"><value>所有権確認に役立つ追加情報...</value></data>
+  <data name="Claim_ConfirmAuthorized" xml:space="preserve"><value>このビジネスを代表する権限があることを確認し、以下に同意します</value></data>
+  <data name="Claim_SubmitClaim" xml:space="preserve"><value>申請を送信</value></data>
+  <data name="Claim_WhatHappensNext" xml:space="preserve"><value>次のステップは？</value></data>
+  <data name="Claim_Next1" xml:space="preserve"><value>1〜2営業日以内に申請を確認します</value></data>
+  <data name="Claim_Next2" xml:space="preserve"><value>確認のメールまたは電話を受け取ります</value></data>
+  <data name="Claim_Next3" xml:space="preserve"><value>確認後、リスティングを完全に管理できます</value></data>
+  <data name="Claim_Next4" xml:space="preserve"><value>追加機能のためにプレミアムプランにアップグレードできます</value></data>
+
+  <!-- Submit Arcade Page -->
+  <data name="Submit_Title" xml:space="preserve"><value>VRアーケードを登録</value></data>
+  <data name="Submit_Subtitle" xml:space="preserve"><value>ディレクトリにVRアーケードを追加し、数千のVR愛好家にリーチ</value></data>
+  <data name="Submit_BasicInfo" xml:space="preserve"><value>基本情報</value></data>
+  <data name="Submit_ArcadeName" xml:space="preserve"><value>アーケード名</value></data>
+  <data name="Submit_Description" xml:space="preserve"><value>説明</value></data>
+  <data name="Submit_DescriptionPlaceholder" xml:space="preserve"><value>VRアーケードの特徴、ユニークな点、お客様が期待できることを説明してください...</value></data>
+  <data name="Submit_Website" xml:space="preserve"><value>ウェブサイト</value></data>
+  <data name="Submit_Phone" xml:space="preserve"><value>電話番号</value></data>
+  <data name="Submit_Email" xml:space="preserve"><value>メール</value></data>
+  <data name="Submit_Location" xml:space="preserve"><value>所在地</value></data>
+  <data name="Submit_Address" xml:space="preserve"><value>住所</value></data>
+  <data name="Submit_City" xml:space="preserve"><value>都市</value></data>
+  <data name="Submit_Country" xml:space="preserve"><value>国</value></data>
+  <data name="Submit_SelectCountry" xml:space="preserve"><value>国を選択...</value></data>
+  <data name="Submit_VREquipment" xml:space="preserve"><value>VR機器と機能</value></data>
+  <data name="Submit_VRPlatforms" xml:space="preserve"><value>利用可能なVRプラットフォーム</value></data>
+  <data name="Submit_TotalStations" xml:space="preserve"><value>VRステーション総数</value></data>
+  <data name="Submit_PriceRange" xml:space="preserve"><value>価格帯</value></data>
+  <data name="Submit_BudgetFriendly" xml:space="preserve"><value>お手頃</value></data>
+  <data name="Submit_Moderate" xml:space="preserve"><value>標準</value></data>
+  <data name="Submit_PremiumPrice" xml:space="preserve"><value>プレミアム</value></data>
+  <data name="Submit_Features" xml:space="preserve"><value>機能</value></data>
+  <data name="Submit_MultiplayerArea" xml:space="preserve"><value>マルチプレイヤーエリア</value></data>
+  <data name="Submit_PartyRooms" xml:space="preserve"><value>パーティールーム</value></data>
+  <data name="Submit_MotionPlatform" xml:space="preserve"><value>モーションプラットフォーム</value></data>
+  <data name="Submit_RoomScaleVR" xml:space="preserve"><value>ルームスケールVR</value></data>
+  <data name="Submit_FullBodyTracking" xml:space="preserve"><value>フルボディトラッキング</value></data>
+  <data name="Submit_VRArena" xml:space="preserve"><value>VRアリーナ/フリーローム</value></data>
+  <data name="Submit_BusinessHours" xml:space="preserve"><value>営業時間</value></data>
+  <data name="Submit_To" xml:space="preserve"><value>〜</value></data>
+  <data name="Submit_Closed" xml:space="preserve"><value>定休日</value></data>
+  <data name="Submit_Photos" xml:space="preserve"><value>写真</value></data>
+  <data name="Submit_Logo" xml:space="preserve"><value>ロゴ</value></data>
+  <data name="Submit_CoverPhoto" xml:space="preserve"><value>カバー写真</value></data>
+  <data name="Submit_GalleryPhotos" xml:space="preserve"><value>ギャラリー写真（最大10枚）</value></data>
+  <data name="Submit_GalleryNote" xml:space="preserve"><value>アーケード、VR機器、セットアップの写真を複数選択してください</value></data>
+  <data name="Submit_ChoosePlan" xml:space="preserve"><value>プランを選択</value></data>
+  <data name="Submit_ViewPlanComparison" xml:space="preserve"><value>プラン比較の詳細を見る</value></data>
+  <data name="Submit_StandardListing" xml:space="preserve"><value>連絡先情報付き標準掲載</value></data>
+  <data name="Submit_Popular" xml:space="preserve"><value>人気</value></data>
+  <data name="Submit_PhotoGalleryPriority" xml:space="preserve"><value>フォトギャラリー＋優先掲載</value></data>
+  <data name="Submit_HomepageAnalytics" xml:space="preserve"><value>ホームページ掲載＋分析</value></data>
+  <data name="Submit_AgreeTerms" xml:space="preserve"><value>以下に同意します</value></data>
+  <data name="Submit_And" xml:space="preserve"><value>および</value></data>
+  <data name="Submit_SubmitArcade" xml:space="preserve"><value>アーケードを登録</value></data>
+
+  <!-- Checkout Success Page -->
+  <data name="Checkout_PaymentSuccessful" xml:space="preserve"><value>お支払い完了！</value></data>
+  <data name="Checkout_ThankYou" xml:space="preserve"><value>ご購入ありがとうございます。リスティングが有効になりました。</value></data>
+  <data name="Checkout_OrderId" xml:space="preserve"><value>注文ID:</value></data>
+  <data name="Checkout_Plan" xml:space="preserve"><value>プラン:</value></data>
+  <data name="Checkout_Amount" xml:space="preserve"><value>金額:</value></data>
+  <data name="Checkout_WhatsNext" xml:space="preserve"><value>次のステップは？</value></data>
+  <data name="Checkout_Next1" xml:space="preserve"><value>リスティングが公開され、ユーザーに表示されています</value></data>
+  <data name="Checkout_Next2" xml:space="preserve"><value>以下からリスティングを管理できます</value></data>
+  <data name="Checkout_Dashboard" xml:space="preserve"><value>ダッシュボード</value></data>
+  <data name="Checkout_Next3" xml:space="preserve"><value>確認メールがメールアドレスに送信されました</value></data>
+  <data name="Checkout_Next4" xml:space="preserve"><value>分析にアクセスして閲覧数とエンゲージメントを追跡</value></data>
+  <data name="Checkout_ViewListing" xml:space="preserve"><value>リスティングを見る</value></data>
+  <data name="Checkout_GoToDashboard" xml:space="preserve"><value>ダッシュボードへ</value></data>
+  <data name="Checkout_NeedHelp" xml:space="preserve"><value>お困りですか？こちらまでご連絡ください</value></data>
+
+  <!-- Days of Week -->
+  <data name="Day_Monday" xml:space="preserve"><value>月曜日</value></data>
+  <data name="Day_Tuesday" xml:space="preserve"><value>火曜日</value></data>
+  <data name="Day_Wednesday" xml:space="preserve"><value>水曜日</value></data>
+  <data name="Day_Thursday" xml:space="preserve"><value>木曜日</value></data>
+  <data name="Day_Friday" xml:space="preserve"><value>金曜日</value></data>
+  <data name="Day_Saturday" xml:space="preserve"><value>土曜日</value></data>
+  <data name="Day_Sunday" xml:space="preserve"><value>日曜日</value></data>
+</root>

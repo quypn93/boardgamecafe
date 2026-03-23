@@ -55,7 +55,7 @@
     <value>Bảng giá</value>
   </data>
   <data name="Nav_AddCafe" xml:space="preserve">
-    <value>Thêm quán của bạn</value>
+    <value>Thêm cafe của bạn</value>
   </data>
   <data name="Nav_FAQ" xml:space="preserve">
     <value>Câu hỏi thường gặp</value>
@@ -78,13 +78,13 @@
 
   <!-- Home Page -->
   <data name="Home_Title" xml:space="preserve">
-    <value>Tìm quán Board Game gần bạn</value>
+    <value>Tìm cafe Board Game gần bạn</value>
   </data>
   <data name="Home_Subtitle" xml:space="preserve">
-    <value>Khám phá những quán board game, phòng chơi và điểm đến chơi game tốt nhất trong khu vực của bạn</value>
+    <value>Khám phá những cafe board game, phòng chơi và điểm đến chơi game tốt nhất trong khu vực của bạn</value>
   </data>
   <data name="Home_SearchPlaceholder" xml:space="preserve">
-    <value>Tìm theo thành phố, tên quán...</value>
+    <value>Tìm theo thành phố, tên cafe...</value>
   </data>
   <data name="Home_SearchButton" xml:space="preserve">
     <value>Tìm kiếm</value>
@@ -102,16 +102,16 @@
     <value>Thành phố</value>
   </data>
   <data name="Home_CafesFound" xml:space="preserve">
-    <value>quán được tìm thấy</value>
+    <value>cafe được tìm thấy</value>
   </data>
   <data name="Home_NoCafesFound" xml:space="preserve">
-    <value>Không tìm thấy quán nào phù hợp với tiêu chí của bạn</value>
+    <value>Không tìm thấy cafe nào phù hợp với tiêu chí của bạn</value>
   </data>
   <data name="Home_HeroTitle" xml:space="preserve">
-    <value>Tìm Quán Board Game Hoàn Hảo</value>
+    <value>Tìm Cafe Board Game Hoàn Hảo</value>
   </data>
   <data name="Home_HeroSubtitle" xml:space="preserve">
-    <value>Khám phá các quán board game tuyệt vời gần bạn. Duyệt hàng ngàn game, đọc đánh giá và tìm địa điểm hoàn hảo cho buổi chơi game tiếp theo cùng bạn bè và gia đình.</value>
+    <value>Khám phá các cafe board game tuyệt vời gần bạn. Duyệt hàng ngàn game, đọc đánh giá và tìm địa điểm hoàn hảo cho buổi chơi game tiếp theo cùng bạn bè và gia đình.</value>
   </data>
   <data name="Home_BrowseCafes" xml:space="preserve">
     <value>Tìm Kiếm</value>
@@ -141,7 +141,7 @@
     <value>Xóa Bộ Lọc</value>
   </data>
   <data name="Home_BoardGameCafes" xml:space="preserve">
-    <value>Quán Board Game</value>
+    <value>Cafe Board Game</value>
   </data>
   <data name="Home_NearYourLocation" xml:space="preserve">
     <value>gần vị trí của bạn</value>
@@ -165,16 +165,16 @@
     <value>trên</value>
   </data>
   <data name="Home_NoCafesTitle" xml:space="preserve">
-    <value>Không tìm thấy quán</value>
+    <value>Không tìm thấy cafe</value>
   </data>
   <data name="Home_NoCafesMessage" xml:space="preserve">
-    <value>Hãy thử điều chỉnh bộ lọc hoặc xóa tất cả bộ lọc để xem tất cả các quán.</value>
+    <value>Hãy thử điều chỉnh bộ lọc hoặc xóa tất cả bộ lọc để xem tất cả các cafe.</value>
   </data>
   <data name="Home_PopularCities" xml:space="preserve">
     <value>Thành Phố Phổ Biến</value>
   </data>
   <data name="Home_WhyVisit" xml:space="preserve">
-    <value>Tại Sao Nên Đến Quán Board Game?</value>
+    <value>Tại Sao Nên Đến Cafe Board Game?</value>
   </data>
   <data name="Home_HugeLibraries" xml:space="preserve">
     <value>Thư Viện Game Khổng Lồ</value>
@@ -192,34 +192,34 @@
     <value>Hướng Dẫn Chuyên Nghiệp</value>
   </data>
   <data name="Home_ExpertGuidanceDesc" xml:space="preserve">
-    <value>Nhân viên quán board game có thể dạy bạn luật chơi, đề xuất game phù hợp với sở thích và giúp bạn tìm game hoàn hảo cho nhóm.</value>
+    <value>Nhân viên cafe board game có thể dạy bạn luật chơi, đề xuất game phù hợp với sở thích và giúp bạn tìm game hoàn hảo cho nhóm.</value>
   </data>
   <data name="Home_HowToFind" xml:space="preserve">
-    <value>Cách Tìm Quán Hoàn Hảo</value>
+    <value>Cách Tìm Cafe Hoàn Hảo</value>
   </data>
   <data name="Home_Step1Title" xml:space="preserve">
     <value>Tìm Theo Vị Trí</value>
   </data>
   <data name="Home_Step1Desc" xml:space="preserve">
-    <value>Sử dụng nút "Gần Tôi" hoặc chọn quốc gia và thành phố để tìm quán gần đó.</value>
+    <value>Sử dụng nút "Gần Tôi" hoặc chọn quốc gia và thành phố để tìm cafe gần đó.</value>
   </data>
   <data name="Home_Step2Title" xml:space="preserve">
     <value>Lọc Theo Game</value>
   </data>
   <data name="Home_Step2Desc" xml:space="preserve">
-    <value>Đang tìm một game cụ thể? Lọc các quán theo board game họ có.</value>
+    <value>Đang tìm một game cụ thể? Lọc các cafe theo board game họ có.</value>
   </data>
   <data name="Home_Step3Title" xml:space="preserve">
     <value>Đọc Đánh Giá</value>
   </data>
   <data name="Home_Step3Desc" xml:space="preserve">
-    <value>Xem đánh giá từ những khách hàng khác để tìm quán tốt nhất trong khu vực.</value>
+    <value>Xem đánh giá từ những khách hàng khác để tìm cafe tốt nhất trong khu vực.</value>
   </data>
   <data name="Home_Step4Title" xml:space="preserve">
     <value>Lên Kế Hoạch</value>
   </data>
   <data name="Home_Step4Desc" xml:space="preserve">
-    <value>Xem chỉ đường, kiểm tra giờ mở cửa và truy cập website của quán để lên kế hoạch.</value>
+    <value>Xem chỉ đường, kiểm tra giờ mở cửa và truy cập website của cafe để lên kế hoạch.</value>
   </data>
   <data name="Home_GettingLocation" xml:space="preserve">
     <value>Đang lấy vị trí...</value>
@@ -282,28 +282,28 @@
 
   <!-- Dynamic Blog Post Templates -->
   <data name="BlogTemplate_CityGuide_Title" xml:space="preserve">
-    <value>Các quán Board Game tại {0} - Hướng dẫn đầy đủ</value>
+    <value>Các cafe Board Game tại {0} - Hướng dẫn đầy đủ</value>
   </data>
   <data name="BlogTemplate_CityGuide_Summary" xml:space="preserve">
-    <value>Hướng dẫn đầy đủ về các quán board game tại {0}. Tìm những địa điểm chơi tốt nhất, các game có sẵn và nhiều hơn nữa.</value>
+    <value>Hướng dẫn đầy đủ về các cafe board game tại {0}. Tìm những địa điểm chơi tốt nhất, các game có sẵn và nhiều hơn nữa.</value>
   </data>
   <data name="BlogTemplate_CityGuide_Intro" xml:space="preserve">
-    <value>Chào mừng bạn đến với hướng dẫn toàn diện về các quán board game tại {0}! Dù bạn là game thủ kỳ cựu hay chỉ đang tìm kiếm một đêm vui vẻ, chúng tôi đã có mọi thứ cho bạn.</value>
+    <value>Chào mừng bạn đến với hướng dẫn toàn diện về các cafe board game tại {0}! Dù bạn là game thủ kỳ cựu hay chỉ đang tìm kiếm một đêm vui vẻ, chúng tôi đã có mọi thứ cho bạn.</value>
   </data>
   <data name="BlogTemplate_CityGuide_Overview" xml:space="preserve">
     <value>Tổng quan</value>
   </data>
   <data name="BlogTemplate_CityGuide_OverviewText" xml:space="preserve">
-    <value>{0} có {1} quán board game, cung cấp hàng ngàn game thuộc nhiều thể loại khác nhau. Từ những góc ấm cúng hoàn hảo cho buổi hẹn hò đến những không gian rộng rãi lý tưởng cho nhóm lớn, có thứ gì đó dành cho tất cả mọi người.</value>
+    <value>{0} có {1} cafe board game, cung cấp hàng ngàn game thuộc nhiều thể loại khác nhau. Từ những góc ấm cúng hoàn hảo cho buổi hẹn hò đến những không gian rộng rãi lý tưởng cho nhóm lớn, có thứ gì đó dành cho tất cả mọi người.</value>
   </data>
   <data name="BlogTemplate_CityGuide_TopRated" xml:space="preserve">
-    <value>Các quán được đánh giá cao</value>
+    <value>Các cafe được đánh giá cao</value>
   </data>
   <data name="BlogTemplate_CityGuide_Tips" xml:space="preserve">
     <value>Mẹo khi ghé thăm</value>
   </data>
   <data name="BlogTemplate_CityGuide_Tip1" xml:space="preserve">
-    <value>Đặt chỗ trước: Các quán nổi tiếng có thể đông kín nhanh chóng, đặc biệt vào cuối tuần.</value>
+    <value>Đặt chỗ trước: Các cafe nổi tiếng có thể đông kín nhanh chóng, đặc biệt vào cuối tuần.</value>
   </data>
   <data name="BlogTemplate_CityGuide_Tip2" xml:space="preserve">
     <value>Hỏi ý kiến nhân viên: Nhân viên thường là những game thủ và có thể gợi ý game hoàn hảo cho nhóm của bạn.</value>
@@ -318,31 +318,31 @@
     <value>Khám phá thêm</value>
   </data>
   <data name="BlogTemplate_CityGuide_ViewAllCafes" xml:space="preserve">
-    <value>Xem tất cả quán tại {0}</value>
+    <value>Xem tất cả cafe tại {0}</value>
   </data>
   <data name="BlogTemplate_TopGames_Title" xml:space="preserve">
     <value>Các Board Game phổ biến nhất tại {0}</value>
   </data>
   <data name="BlogTemplate_TopGames_Summary" xml:space="preserve">
-    <value>Khám phá những board game phổ biến nhất có sẵn tại các quán board game ở {0}. Từ game gia đình yêu thích đến những kiệt tác chiến thuật.</value>
+    <value>Khám phá những board game phổ biến nhất có sẵn tại các cafe board game ở {0}. Từ game gia đình yêu thích đến những kiệt tác chiến thuật.</value>
   </data>
   <data name="BlogTemplate_TopGames_Intro" xml:space="preserve">
-    <value>Đang tìm những board game hay nhất để chơi tại {0}? Chúng tôi đã phân tích dữ liệu từ {1} quán board game trong khu vực để mang đến cho bạn những game phổ biến nhất mà người chơi địa phương yêu thích.</value>
+    <value>Đang tìm những board game hay nhất để chơi tại {0}? Chúng tôi đã phân tích dữ liệu từ {1} cafe board game trong khu vực để mang đến cho bạn những game phổ biến nhất mà người chơi địa phương yêu thích.</value>
   </data>
   <data name="BlogTemplate_TopGames_WhyTheseGames" xml:space="preserve">
     <value>Tại sao lại là những game này?</value>
   </data>
   <data name="BlogTemplate_TopGames_WhyText" xml:space="preserve">
-    <value>Những game này xuất hiện thường xuyên nhất tại các quán board game ở {0}, nghĩa là bạn có thể tìm thấy chúng ở bất cứ đâu bạn đến. Đây là những game được yêu thích, phù hợp với mọi người.</value>
+    <value>Những game này xuất hiện thường xuyên nhất tại các cafe board game ở {0}, nghĩa là bạn có thể tìm thấy chúng ở bất cứ đâu bạn đến. Đây là những game được yêu thích, phù hợp với mọi người.</value>
   </data>
   <data name="BlogTemplate_TopGames_AvailableAt" xml:space="preserve">
-    <value>Có sẵn tại {0} quán ở {1}</value>
+    <value>Có sẵn tại {0} cafe ở {1}</value>
   </data>
   <data name="BlogTemplate_TopGames_WhereToPlay" xml:space="preserve">
     <value>Chơi ở đâu</value>
   </data>
   <data name="BlogTemplate_TopGames_WhereToPlayText" xml:space="preserve">
-    <value>Sẵn sàng thử những game này? Duyệt tất cả các quán board game tại {0} để tìm địa điểm hoàn hảo cho đêm chơi game tiếp theo của bạn.</value>
+    <value>Sẵn sàng thử những game này? Duyệt tất cả các cafe board game tại {0} để tìm địa điểm hoàn hảo cho đêm chơi game tiếp theo của bạn.</value>
   </data>
   <data name="BlogTemplate_Players" xml:space="preserve">
     <value>{0}-{1} Người chơi</value>
@@ -353,7 +353,7 @@
 
   <!-- Footer -->
   <data name="Footer_Description" xml:space="preserve">
-    <value>Khám phá những quán board game tốt nhất gần bạn. Duyệt thư viện game phong phú, đọc đánh giá và tìm điểm đến chơi game tiếp theo của bạn.</value>
+    <value>Khám phá những cafe board game tốt nhất gần bạn. Duyệt thư viện game phong phú, đọc đánh giá và tìm điểm đến chơi game tiếp theo của bạn.</value>
   </data>
   <data name="Footer_Explore" xml:space="preserve">
     <value>Khám phá</value>
@@ -367,11 +367,14 @@
   <data name="Footer_Terms" xml:space="preserve">
     <value>Điều khoản dịch vụ</value>
   </data>
+  <data name="Footer_RefundPolicy" xml:space="preserve">
+    <value>Chính sách hoàn tiền</value>
+  </data>
   <data name="Footer_Contact" xml:space="preserve">
     <value>Liên hệ</value>
   </data>
   <data name="Footer_ContactText" xml:space="preserve">
-    <value>Bạn có quán board game muốn thêm? Sở hữu quán và muốn cập nhật thông tin? Hãy liên hệ với chúng tôi!</value>
+    <value>Bạn có cafe board game muốn thêm? Sở hữu cafe và muốn cập nhật thông tin? Hãy liên hệ với chúng tôi!</value>
   </data>
   <data name="Footer_Copyright" xml:space="preserve">
     <value>© {0} Board Game Cafe Finder. Đã đăng ký bản quyền.</value>
@@ -414,21 +417,55 @@
 
   <!-- SEO Meta -->
   <data name="Meta_DefaultDescription" xml:space="preserve">
-    <value>Tìm những quán board game tốt nhất gần bạn. Khám phá các phòng chơi board game với bản đồ tương tác và danh bạ quán toàn diện.</value>
+    <value>Tìm những cafe board game tốt nhất gần bạn. Khám phá các phòng chơi board game với bản đồ tương tác và danh bạ cafe toàn diện.</value>
   </data>
   <data name="Meta_DefaultKeywords" xml:space="preserve">
-    <value>quán board game, phòng chơi board game, chơi game bàn, board game gần tôi, tìm quán board game</value>
+    <value>cafe board game, phòng chơi board game, chơi game bàn, board game gần tôi, tìm cafe board game</value>
+  </data>
+
+  <!-- SEO: Blog Post Page -->
+  <data name="SEO_BlogPost_Title" xml:space="preserve">
+    <value>Cafe Board Game tại {0}, {1} - Hướng Dẫn Đầy Đủ {2}</value>
+  </data>
+  <data name="SEO_BlogPost_Description" xml:space="preserve">
+    <value>Khám phá {0} cafe board game tại {1}, {2}. Tìm những địa điểm chơi board game tốt nhất với hơn {3} game có sẵn. Đánh giá, xếp hạng &amp; chỉ đường.</value>
+  </data>
+  <data name="SEO_BlogPost_Keywords" xml:space="preserve">
+    <value>cafe board game {0}, phòng chơi board game {0}, chơi game bàn {0}, board game {1}, tìm cafe board game {0}</value>
+  </data>
+  <data name="SEO_BlogPost_Headline" xml:space="preserve">
+    <value>Cafe Board Game tại {0} - Hướng Dẫn Đầy Đủ</value>
+  </data>
+
+  <!-- SEO: Blog Index Page -->
+  <data name="SEO_BlogIndex_TitleCountry" xml:space="preserve">
+    <value>Cafe Board Game tại {0} - Hướng Dẫn Theo Thành Phố {1}</value>
+  </data>
+  <data name="SEO_BlogIndex_TitleAll" xml:space="preserve">
+    <value>Hướng Dẫn Cafe Board Game - {0} Thành Phố Trên Toàn Thế Giới</value>
+  </data>
+  <data name="SEO_BlogIndex_DescCountry" xml:space="preserve">
+    <value>Tìm cafe board game tại {0}. Duyệt hướng dẫn theo thành phố, khám phá game hàng đầu và lên kế hoạch cho buổi chơi board game tiếp theo.</value>
+  </data>
+  <data name="SEO_BlogIndex_DescAll" xml:space="preserve">
+    <value>Khám phá cafe board game tại {0} thành phố trên toàn thế giới. Hướng dẫn chi tiết với game hàng đầu, đánh giá, xếp hạng &amp; chỉ đường.</value>
+  </data>
+  <data name="SEO_BlogIndex_KeywordsCountry" xml:space="preserve">
+    <value>cafe board game {0}, phòng chơi board game {0}, chơi game bàn {0}</value>
+  </data>
+  <data name="SEO_BlogIndex_KeywordsAll" xml:space="preserve">
+    <value>cafe board game, phòng chơi board game, chơi game bàn, board game gần tôi, hướng dẫn theo thành phố</value>
   </data>
 
   <!-- Blog Index Page -->
   <data name="Blog_CafeGuides" xml:space="preserve">
-    <value>Hướng Dẫn Quán Board Game</value>
+    <value>Hướng Dẫn Cafe Board Game</value>
   </data>
   <data name="Blog_ExploreCities" xml:space="preserve">
-    <value>Khám phá quán board game tại {0} thành phố trên toàn thế giới</value>
+    <value>Khám phá cafe board game tại {0} thành phố trên toàn thế giới</value>
   </data>
   <data name="Blog_ExploreCitiesInCountry" xml:space="preserve">
-    <value>Khám phá quán board game tại {0} thành phố ở {1}</value>
+    <value>Khám phá cafe board game tại {0} thành phố ở {1}</value>
   </data>
   <data name="Blog_Clear" xml:space="preserve">
     <value>Xóa</value>
@@ -446,7 +483,7 @@
     <value>Xem Tất cả Quốc gia</value>
   </data>
   <data name="Blog_CafesIn" xml:space="preserve">
-    <value>Quán Board Game tại {0}</value>
+    <value>Cafe Board Game tại {0}</value>
   </data>
   <data name="Blog_DiscoverCafes" xml:space="preserve">
     <value>Khám phá {0} {1} board game tại {2} với hơn {3} game để chơi.</value>
@@ -455,10 +492,10 @@
     <value>Khám phá {0} {1} board game tại {2}.</value>
   </data>
   <data name="Blog_Cafe" xml:space="preserve">
-    <value>quán</value>
+    <value>cafe</value>
   </data>
   <data name="Blog_Cafes" xml:space="preserve">
-    <value>quán</value>
+    <value>cafe</value>
   </data>
   <data name="Blog_ShowingPage" xml:space="preserve">
     <value>Đang hiển thị trang</value>
@@ -470,7 +507,7 @@
     <value>Không tìm thấy thành phố</value>
   </data>
   <data name="Blog_NoCitiesMessage" xml:space="preserve">
-    <value>Chưa có quán board game nào được thêm vào.</value>
+    <value>Chưa có cafe board game nào được thêm vào.</value>
   </data>
   <data name="Blog_QuickStats" xml:space="preserve">
     <value>Thống Kê Nhanh</value>
@@ -485,10 +522,10 @@
     <value>Duyệt theo Quốc gia</value>
   </data>
   <data name="Blog_FindCafesNearYou" xml:space="preserve">
-    <value>Tìm Quán Gần Bạn</value>
+    <value>Tìm Cafe Gần Bạn</value>
   </data>
   <data name="Blog_FindCafesDesc" xml:space="preserve">
-    <value>Sử dụng bản đồ tương tác để khám phá các quán board game.</value>
+    <value>Sử dụng bản đồ tương tác để khám phá các cafe board game.</value>
   </data>
   <data name="Blog_OpenMap" xml:space="preserve">
     <value>Mở Bản Đồ</value>
@@ -499,13 +536,13 @@
 
   <!-- Map Page -->
   <data name="Map_Title" xml:space="preserve">
-    <value>Bản Đồ Quán Board Game</value>
+    <value>Bản Đồ Cafe Board Game</value>
   </data>
   <data name="Map_Subtitle" xml:space="preserve">
-    <value>Khám phá quán board game gần bạn</value>
+    <value>Khám phá cafe board game gần bạn</value>
   </data>
   <data name="Map_CafesFound" xml:space="preserve">
-    <value>Quán Được Tìm Thấy</value>
+    <value>Cafe Được Tìm Thấy</value>
   </data>
   <data name="Map_SearchPlaceholder" xml:space="preserve">
     <value>Tìm thành phố hoặc địa chỉ...</value>
@@ -547,13 +584,13 @@
     <value>Tìm kiếm</value>
   </data>
   <data name="Map_FindCafes" xml:space="preserve">
-    <value>Tìm Quán Board Game</value>
+    <value>Tìm Cafe Board Game</value>
   </data>
   <data name="Map_EmptyStateText" xml:space="preserve">
-    <value>Nhập vị trí hoặc dùng vị trí hiện tại để khám phá quán gần đó</value>
+    <value>Nhập vị trí hoặc dùng vị trí hiện tại để khám phá cafe gần đó</value>
   </data>
   <data name="Map_SearchingForCafes" xml:space="preserve">
-    <value>Đang tìm quán...</value>
+    <value>Đang tìm cafe...</value>
   </data>
   <data name="Map_ShowResults" xml:space="preserve">
     <value>Hiển thị Kết quả</value>
@@ -571,7 +608,7 @@
     <value>Về vị trí</value>
   </data>
   <data name="Map_Cafe" xml:space="preserve">
-    <value>Quán</value>
+    <value>Cafe</value>
   </data>
   <data name="Map_YourLocation" xml:space="preserve">
     <value>Vị trí của bạn</value>
@@ -593,8 +630,8 @@
   <data name="Account_LastName" xml:space="preserve"><value>Họ</value></data>
   <data name="Account_ConfirmPassword" xml:space="preserve"><value>Xác nhận mật khẩu</value></data>
   <data name="Account_PasswordHint" xml:space="preserve"><value>Tối thiểu 8 ký tự gồm chữ hoa, chữ thường và số.</value></data>
-  <data name="Account_IsCafeOwner" xml:space="preserve"><value>Tôi là chủ quán café</value></data>
-  <data name="Account_CafeOwnerHint" xml:space="preserve"><value>Chọn nếu bạn sở hữu hoặc quản lý quán board game. Bạn sẽ có thể xác nhận và quản lý quán của mình.</value></data>
+  <data name="Account_IsCafeOwner" xml:space="preserve"><value>Tôi là chủ cafe board game</value></data>
+  <data name="Account_CafeOwnerHint" xml:space="preserve"><value>Chọn nếu bạn sở hữu hoặc quản lý cafe board game. Bạn sẽ có thể xác nhận và quản lý cafe của mình.</value></data>
   <data name="Account_AlreadyHaveAccount" xml:space="preserve"><value>Đã có tài khoản?</value></data>
   <data name="Account_Profile" xml:space="preserve"><value>Hồ sơ của tôi</value></data>
   <data name="Account_ProfileInfo" xml:space="preserve"><value>Thông tin hồ sơ</value></data>
@@ -615,10 +652,10 @@
   <data name="Account_MemberSince" xml:space="preserve"><value>Thành viên từ</value></data>
   <data name="Account_LastLogin" xml:space="preserve"><value>Đăng nhập gần nhất</value></data>
   <data name="Account_QuickActions" xml:space="preserve"><value>Thao tác nhanh</value></data>
-  <data name="Account_FindCafes" xml:space="preserve"><value>Tìm quán</value></data>
+  <data name="Account_FindCafes" xml:space="preserve"><value>Tìm cafe</value></data>
   <data name="Account_MapView" xml:space="preserve"><value>Xem bản đồ</value></data>
-  <data name="Account_ManageMyCafe" xml:space="preserve"><value>Quản lý quán của tôi</value></data>
-  <data name="Account_OwnBoardGameCafe" xml:space="preserve"><value>Bạn sở hữu quán Board Game?</value></data>
+  <data name="Account_ManageMyCafe" xml:space="preserve"><value>Quản lý cafe của tôi</value></data>
+  <data name="Account_OwnBoardGameCafe" xml:space="preserve"><value>Bạn sở hữu cafe Board Game?</value></data>
   <data name="Account_ClaimBusiness" xml:space="preserve"><value>Xác nhận doanh nghiệp và quản lý để thu hút thêm khách hàng.</value></data>
   <data name="Account_LearnPremium" xml:space="preserve"><value>Tìm hiểu về gói Premium</value></data>
   <data name="Account_ChangeAvatar" xml:space="preserve"><value>Đổi ảnh đại diện</value></data>
@@ -634,7 +671,7 @@
 
   <!-- Pricing Page -->
   <data name="Pricing_Title" xml:space="preserve"><value>Gói Đăng Ký Cao Cấp</value></data>
-  <data name="Pricing_Subtitle" xml:space="preserve"><value>Tăng độ nhận diện quán board game và thu hút thêm khách hàng</value></data>
+  <data name="Pricing_Subtitle" xml:space="preserve"><value>Tăng độ nhận diện cafe board game và thu hút thêm khách hàng</value></data>
   <data name="Pricing_MostPopular" xml:space="preserve"><value>Phổ biến nhất</value></data>
   <data name="Pricing_PerMonth" xml:space="preserve"><value>/tháng</value></data>
   <data name="Pricing_GetStarted" xml:space="preserve"><value>Bắt đầu</value></data>
@@ -653,8 +690,8 @@
   <data name="Pricing_GameInventory" xml:space="preserve"><value>Quản lý kho game</value></data>
   <data name="Pricing_Analytics" xml:space="preserve"><value>Bảng thống kê</value></data>
   <data name="Pricing_FAQ" xml:space="preserve"><value>Câu hỏi thường gặp</value></data>
-  <data name="Pricing_FAQ1_Q" xml:space="preserve"><value>Làm sao để xác nhận quán của tôi?</value></data>
-  <data name="Pricing_FAQ1_A" xml:space="preserve"><value>Tìm quán của bạn trên nền tảng, sau đó nhấn "Xác nhận doanh nghiệp" trên trang quán. Bạn cần xác minh quyền sở hữu trước khi kích hoạt tính năng cao cấp.</value></data>
+  <data name="Pricing_FAQ1_Q" xml:space="preserve"><value>Làm sao để xác nhận cafe của tôi?</value></data>
+  <data name="Pricing_FAQ1_A" xml:space="preserve"><value>Tìm cafe của bạn trên nền tảng, sau đó nhấn "Xác nhận doanh nghiệp" trên trang cafe. Bạn cần xác minh quyền sở hữu trước khi kích hoạt tính năng cao cấp.</value></data>
   <data name="Pricing_FAQ2_Q" xml:space="preserve"><value>Tôi có thể thay đổi gói sau không?</value></data>
   <data name="Pricing_FAQ2_A" xml:space="preserve"><value>Có! Bạn có thể nâng cấp hoặc hạ cấp gói bất cứ lúc nào. Khi nâng cấp, bạn được truy cập ngay các tính năng mới. Khi hạ cấp, thay đổi có hiệu lực vào cuối kỳ thanh toán.</value></data>
   <data name="Pricing_FAQ3_Q" xml:space="preserve"><value>Bạn chấp nhận phương thức thanh toán nào?</value></data>
@@ -662,15 +699,15 @@
   <data name="Pricing_FAQ4_Q" xml:space="preserve"><value>Có hợp đồng hoặc cam kết không?</value></data>
   <data name="Pricing_FAQ4_A" xml:space="preserve"><value>Không có hợp đồng dài hạn! Tất cả gói đều theo tháng và bạn có thể hủy bất cứ lúc nào. Listing của bạn vẫn hoạt động đến hết kỳ thanh toán.</value></data>
   <data name="Pricing_ReadyToGrow" xml:space="preserve"><value>Sẵn sàng phát triển doanh nghiệp?</value></data>
-  <data name="Pricing_JoinCafes" xml:space="preserve"><value>Tham gia cùng hàng trăm quán board game đang sử dụng nền tảng của chúng tôi</value></data>
-  <data name="Pricing_FindYourCafe" xml:space="preserve"><value>Tìm quán của bạn</value></data>
-  <data name="Pricing_AddYourCafe" xml:space="preserve"><value>Thêm quán của bạn</value></data>
-  <data name="Pricing_SearchCafe" xml:space="preserve"><value>Tìm kiếm quán board game của bạn để bắt đầu với gói</value></data>
+  <data name="Pricing_JoinCafes" xml:space="preserve"><value>Tham gia cùng hàng trăm cafe board game đang sử dụng nền tảng của chúng tôi</value></data>
+  <data name="Pricing_FindYourCafe" xml:space="preserve"><value>Tìm cafe của bạn</value></data>
+  <data name="Pricing_AddYourCafe" xml:space="preserve"><value>Thêm cafe của bạn</value></data>
+  <data name="Pricing_SearchCafe" xml:space="preserve"><value>Tìm kiếm cafe board game của bạn để bắt đầu với gói</value></data>
   <data name="Pricing_Plan" xml:space="preserve"><value></value></data>
-  <data name="Pricing_SearchPlaceholder" xml:space="preserve"><value>Nhập tên quán hoặc thành phố...</value></data>
-  <data name="Pricing_StartTyping" xml:space="preserve"><value>Bắt đầu nhập để tìm kiếm quán của bạn</value></data>
-  <data name="Pricing_NoCafesFound" xml:space="preserve"><value>Không tìm thấy quán. Thử từ khóa khác.</value></data>
-  <data name="Pricing_CantFindCafe" xml:space="preserve"><value>Không tìm thấy quán của bạn?</value></data>
+  <data name="Pricing_SearchPlaceholder" xml:space="preserve"><value>Nhập tên cafe hoặc thành phố...</value></data>
+  <data name="Pricing_StartTyping" xml:space="preserve"><value>Bắt đầu nhập để tìm kiếm cafe của bạn</value></data>
+  <data name="Pricing_NoCafesFound" xml:space="preserve"><value>Không tìm thấy cafe. Thử từ khóa khác.</value></data>
+  <data name="Pricing_CantFindCafe" xml:space="preserve"><value>Không tìm thấy cafe của bạn?</value></data>
   <data name="Pricing_AddItNow" xml:space="preserve"><value>Thêm ngay</value></data>
   <data name="Pricing_SearchError" xml:space="preserve"><value>Lỗi tìm kiếm. Vui lòng thử lại.</value></data>
   <data name="Plan_Feature_BasicListing" xml:space="preserve"><value>Danh sách cơ bản</value></data>

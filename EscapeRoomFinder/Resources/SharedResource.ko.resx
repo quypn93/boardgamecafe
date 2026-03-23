@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>홈</value></data>
+  <data name="Nav_Search" xml:space="preserve"><value>검색</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>지도</value></data>
+  <data name="Nav_Cities" xml:space="preserve"><value>도시</value></data>
+  <data name="Nav_Themes" xml:space="preserve"><value>테마</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>블로그</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>비즈니스</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>로그인</value></data>
+  <data name="Nav_SignUp" xml:space="preserve"><value>회원가입</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>로그아웃</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>프로필</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>관리자</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>주변 방탈출 찾기</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>다음 탈출을 찾아보세요</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>전 세계 {0}개 업체, {1}개 방탈출 발견</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>최고의 방탈출을 발견하고, 리뷰를 읽고, 난이도를 비교하고, 다음 모험을 예약하세요</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>방탈출 검색...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>검색</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>모든 국가</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>모든 도시</value></data>
+  <data name="Home_AllThemes" xml:space="preserve"><value>모든 테마</value></data>
+  <data name="Home_VenuesFound" xml:space="preserve"><value>개 업체 찾음</value></data>
+  <data name="Home_BrowseVenues" xml:space="preserve"><value>업체 보기</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>지도 보기</value></data>
+  <data name="Home_AdvancedFilters" xml:space="preserve"><value>고급 필터</value></data>
+  <data name="Home_Difficulty" xml:space="preserve"><value>난이도</value></data>
+  <data name="Home_Players" xml:space="preserve"><value>인원</value></data>
+  <data name="Home_SortBy" xml:space="preserve"><value>정렬</value></data>
+  <data name="Home_Apply" xml:space="preserve"><value>적용</value></data>
+  <data name="Home_Any" xml:space="preserve"><value>전체</value></data>
+  <data name="Home_VeryEasy" xml:space="preserve"><value>매우 쉬움</value></data>
+  <data name="Home_Easy" xml:space="preserve"><value>쉬움</value></data>
+  <data name="Home_Medium" xml:space="preserve"><value>보통</value></data>
+  <data name="Home_Hard" xml:space="preserve"><value>어려움</value></data>
+  <data name="Home_Expert" xml:space="preserve"><value>전문가</value></data>
+  <data name="Home_PlayersCount" xml:space="preserve"><value>{0}명</value></data>
+  <data name="Home_Recommended" xml:space="preserve"><value>추천</value></data>
+  <data name="Home_Rating" xml:space="preserve"><value>평점</value></data>
+  <data name="Home_Reviews" xml:space="preserve"><value>리뷰</value></data>
+  <data name="Home_Rooms" xml:space="preserve"><value>방</value></data>
+  <data name="Home_Name" xml:space="preserve"><value>이름</value></data>
+  <data name="Home_NoResults" xml:space="preserve"><value>방탈출을 찾을 수 없습니다</value></data>
+  <data name="Home_NoResultsMessage" xml:space="preserve"><value>검색 필터를 조정하거나 다른 도시를 탐색해보세요.</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>필터 지우기</value></data>
+  <data name="Home_Showing" xml:space="preserve"><value>{2}개 중 {0}-{1} 표시</value></data>
+  <data name="Home_ViewDetails" xml:space="preserve"><value>상세 보기</value></data>
+  <data name="Home_Featured" xml:space="preserve"><value>추천</value></data>
+  <data name="Home_Verified" xml:space="preserve"><value>인증됨</value></data>
+
+  <!-- Venue Details -->
+  <data name="Venue_Rating" xml:space="preserve"><value>평점</value></data>
+  <data name="Venue_Reviews" xml:space="preserve"><value>개 리뷰</value></data>
+  <data name="Venue_Address" xml:space="preserve"><value>주소</value></data>
+  <data name="Venue_Phone" xml:space="preserve"><value>전화</value></data>
+  <data name="Venue_Website" xml:space="preserve"><value>웹사이트</value></data>
+  <data name="Venue_Hours" xml:space="preserve"><value>영업시간</value></data>
+  <data name="Venue_Rooms" xml:space="preserve"><value>방탈출</value></data>
+  <data name="Venue_RoomsAvailable" xml:space="preserve"><value>개 방 이용 가능</value></data>
+  <data name="Venue_ViewOnMap" xml:space="preserve"><value>지도에서 보기</value></data>
+  <data name="Venue_GetDirections" xml:space="preserve"><value>길찾기</value></data>
+  <data name="Venue_Difficulty" xml:space="preserve"><value>난이도</value></data>
+  <data name="Venue_Players" xml:space="preserve"><value>인원</value></data>
+  <data name="Venue_Duration" xml:space="preserve"><value>소요시간</value></data>
+  <data name="Venue_Theme" xml:space="preserve"><value>테마</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>도시별 방탈출 가이드</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>전 세계 {0}개 도시의 방탈출 탐색</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>{1}의 {0}개 도시 방탈출 탐색</value></data>
+  <data name="Blog_VenuesIn" xml:space="preserve"><value>{0}의 방탈출</value></data>
+  <data name="Blog_DiscoverVenues" xml:space="preserve"><value>{2}에서 {0}개 {1}, {3}개 방을 발견하세요.</value></data>
+  <data name="Blog_DiscoverVenuesSimple" xml:space="preserve"><value>{2}에서 {0}개 방탈출 {1}을 발견하세요.</value></data>
+  <data name="Blog_Venue" xml:space="preserve"><value>업체</value></data>
+  <data name="Blog_Venues" xml:space="preserve"><value>업체</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>모든 도시 표시</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>국가별 필터</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>모든 국가</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>지우기</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>페이지</value></data>
+  <data name="Blog_Of" xml:space="preserve"><value>/</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>개 도시 찾음</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>도시를 찾을 수 없음</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>아직 데이터를 수집하지 않았습니다. 나중에 다시 확인해주세요!</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>통계</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>도시</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>국가</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>국가별 보기</value></data>
+  <data name="Blog_FindVenuesNearYou" xml:space="preserve"><value>주변 방탈출 찾기</value></data>
+  <data name="Blog_FindVenuesDesc" xml:space="preserve"><value>인터랙티브 지도로 주변 방탈출을 발견하세요.</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>지도 열기</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0}개 더</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>주변 최고의 방탈출을 발견하세요. 업체를 탐색하고, 리뷰를 읽고, 난이도를 비교하고, 다음 목적지를 찾으세요.</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>탐색</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>법적 정보</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>개인정보 보호정책</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>이용약관</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>문의하기</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>추가하고 싶은 방탈출이 있으신가요? 업체를 운영하시며 정보를 업데이트하고 싶으신가요? 연락주세요!</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Escape Room Finder. All rights reserved.</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>상세 보기</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>더 알아보기</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>제출</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>취소</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>저장</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>삭제</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>편집</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>뒤로</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>다음</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>이전</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>로딩 중...</value></data>
+  <data name="Common_Explore" xml:space="preserve"><value>탐색</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>방탈출 지도</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>주변 방탈출 발견</value></data>
+  <data name="Map_VenuesFound" xml:space="preserve"><value>업체 찾음</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>도시 또는 주소 검색...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>내 위치 사용</value></data>
+
+  <!-- Profile Page -->
+  <data name="Profile_Title" xml:space="preserve"><value>내 프로필</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>프로필 편집</value></data>
+  <data name="Profile_Stats" xml:space="preserve"><value>통계</value></data>
+  <data name="Profile_ReviewsWritten" xml:space="preserve"><value>작성한 리뷰</value></data>
+  <data name="Profile_RoomsPlayed" xml:space="preserve"><value>플레이한 방</value></data>
+  <data name="Profile_Escapes" xml:space="preserve"><value>탈출 성공</value></data>
+  <data name="Profile_EscapeRate" xml:space="preserve"><value>탈출 성공률</value></data>
+  <data name="Profile_Reputation" xml:space="preserve"><value>평판</value></data>
+  <data name="Profile_FirstName" xml:space="preserve"><value>이름</value></data>
+  <data name="Profile_LastName" xml:space="preserve"><value>성</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>표시 이름</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>소개</value></data>
+  <data name="Profile_City" xml:space="preserve"><value>도시</value></data>
+  <data name="Profile_Country" xml:space="preserve"><value>국가</value></data>
+  <data name="Profile_FavoriteThemes" xml:space="preserve"><value>좋아하는 테마</value></data>
+  <data name="Profile_FavoriteThemesPlaceholder" xml:space="preserve"><value>공포, 미스터리, 모험...</value></data>
+  <data name="Profile_SeparateWithCommas" xml:space="preserve"><value>쉼표로 구분하세요</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>변경사항 저장</value></data>
+
+  <!-- Language Names -->
+  <data name="Lang_English" xml:space="preserve"><value>English</value></data>
+  <data name="Lang_Vietnamese" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Lang_Japanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="Lang_Korean" xml:space="preserve"><value>한국어</value></data>
+  <data name="Lang_Chinese" xml:space="preserve"><value>中文</value></data>
+  <data name="Lang_Thai" xml:space="preserve"><value>ไทย</value></data>
+  <data name="Lang_Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="Lang_German" xml:space="preserve"><value>Deutsch</value></data>
+</root>

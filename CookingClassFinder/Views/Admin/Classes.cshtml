@@ -1,0 +1,123 @@
+@model IEnumerable<CookingClass>
+@{
+    ViewData["Title"] = "Classes";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0">Manage Classes</h4>
+    </div>
+    <a asp-action="CreateClass" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Add Class
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search classes...">
+            </div>
+            <div class="col-md-3">
+                <select id="cuisineFilter" class="form-select">
+                    <option value="">All Cuisines</option>
+                    @foreach (var cuisine in Model.Select(c => c.CuisineType).Distinct().OrderBy(c => c))
+                    {
+                        <option value="@cuisine">@cuisine</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="levelFilter" class="form-select">
+                    <option value="">All Levels</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="All Levels">All Levels</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover" id="classesTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>School</th>
+                        <th>Cuisine</th>
+                        <th>Level</th>
+                        <th>Price</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr data-cuisine="@item.CuisineType" data-level="@item.DifficultyLevel">
+                            <td>
+                                <strong>@item.Name</strong>
+                            </td>
+                            <td>@item.School?.Name</td>
+                            <td><span class="badge bg-secondary">@item.CuisineType</span></td>
+                            <td><span class="badge @item.GetDifficultyBadgeClass()">@item.DifficultyLevel</span></td>
+                            <td>
+                                @if (item.PricePerPerson.HasValue)
+                                {
+                                    <span>$@item.PricePerPerson</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>@item.GetDurationDisplay()</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="EditClass" asp-route-id="@item.ClassId" class="btn btn-outline-primary" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-controller="School" asp-action="ClassDetails" asp-route-slug="@item.Slug" target="_blank" class="btn btn-outline-secondary" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" onclick="confirmDelete(@item.ClassId, '@item.Name')" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('searchInput').addEventListener('input', filterTable);
+        document.getElementById('cuisineFilter').addEventListener('change', filterTable);
+        document.getElementById('levelFilter').addEventListener('change', filterTable);
+
+        function filterTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const cuisine = document.getElementById('cuisineFilter').value;
+            const level = document.getElementById('levelFilter').value;
+
+            document.querySelectorAll('#classesTable tbody tr').forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchSearch = !search || text.includes(search);
+                const matchCuisine = !cuisine || row.dataset.cuisine === cuisine;
+                const matchLevel = !level || row.dataset.level === level;
+                row.style.display = matchSearch && matchCuisine && matchLevel ? '' : 'none';
+            });
+        }
+
+        function confirmDelete(id, name) {
+            if (confirm(`Are you sure you want to delete "${name}"?`)) {
+                window.location.href = `/Admin/DeleteClass/${id}`;
+            }
+        }
+    </script>
+}

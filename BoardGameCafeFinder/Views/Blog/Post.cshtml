@@ -1,7 +1,8 @@
 @model BoardGameCafeFinder.Controllers.DynamicBlogPost
+@inject IStringLocalizer<SharedResource> SharedLocalizer
 @{
-    ViewData["Title"] = $"Board Game Cafes in {Model.City}, {Model.Country} - Complete Guide {DateTime.Now.Year}";
-    ViewData["MetaDescription"] = $"Discover {Model.TotalCafes} board game cafes in {Model.City}, {Model.Country}. Find the best places to play board games with {Model.TotalGames}+ games available. Reviews, ratings & directions.";
+    ViewData["Title"] = string.Format(SharedLocalizer["SEO_BlogPost_Title"].Value, Model.City, Model.Country, DateTime.Now.Year);
+    ViewData["MetaDescription"] = string.Format(SharedLocalizer["SEO_BlogPost_Description"].Value, Model.TotalCafes, Model.City, Model.Country, Model.TotalGames);
     Layout = "_UserLayout";
 
     // Helper function to create URL-friendly slug from city name
@@ -18,7 +19,7 @@
     }
 
     // SEO: Keywords
-    ViewData["Keywords"] = $"board game cafe {Model.City}, board game lounge {Model.City}, tabletop gaming {Model.City}, {Model.Country} board games, where to play board games {Model.City}";
+    ViewData["Keywords"] = string.Format(SharedLocalizer["SEO_BlogPost_Keywords"].Value, Model.City, Model.Country);
 
     var relatedCities = ViewBag.RelatedCities as List<string> ?? new List<string>();
 }
@@ -29,7 +30,7 @@
     {
         "@@context": "https://schema.org",
         "@@type": "Article",
-        "headline": "Board Game Cafes in @Model.City - Complete Guide",
+        "headline": "@string.Format(SharedLocalizer["SEO_BlogPost_Headline"].Value, Model.City)",
         "description": "@ViewData["MetaDescription"]",
         "author": {
             "@@type": "Organization",
@@ -59,9 +60,10 @@
                 {
                     "@@type": "ListItem",
                     "position": @(i + 1),
+                    "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(cafe.Name).ToString())",
                     "item": {
                         "@@type": "LocalBusiness",
-                        "name": "@cafe.Name.Replace("\"", "\\\"")",
+                        "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(cafe.Name).ToString())",
                         "address": {
                             "@@type": "PostalAddress",
                             "addressLocality": "@Model.City",
@@ -70,9 +72,9 @@
                         {<text>,
                         "aggregateRating": {
                             "@@type": "AggregateRating",
-                            "ratingValue": "@cafe.AverageRating.Value.ToString("F1")",
+                            "ratingValue": "@cafe.AverageRating.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)",
                             "bestRating": "5",
-                            "ratingCount": "@cafe.TotalReviews"
+                            "reviewCount": @cafe.TotalReviews
                         }</text>}
                     }
                 }@(i < Math.Min(Model.Cafes.Count, 10) - 1 ? "," : "")
@@ -82,6 +84,36 @@
         }
     }
     </script>
+
+    @{
+        var ratedCafes = Model.Cafes.Where(c => c.AverageRating.HasValue && c.TotalReviews > 0).ToList();
+        var totalReviewCount = ratedCafes.Sum(c => c.TotalReviews);
+    }
+    @if (ratedCafes.Any() && totalReviewCount > 0)
+    {
+        var avgRating = ratedCafes.Average(c => (double)c.AverageRating!.Value);
+        <!-- LocalBusiness Schema for star rich snippets -->
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "LocalBusiness",
+            "name": "Board Game Cafe in @Model.City",
+            "description": "Find the best board game cafe in @Model.City, @Model.Country. @Model.TotalCafes locations with reviews, ratings & game libraries.",
+            "address": {
+                "@@type": "PostalAddress",
+                "addressLocality": "@Model.City",
+                "addressCountry": "@Model.Country"
+            },
+            "aggregateRating": {
+                "@@type": "AggregateRating",
+                "ratingValue": "@avgRating.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)",
+                "reviewCount": @totalReviewCount,
+                "bestRating": "5",
+                "worstRating": "1"
+            }
+        }
+        </script>
+    }
 }
 
 <!-- Hero Section -->

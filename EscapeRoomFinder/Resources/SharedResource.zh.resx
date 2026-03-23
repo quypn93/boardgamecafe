@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>首页</value></data>
+  <data name="Nav_Search" xml:space="preserve"><value>搜索</value></data>
+  <data name="Nav_MapView" xml:space="preserve"><value>地图</value></data>
+  <data name="Nav_Cities" xml:space="preserve"><value>城市</value></data>
+  <data name="Nav_Themes" xml:space="preserve"><value>主题</value></data>
+  <data name="Nav_Blog" xml:space="preserve"><value>博客</value></data>
+  <data name="Nav_ForBusiness" xml:space="preserve"><value>商业合作</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Nav_SignUp" xml:space="preserve"><value>注册</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>退出</value></data>
+  <data name="Nav_Profile" xml:space="preserve"><value>个人资料</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>管理</value></data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve"><value>查找附近的密室逃脱</value></data>
+  <data name="Home_HeroTitle" xml:space="preserve"><value>寻找您的下一次逃脱</value></data>
+  <data name="Home_HeroSubtitle" xml:space="preserve"><value>发现全球{0}个场馆，{1}个密室逃脱</value></data>
+  <data name="Home_Subtitle" xml:space="preserve"><value>发现最佳密室逃脱，阅读评论，比较难度，预订您的下一次冒险</value></data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve"><value>搜索密室逃脱...</value></data>
+  <data name="Home_SearchButton" xml:space="preserve"><value>搜索</value></data>
+  <data name="Home_AllCountries" xml:space="preserve"><value>所有国家</value></data>
+  <data name="Home_AllCities" xml:space="preserve"><value>所有城市</value></data>
+  <data name="Home_AllThemes" xml:space="preserve"><value>所有主题</value></data>
+  <data name="Home_VenuesFound" xml:space="preserve"><value>个场馆找到</value></data>
+  <data name="Home_BrowseVenues" xml:space="preserve"><value>浏览场馆</value></data>
+  <data name="Home_ViewMap" xml:space="preserve"><value>查看地图</value></data>
+  <data name="Home_AdvancedFilters" xml:space="preserve"><value>高级筛选</value></data>
+  <data name="Home_Difficulty" xml:space="preserve"><value>难度</value></data>
+  <data name="Home_Players" xml:space="preserve"><value>人数</value></data>
+  <data name="Home_SortBy" xml:space="preserve"><value>排序</value></data>
+  <data name="Home_Apply" xml:space="preserve"><value>应用</value></data>
+  <data name="Home_Any" xml:space="preserve"><value>全部</value></data>
+  <data name="Home_VeryEasy" xml:space="preserve"><value>非常简单</value></data>
+  <data name="Home_Easy" xml:space="preserve"><value>简单</value></data>
+  <data name="Home_Medium" xml:space="preserve"><value>中等</value></data>
+  <data name="Home_Hard" xml:space="preserve"><value>困难</value></data>
+  <data name="Home_Expert" xml:space="preserve"><value>专家</value></data>
+  <data name="Home_PlayersCount" xml:space="preserve"><value>{0}人</value></data>
+  <data name="Home_Recommended" xml:space="preserve"><value>推荐</value></data>
+  <data name="Home_Rating" xml:space="preserve"><value>评分</value></data>
+  <data name="Home_Reviews" xml:space="preserve"><value>评论</value></data>
+  <data name="Home_Rooms" xml:space="preserve"><value>房间</value></data>
+  <data name="Home_Name" xml:space="preserve"><value>名称</value></data>
+  <data name="Home_NoResults" xml:space="preserve"><value>未找到密室逃脱</value></data>
+  <data name="Home_NoResultsMessage" xml:space="preserve"><value>请尝试调整搜索筛选条件或探索其他城市。</value></data>
+  <data name="Home_ClearFilters" xml:space="preserve"><value>清除筛选</value></data>
+  <data name="Home_Showing" xml:space="preserve"><value>显示{2}个中的{0}-{1}</value></data>
+  <data name="Home_ViewDetails" xml:space="preserve"><value>查看详情</value></data>
+  <data name="Home_Featured" xml:space="preserve"><value>推荐</value></data>
+  <data name="Home_Verified" xml:space="preserve"><value>已认证</value></data>
+
+  <!-- Venue Details -->
+  <data name="Venue_Rating" xml:space="preserve"><value>评分</value></data>
+  <data name="Venue_Reviews" xml:space="preserve"><value>条评论</value></data>
+  <data name="Venue_Address" xml:space="preserve"><value>地址</value></data>
+  <data name="Venue_Phone" xml:space="preserve"><value>电话</value></data>
+  <data name="Venue_Website" xml:space="preserve"><value>网站</value></data>
+  <data name="Venue_Hours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Venue_Rooms" xml:space="preserve"><value>密室逃脱</value></data>
+  <data name="Venue_RoomsAvailable" xml:space="preserve"><value>个房间可用</value></data>
+  <data name="Venue_ViewOnMap" xml:space="preserve"><value>在地图上查看</value></data>
+  <data name="Venue_GetDirections" xml:space="preserve"><value>获取路线</value></data>
+  <data name="Venue_Difficulty" xml:space="preserve"><value>难度</value></data>
+  <data name="Venue_Players" xml:space="preserve"><value>人数</value></data>
+  <data name="Venue_Duration" xml:space="preserve"><value>时长</value></data>
+  <data name="Venue_Theme" xml:space="preserve"><value>主题</value></data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve"><value>城市密室逃脱指南</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>探索全球{0}个城市的密室逃脱</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>探索{1}{0}个城市的密室逃脱</value></data>
+  <data name="Blog_VenuesIn" xml:space="preserve"><value>{0}的密室逃脱</value></data>
+  <data name="Blog_DiscoverVenues" xml:space="preserve"><value>在{2}发现{0}个{1}，{3}个房间等你探索。</value></data>
+  <data name="Blog_DiscoverVenuesSimple" xml:space="preserve"><value>在{2}发现{0}个密室逃脱{1}。</value></data>
+  <data name="Blog_Venue" xml:space="preserve"><value>场馆</value></data>
+  <data name="Blog_Venues" xml:space="preserve"><value>场馆</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>显示所有城市</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>按国家筛选</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>所有国家</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>清除</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>第</value></data>
+  <data name="Blog_Of" xml:space="preserve"><value>/</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>个城市找到</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>未找到城市</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>我们还没有收集数据。请稍后再来！</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>统计</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>城市</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>国家</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>按国家浏览</value></data>
+  <data name="Blog_FindVenuesNearYou" xml:space="preserve"><value>查找附近的密室逃脱</value></data>
+  <data name="Blog_FindVenuesDesc" xml:space="preserve"><value>使用互动地图发现您附近的密室逃脱。</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>打开地图</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>+{0}更多</value></data>
+
+  <!-- Footer -->
+  <data name="Footer_Description" xml:space="preserve"><value>发现附近最好的密室逃脱。浏览场馆，阅读评论，比较难度，找到您的下一个目的地。</value></data>
+  <data name="Footer_Explore" xml:space="preserve"><value>探索</value></data>
+  <data name="Footer_Legal" xml:space="preserve"><value>法律信息</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>隐私政策</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>服务条款</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>联系我们</value></data>
+  <data name="Footer_ContactText" xml:space="preserve"><value>有想添加的密室逃脱吗？拥有场馆想更新信息？请联系我们！</value></data>
+  <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Escape Room Finder. 保留所有权利。</value></data>
+
+  <!-- Common -->
+  <data name="Common_ViewDetails" xml:space="preserve"><value>查看详情</value></data>
+  <data name="Common_LearnMore" xml:space="preserve"><value>了解更多</value></data>
+  <data name="Common_Submit" xml:space="preserve"><value>提交</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Common_Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>返回</value></data>
+  <data name="Common_Next" xml:space="preserve"><value>下一页</value></data>
+  <data name="Common_Previous" xml:space="preserve"><value>上一页</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>加载中...</value></data>
+  <data name="Common_Explore" xml:space="preserve"><value>探索</value></data>
+
+  <!-- Map Page -->
+  <data name="Map_Title" xml:space="preserve"><value>密室逃脱地图</value></data>
+  <data name="Map_Subtitle" xml:space="preserve"><value>发现附近的密室逃脱</value></data>
+  <data name="Map_VenuesFound" xml:space="preserve"><value>个场馆找到</value></data>
+  <data name="Map_SearchPlaceholder" xml:space="preserve"><value>搜索城市或地址...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>使用我的位置</value></data>
+
+  <!-- Profile Page -->
+  <data name="Profile_Title" xml:space="preserve"><value>我的个人资料</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>编辑资料</value></data>
+  <data name="Profile_Stats" xml:space="preserve"><value>统计</value></data>
+  <data name="Profile_ReviewsWritten" xml:space="preserve"><value>撰写的评论</value></data>
+  <data name="Profile_RoomsPlayed" xml:space="preserve"><value>已玩房间</value></data>
+  <data name="Profile_Escapes" xml:space="preserve"><value>逃脱成功</value></data>
+  <data name="Profile_EscapeRate" xml:space="preserve"><value>逃脱成功率</value></data>
+  <data name="Profile_Reputation" xml:space="preserve"><value>声誉</value></data>
+  <data name="Profile_FirstName" xml:space="preserve"><value>名</value></data>
+  <data name="Profile_LastName" xml:space="preserve"><value>姓</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>显示名称</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>简介</value></data>
+  <data name="Profile_City" xml:space="preserve"><value>城市</value></data>
+  <data name="Profile_Country" xml:space="preserve"><value>国家</value></data>
+  <data name="Profile_FavoriteThemes" xml:space="preserve"><value>喜欢的主题</value></data>
+  <data name="Profile_FavoriteThemesPlaceholder" xml:space="preserve"><value>恐怖、悬疑、冒险...</value></data>
+  <data name="Profile_SeparateWithCommas" xml:space="preserve"><value>用逗号分隔</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>保存更改</value></data>
+
+  <!-- Language Names -->
+  <data name="Lang_English" xml:space="preserve"><value>English</value></data>
+  <data name="Lang_Vietnamese" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Lang_Japanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="Lang_Korean" xml:space="preserve"><value>한국어</value></data>
+  <data name="Lang_Chinese" xml:space="preserve"><value>中文</value></data>
+  <data name="Lang_Thai" xml:space="preserve"><value>ไทย</value></data>
+  <data name="Lang_Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="Lang_German" xml:space="preserve"><value>Deutsch</value></data>
+</root>

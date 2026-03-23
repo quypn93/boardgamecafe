@@ -204,24 +204,8 @@ namespace EscapeRoomFinder.Controllers
             return RedirectToAction(nameof(RoomDetails), new { slug = room.Venue.Slug, roomSlug = room.Slug });
         }
 
-        [Route("cities")]
-        public async Task<IActionResult> Cities()
-        {
-            var cities = await _context.Venues
-                .Where(v => v.IsActive)
-                .GroupBy(v => new { v.City, v.Country })
-                .Select(g => new
-                {
-                    g.Key.City,
-                    g.Key.Country,
-                    VenueCount = g.Count(),
-                    RoomCount = g.Sum(v => v.TotalRooms)
-                })
-                .OrderByDescending(c => c.VenueCount)
-                .ToListAsync();
-
-            return View(cities);
-        }
+        // Redirecting to Blog cities page to avoid route conflict
+        // [Route("cities")] - Removed due to conflict with BlogController.Cities
 
         [Route("themes")]
         public async Task<IActionResult> Themes()

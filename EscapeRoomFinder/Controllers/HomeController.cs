@@ -86,6 +86,12 @@ namespace EscapeRoomFinder.Controllers
             return View();
         }
 
+        [Route("for-business")]
+        public IActionResult ForBusiness()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

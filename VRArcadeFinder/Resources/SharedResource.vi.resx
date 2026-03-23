@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter</value>
+  </resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="Nav_MapView" xml:space="preserve">
+    <value>Xem bản đồ</value>
+  </data>
+  <data name="Nav_Blog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="Nav_ForBusiness" xml:space="preserve">
+    <value>Dành cho doanh nghiệp</value>
+  </data>
+  <data name="Nav_Pricing" xml:space="preserve">
+    <value>Bảng giá</value>
+  </data>
+  <data name="Nav_AddArcade" xml:space="preserve">
+    <value>Thêm trung tâm VR</value>
+  </data>
+  <data name="Nav_FAQ" xml:space="preserve">
+    <value>Câu hỏi thường gặp</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Nav_Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>Hồ sơ của tôi</value>
+  </data>
+  <data name="Nav_AdminDashboard" xml:space="preserve">
+    <value>Quản trị viên</value>
+  </data>
+
+  <!-- Home Page -->
+  <data name="Home_Title" xml:space="preserve">
+    <value>Tìm trung tâm VR gần bạn</value>
+  </data>
+  <data name="Home_Subtitle" xml:space="preserve">
+    <value>Khám phá các trung tâm thực tế ảo và gaming center tốt nhất trong khu vực của bạn</value>
+  </data>
+  <data name="Home_SearchPlaceholder" xml:space="preserve">
+    <value>Tìm kiếm theo thành phố, tên trung tâm...</value>
+  </data>
+  <data name="Home_SearchButton" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="Home_AllCountries" xml:space="preserve">
+    <value>Tất cả quốc gia</value>
+  </data>
+  <data name="Home_AllCities" xml:space="preserve">
+    <value>Tất cả thành phố</value>
+  </data>
+  <data name="Home_FilterByCountry" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="Home_FilterByCity" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="Home_ArcadesFound" xml:space="preserve">
+    <value>trung tâm VR được tìm thấy</value>
+  </data>
+  <data name="Home_NoArcadesFound" xml:space="preserve">
+    <value>Không tìm thấy trung tâm VR phù hợp</value>
+  </data>
+  <data name="Home_HeroTitle" xml:space="preserve">
+    <value>Tìm trung tâm VR hoàn hảo của bạn</value>
+  </data>
+  <data name="Home_HeroSubtitle" xml:space="preserve">
+    <value>Khám phá các trung tâm VR tuyệt vời gần bạn. Trải nghiệm các trò chơi thực tế ảo mới nhất, đọc đánh giá và tìm địa điểm hoàn hảo cho buổi chơi game đắm chìm tiếp theo của bạn.</value>
+  </data>
+  <data name="Home_BrowseArcades" xml:space="preserve">
+    <value>Khám phá trung tâm VR</value>
+  </data>
+  <data name="Home_ViewMap" xml:space="preserve">
+    <value>Xem bản đồ</value>
+  </data>
+  <data name="Home_Filters" xml:space="preserve">
+    <value>Bộ lọc</value>
+  </data>
+  <data name="Home_NearMe" xml:space="preserve">
+    <value>Gần tôi</value>
+  </data>
+  <data name="Home_Radius" xml:space="preserve">
+    <value>Bán kính (km)</value>
+  </data>
+  <data name="Home_VRPlatforms" xml:space="preserve">
+    <value>Nền tảng VR</value>
+  </data>
+  <data name="Home_GamesAvailable" xml:space="preserve">
+    <value>Trò chơi có sẵn</value>
+  </data>
+  <data name="Home_ApplyFilters" xml:space="preserve">
+    <value>Áp dụng bộ lọc</value>
+  </data>
+  <data name="Home_ClearFilters" xml:space="preserve">
+    <value>Xóa bộ lọc</value>
+  </data>
+  <data name="Home_VRArcades" xml:space="preserve">
+    <value>Trung tâm VR</value>
+  </data>
+  <data name="Home_NearYourLocation" xml:space="preserve">
+    <value>gần vị trí của bạn</value>
+  </data>
+  <data name="Home_ActiveFilters" xml:space="preserve">
+    <value>Bộ lọc đang áp dụng:</value>
+  </data>
+  <data name="Home_PlatformsSelected" xml:space="preserve">
+    <value>nền tảng đã chọn</value>
+  </data>
+  <data name="Home_Details" xml:space="preserve">
+    <value>Chi tiết</value>
+  </data>
+  <data name="Home_Map" xml:space="preserve">
+    <value>Bản đồ</value>
+  </data>
+  <data name="Home_ShowingPage" xml:space="preserve">
+    <value>Đang hiển thị trang</value>
+  </data>
+  <data name="Home_Of" xml:space="preserve">
+    <value>của</value>
+  </data>
+  <data name="Home_NoArcadesTitle" xml:space="preserve">
+    <value>Không tìm thấy trung tâm VR</value>
+  </data>
+  <data name="Home_NoArcadesMessage" xml:space="preserve">
+    <value>Hãy thử điều chỉnh bộ lọc hoặc xóa tất cả bộ lọc để xem tất cả trung tâm.</value>
+  </data>
+  <data name="Home_PopularCities" xml:space="preserve">
+    <value>Các thành phố có nhiều trung tâm VR</value>
+  </data>
+  <data name="Home_WhyVisit" xml:space="preserve">
+    <value>Tại sao nên đến trung tâm VR?</value>
+  </data>
+  <data name="Home_LatestTechnology" xml:space="preserve">
+    <value>Công nghệ VR mới nhất</value>
+  </data>
+  <data name="Home_LatestTechnologyDesc" xml:space="preserve">
+    <value>Trải nghiệm các thiết bị VR tiên tiến mà không cần chi phí cao để mua riêng. Thử các trò chơi và phần cứng mới nhất trước khi bạn mua.</value>
+  </data>
+  <data name="Home_SocialExperience" xml:space="preserve">
+    <value>Trải nghiệm xã hội</value>
+  </data>
+  <data name="Home_SocialExperienceDesc" xml:space="preserve">
+    <value>Gặp gỡ những người yêu thích VR khác, tận hưởng các trải nghiệm nhiều người chơi, hoặc đưa bạn bè đến cho một cuộc phiêu lưu gaming độc đáo.</value>
+  </data>
+  <data name="Home_ExpertGuidance" xml:space="preserve">
+    <value>Hướng dẫn chuyên nghiệp</value>
+  </data>
+  <data name="Home_ExpertGuidanceDesc" xml:space="preserve">
+    <value>Nhân viên tại các trung tâm VR có thể giúp bạn thiết lập thiết bị, giới thiệu trò chơi dựa trên sở thích của bạn và đảm bảo bạn có trải nghiệm tốt nhất.</value>
+  </data>
+  <data name="Home_HowToFind" xml:space="preserve">
+    <value>Cách tìm trung tâm VR hoàn hảo</value>
+  </data>
+
+  <!-- Arcade Page -->
+  <data name="Arcade_Details" xml:space="preserve">
+    <value>Chi tiết trung tâm VR</value>
+  </data>
+  <data name="Arcade_Rating" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="Arcade_Reviews" xml:space="preserve">
+    <value>đánh giá</value>
+  </data>
+  <data name="Arcade_WriteReview" xml:space="preserve">
+    <value>Viết đánh giá</value>
+  </data>
+  <data name="Arcade_Address" xml:space="preserve">
+    <value>Địa chỉ</value>
+  </data>
+  <data name="Arcade_Phone" xml:space="preserve">
+    <value>Điện thoại</value>
+  </data>
+  <data name="Arcade_Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="Arcade_OpeningHours" xml:space="preserve">
+    <value>Giờ mở cửa</value>
+  </data>
+  <data name="Arcade_VRPlatforms" xml:space="preserve">
+    <value>Nền tảng VR</value>
+  </data>
+  <data name="Arcade_TotalStations" xml:space="preserve">
+    <value>Tổng số trạm VR</value>
+  </data>
+  <data name="Arcade_Multiplayer" xml:space="preserve">
+    <value>Khu vực nhiều người chơi</value>
+  </data>
+  <data name="Arcade_PartyRooms" xml:space="preserve">
+    <value>Phòng tiệc</value>
+  </data>
+  <data name="Arcade_GetDirections" xml:space="preserve">
+    <value>Chỉ đường</value>
+  </data>
+  <data name="Arcade_OpenNow" xml:space="preserve">
+    <value>Đang mở</value>
+  </data>
+  <data name="Arcade_Closed" xml:space="preserve">
+    <value>Đã đóng</value>
+  </data>
+  <data name="Arcade_Verified" xml:space="preserve">
+    <value>Đã xác minh</value>
+  </data>
+  <data name="Arcade_Premium" xml:space="preserve">
+    <value>Cao cấp</value>
+  </data>
+  <data name="Arcade_Featured" xml:space="preserve">
+    <value>Nổi bật</value>
+  </data>
+  <data name="Arcade_AvailableGames" xml:space="preserve">
+    <value>Trò chơi có sẵn</value>
+  </data>
+  <data name="Arcade_Photos" xml:space="preserve">
+    <value>Hình ảnh</value>
+  </data>
+  <data name="Arcade_NearbyArcades" xml:space="preserve">
+    <value>Trung tâm VR gần đây</value>
+  </data>
+  <data name="Arcade_Yes" xml:space="preserve">
+    <value>Có</value>
+  </data>
+  <data name="Arcade_No" xml:space="preserve">
+    <value>Không</value>
+  </data>
+
+  <!-- Reviews -->
+  <data name="Review_Title" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="Review_NoReviews" xml:space="preserve">
+    <value>Chưa có đánh giá. Hãy là người đầu tiên!</value>
+  </data>
+  <data name="Review_WriteFirst" xml:space="preserve">
+    <value>Viết đánh giá đầu tiên</value>
+  </data>
+  <data name="Review_YourRating" xml:space="preserve">
+    <value>Đánh giá của bạn</value>
+  </data>
+  <data name="Review_YourReview" xml:space="preserve">
+    <value>Nhận xét của bạn</value>
+  </data>
+  <data name="Review_Submit" xml:space="preserve">
+    <value>Gửi đánh giá</value>
+  </data>
+  <data name="Review_Helpful" xml:space="preserve">
+    <value>Hữu ích</value>
+  </data>
+  <data name="Review_VerifiedVisit" xml:space="preserve">
+    <value>Đã xác minh ghé thăm</value>
+  </data>
+
+  <!-- Account -->
+  <data name="Account_Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Account_Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Account_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Account_Password" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="Account_ConfirmPassword" xml:space="preserve">
+    <value>Xác nhận mật khẩu</value>
+  </data>
+  <data name="Account_RememberMe" xml:space="preserve">
+    <value>Ghi nhớ đăng nhập</value>
+  </data>
+  <data name="Account_ForgotPassword" xml:space="preserve">
+    <value>Quên mật khẩu?</value>
+  </data>
+  <data name="Account_NoAccount" xml:space="preserve">
+    <value>Chưa có tài khoản?</value>
+  </data>
+  <data name="Account_HaveAccount" xml:space="preserve">
+    <value>Đã có tài khoản?</value>
+  </data>
+  <data name="Account_SignUp" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Account_FirstName" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="Account_LastName" xml:space="preserve">
+    <value>Họ</value>
+  </data>
+  <data name="Account_FullName" xml:space="preserve">
+    <value>Họ và tên</value>
+  </data>
+
+  <!-- Blog -->
+  <data name="Blog_Title" xml:space="preserve">
+    <value>Blog VR Arcade</value>
+  </data>
+  <data name="Blog_Subtitle" xml:space="preserve">
+    <value>Tin tức, mẹo và hướng dẫn về gaming VR</value>
+  </data>
+  <data name="Blog_ReadMore" xml:space="preserve">
+    <value>Đọc thêm</value>
+  </data>
+  <data name="Blog_Categories" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="Blog_RecentPosts" xml:space="preserve">
+    <value>Bài viết gần đây</value>
+  </data>
+  <data name="Blog_Author" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="Blog_PublishedOn" xml:space="preserve">
+    <value>Đăng vào</value>
+  </data>
+  <data name="Blog_Tags" xml:space="preserve">
+    <value>Thẻ</value>
+  </data>
+  <data name="Blog_Share" xml:space="preserve">
+    <value>Chia sẻ</value>
+  </data>
+  <data name="Blog_RelatedPosts" xml:space="preserve">
+    <value>Bài viết liên quan</value>
+  </data>
+
+  <!-- Pricing -->
+  <data name="Pricing_Title" xml:space="preserve">
+    <value>Bảng giá</value>
+  </data>
+  <data name="Pricing_Subtitle" xml:space="preserve">
+    <value>Chọn gói phù hợp cho trung tâm VR của bạn</value>
+  </data>
+  <data name="Pricing_Basic" xml:space="preserve">
+    <value>Cơ bản</value>
+  </data>
+  <data name="Pricing_Standard" xml:space="preserve">
+    <value>Tiêu chuẩn</value>
+  </data>
+  <data name="Pricing_Premium" xml:space="preserve">
+    <value>Cao cấp</value>
+  </data>
+  <data name="Pricing_Monthly" xml:space="preserve">
+    <value>mỗi tháng</value>
+  </data>
+  <data name="Pricing_GetStarted" xml:space="preserve">
+    <value>Bắt đầu</value>
+  </data>
+  <data name="Pricing_ContactUs" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="Pricing_MostPopular" xml:space="preserve">
+    <value>Phổ biến nhất</value>
+  </data>
+
+  <!-- Common -->
+  <data name="Common_Loading" xml:space="preserve">
+    <value>Đang tải...</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="Common_Edit" xml:space="preserve">
+    <value>Sửa</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Common_View" xml:space="preserve">
+    <value>Xem</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="Common_Next" xml:space="preserve">
+    <value>Tiếp theo</value>
+  </data>
+  <data name="Common_Previous" xml:space="preserve">
+    <value>Trước</value>
+  </data>
+  <data name="Common_Submit" xml:space="preserve">
+    <value>Gửi</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="Common_Yes" xml:space="preserve">
+    <value>Có</value>
+  </data>
+  <data name="Common_No" xml:space="preserve">
+    <value>Không</value>
+  </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>Lỗi</value>
+  </data>
+  <data name="Common_Success" xml:space="preserve">
+    <value>Thành công</value>
+  </data>
+  <data name="Common_Warning" xml:space="preserve">
+    <value>Cảnh báo</value>
+  </data>
+
+  <!-- Footer -->
+  <data name="Footer_About" xml:space="preserve">
+    <value>Về chúng tôi</value>
+  </data>
+  <data name="Footer_Contact" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="Footer_Privacy" xml:space="preserve">
+    <value>Chính sách bảo mật</value>
+  </data>
+  <data name="Footer_Terms" xml:space="preserve">
+    <value>Điều khoản dịch vụ</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>Bảo lưu mọi quyền.</value>
+  </data>
+  <data name="Footer_Description" xml:space="preserve">
+    <value>VR Arcade Finder giúp bạn khám phá các trung tâm gaming thực tế ảo tốt nhất trên toàn thế giới.</value>
+  </data>
+
+  <!-- Meta/SEO -->
+  <data name="Meta_SiteTitle" xml:space="preserve">
+    <value>VR Arcade Finder</value>
+  </data>
+  <data name="Meta_SiteDescription" xml:space="preserve">
+    <value>Tìm các trung tâm VR arcade và gaming thực tế ảo tốt nhất gần bạn. Xem đánh giá, so sánh giá và khám phá các trải nghiệm VR tuyệt vời.</value>
+  </data>
+  <data name="Meta_Keywords" xml:space="preserve">
+    <value>VR arcade, thực tế ảo, VR gaming, trung tâm VR, trải nghiệm VR, gaming arcade</value>
+  </data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>Hồ sơ của tôi</value></data>
+  <data name="Profile_EditProfile" xml:space="preserve"><value>Chỉnh sửa hồ sơ</value></data>
+  <data name="Profile_DisplayName" xml:space="preserve"><value>Tên hiển thị</value></data>
+  <data name="Profile_Bio" xml:space="preserve"><value>Giới thiệu</value></data>
+  <data name="Profile_BioPlaceholder" xml:space="preserve"><value>Giới thiệu về bản thân...</value></data>
+  <data name="Profile_Avatar" xml:space="preserve"><value>Ảnh đại diện</value></data>
+  <data name="Profile_FavoriteVRPlatforms" xml:space="preserve"><value>Nền tảng VR yêu thích</value></data>
+  <data name="Profile_PreferredLanguage" xml:space="preserve"><value>Ngôn ngữ ưa thích</value></data>
+  <data name="Profile_Notifications" xml:space="preserve"><value>Thông báo</value></data>
+  <data name="Profile_EmailNotifications" xml:space="preserve"><value>Gửi email về các trung tâm VR mới trong khu vực</value></data>
+  <data name="Profile_EventNotifications" xml:space="preserve"><value>Gửi email về các sự kiện VR sắp tới</value></data>
+  <data name="Profile_SaveChanges" xml:space="preserve"><value>Lưu thay đổi</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>Đổi mật khẩu</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>Mật khẩu hiện tại</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>Mật khẩu mới</value></data>
+  <data name="Profile_ConfirmNewPassword" xml:space="preserve"><value>Xác nhận mật khẩu mới</value></data>
+  <data name="Profile_MemberSince" xml:space="preserve"><value>Thành viên từ</value></data>
+  <data name="Profile_Favorites" xml:space="preserve"><value>Yêu thích</value></data>
+  <data name="Profile_MyReviews" xml:space="preserve"><value>Đánh giá của tôi</value></data>
+  <data name="Profile_MyArcades" xml:space="preserve"><value>Trung tâm của tôi</value></data>
+  <data name="Profile_Settings" xml:space="preserve"><value>Cài đặt</value></data>
+  <data name="Profile_ContactSupport" xml:space="preserve"><value>Liên hệ hỗ trợ để đổi email</value></data>
+
+  <!-- Favorites -->
+  <data name="Favorites_Title" xml:space="preserve"><value>Trung tâm VR yêu thích</value></data>
+  <data name="Favorites_RemoveFromFavorites" xml:space="preserve"><value>Xóa khỏi yêu thích</value></data>
+  <data name="Favorites_NoFavorites" xml:space="preserve"><value>Chưa có yêu thích</value></data>
+  <data name="Favorites_NoFavoritesMessage" xml:space="preserve"><value>Bắt đầu khám phá các trung tâm VR và lưu những địa điểm yêu thích!</value></data>
+  <data name="Favorites_BrowseArcades" xml:space="preserve"><value>Khám phá trung tâm</value></data>
+  <data name="Favorites_ViewDetails" xml:space="preserve"><value>Xem chi tiết</value></data>
+  <data name="Favorites_ConfirmRemove" xml:space="preserve"><value>Xóa trung tâm này khỏi yêu thích?</value></data>
+
+  <!-- My Reviews -->
+  <data name="MyReviews_Title" xml:space="preserve"><value>Đánh giá của tôi</value></data>
+  <data name="MyReviews_NoReviews" xml:space="preserve"><value>Chưa có đánh giá</value></data>
+  <data name="MyReviews_NoReviewsMessage" xml:space="preserve"><value>Ghé thăm trung tâm VR và chia sẻ trải nghiệm của bạn!</value></data>
+  <data name="MyReviews_Published" xml:space="preserve"><value>Đã đăng</value></data>
+  <data name="MyReviews_Pending" xml:space="preserve"><value>Đang chờ</value></data>
+  <data name="MyReviews_PeopleFoundHelpful" xml:space="preserve"><value>người thấy hữu ích</value></data>
+  <data name="MyReviews_EditReview" xml:space="preserve"><value>Sửa đánh giá</value></data>
+  <data name="MyReviews_DeleteReview" xml:space="preserve"><value>Xóa đánh giá</value></data>
+  <data name="MyReviews_FindArcades" xml:space="preserve"><value>Tìm trung tâm</value></data>
+  <data name="MyReviews_ConfirmDelete" xml:space="preserve"><value>Bạn có chắc muốn xóa đánh giá này?</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>Truy cập bị từ chối</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>Bạn không có quyền truy cập trang này.</value></data>
+  <data name="AccessDenied_ContactAdmin" xml:space="preserve"><value>Nếu bạn cho rằng đây là lỗi, vui lòng liên hệ quản trị viên hoặc thử đăng nhập bằng tài khoản khác.</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>Về trang chủ</value></data>
+
+  <!-- Error Pages -->
+  <data name="Error_Title" xml:space="preserve"><value>Lỗi</value></data>
+  <data name="Error_Message" xml:space="preserve"><value>Rất tiếc! Đã xảy ra sự cố</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>Mã yêu cầu</value></data>
+  <data name="Error_BackHome" xml:space="preserve"><value>Quay về trang chủ</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>Không tìm thấy trang</value></data>
+  <data name="NotFound_Message" xml:space="preserve"><value>Trang bạn tìm kiếm không tồn tại.</value></data>
+
+  <!-- Map -->
+  <data name="Map_Title" xml:space="preserve"><value>Bản đồ trung tâm VR</value></data>
+  <data name="Map_FindArcades" xml:space="preserve"><value>Tìm trung tâm VR</value></data>
+  <data name="Map_EnterCity" xml:space="preserve"><value>Nhập thành phố...</value></data>
+  <data name="Map_UseMyLocation" xml:space="preserve"><value>Sử dụng vị trí của tôi</value></data>
+  <data name="Map_Filters" xml:space="preserve"><value>Bộ lọc</value></data>
+  <data name="Map_VRPlatform" xml:space="preserve"><value>Nền tảng VR</value></data>
+  <data name="Map_AllPlatforms" xml:space="preserve"><value>Tất cả nền tảng</value></data>
+  <data name="Map_HasPartyRooms" xml:space="preserve"><value>Có phòng tiệc</value></data>
+  <data name="Map_MultiplayerArea" xml:space="preserve"><value>Khu vực nhiều người chơi</value></data>
+  <data name="Map_ArcadesFound" xml:space="preserve"><value>trung tâm được tìm thấy</value></data>
+  <data name="Map_SearchForArcades" xml:space="preserve"><value>Tìm kiếm trung tâm VR trong khu vực của bạn</value></data>
+  <data name="Map_ViewDetails" xml:space="preserve"><value>Xem chi tiết</value></data>
+  <data name="Map_UnableToGetLocation" xml:space="preserve"><value>Không thể lấy vị trí. Vui lòng nhập thành phố thủ công.</value></data>
+
+  <!-- Arcade Additional -->
+  <data name="Arcade_ContactInfo" xml:space="preserve"><value>Thông tin liên hệ</value></data>
+  <data name="Arcade_VisitWebsite" xml:space="preserve"><value>Truy cập website</value></data>
+  <data name="Arcade_ViewOnGoogleMaps" xml:space="preserve"><value>Xem trên Google Maps</value></data>
+  <data name="Arcade_OwnThisArcade" xml:space="preserve"><value>Bạn sở hữu trung tâm này?</value></data>
+  <data name="Arcade_ClaimListing" xml:space="preserve"><value>Nhận quyền quản lý</value></data>
+  <data name="Arcade_MoreVisibility" xml:space="preserve"><value>Nhận quyền quản lý để có nhiều hiển thị hơn!</value></data>
+  <data name="Arcade_UpcomingEvents" xml:space="preserve"><value>Sự kiện sắp tới</value></data>
+  <data name="Arcade_VRGames" xml:space="preserve"><value>Trò chơi VR</value></data>
+  <data name="Arcade_MoreGames" xml:space="preserve"><value>trò chơi khác...</value></data>
+  <data name="Arcade_And" xml:space="preserve"><value>Và</value></data>
+
+  <!-- Blog Additional -->
+  <data name="Blog_Views" xml:space="preserve"><value>lượt xem</value></data>
+  <data name="Blog_NoBlogPosts" xml:space="preserve"><value>Chưa có bài viết. Hãy quay lại sau!</value></data>
+
+  <!-- Pricing Additional -->
+  <data name="Pricing_GetMoreVisibility" xml:space="preserve"><value>Tăng hiển thị cho trung tâm VR của bạn</value></data>
+  <data name="Pricing_Featured" xml:space="preserve"><value>Nổi bật</value></data>
+  <data name="Pricing_BasicListing" xml:space="preserve"><value>Đăng ký cơ bản</value></data>
+  <data name="Pricing_ContactInformation" xml:space="preserve"><value>Thông tin liên hệ</value></data>
+  <data name="Pricing_BusinessHours" xml:space="preserve"><value>Giờ làm việc</value></data>
+  <data name="Pricing_MapLocation" xml:space="preserve"><value>Vị trí trên bản đồ</value></data>
+  <data name="Pricing_PhotoGallery" xml:space="preserve"><value>Thư viện ảnh</value></data>
+  <data name="Pricing_EventListings" xml:space="preserve"><value>Danh sách sự kiện</value></data>
+  <data name="Pricing_FeaturedPlacement" xml:space="preserve"><value>Vị trí nổi bật</value></data>
+  <data name="Pricing_EverythingInBasic" xml:space="preserve"><value>Tất cả trong gói Cơ bản</value></data>
+  <data name="Pricing_PhotoGalleryUpTo" xml:space="preserve"><value>Thư viện ảnh (tối đa 20)</value></data>
+  <data name="Pricing_PriorityInSearch" xml:space="preserve"><value>Ưu tiên trong tìm kiếm</value></data>
+  <data name="Pricing_VerifiedBadge" xml:space="preserve"><value>Huy hiệu xác minh</value></data>
+  <data name="Pricing_AnalyticsDashboard" xml:space="preserve"><value>Bảng phân tích</value></data>
+  <data name="Pricing_GetPremium" xml:space="preserve"><value>Mua gói Cao cấp</value></data>
+  <data name="Pricing_EverythingInPremium" xml:space="preserve"><value>Tất cả trong gói Cao cấp</value></data>
+  <data name="Pricing_FeaturedHomepage" xml:space="preserve"><value>Vị trí nổi bật trang chủ</value></data>
+  <data name="Pricing_GameInventory" xml:space="preserve"><value>Quản lý kho trò chơi</value></data>
+  <data name="Pricing_UnlimitedPhotos" xml:space="preserve"><value>Ảnh không giới hạn</value></data>
+  <data name="Pricing_PrioritySupport" xml:space="preserve"><value>Hỗ trợ ưu tiên</value></data>
+  <data name="Pricing_SocialMediaPromotion" xml:space="preserve"><value>Quảng bá mạng xã hội</value></data>
+  <data name="Pricing_GoFeatured" xml:space="preserve"><value>Mua gói Nổi bật</value></data>
+  <data name="Pricing_AnnualDiscount" xml:space="preserve"><value>Tiết kiệm 20% khi thanh toán theo năm! Liên hệ để biết gói doanh nghiệp.</value></data>
+
+  <!-- My Reviews Additional -->
+  <data name="MyReviews_Rating" xml:space="preserve"><value>Đánh giá</value></data>
+  <data name="MyReviews_ReviewTitle" xml:space="preserve"><value>Tiêu đề</value></data>
+  <data name="MyReviews_YourReview" xml:space="preserve"><value>Đánh giá của bạn</value></data>
+  <data name="MyReviews_SaveChanges" xml:space="preserve"><value>Lưu thay đổi</value></data>
+  <data name="MyReviews_UpdateFailed" xml:space="preserve"><value>Cập nhật đánh giá thất bại</value></data>
+  <data name="MyReviews_DeleteFailed" xml:space="preserve"><value>Xóa đánh giá thất bại</value></data>
+
+  <!-- Blog Post Page -->
+  <data name="Blog_SearchArticles" xml:space="preserve"><value>Tìm kiếm bài viết</value></data>
+  <data name="Blog_SearchPlaceholder" xml:space="preserve"><value>Tìm kiếm...</value></data>
+  <data name="Blog_Newsletter" xml:space="preserve"><value>Bản tin</value></data>
+  <data name="Blog_NewsletterDesc" xml:space="preserve"><value>Nhận tin tức VR mới nhất qua email.</value></data>
+  <data name="Blog_EmailPlaceholder" xml:space="preserve"><value>Địa chỉ email của bạn</value></data>
+  <data name="Blog_Subscribe" xml:space="preserve"><value>Đăng ký</value></data>
+  <data name="Blog_ShareArticle" xml:space="preserve"><value>Chia sẻ bài viết:</value></data>
+  <data name="Blog_RelatedArticles" xml:space="preserve"><value>Bài viết liên quan</value></data>
+  <data name="Blog_Guides" xml:space="preserve"><value>Hướng dẫn</value></data>
+  <data name="Blog_GameReviews" xml:space="preserve"><value>Đánh giá game</value></data>
+  <data name="Blog_VRNews" xml:space="preserve"><value>Tin tức VR</value></data>
+  <data name="Blog_TipsTricks" xml:space="preserve"><value>Mẹo &amp; Thủ thuật</value></data>
+
+  <!-- About Page -->
+  <data name="About_Title" xml:space="preserve"><value>Giới thiệu VR Arcade Finder</value></data>
+  <data name="About_Subtitle" xml:space="preserve"><value>Cổng vào thế giới trải nghiệm thực tế ảo</value></data>
+  <data name="About_OurMission" xml:space="preserve"><value>Sứ mệnh của chúng tôi</value></data>
+  <data name="About_MissionText1" xml:space="preserve"><value>VR Arcade Finder cam kết kết nối những người đam mê VR với các phòng chơi thực tế ảo tốt nhất trên toàn thế giới. Chúng tôi tin rằng mọi người đều nên được tiếp cận trải nghiệm VR cao cấp, dù bạn là người mới tò mò về thực tế ảo hay game thủ kỳ cựu tìm kiếm trải nghiệm mới nhất.</value></data>
+  <data name="About_MissionText2" xml:space="preserve"><value>Nền tảng của chúng tôi giúp bạn dễ dàng khám phá, so sánh và chọn phòng chơi VR dựa trên vị trí, game có sẵn, thiết bị và đánh giá của người dùng.</value></data>
+  <data name="About_WhatWeOffer" xml:space="preserve"><value>Chúng tôi cung cấp</value></data>
+  <data name="About_LocationSearch" xml:space="preserve"><value>Tìm kiếm theo vị trí</value></data>
+  <data name="About_LocationSearchDesc" xml:space="preserve"><value>Tìm phòng chơi VR gần bạn với tính năng tìm kiếm và bản đồ mạnh mẽ.</value></data>
+  <data name="About_GameCatalog" xml:space="preserve"><value>Danh mục game</value></data>
+  <data name="About_GameCatalogDesc" xml:space="preserve"><value>Duyệt hàng ngàn game VR và tìm phòng chơi có sẵn.</value></data>
+  <data name="About_UserReviews" xml:space="preserve"><value>Đánh giá người dùng</value></data>
+  <data name="About_UserReviewsDesc" xml:space="preserve"><value>Đọc đánh giá thực từ người đã trải nghiệm.</value></data>
+  <data name="About_EventsTournaments" xml:space="preserve"><value>Sự kiện &amp; Giải đấu</value></data>
+  <data name="About_EventsTournamentsDesc" xml:space="preserve"><value>Khám phá các sự kiện và giải đấu VR gần bạn.</value></data>
+  <data name="About_ForArcadeOwners" xml:space="preserve"><value>Dành cho chủ phòng chơi</value></data>
+  <data name="About_ArcadeOwnersText" xml:space="preserve"><value>Bạn là chủ phòng chơi VR? Tham gia nền tảng của chúng tôi để tăng khả năng hiển thị và tiếp cận hàng ngàn khách hàng tiềm năng đang tìm kiếm trải nghiệm VR.</value></data>
+  <data name="About_ArcadeFeature1" xml:space="preserve"><value>Tạo danh sách chi tiết với ảnh và kho game</value></data>
+  <data name="About_ArcadeFeature2" xml:space="preserve"><value>Trả lời đánh giá và xây dựng uy tín</value></data>
+  <data name="About_ArcadeFeature3" xml:space="preserve"><value>Đăng sự kiện và khuyến mãi đặc biệt</value></data>
+  <data name="About_ArcadeFeature4" xml:space="preserve"><value>Truy cập phân tích để hiểu khách hàng</value></data>
+  <data name="About_ArcadeFeature5" xml:space="preserve"><value>Tùy chọn nổi bật để tiếp cận tối đa</value></data>
+  <data name="About_ListYourArcade" xml:space="preserve"><value>Đăng ký phòng chơi</value></data>
+  <data name="About_ContactUs" xml:space="preserve"><value>Liên hệ</value></data>
+  <data name="About_ContactText" xml:space="preserve"><value>Có câu hỏi, góp ý hoặc muốn hợp tác? Chúng tôi rất muốn nghe từ bạn!</value></data>
+  <data name="About_Email" xml:space="preserve"><value>Email:</value></data>
+  <data name="About_FollowUs" xml:space="preserve"><value>Theo dõi chúng tôi:</value></data>
+
+  <!-- Privacy Page -->
+  <data name="Privacy_Title" xml:space="preserve"><value>Chính sách bảo mật</value></data>
+  <data name="Privacy_LastUpdated" xml:space="preserve"><value>Cập nhật lần cuối:</value></data>
+  <data name="Privacy_Section1_Title" xml:space="preserve"><value>1. Thông tin chúng tôi thu thập</value></data>
+  <data name="Privacy_Section1_Text" xml:space="preserve"><value>Chúng tôi thu thập thông tin bạn cung cấp trực tiếp, như khi bạn:</value></data>
+  <data name="Privacy_Section1_Item1" xml:space="preserve"><value>Tạo tài khoản</value></data>
+  <data name="Privacy_Section1_Item2" xml:space="preserve"><value>Gửi hoặc nhận phòng chơi VR</value></data>
+  <data name="Privacy_Section1_Item3" xml:space="preserve"><value>Viết đánh giá</value></data>
+  <data name="Privacy_Section1_Item4" xml:space="preserve"><value>Liên hệ chúng tôi</value></data>
+  <data name="Privacy_Section1_Item5" xml:space="preserve"><value>Đăng ký bản tin</value></data>
+  <data name="Privacy_Section2_Title" xml:space="preserve"><value>2. Thông tin thu thập tự động</value></data>
+  <data name="Privacy_Section2_Text" xml:space="preserve"><value>Khi bạn sử dụng dịch vụ, chúng tôi tự động thu thập một số thông tin, bao gồm:</value></data>
+  <data name="Privacy_Section2_Item1" xml:space="preserve"><value>Thông tin nhật ký (địa chỉ IP, loại trình duyệt, thời gian truy cập)</value></data>
+  <data name="Privacy_Section2_Item2" xml:space="preserve"><value>Thông tin thiết bị</value></data>
+  <data name="Privacy_Section2_Item3" xml:space="preserve"><value>Thông tin vị trí (với sự đồng ý của bạn)</value></data>
+  <data name="Privacy_Section2_Item4" xml:space="preserve"><value>Cookie và công nghệ tương tự</value></data>
+  <data name="Privacy_Section3_Title" xml:space="preserve"><value>3. Cách chúng tôi sử dụng thông tin</value></data>
+  <data name="Privacy_Section3_Text" xml:space="preserve"><value>Chúng tôi sử dụng thông tin thu thập để:</value></data>
+  <data name="Privacy_Section3_Item1" xml:space="preserve"><value>Cung cấp, duy trì và cải thiện dịch vụ</value></data>
+  <data name="Privacy_Section3_Item2" xml:space="preserve"><value>Xử lý giao dịch và gửi thông tin liên quan</value></data>
+  <data name="Privacy_Section3_Item3" xml:space="preserve"><value>Gửi thông tin quảng cáo (với sự đồng ý của bạn)</value></data>
+  <data name="Privacy_Section3_Item4" xml:space="preserve"><value>Theo dõi và phân tích xu hướng sử dụng</value></data>
+  <data name="Privacy_Section3_Item5" xml:space="preserve"><value>Phát hiện và ngăn chặn hoạt động gian lận</value></data>
+  <data name="Privacy_Section4_Title" xml:space="preserve"><value>4. Chia sẻ thông tin</value></data>
+  <data name="Privacy_Section4_Text" xml:space="preserve"><value>Chúng tôi không bán thông tin cá nhân của bạn. Chúng tôi có thể chia sẻ thông tin:</value></data>
+  <data name="Privacy_Section4_Item1" xml:space="preserve"><value>Với sự đồng ý của bạn</value></data>
+  <data name="Privacy_Section4_Item2" xml:space="preserve"><value>Với nhà cung cấp dịch vụ hỗ trợ hoạt động</value></data>
+  <data name="Privacy_Section4_Item3" xml:space="preserve"><value>Để tuân thủ nghĩa vụ pháp lý</value></data>
+  <data name="Privacy_Section4_Item4" xml:space="preserve"><value>Trong trường hợp sáp nhập hoặc mua lại</value></data>
+  <data name="Privacy_Section5_Title" xml:space="preserve"><value>5. Bảo mật dữ liệu</value></data>
+  <data name="Privacy_Section5_Text" xml:space="preserve"><value>Chúng tôi thực hiện các biện pháp bảo mật phù hợp để bảo vệ thông tin cá nhân của bạn khỏi truy cập, thay đổi, tiết lộ hoặc phá hủy trái phép.</value></data>
+  <data name="Privacy_Section6_Title" xml:space="preserve"><value>6. Quyền của bạn</value></data>
+  <data name="Privacy_Section6_Text" xml:space="preserve"><value>Tùy thuộc vào vị trí, bạn có thể có quyền về thông tin cá nhân, bao gồm:</value></data>
+  <data name="Privacy_Section6_Item1" xml:space="preserve"><value>Truy cập dữ liệu cá nhân</value></data>
+  <data name="Privacy_Section6_Item2" xml:space="preserve"><value>Sửa dữ liệu không chính xác</value></data>
+  <data name="Privacy_Section6_Item3" xml:space="preserve"><value>Xóa dữ liệu</value></data>
+  <data name="Privacy_Section6_Item4" xml:space="preserve"><value>Di chuyển dữ liệu</value></data>
+  <data name="Privacy_Section6_Item5" xml:space="preserve"><value>Từ chối nhận thông tin tiếp thị</value></data>
+  <data name="Privacy_Section7_Title" xml:space="preserve"><value>7. Cookie</value></data>
+  <data name="Privacy_Section7_Text" xml:space="preserve"><value>Chúng tôi sử dụng cookie và công nghệ theo dõi tương tự để thu thập thông tin về hoạt động duyệt web của bạn. Bạn có thể kiểm soát cookie qua cài đặt trình duyệt.</value></data>
+  <data name="Privacy_Section8_Title" xml:space="preserve"><value>8. Thay đổi chính sách</value></data>
+  <data name="Privacy_Section8_Text" xml:space="preserve"><value>Chúng tôi có thể cập nhật chính sách bảo mật này theo thời gian. Chúng tôi sẽ thông báo về bất kỳ thay đổi nào bằng cách đăng chính sách mới trên trang này.</value></data>
+  <data name="Privacy_Section9_Title" xml:space="preserve"><value>9. Liên hệ</value></data>
+  <data name="Privacy_Section9_Text" xml:space="preserve"><value>Nếu bạn có câu hỏi về chính sách bảo mật này, vui lòng liên hệ:</value></data>
+
+  <!-- Terms Page -->
+  <data name="Terms_Title" xml:space="preserve"><value>Điều khoản dịch vụ</value></data>
+  <data name="Terms_LastUpdated" xml:space="preserve"><value>Cập nhật lần cuối:</value></data>
+  <data name="Terms_Section1_Title" xml:space="preserve"><value>1. Chấp nhận điều khoản</value></data>
+  <data name="Terms_Section1_Text" xml:space="preserve"><value>Bằng cách truy cập hoặc sử dụng VR Arcade Finder, bạn đồng ý tuân theo các Điều khoản dịch vụ này. Nếu không đồng ý, vui lòng không sử dụng dịch vụ.</value></data>
+  <data name="Terms_Section2_Title" xml:space="preserve"><value>2. Mô tả dịch vụ</value></data>
+  <data name="Terms_Section2_Text" xml:space="preserve"><value>VR Arcade Finder cung cấp nền tảng trực tuyến kết nối người dùng với phòng chơi VR. Chúng tôi cung cấp:</value></data>
+  <data name="Terms_Section2_Item1" xml:space="preserve"><value>Danh bạ và tìm kiếm phòng chơi VR</value></data>
+  <data name="Terms_Section2_Item2" xml:space="preserve"><value>Đánh giá và xếp hạng người dùng</value></data>
+  <data name="Terms_Section2_Item3" xml:space="preserve"><value>Dịch vụ đăng ký cho chủ phòng chơi</value></data>
+  <data name="Terms_Section2_Item4" xml:space="preserve"><value>Danh sách sự kiện và thông tin</value></data>
+  <data name="Terms_Section3_Title" xml:space="preserve"><value>3. Tài khoản người dùng</value></data>
+  <data name="Terms_Section3_Text" xml:space="preserve"><value>Để truy cập một số tính năng, bạn phải tạo tài khoản. Bạn chịu trách nhiệm:</value></data>
+  <data name="Terms_Section3_Item1" xml:space="preserve"><value>Bảo mật tài khoản</value></data>
+  <data name="Terms_Section3_Item2" xml:space="preserve"><value>Mọi hoạt động trên tài khoản</value></data>
+  <data name="Terms_Section3_Item3" xml:space="preserve"><value>Thông báo khi có truy cập trái phép</value></data>
+  <data name="Terms_Section4_Title" xml:space="preserve"><value>4. Nội dung người dùng</value></data>
+  <data name="Terms_Section4_Text1" xml:space="preserve"><value>Bạn giữ quyền sở hữu nội dung gửi lên. Khi đăng nội dung, bạn cấp cho chúng tôi giấy phép không độc quyền, miễn phí bản quyền để sử dụng, hiển thị và phân phối nội dung trên nền tảng.</value></data>
+  <data name="Terms_Section4_Text2" xml:space="preserve"><value>Bạn đồng ý không đăng nội dung:</value></data>
+  <data name="Terms_Section4_Item1" xml:space="preserve"><value>Sai sự thật, gây hiểu lầm hoặc gian lận</value></data>
+  <data name="Terms_Section4_Item2" xml:space="preserve"><value>Vi phạm quyền sở hữu trí tuệ</value></data>
+  <data name="Terms_Section4_Item3" xml:space="preserve"><value>Phỉ báng, tục tĩu hoặc xúc phạm</value></data>
+  <data name="Terms_Section4_Item4" xml:space="preserve"><value>Vi phạm pháp luật hiện hành</value></data>
+  <data name="Terms_Section5_Title" xml:space="preserve"><value>5. Đăng ký doanh nghiệp</value></data>
+  <data name="Terms_Section5_Text" xml:space="preserve"><value>Chủ phòng chơi đăng ký kinh doanh đồng ý:</value></data>
+  <data name="Terms_Section5_Item1" xml:space="preserve"><value>Cung cấp thông tin chính xác và cập nhật</value></data>
+  <data name="Terms_Section5_Item2" xml:space="preserve"><value>Giữ thông tin luôn mới nhất</value></data>
+  <data name="Terms_Section5_Item3" xml:space="preserve"><value>Thanh toán phí đăng ký</value></data>
+  <data name="Terms_Section5_Item4" xml:space="preserve"><value>Tuân thủ pháp luật và quy định</value></data>
+  <data name="Terms_Section6_Title" xml:space="preserve"><value>6. Thanh toán và đăng ký</value></data>
+  <data name="Terms_Section6_Text" xml:space="preserve"><value>Gói cao cấp yêu cầu thanh toán. Phí đăng ký được tính trước và không hoàn lại trừ khi luật yêu cầu hoặc theo chính sách hoàn tiền.</value></data>
+  <data name="Terms_Section7_Title" xml:space="preserve"><value>7. Sở hữu trí tuệ</value></data>
+  <data name="Terms_Section7_Text" xml:space="preserve"><value>Tất cả nội dung, thương hiệu và sở hữu trí tuệ trên VR Arcade Finder thuộc về chúng tôi hoặc bên cấp phép. Bạn không được sao chép, sửa đổi hoặc phân phối nội dung mà không có sự cho phép.</value></data>
+  <data name="Terms_Section8_Title" xml:space="preserve"><value>8. Từ chối bảo hành</value></data>
+  <data name="Terms_Section8_Text" xml:space="preserve"><value>Dịch vụ được cung cấp "nguyên trạng" không có bảo hành. Chúng tôi không đảm bảo độ chính xác của danh sách hoặc đánh giá.</value></data>
+  <data name="Terms_Section9_Title" xml:space="preserve"><value>9. Giới hạn trách nhiệm</value></data>
+  <data name="Terms_Section9_Text" xml:space="preserve"><value>Trong phạm vi pháp luật cho phép, VR Arcade Finder không chịu trách nhiệm về bất kỳ thiệt hại gián tiếp, ngẫu nhiên, đặc biệt hoặc hậu quả nào phát sinh từ việc sử dụng dịch vụ.</value></data>
+  <data name="Terms_Section10_Title" xml:space="preserve"><value>10. Bồi thường</value></data>
+  <data name="Terms_Section10_Text" xml:space="preserve"><value>Bạn đồng ý bồi thường và miễn trách cho VR Arcade Finder khỏi mọi khiếu nại, thiệt hại hoặc chi phí phát sinh từ việc sử dụng dịch vụ hoặc vi phạm điều khoản.</value></data>
+  <data name="Terms_Section11_Title" xml:space="preserve"><value>11. Chấm dứt</value></data>
+  <data name="Terms_Section11_Text" xml:space="preserve"><value>Chúng tôi có quyền đình chỉ hoặc chấm dứt tài khoản của bạn nếu vi phạm điều khoản hoặc vì bất kỳ lý do nào theo quyết định của chúng tôi.</value></data>
+  <data name="Terms_Section12_Title" xml:space="preserve"><value>12. Thay đổi điều khoản</value></data>
+  <data name="Terms_Section12_Text" xml:space="preserve"><value>Chúng tôi có thể sửa đổi điều khoản bất cứ lúc nào. Việc tiếp tục sử dụng dịch vụ sau khi thay đổi đồng nghĩa với việc chấp nhận điều khoản mới.</value></data>
+  <data name="Terms_Section13_Title" xml:space="preserve"><value>13. Luật điều chỉnh</value></data>
+  <data name="Terms_Section13_Text" xml:space="preserve"><value>Các điều khoản này được điều chỉnh và giải thích theo luật pháp hiện hành.</value></data>
+  <data name="Terms_Section14_Title" xml:space="preserve"><value>14. Liên hệ</value></data>
+  <data name="Terms_Section14_Text" xml:space="preserve"><value>Nếu có câu hỏi về điều khoản này, vui lòng liên hệ:</value></data>
+
+  <!-- Games Page -->
+  <data name="Games_Title" xml:space="preserve"><value>Game VR</value></data>
+  <data name="Games_Subtitle" xml:space="preserve"><value>Duyệt danh mục game VR có tại các phòng chơi</value></data>
+  <data name="Games_SearchPlaceholder" xml:space="preserve"><value>Tìm kiếm game...</value></data>
+  <data name="Games_AllPlatforms" xml:space="preserve"><value>Tất cả nền tảng</value></data>
+  <data name="Games_AllGenres" xml:space="preserve"><value>Tất cả thể loại</value></data>
+  <data name="Games_AllIntensities" xml:space="preserve"><value>Tất cả cường độ</value></data>
+  <data name="Games_Filter" xml:space="preserve"><value>Lọc</value></data>
+  <data name="Games_Reset" xml:space="preserve"><value>Đặt lại</value></data>
+  <data name="Games_Multiplayer" xml:space="preserve"><value>Nhiều người</value></data>
+  <data name="Games_CoOp" xml:space="preserve"><value>Hợp tác</value></data>
+  <data name="Games_Intensity" xml:space="preserve"><value>Cường độ:</value></data>
+  <data name="Games_IntensityLow" xml:space="preserve"><value>Thấp (Thoải mái)</value></data>
+  <data name="Games_IntensityMedium" xml:space="preserve"><value>Trung bình</value></data>
+  <data name="Games_IntensityHigh" xml:space="preserve"><value>Cao (Căng thẳng)</value></data>
+  <data name="Games_Arcades" xml:space="preserve"><value>phòng chơi</value></data>
+  <data name="Games_NoGames" xml:space="preserve"><value>Không tìm thấy game</value></data>
+  <data name="Games_NoGamesMessage" xml:space="preserve"><value>Thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm.</value></data>
+
+  <!-- Claim Page -->
+  <data name="Claim_Title" xml:space="preserve"><value>Nhận quyền sở hữu</value></data>
+  <data name="Claim_ClaimYourArcade" xml:space="preserve"><value>Nhận quyền phòng chơi VR của bạn</value></data>
+  <data name="Claim_WhyClaim" xml:space="preserve"><value>Tại sao nên nhận quyền sở hữu?</value></data>
+  <data name="Claim_Benefit1" xml:space="preserve"><value>Cập nhật thông tin phòng chơi bất cứ lúc nào</value></data>
+  <data name="Claim_Benefit2" xml:space="preserve"><value>Trả lời đánh giá của khách hàng</value></data>
+  <data name="Claim_Benefit3" xml:space="preserve"><value>Thêm ảnh và kho game VR</value></data>
+  <data name="Claim_Benefit4" xml:space="preserve"><value>Đăng sự kiện và ưu đãi đặc biệt</value></data>
+  <data name="Claim_Benefit5" xml:space="preserve"><value>Truy cập phân tích và thông tin chi tiết</value></data>
+  <data name="Claim_Claiming" xml:space="preserve"><value>Đang nhận:</value></data>
+  <data name="Claim_VerificationInfo" xml:space="preserve"><value>Thông tin xác minh</value></data>
+  <data name="Claim_FullName" xml:space="preserve"><value>Họ tên đầy đủ</value></data>
+  <data name="Claim_YourRole" xml:space="preserve"><value>Vai trò của bạn</value></data>
+  <data name="Claim_SelectRole" xml:space="preserve"><value>Chọn vai trò...</value></data>
+  <data name="Claim_Owner" xml:space="preserve"><value>Chủ sở hữu</value></data>
+  <data name="Claim_Manager" xml:space="preserve"><value>Quản lý</value></data>
+  <data name="Claim_MarketingManager" xml:space="preserve"><value>Quản lý Marketing</value></data>
+  <data name="Claim_Other" xml:space="preserve"><value>Khác</value></data>
+  <data name="Claim_BusinessEmail" xml:space="preserve"><value>Email doanh nghiệp</value></data>
+  <data name="Claim_EmailNote" xml:space="preserve"><value>Chúng tôi sẽ gửi xác minh đến email này</value></data>
+  <data name="Claim_PhoneNumber" xml:space="preserve"><value>Số điện thoại</value></data>
+  <data name="Claim_VerificationMethod" xml:space="preserve"><value>Phương thức xác minh</value></data>
+  <data name="Claim_EmailVerification" xml:space="preserve"><value>Xác minh email (chúng tôi sẽ gửi mã đến email doanh nghiệp)</value></data>
+  <data name="Claim_PhoneVerification" xml:space="preserve"><value>Xác minh điện thoại (chúng tôi sẽ gọi đến số điện thoại đăng ký)</value></data>
+  <data name="Claim_DocumentVerification" xml:space="preserve"><value>Xác minh tài liệu (tải lên giấy phép kinh doanh hoặc hóa đơn tiện ích)</value></data>
+  <data name="Claim_UploadDocument" xml:space="preserve"><value>Tải lên tài liệu xác minh</value></data>
+  <data name="Claim_AcceptedDocuments" xml:space="preserve"><value>Chấp nhận: Giấy phép kinh doanh, hóa đơn tiện ích, hoặc tài liệu chính thức có tên và địa chỉ doanh nghiệp</value></data>
+  <data name="Claim_AdditionalNotes" xml:space="preserve"><value>Ghi chú bổ sung</value></data>
+  <data name="Claim_NotesPlaceholder" xml:space="preserve"><value>Thông tin bổ sung giúp xác minh quyền sở hữu...</value></data>
+  <data name="Claim_ConfirmAuthorized" xml:space="preserve"><value>Tôi xác nhận được ủy quyền đại diện doanh nghiệp và đồng ý với</value></data>
+  <data name="Claim_SubmitClaim" xml:space="preserve"><value>Gửi yêu cầu nhận quyền</value></data>
+  <data name="Claim_WhatHappensNext" xml:space="preserve"><value>Bước tiếp theo?</value></data>
+  <data name="Claim_Next1" xml:space="preserve"><value>Chúng tôi sẽ xem xét yêu cầu trong 1-2 ngày làm việc</value></data>
+  <data name="Claim_Next2" xml:space="preserve"><value>Bạn sẽ nhận email hoặc cuộc gọi xác minh</value></data>
+  <data name="Claim_Next3" xml:space="preserve"><value>Sau khi xác minh, bạn có toàn quyền quản lý danh sách</value></data>
+  <data name="Claim_Next4" xml:space="preserve"><value>Bạn có thể nâng cấp lên gói cao cấp để có thêm tính năng</value></data>
+
+  <!-- Submit Arcade Page -->
+  <data name="Submit_Title" xml:space="preserve"><value>Gửi phòng chơi VR của bạn</value></data>
+  <data name="Submit_Subtitle" xml:space="preserve"><value>Thêm phòng chơi VR vào danh bạ và tiếp cận hàng ngàn người đam mê VR</value></data>
+  <data name="Submit_BasicInfo" xml:space="preserve"><value>Thông tin cơ bản</value></data>
+  <data name="Submit_ArcadeName" xml:space="preserve"><value>Tên phòng chơi</value></data>
+  <data name="Submit_Description" xml:space="preserve"><value>Mô tả</value></data>
+  <data name="Submit_DescriptionPlaceholder" xml:space="preserve"><value>Mô tả phòng chơi VR, điểm đặc biệt và những gì khách hàng có thể mong đợi...</value></data>
+  <data name="Submit_Website" xml:space="preserve"><value>Website</value></data>
+  <data name="Submit_Phone" xml:space="preserve"><value>Số điện thoại</value></data>
+  <data name="Submit_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Submit_Location" xml:space="preserve"><value>Vị trí</value></data>
+  <data name="Submit_Address" xml:space="preserve"><value>Địa chỉ</value></data>
+  <data name="Submit_City" xml:space="preserve"><value>Thành phố</value></data>
+  <data name="Submit_Country" xml:space="preserve"><value>Quốc gia</value></data>
+  <data name="Submit_SelectCountry" xml:space="preserve"><value>Chọn quốc gia...</value></data>
+  <data name="Submit_VREquipment" xml:space="preserve"><value>Thiết bị &amp; Tính năng VR</value></data>
+  <data name="Submit_VRPlatforms" xml:space="preserve"><value>Nền tảng VR có sẵn</value></data>
+  <data name="Submit_TotalStations" xml:space="preserve"><value>Tổng số trạm VR</value></data>
+  <data name="Submit_PriceRange" xml:space="preserve"><value>Mức giá</value></data>
+  <data name="Submit_BudgetFriendly" xml:space="preserve"><value>Bình dân</value></data>
+  <data name="Submit_Moderate" xml:space="preserve"><value>Trung bình</value></data>
+  <data name="Submit_PremiumPrice" xml:space="preserve"><value>Cao cấp</value></data>
+  <data name="Submit_Features" xml:space="preserve"><value>Tính năng</value></data>
+  <data name="Submit_MultiplayerArea" xml:space="preserve"><value>Khu vực nhiều người chơi</value></data>
+  <data name="Submit_PartyRooms" xml:space="preserve"><value>Phòng tiệc</value></data>
+  <data name="Submit_MotionPlatform" xml:space="preserve"><value>Nền tảng chuyển động</value></data>
+  <data name="Submit_RoomScaleVR" xml:space="preserve"><value>VR quy mô phòng</value></data>
+  <data name="Submit_FullBodyTracking" xml:space="preserve"><value>Theo dõi toàn thân</value></data>
+  <data name="Submit_VRArena" xml:space="preserve"><value>Đấu trường VR/Di chuyển tự do</value></data>
+  <data name="Submit_BusinessHours" xml:space="preserve"><value>Giờ làm việc</value></data>
+  <data name="Submit_To" xml:space="preserve"><value>đến</value></data>
+  <data name="Submit_Closed" xml:space="preserve"><value>Đóng cửa</value></data>
+  <data name="Submit_Photos" xml:space="preserve"><value>Ảnh</value></data>
+  <data name="Submit_Logo" xml:space="preserve"><value>Logo</value></data>
+  <data name="Submit_CoverPhoto" xml:space="preserve"><value>Ảnh bìa</value></data>
+  <data name="Submit_GalleryPhotos" xml:space="preserve"><value>Ảnh thư viện (tối đa 10)</value></data>
+  <data name="Submit_GalleryNote" xml:space="preserve"><value>Chọn nhiều ảnh về phòng chơi, thiết bị VR và setup</value></data>
+  <data name="Submit_ChoosePlan" xml:space="preserve"><value>Chọn gói của bạn</value></data>
+  <data name="Submit_ViewPlanComparison" xml:space="preserve"><value>Xem so sánh gói đầy đủ</value></data>
+  <data name="Submit_StandardListing" xml:space="preserve"><value>Danh sách tiêu chuẩn với thông tin liên hệ</value></data>
+  <data name="Submit_Popular" xml:space="preserve"><value>Phổ biến</value></data>
+  <data name="Submit_PhotoGalleryPriority" xml:space="preserve"><value>Thư viện ảnh + danh sách ưu tiên</value></data>
+  <data name="Submit_HomepageAnalytics" xml:space="preserve"><value>Nổi bật trang chủ + phân tích</value></data>
+  <data name="Submit_AgreeTerms" xml:space="preserve"><value>Tôi đồng ý với</value></data>
+  <data name="Submit_And" xml:space="preserve"><value>và</value></data>
+  <data name="Submit_SubmitArcade" xml:space="preserve"><value>Gửi phòng chơi</value></data>
+
+  <!-- Checkout Success Page -->
+  <data name="Checkout_PaymentSuccessful" xml:space="preserve"><value>Thanh toán thành công!</value></data>
+  <data name="Checkout_ThankYou" xml:space="preserve"><value>Cảm ơn bạn đã mua hàng. Danh sách của bạn đã được kích hoạt.</value></data>
+  <data name="Checkout_OrderId" xml:space="preserve"><value>Mã đơn hàng:</value></data>
+  <data name="Checkout_Plan" xml:space="preserve"><value>Gói:</value></data>
+  <data name="Checkout_Amount" xml:space="preserve"><value>Số tiền:</value></data>
+  <data name="Checkout_WhatsNext" xml:space="preserve"><value>Bước tiếp theo?</value></data>
+  <data name="Checkout_Next1" xml:space="preserve"><value>Danh sách của bạn đã hiển thị cho người dùng</value></data>
+  <data name="Checkout_Next2" xml:space="preserve"><value>Bạn có thể quản lý danh sách từ</value></data>
+  <data name="Checkout_Dashboard" xml:space="preserve"><value>bảng điều khiển</value></data>
+  <data name="Checkout_Next3" xml:space="preserve"><value>Email xác nhận đã được gửi đến địa chỉ email của bạn</value></data>
+  <data name="Checkout_Next4" xml:space="preserve"><value>Truy cập phân tích để theo dõi lượt xem và tương tác</value></data>
+  <data name="Checkout_ViewListing" xml:space="preserve"><value>Xem danh sách</value></data>
+  <data name="Checkout_GoToDashboard" xml:space="preserve"><value>Đến bảng điều khiển</value></data>
+  <data name="Checkout_NeedHelp" xml:space="preserve"><value>Cần trợ giúp? Liên hệ chúng tôi tại</value></data>
+
+  <!-- Days of Week -->
+  <data name="Day_Monday" xml:space="preserve"><value>Thứ Hai</value></data>
+  <data name="Day_Tuesday" xml:space="preserve"><value>Thứ Ba</value></data>
+  <data name="Day_Wednesday" xml:space="preserve"><value>Thứ Tư</value></data>
+  <data name="Day_Thursday" xml:space="preserve"><value>Thứ Năm</value></data>
+  <data name="Day_Friday" xml:space="preserve"><value>Thứ Sáu</value></data>
+  <data name="Day_Saturday" xml:space="preserve"><value>Thứ Bảy</value></data>
+  <data name="Day_Sunday" xml:space="preserve"><value>Chủ Nhật</value></data>
+
+  <!-- Dynamic Blog - Index Page -->
+  <data name="Blog_VRArcadeGuides" xml:space="preserve"><value>Hướng dẫn phòng chơi VR</value></data>
+  <data name="Blog_VRArcadesIn" xml:space="preserve"><value>Phòng chơi VR tại</value></data>
+  <data name="Blog_CityGuides" xml:space="preserve"><value>Hướng dẫn theo thành phố</value></data>
+  <data name="Blog_CitiesWorldwide" xml:space="preserve"><value>Thành phố trên toàn thế giới</value></data>
+  <data name="Blog_ExploreCitiesInCountry" xml:space="preserve"><value>Khám phá {0} thành phố có phòng chơi VR tại {1}</value></data>
+  <data name="Blog_ExploreCities" xml:space="preserve"><value>Khám phá {0} thành phố có phòng chơi VR trên toàn thế giới</value></data>
+  <data name="Blog_ViewAllCountries" xml:space="preserve"><value>Xem tất cả quốc gia</value></data>
+  <data name="Blog_Clear" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Blog_ShowingAllCities" xml:space="preserve"><value>Hiển thị tất cả thành phố</value></data>
+  <data name="Blog_FilterByCountry" xml:space="preserve"><value>Lọc theo quốc gia</value></data>
+  <data name="Blog_AllCountries" xml:space="preserve"><value>Tất cả quốc gia</value></data>
+  <data name="Blog_ArcadesIn" xml:space="preserve"><value>Phòng chơi VR tại {0}</value></data>
+  <data name="Blog_DiscoverArcades" xml:space="preserve"><value>Khám phá {0} phòng chơi VR tại {1} với hơn {2} trò chơi</value></data>
+  <data name="Blog_DiscoverArcadesSimple" xml:space="preserve"><value>Khám phá {0} phòng chơi VR tại {1}</value></data>
+  <data name="Blog_ShowingPage" xml:space="preserve"><value>Trang</value></data>
+  <data name="Blog_CitiesFound" xml:space="preserve"><value>thành phố được tìm thấy</value></data>
+  <data name="Blog_NoCitiesFound" xml:space="preserve"><value>Không tìm thấy thành phố nào</value></data>
+  <data name="Blog_NoCitiesMessage" xml:space="preserve"><value>Chúng tôi không tìm thấy thành phố nào có phòng chơi VR phù hợp với tiêu chí của bạn.</value></data>
+  <data name="Blog_QuickStats" xml:space="preserve"><value>Thống kê nhanh</value></data>
+  <data name="Blog_Cities" xml:space="preserve"><value>Thành phố</value></data>
+  <data name="Blog_Countries" xml:space="preserve"><value>Quốc gia</value></data>
+  <data name="Blog_BrowseByCountry" xml:space="preserve"><value>Duyệt theo quốc gia</value></data>
+  <data name="Blog_More" xml:space="preserve"><value>khác</value></data>
+  <data name="Blog_FindArcadesNearYou" xml:space="preserve"><value>Tìm phòng chơi gần bạn</value></data>
+  <data name="Blog_FindArcadesDesc" xml:space="preserve"><value>Sử dụng bản đồ tương tác để khám phá phòng chơi VR trong khu vực của bạn</value></data>
+  <data name="Blog_OpenMap" xml:space="preserve"><value>Mở bản đồ</value></data>
+
+  <!-- Dynamic Blog - Post Page -->
+  <data name="Blog_CompleteGuide" xml:space="preserve"><value>Hướng dẫn đầy đủ</value></data>
+  <data name="Blog_PostMetaDescription" xml:space="preserve"><value>Khám phá {0} phòng chơi VR tại {1}, {2}. Tìm những địa điểm trải nghiệm thực tế ảo tốt nhất với hơn {3} trò chơi. Đánh giá, xếp hạng và chỉ đường.</value></data>
+  <data name="Blog_PostHeroSubtitle" xml:space="preserve"><value>Hướng dẫn đầy đủ về {0} phòng chơi VR tại {1}, {2}</value></data>
+  <data name="Blog_Arcades" xml:space="preserve"><value>Phòng chơi</value></data>
+  <data name="Blog_Arcade" xml:space="preserve"><value>Phòng chơi</value></data>
+  <data name="Blog_Games" xml:space="preserve"><value>Trò chơi</value></data>
+  <data name="Blog_AvgRating" xml:space="preserve"><value>Đánh giá TB</value></data>
+  <data name="Blog_AboutArcadesIn" xml:space="preserve"><value>Giới thiệu phòng chơi VR tại {0}</value></data>
+  <data name="Blog_PostIntro" xml:space="preserve"><value>{0} có {1} phòng chơi VR{2}. Dù bạn đang tìm kiếm trải nghiệm VR thông thường hay trải nghiệm nhiều người chơi đắm chìm, bạn sẽ tìm thấy lựa chọn tuyệt vời ở đây.</value></data>
+  <data name="Blog_WithGamesLibrary" xml:space="preserve"><value>, cung cấp thư viện kết hợp hơn {0} trò chơi cho khách trải nghiệm</value></data>
+  <data name="Blog_PopularGamesIn" xml:space="preserve"><value>Trò chơi phổ biến nhất tại {0}</value></data>
+  <data name="Blog_GamesAppearMost" xml:space="preserve"><value>Những trò chơi này xuất hiện thường xuyên nhất tại các phòng chơi ở {0}:</value></data>
+  <data name="Blog_At" xml:space="preserve"><value>Tại</value></data>
+  <data name="Blog_AllArcadesIn" xml:space="preserve"><value>Tất cả phòng chơi VR tại {0}</value></data>
+  <data name="Blog_ViewDetails" xml:space="preserve"><value>Xem chi tiết</value></data>
+  <data name="Blog_Directions" xml:space="preserve"><value>Chỉ đường</value></data>
+  <data name="Blog_TipsTitle" xml:space="preserve"><value>Mẹo khi đến phòng chơi VR</value></data>
+  <data name="Blog_Tip1Title" xml:space="preserve"><value>Đặt trước:</value></data>
+  <data name="Blog_Tip1Desc" xml:space="preserve"><value>Các phòng chơi VR phổ biến có thể đầy nhanh, đặc biệt vào cuối tuần.</value></data>
+  <data name="Blog_Tip2Title" xml:space="preserve"><value>Hỏi đề xuất:</value></data>
+  <data name="Blog_Tip2Desc" xml:space="preserve"><value>Nhân viên có thể gợi ý trải nghiệm VR hoàn hảo dựa trên sở thích của bạn.</value></data>
+  <data name="Blog_Tip3Title" xml:space="preserve"><value>Lên kế hoạch thời gian:</value></data>
+  <data name="Blog_Tip3Desc" xml:space="preserve"><value>Hầu hết các phiên VR kéo dài 30-60 phút. Hãy dành thời gian để thử nhiều trò chơi.</value></data>
+  <data name="Blog_Tip4Title" xml:space="preserve"><value>Thử điều mới:</value></data>
+  <data name="Blog_Tip4Desc" xml:space="preserve"><value>Hãy bước ra khỏi vùng an toàn và thử trải nghiệm VR mà bạn chưa từng có!</value></data>
+  <data name="Blog_ReadyToPlay" xml:space="preserve"><value>Sẵn sàng trải nghiệm VR?</value></data>
+  <data name="Blog_FindArcadesIn" xml:space="preserve"><value>Tìm tất cả phòng chơi VR tại {0} trên bản đồ</value></data>
+  <data name="Blog_BrowseArcadesIn" xml:space="preserve"><value>Duyệt phòng chơi tại {0}</value></data>
+  <data name="Blog_QuickFacts" xml:space="preserve"><value>Thông tin nhanh</value></data>
+  <data name="Blog_TotalArcades" xml:space="preserve"><value>Tổng số phòng chơi</value></data>
+  <data name="Blog_TotalGames" xml:space="preserve"><value>Tổng số trò chơi</value></data>
+  <data name="Blog_AverageRating" xml:space="preserve"><value>Đánh giá trung bình</value></data>
+  <data name="Blog_Country" xml:space="preserve"><value>Quốc gia</value></data>
+  <data name="Blog_MoreCitiesIn" xml:space="preserve"><value>Thành phố khác tại {0}</value></data>
+  <data name="Blog_ViewOnMap" xml:space="preserve"><value>Xem trên bản đồ</value></data>
+  <data name="Blog_SeeAllOnMap" xml:space="preserve"><value>Xem tất cả phòng chơi tại {0} trên bản đồ tương tác.</value></data>
+</root>

@@ -136,6 +136,7 @@
   <data name="Footer_Legal" xml:space="preserve"><value>法律</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>隐私政策</value></data>
   <data name="Footer_Terms" xml:space="preserve"><value>服务条款</value></data>
+  <data name="Footer_RefundPolicy" xml:space="preserve"><value>退款政策</value></data>
   <data name="Footer_Contact" xml:space="preserve"><value>联系我们</value></data>
   <data name="Footer_ContactText" xml:space="preserve"><value>想添加您的桌游吧？想更新店铺信息？请联系我们！</value></data>
   <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Board Game Cafe Finder. 版权所有。</value></data>
@@ -156,6 +157,19 @@
   <!-- SEO Meta -->
   <data name="Meta_DefaultDescription" xml:space="preserve"><value>寻找附近最好的桌游吧。通过互动地图和全面的店铺目录发现桌游馆。</value></data>
   <data name="Meta_DefaultKeywords" xml:space="preserve"><value>桌游吧,桌游馆,桌游,附近桌游,找桌游吧</value></data>
+
+  <!-- SEO: Blog Post Page -->
+  <data name="SEO_BlogPost_Title" xml:space="preserve"><value>{0}（{1}）桌游吧 - 完整指南 {2}</value></data>
+  <data name="SEO_BlogPost_Description" xml:space="preserve"><value>发现{1}（{2}）的{0}家桌游吧。找到最佳桌游场所，提供{3}+款游戏。评价、评分和路线。</value></data>
+  <data name="SEO_BlogPost_Keywords" xml:space="preserve"><value>桌游吧 {0},桌游馆 {0},桌游 {0},{1} 桌游</value></data>
+  <data name="SEO_BlogPost_Headline" xml:space="preserve"><value>{0}桌游吧 - 完整指南</value></data>
+  <!-- SEO: Blog Index Page -->
+  <data name="SEO_BlogIndex_TitleCountry" xml:space="preserve"><value>{0}桌游吧 - 城市指南 {1}</value></data>
+  <data name="SEO_BlogIndex_TitleAll" xml:space="preserve"><value>桌游吧城市指南 - 全球{0}个城市</value></data>
+  <data name="SEO_BlogIndex_DescCountry" xml:space="preserve"><value>查找{0}的桌游吧。浏览城市指南，发现热门游戏，规划您的下一次桌游之旅。</value></data>
+  <data name="SEO_BlogIndex_DescAll" xml:space="preserve"><value>发现全球{0}个城市的桌游吧。包含热门游戏、评价、评分和路线的详细指南。</value></data>
+  <data name="SEO_BlogIndex_KeywordsCountry" xml:space="preserve"><value>桌游吧 {0},桌游馆 {0},桌游 {0}</value></data>
+  <data name="SEO_BlogIndex_KeywordsAll" xml:space="preserve"><value>桌游吧,桌游馆,桌游,附近桌游,城市指南</value></data>
 
   <!-- Blog Index Page -->
   <data name="Blog_CafeGuides" xml:space="preserve"><value>桌游吧指南</value></data>

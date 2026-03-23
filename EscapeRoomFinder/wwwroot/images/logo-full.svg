@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60">
+  <defs>
+    <linearGradient id="doorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#4f46e5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Door icon -->
+  <rect x="5" y="5" width="40" height="50" rx="4" fill="url(#doorGradient)"/>
+  <rect x="10" y="10" width="30" height="40" rx="2" fill="#312e81"/>
+
+  <!-- Door handle -->
+  <circle cx="33" cy="30" r="3.5" fill="#fbbf24"/>
+
+  <!-- Keyhole -->
+  <ellipse cx="33" cy="30" rx="1.8" ry="2.5" fill="#1e1b4b"/>
+  <rect x="32" y="31.5" width="2" height="5" fill="#1e1b4b"/>
+
+  <!-- Top panel -->
+  <rect x="13" y="13" width="24" height="12" rx="1" fill="#4338ca" opacity="0.5"/>
+
+  <!-- Bottom panel -->
+  <rect x="13" y="29" width="24" height="18" rx="1" fill="#4338ca" opacity="0.3"/>
+
+  <!-- Text: Escape Room -->
+  <text x="55" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#1f2937">Escape Room</text>
+
+  <!-- Text: Finder -->
+  <text x="55" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#4f46e5">Finder</text>
+</svg>

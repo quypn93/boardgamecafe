@@ -1,0 +1,210 @@
+@model Arcade
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">@SharedLocalizer["Nav_Home"]</a></li>
+            <li class="breadcrumb-item"><a href="/?city=@Model.City">@Model.City</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="card mb-4">
+                @if (!string.IsNullOrEmpty(Model.LocalImagePath))
+                {
+                    <img src="@Model.LocalImagePath" class="card-img-top" alt="@Model.Name" style="max-height: 400px; object-fit: cover;">
+                }
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h1 class="card-title">@Model.Name</h1>
+                            <p class="text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>@Model.Address, @Model.City, @Model.Country
+                            </p>
+                        </div>
+                        @if (Model.AverageRating.HasValue)
+                        {
+                            <div class="text-center">
+                                <div class="display-6 fw-bold text-warning">@Model.AverageRating.Value.ToString("F1")</div>
+                                <small class="text-muted">@Model.TotalReviews @SharedLocalizer["Arcade_Reviews"]</small>
+                            </div>
+                        }
+                    </div>
+
+                    @if (Model.IsPremium)
+                    {
+                        <span class="badge bg-warning text-dark me-2"><i class="bi bi-star-fill me-1"></i>@SharedLocalizer["Arcade_Premium"]</span>
+                    }
+                    @if (Model.IsVerified)
+                    {
+                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>@SharedLocalizer["Arcade_Verified"]</span>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.Description) && Model.IsDescriptionApproved)
+                    {
+                        <hr>
+                        <p>@Model.Description</p>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.VRPlatforms))
+                    {
+                        <hr>
+                        <h5><i class="bi bi-controller me-2"></i>@SharedLocalizer["Arcade_VRPlatforms"]</h5>
+                        <div>
+                            @foreach (var platform in Model.GetVRPlatformsList())
+                            {
+                                <span class="badge bg-primary me-1">@platform</span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- VR Games -->
+            @if (Model.ArcadeGames?.Any() == true)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-joystick me-2"></i>@SharedLocalizer["Arcade_VRGames"] (@Model.ArcadeGames.Count)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row row-cols-1 row-cols-md-2 g-3">
+                            @foreach (var arcadeGame in Model.ArcadeGames.Take(10))
+                            {
+                                var game = arcadeGame.Game;
+                                <div class="col">
+                                    <div class="d-flex align-items-center p-2 border rounded">
+                                        @if (!string.IsNullOrEmpty(game.ImageUrl))
+                                        {
+                                            <img src="@game.ImageUrl" alt="@game.Name" class="me-3" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                        }
+                                        else
+                                        {
+                                            <div class="me-3 bg-secondary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
+                                                <i class="bi bi-controller text-white"></i>
+                                            </div>
+                                        }
+                                        <div>
+                                            <h6 class="mb-1">@game.Name</h6>
+                                            @if (!string.IsNullOrEmpty(game.Genre))
+                                            {
+                                                <span class="badge bg-info me-1">@game.Genre</span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(game.IntensityLevel))
+                                            {
+                                                <span class="badge @game.GetIntensityBadgeClass()">@game.IntensityLevel</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.ArcadeGames.Count > 10)
+                        {
+                            <p class="text-muted mt-3">@SharedLocalizer["Arcade_And"] @(Model.ArcadeGames.Count - 10) @SharedLocalizer["Arcade_MoreGames"]</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Reviews -->
+            @if (Model.Reviews?.Any() == true)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-chat-quote me-2"></i>@SharedLocalizer["Review_Title"] (@Model.Reviews.Count)</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var review in Model.Reviews.Where(r => r.IsApproved || r.UserId == null).Take(10))
+                        {
+                            <div class="border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>@(review.User?.GetFullName() ?? review.Title ?? "Anonymous")</strong>
+                                        <span class="text-warning ms-2">
+                                            @for (int i = 0; i < review.Rating; i++)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">@review.GetTimeAgo()</small>
+                                </div>
+                                @if (!string.IsNullOrEmpty(review.Content))
+                                {
+                                    <p class="mt-2 mb-0">@review.Content</p>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Contact Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>@SharedLocalizer["Arcade_ContactInfo"]</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Phone))
+                    {
+                        <p><i class="bi bi-telephone me-2"></i><a href="tel:@Model.Phone">@Model.Phone</a></p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Email))
+                    {
+                        <p><i class="bi bi-envelope me-2"></i><a href="mailto:@Model.Email">@Model.Email</a></p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Website))
+                    {
+                        <p><i class="bi bi-globe me-2"></i><a href="@Model.Website" target="_blank">@SharedLocalizer["Arcade_VisitWebsite"]</a></p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
+                    {
+                        <p><i class="bi bi-map me-2"></i><a href="@Model.GoogleMapsUrl" target="_blank">@SharedLocalizer["Arcade_ViewOnGoogleMaps"]</a></p>
+                    }
+                </div>
+            </div>
+
+            <!-- Premium Listing CTA -->
+            @if (!Model.IsPremium)
+            {
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body text-center">
+                        <h5><i class="bi bi-star me-2"></i>@SharedLocalizer["Arcade_OwnThisArcade"]</h5>
+                        <p class="mb-3">@SharedLocalizer["Arcade_MoreVisibility"]</p>
+                        <a href="/listing/claim/@Model.ArcadeId" class="btn btn-light">@SharedLocalizer["Arcade_ClaimListing"]</a>
+                    </div>
+                </div>
+            }
+
+            <!-- Upcoming Events -->
+            @if (Model.Events?.Any(e => e.IsActive && e.IsUpcoming()) == true)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-calendar-event me-2"></i>@SharedLocalizer["Arcade_UpcomingEvents"]</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        @foreach (var ev in Model.Events.Where(e => e.IsActive && e.IsUpcoming()).OrderBy(e => e.StartDateTime).Take(3))
+                        {
+                            <div class="list-group-item">
+                                <h6 class="mb-1">@ev.Title</h6>
+                                <small class="text-muted">@ev.GetEventDate() - @ev.GetEventTime()</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

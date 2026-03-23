@@ -136,6 +136,7 @@
   <data name="Footer_Legal" xml:space="preserve"><value>법적 정보</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>개인정보처리방침</value></data>
   <data name="Footer_Terms" xml:space="preserve"><value>이용약관</value></data>
+  <data name="Footer_RefundPolicy" xml:space="preserve"><value>환불 정책</value></data>
   <data name="Footer_Contact" xml:space="preserve"><value>문의하기</value></data>
   <data name="Footer_ContactText" xml:space="preserve"><value>추가하고 싶은 보드게임 카페가 있나요? 카페 주인으로서 정보를 업데이트하고 싶으신가요? 문의해 주세요!</value></data>
   <data name="Footer_Copyright" xml:space="preserve"><value>© {0} Board Game Cafe Finder. All rights reserved.</value></data>
@@ -156,6 +157,19 @@
   <!-- SEO Meta -->
   <data name="Meta_DefaultDescription" xml:space="preserve"><value>주변 최고의 보드게임 카페를 찾아보세요. 인터랙티브 지도와 종합 카페 디렉토리로 보드게임 라운지를 발견하세요.</value></data>
   <data name="Meta_DefaultKeywords" xml:space="preserve"><value>보드게임카페,보드게임라운지,보드게임,내주변보드게임,카페찾기</value></data>
+
+  <!-- SEO: Blog Post Page -->
+  <data name="SEO_BlogPost_Title" xml:space="preserve"><value>{0}, {1}의 보드게임 카페 - 완벽 가이드 {2}</value></data>
+  <data name="SEO_BlogPost_Description" xml:space="preserve"><value>{1}, {2}의 보드게임 카페 {0}곳을 발견하세요. {3}개 이상의 게임을 즐길 수 있는 최고의 장소를 찾아보세요. 리뷰, 평점, 길찾기.</value></data>
+  <data name="SEO_BlogPost_Keywords" xml:space="preserve"><value>보드게임카페 {0},보드게임라운지 {0},테이블게임 {0},{1} 보드게임</value></data>
+  <data name="SEO_BlogPost_Headline" xml:space="preserve"><value>{0}의 보드게임 카페 - 완벽 가이드</value></data>
+  <!-- SEO: Blog Index Page -->
+  <data name="SEO_BlogIndex_TitleCountry" xml:space="preserve"><value>{0}의 보드게임 카페 - 도시 가이드 {1}</value></data>
+  <data name="SEO_BlogIndex_TitleAll" xml:space="preserve"><value>보드게임 카페 가이드 - 전 세계 {0}개 도시</value></data>
+  <data name="SEO_BlogIndex_DescCountry" xml:space="preserve"><value>{0}의 보드게임 카페를 찾아보세요. 도시 가이드 탐색, 인기 게임 발견, 다음 보드게임 모임을 계획하세요.</value></data>
+  <data name="SEO_BlogIndex_DescAll" xml:space="preserve"><value>전 세계 {0}개 도시의 보드게임 카페를 발견하세요. 인기 게임, 리뷰, 평점, 길찾기가 포함된 상세 가이드.</value></data>
+  <data name="SEO_BlogIndex_KeywordsCountry" xml:space="preserve"><value>보드게임카페 {0},보드게임라운지 {0},테이블게임 {0}</value></data>
+  <data name="SEO_BlogIndex_KeywordsAll" xml:space="preserve"><value>보드게임카페,보드게임라운지,테이블게임,내주변보드게임,도시가이드</value></data>
 
   <!-- Blog Index Page -->
   <data name="Blog_CafeGuides" xml:space="preserve"><value>보드게임 카페 가이드</value></data>

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using BoardGameCafeFinder.Models.Domain;
+using System.Text.RegularExpressions;
 
 namespace BoardGameCafeFinder.Controllers
 {
@@ -124,7 +125,8 @@ namespace BoardGameCafeFinder.Controllers
                 .Where(c => !string.IsNullOrEmpty(c.Country))
                 .Select(c => c.Country!)
                 .Distinct()
-                .OrderBy(c => c)
+                .OrderBy(c => c == "United States" ? 0 : 1)
+                .ThenBy(c => c)
                 .ToListAsync();
 
             var cities = await _context.Cafes
@@ -1310,6 +1312,334 @@ namespace BoardGameCafeFinder.Controllers
                     message = $"Error: {ex.Message}"
                 });
             }
+        }
+
+        /// <summary>
+        /// GET: /Test/FindDuplicateBoardGames
+        /// Find duplicate board games by name
+        /// </summary>
+        [Route("FindDuplicateBoardGames")]
+        [HttpGet]
+        public async Task<IActionResult> FindDuplicateBoardGames()
+        {
+            // Load all games with CafeGames count to memory first (EF Core can't translate GroupBy with ToLower)
+            var allGames = await _context.BoardGames
+                .Select(g => new
+                {
+                    g.GameId,
+                    g.Name,
+                    g.BGGId,
+                    g.Category,
+                    CafeCount = g.CafeGames.Count
+                })
+                .ToListAsync();
+
+            // Group in memory
+            var duplicates = allGames
+                .GroupBy(g => g.Name.ToLower().Trim())
+                .Where(g => g.Count() > 1)
+                .Select(g => new
+                {
+                    Name = g.First().Name,
+                    Count = g.Count(),
+                    Games = g.ToList()
+                })
+                .OrderByDescending(g => g.Count)
+                .ToList();
+
+            return Json(new
+            {
+                duplicateGroups = duplicates.Count,
+                totalDuplicates = duplicates.Sum(d => d.Count - 1),
+                duplicates = duplicates
+            });
+        }
+
+        /// <summary>
+        /// POST: /Test/DeduplicateBoardGames
+        /// Merge duplicate board games - keeps the one with BGGId or most CafeGames
+        /// </summary>
+        [Route("DeduplicateBoardGames")]
+        [HttpPost]
+        public async Task<IActionResult> DeduplicateBoardGames()
+        {
+            try
+            {
+                // Load all games to memory first (EF Core can't translate GroupBy with ToLower)
+                var allGames = await _context.BoardGames
+                    .Include(g => g.CafeGames)
+                    .ToListAsync();
+
+                // Group in memory
+                var duplicateGroups = allGames
+                    .GroupBy(g => g.Name.ToLower().Trim())
+                    .Where(g => g.Count() > 1)
+                    .ToList();
+
+                int mergedCount = 0;
+                int deletedCount = 0;
+
+                foreach (var group in duplicateGroups)
+                {
+                    var games = group.OrderByDescending(g => g.BGGId.HasValue)
+                                     .ThenByDescending(g => g.CafeGames.Count)
+                                     .ThenBy(g => g.GameId)
+                                     .ToList();
+
+                    var primary = games.First();
+                    var duplicates = games.Skip(1).ToList();
+
+                    foreach (var duplicate in duplicates)
+                    {
+                        // Move CafeGames from duplicate to primary
+                        var cafeGamesToMove = await _context.CafeGames
+                            .Where(cg => cg.GameId == duplicate.GameId)
+                            .ToListAsync();
+
+                        foreach (var cafeGame in cafeGamesToMove)
+                        {
+                            // Check if primary already has this cafe-game link
+                            var existingLink = await _context.CafeGames
+                                .FirstOrDefaultAsync(cg => cg.CafeId == cafeGame.CafeId && cg.GameId == primary.GameId);
+
+                            if (existingLink == null)
+                            {
+                                cafeGame.GameId = primary.GameId;
+                                mergedCount++;
+                            }
+                            else
+                            {
+                                _context.CafeGames.Remove(cafeGame);
+                            }
+                        }
+
+                        // Update primary with any missing data from duplicate
+                        if (!primary.BGGId.HasValue && duplicate.BGGId.HasValue)
+                            primary.BGGId = duplicate.BGGId;
+                        if (string.IsNullOrEmpty(primary.Category) && !string.IsNullOrEmpty(duplicate.Category))
+                            primary.Category = duplicate.Category;
+                        if (string.IsNullOrEmpty(primary.ImageUrl) && !string.IsNullOrEmpty(duplicate.ImageUrl))
+                            primary.ImageUrl = duplicate.ImageUrl;
+                        if (string.IsNullOrEmpty(primary.Description) && !string.IsNullOrEmpty(duplicate.Description))
+                            primary.Description = duplicate.Description;
+
+                        // Delete the duplicate
+                        _context.BoardGames.Remove(duplicate);
+                        deletedCount++;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Deduplicated board games",
+                    duplicateGroupsProcessed = duplicateGroups.Count,
+                    gamesDeleted = deletedCount,
+                    cafeGamesMerged = mergedCount
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deduplicating board games");
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
+        /// GET: /Test/FindInvalidCities
+        /// Find cafes with invalid city data (postal codes, unit numbers, street addresses)
+        /// </summary>
+        [Route("FindInvalidCities")]
+        [HttpGet]
+        public async Task<IActionResult> FindInvalidCities()
+        {
+            var allCafes = await _context.Cafes.Select(c => new { c.CafeId, c.Name, c.City, c.State, c.Country, c.Address }).ToListAsync();
+
+            var invalidCities = allCafes.Where(c =>
+            {
+                if (string.IsNullOrEmpty(c.City)) return true;
+                var city = c.City.Trim();
+
+                // Check for unit numbers (#01-01, etc.)
+                if (city.StartsWith("#")) return true;
+
+                // Check for floor numbers (14/F, Level 1, etc.)
+                if (Regex.IsMatch(city, @"^\d+/[A-Za-z]|^Level\s+\d|^Ground\s+Floor|^First\s+Floor", RegexOptions.IgnoreCase)) return true;
+
+                // Check for pure numbers
+                if (Regex.IsMatch(city, @"^\d+[a-z]?$", RegexOptions.IgnoreCase)) return true;
+
+                // Check for postal code + city format (10117 Berlin, 75001 Paris)
+                if (Regex.IsMatch(city, @"^\d{4,5}\s+[A-Z]", RegexOptions.IgnoreCase)) return true;
+
+                // Check for UK postcode format (Leeds LS1 3AL)
+                if (Regex.IsMatch(city, @"\s+[A-Z]{1,2}\d{1,2}\s*\d?[A-Z]{2}$", RegexOptions.IgnoreCase)) return true;
+
+                // Check for street addresses (contains "St", "Rd", "Ave", etc. at word boundaries)
+                if (Regex.IsMatch(city, @"\b(St|Rd|Ave|Lane|Ln|Way|Sq|Drive|Dr|Blvd|Road|Street)\b", RegexOptions.IgnoreCase)) return true;
+
+                // Check for Amsterdam/Rotterdam postal codes (1016 PV Amsterdam)
+                if (Regex.IsMatch(city, @"^\d{4}\s+[A-Z]{2}\s+[A-Z]", RegexOptions.IgnoreCase)) return true;
+
+                return false;
+            }).ToList();
+
+            return Json(new
+            {
+                totalCafes = allCafes.Count,
+                invalidCount = invalidCities.Count,
+                invalidCities = invalidCities.OrderBy(c => c.City).ToList()
+            });
+        }
+
+        /// <summary>
+        /// POST: /Test/CleanupCityData
+        /// Fix invalid city data by extracting actual city names
+        /// </summary>
+        [Route("CleanupCityData")]
+        [HttpPost]
+        public async Task<IActionResult> CleanupCityData()
+        {
+            try
+            {
+                var cafes = await _context.Cafes.ToListAsync();
+                int fixed_ = 0;
+
+                foreach (var cafe in cafes)
+                {
+                    if (string.IsNullOrEmpty(cafe.City)) continue;
+
+                    var originalCity = cafe.City;
+                    var newCity = CleanupCityName(cafe.City, cafe.Address, cafe.Country);
+
+                    if (newCity != originalCity)
+                    {
+                        cafe.City = newCity;
+                        fixed_++;
+                        _logger.LogInformation("Fixed city: '{Original}' -> '{New}' for cafe {Name}", originalCity, newCity, cafe.Name);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Json(new
+                {
+                    success = true,
+                    message = $"Fixed {fixed_} cafe cities",
+                    fixedCount = fixed_
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cleaning up city data");
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error: {ex.Message}"
+                });
+            }
+        }
+
+        private string CleanupCityName(string city, string? address, string? country)
+        {
+            if (string.IsNullOrEmpty(city)) return city;
+            city = city.Trim();
+
+            // 1. Extract city from "PostalCode City" format (German: 10117 Berlin, French: 75001 Paris)
+            var postalCityMatch = Regex.Match(city, @"^\d{4,5}\s+(.+)$");
+            if (postalCityMatch.Success)
+            {
+                return postalCityMatch.Groups[1].Value.Trim();
+            }
+
+            // 2. Extract city from Dutch postal format (1016 PV Amsterdam)
+            var dutchPostalMatch = Regex.Match(city, @"^\d{4}\s+[A-Z]{2}\s+(.+)$", RegexOptions.IgnoreCase);
+            if (dutchPostalMatch.Success)
+            {
+                return dutchPostalMatch.Groups[1].Value.Trim();
+            }
+
+            // 3. Extract city from UK format (Leeds LS1 3AL, Edinburgh EH1 1HR)
+            var ukPostcodeMatch = Regex.Match(city, @"^([A-Za-z\s]+)\s+[A-Z]{1,2}\d{1,2}\s*\d?[A-Z]{2}$", RegexOptions.IgnoreCase);
+            if (ukPostcodeMatch.Success)
+            {
+                return ukPostcodeMatch.Groups[1].Value.Trim();
+            }
+
+            // 4. Remove Bristol/UK city+postcode format (Bristol BS1 2BD -> Bristol)
+            var cityPostcodeMatch = Regex.Match(city, @"^([A-Za-z]+)\s+[A-Z]{1,2}\d{1,2}\s*\d?[A-Z]{2}$", RegexOptions.IgnoreCase);
+            if (cityPostcodeMatch.Success)
+            {
+                return cityPostcodeMatch.Groups[1].Value.Trim();
+            }
+
+            // 5. Invalid entries - try to extract from address or return empty for manual fix
+            if (city.StartsWith("#") || // Unit numbers
+                Regex.IsMatch(city, @"^\d+[a-z]?/|^Level\s+|^Ground|^First", RegexOptions.IgnoreCase) || // Floor numbers
+                Regex.IsMatch(city, @"^\d{1,3}$") || // Pure small numbers
+                Regex.IsMatch(city, @"\b(St|Rd|Ave|Lane|Ln|Way|Sq|Drive|Dr|Blvd|Road|Street)\b", RegexOptions.IgnoreCase)) // Street addresses
+            {
+                // Try to extract city from address
+                if (!string.IsNullOrEmpty(address))
+                {
+                    var extractedCity = ExtractCityFromAddress(address, country);
+                    if (!string.IsNullOrEmpty(extractedCity))
+                    {
+                        return extractedCity;
+                    }
+                }
+                // Return original if we can't fix it
+                return city;
+            }
+
+            return city;
+        }
+
+        private string? ExtractCityFromAddress(string address, string? country)
+        {
+            if (string.IsNullOrEmpty(address)) return null;
+
+            var parts = address.Split(',').Select(p => p.Trim()).ToList();
+            if (parts.Count < 2) return null;
+
+            // For Singapore addresses, city is always "Singapore"
+            if (country == "Singapore" || address.Contains("Singapore"))
+            {
+                return "Singapore";
+            }
+
+            // For UK addresses, try to find the city before the postcode
+            if (country == "United Kingdom" || country == "UK")
+            {
+                foreach (var part in parts)
+                {
+                    // Look for city + postcode pattern
+                    var ukMatch = Regex.Match(part, @"^([A-Za-z\s]+)\s+[A-Z]{1,2}\d", RegexOptions.IgnoreCase);
+                    if (ukMatch.Success)
+                    {
+                        return ukMatch.Groups[1].Value.Trim();
+                    }
+                }
+            }
+
+            // Generic: try second to last part (often the city)
+            if (parts.Count >= 3)
+            {
+                var potentialCity = parts[^2]; // Second to last
+                // Make sure it doesn't look like a postal code or street
+                if (!Regex.IsMatch(potentialCity, @"^\d|#|\bSt\b|\bRd\b|\bAve\b", RegexOptions.IgnoreCase))
+                {
+                    return potentialCity;
+                }
+            }
+
+            return null;
         }
 
         private async Task<string> GenerateUniqueSlugAsync(string name, HashSet<string>? usedSlugs = null)

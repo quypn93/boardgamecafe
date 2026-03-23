@@ -1,0 +1,143 @@
+@model MapViewModel
+@{
+    ViewData["Title"] = "Map View";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid p-0">
+    <div class="row g-0">
+        <div class="col-md-4 col-lg-3" style="height: calc(100vh - 56px); overflow-y: auto;">
+            <div class="p-3">
+                <h5>Cooking Schools Near You</h5>
+
+                <form id="mapSearchForm" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" id="locationSearch" class="form-control" placeholder="Search location...">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mb-3">
+                    <select id="cuisineFilter" class="form-select">
+                        <option value="">All Cuisines</option>
+                        <option value="Italian">Italian</option>
+                        <option value="French">French</option>
+                        <option value="Japanese">Japanese</option>
+                        <option value="Thai">Thai</option>
+                        <option value="Mexican">Mexican</option>
+                        <option value="Baking">Baking</option>
+                    </select>
+                </div>
+
+                <div id="schoolsList">
+                    @if (Model.Schools != null)
+                    {
+                        foreach (var school in Model.Schools)
+                        {
+                            <div class="card mb-2 school-card" data-lat="@school.Lat" data-lng="@school.Lng" data-id="@school.SchoolId">
+                                <div class="card-body p-2">
+                                    <h6 class="card-title mb-1">
+                                        <a asp-controller="School" asp-action="Details" asp-route-slug="@school.Slug" class="text-decoration-none">
+                                            @school.Name
+                                        </a>
+                                    </h6>
+                                    <p class="text-muted small mb-1">
+                                        <i class="bi bi-geo-alt"></i> @school.Address
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">@school.ClassCount classes</small>
+                                        @if (school.Rating.HasValue)
+                                        {
+                                            <span class="badge bg-warning">
+                                                @school.Rating.Value.ToString("F1") <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+                @if (Model.Schools == null || !Model.Schools.Any())
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-geo-alt display-4 text-muted"></i>
+                        <p class="text-muted mt-2">No schools found in this area</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-9">
+            <div id="map" style="height: calc(100vh - 56px);"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://maps.googleapis.com/maps/api/js?key=@ViewBag.GoogleMapsApiKey&callback=initMap" async defer></script>
+    <script>
+        let map;
+        let markers = [];
+
+        function initMap() {
+            const defaultCenter = { lat: @Model.CenterLat, lng: @Model.CenterLng };
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: defaultCenter,
+                zoom: @Model.ZoomLevel,
+                styles: [
+                    { featureType: 'poi.business', stylers: [{ visibility: 'off' }] }
+                ]
+            });
+
+            // Add markers for each school
+            document.querySelectorAll('.school-card').forEach(card => {
+                const lat = parseFloat(card.dataset.lat);
+                const lng = parseFloat(card.dataset.lng);
+
+                if (lat && lng) {
+                    const marker = new google.maps.Marker({
+                        position: { lat, lng },
+                        map: map,
+                        title: card.querySelector('.card-title a').textContent,
+                        icon: {
+                            url: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#e67e22"/><text x="16" y="22" font-size="16" text-anchor="middle" fill="white">🍳</text></svg>'),
+                            scaledSize: new google.maps.Size(32, 32)
+                        }
+                    });
+
+                    marker.addListener('click', () => {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        card.classList.add('border-primary');
+                        setTimeout(() => card.classList.remove('border-primary'), 2000);
+                    });
+
+                    markers.push(marker);
+
+                    // Highlight marker on card hover
+                    card.addEventListener('mouseenter', () => {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(() => marker.setAnimation(null), 750);
+                    });
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    .school-card {
+        transition: border-color 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+    .school-card:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .school-card.border-primary {
+        border-width: 2px !important;
+    }
+</style>

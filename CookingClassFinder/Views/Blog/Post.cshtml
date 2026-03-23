@@ -1,0 +1,93 @@
+@model BlogPost
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Blog</a></li>
+                    <li class="breadcrumb-item active">@Model.Title</li>
+                </ol>
+            </nav>
+
+            <article>
+                @if (!string.IsNullOrEmpty(Model.FeaturedImageUrl))
+                {
+                    <img src="@Model.FeaturedImageUrl" class="img-fluid rounded mb-4" alt="@Model.Title">
+                }
+
+                <div class="mb-3">
+                    @if (Model.IsFeatured)
+                    {
+                        <span class="badge bg-warning me-1">Featured</span>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.RelatedCuisine))
+                    {
+                        <span class="badge bg-secondary">@Model.RelatedCuisine</span>
+                    }
+                </div>
+
+                <h1>@Model.Title</h1>
+
+                <div class="text-muted mb-4">
+                    <i class="bi bi-person"></i> @Model.Author
+                    <span class="mx-2">|</span>
+                    <i class="bi bi-calendar"></i> @Model.PublishedAt?.ToString("MMMM dd, yyyy")
+                    <span class="mx-2">|</span>
+                    <i class="bi bi-eye"></i> @Model.ViewCount views
+                </div>
+
+                <div class="blog-content">
+                    @Html.Raw(Model.Content)
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Tags))
+                {
+                    <div class="mt-4">
+                        <strong>Tags:</strong>
+                        @foreach (var tag in Model.Tags.Split(','))
+                        {
+                            <span class="badge bg-light text-dark">@tag.Trim()</span>
+                        }
+                    </div>
+                }
+
+                <hr class="my-5" />
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="Index" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Blog
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="https://twitter.com/share?url=@Context.Request.Path" target="_blank" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=@Context.Request.Path" target="_blank" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<style>
+    .blog-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+    .blog-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    .blog-content h2, .blog-content h3 {
+        margin-top: 2rem;
+    }
+</style>

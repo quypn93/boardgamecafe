@@ -1,0 +1,181 @@
+@{
+    ViewData["Title"] = "Create Class";
+    Layout = "_AdminLayout";
+}
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="CreateClass" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <h5 class="mb-3">Basic Information</h5>
+
+                    <div class="mb-3">
+                        <label class="form-label">School *</label>
+                        <select name="SchoolId" class="form-select" required>
+                            <option value="">Select a school</option>
+                            @if (ViewBag.Schools != null)
+                            {
+                                foreach (var school in ViewBag.Schools)
+                                {
+                                    <option value="@school.Id">@school.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Class Name *</label>
+                        <input type="text" name="Name" class="form-control" required />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cuisine Type *</label>
+                            <select name="CuisineType" class="form-select" required>
+                                <option value="Italian">Italian</option>
+                                <option value="French">French</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Thai">Thai</option>
+                                <option value="Vietnamese">Vietnamese</option>
+                                <option value="Indian">Indian</option>
+                                <option value="Mexican">Mexican</option>
+                                <option value="Mediterranean">Mediterranean</option>
+                                <option value="Baking">Baking</option>
+                                <option value="Pastry">Pastry</option>
+                                <option value="BBQ">BBQ</option>
+                                <option value="Seafood">Seafood</option>
+                                <option value="Vegetarian">Vegetarian</option>
+                                <option value="Vegan">Vegan</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Difficulty Level *</label>
+                            <select name="DifficultyLevel" class="form-select" required>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="All Levels">All Levels</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="Description" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <hr class="my-4" />
+                    <h5 class="mb-3">Class Details</h5>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Duration (minutes) *</label>
+                            <input type="number" name="DurationMinutes" class="form-control" value="120" required />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Min Students</label>
+                            <input type="number" name="MinStudents" class="form-control" value="2" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Max Students</label>
+                            <input type="number" name="MaxStudents" class="form-control" value="12" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Price Per Person ($)</label>
+                            <input type="number" name="PricePerPerson" class="form-control" step="0.01" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Price for Private Group ($)</label>
+                            <input type="number" name="PriceForPrivateGroup" class="form-control" step="0.01" />
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+                    <h5 class="mb-3">Instructor</h5>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Instructor Name</label>
+                            <input type="text" name="InstructorName" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Minimum Age</label>
+                            <input type="number" name="MinAge" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Instructor Bio</label>
+                        <textarea name="InstructorBio" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="mb-3">Options</h5>
+
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6>What's Included</h6>
+                            <div class="form-check">
+                                <input type="checkbox" name="IngredientsProvided" class="form-check-input" id="ingredientsProvided" checked />
+                                <label class="form-check-label" for="ingredientsProvided">Ingredients Provided</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="MealsIncluded" class="form-check-input" id="mealsIncluded" />
+                                <label class="form-check-label" for="mealsIncluded">Meals Included</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="TakeHomeRecipes" class="form-check-input" id="takeHomeRecipes" checked />
+                                <label class="form-check-label" for="takeHomeRecipes">Take-Home Recipes</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6>Dietary Options</h6>
+                            <div class="form-check">
+                                <input type="checkbox" name="IsVegetarian" class="form-check-input" id="isVegetarian" />
+                                <label class="form-check-label" for="isVegetarian">Vegetarian</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="IsVegan" class="form-check-input" id="isVegan" />
+                                <label class="form-check-label" for="isVegan">Vegan</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="IsGlutenFree" class="form-check-input" id="isGlutenFree" />
+                                <label class="form-check-label" for="isGlutenFree">Gluten-Free</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="IsHalal" class="form-check-input" id="isHalal" />
+                                <label class="form-check-label" for="isHalal">Halal</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="IsKosher" class="form-check-input" id="isKosher" />
+                                <label class="form-check-label" for="isKosher">Kosher</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Image URL</label>
+                        <input type="url" name="ImageUrl" class="form-control" placeholder="https://" />
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Create Class</button>
+                <a asp-action="Classes" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

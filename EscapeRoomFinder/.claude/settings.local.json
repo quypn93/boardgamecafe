@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd.exe /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\EscapeRoomFinder && dotnet new xunit -n EscapeRoomFinder.Tests -o Tests\")",
+      "Bash(cmd.exe /c \"del D:\\\\Task\\\\BoardGameCFFinder\\\\EscapeRoomFinder\\\\Tests\\\\UnitTest1.cs\")",
+      "Bash(cmd.exe /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\EscapeRoomFinder\\\\Tests && dotnet restore\")",
+      "Bash(cmd.exe /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\EscapeRoomFinder\\\\Tests && dotnet build 2>&1\")",
+      "Bash(cmd.exe /c \"cd /d D:\\\\Task\\\\BoardGameCFFinder\\\\EscapeRoomFinder\\\\Tests && dotnet test --verbosity normal 2>&1\")"
+    ]
+  }
+}
