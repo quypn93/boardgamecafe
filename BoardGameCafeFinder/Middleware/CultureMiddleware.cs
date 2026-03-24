@@ -53,8 +53,32 @@ namespace BoardGameCafeFinder.Middleware
 
             if (segments.Length > 0 && SupportedCultures.Contains(segments[0]))
             {
-                // Priority 1: Culture prefix in URL (highest priority)
+                // Priority 1: Culture prefix in URL
                 culture = segments[0].ToLowerInvariant();
+
+                // 301 redirect to strip the culture prefix from the URL.
+                // Attribute-routed controllers (cafe, blog, etc.) don't include the culture
+                // prefix so these URLs return 404. Redirect to the English canonical URL and
+                // save the language preference in a cookie instead.
+                var remainingPath = "/" + string.Join("/", segments.Skip(1).Select(s => s.ToLowerInvariant()));
+                var queryString = context.Request.QueryString.Value ?? "";
+                var redirectUrl = remainingPath + queryString;
+
+                // Save language preference in cookie (non-English only)
+                if (culture != "en")
+                {
+                    context.Response.Cookies.Append(CultureCookieName, culture, new CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddYears(1),
+                        HttpOnly = false,
+                        IsEssential = true,
+                        SameSite = SameSiteMode.Lax
+                    });
+                }
+
+                context.Response.StatusCode = 301;
+                context.Response.Headers["Location"] = redirectUrl;
+                return;
             }
             else
             {

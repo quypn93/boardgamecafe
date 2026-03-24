@@ -56,12 +56,11 @@
         @foreach (var culture in cultures)
         {
             var isActive = culture == currentCulture;
-            var newPath = culture == "en" ? pathWithoutCulture : $"/{culture}{pathWithoutCulture}";
-            if (string.IsNullOrEmpty(newPath)) newPath = "/";
+            var reloadPath = string.IsNullOrEmpty(pathWithoutCulture) ? "/" : pathWithoutCulture;
 
             <li>
                 <a class="dropdown-item language-link @(isActive ? "active" : "")"
-                   href="@newPath@(Context.Request.QueryString)"
+                   href="@reloadPath@(Context.Request.QueryString)"
                    data-culture="@culture">
                     @cultureFlags[culture] @cultureNames[culture]
                 </a>
