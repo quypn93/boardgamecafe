@@ -59,10 +59,21 @@ public class CafeController : Controller
                 {
                     return RedirectToActionPermanent(nameof(Details), new { slug = cafe.Slug });
                 }
+
+                // Inactive cafe by ID → 410 Gone (faster Google deindex than 404)
+                if (cafe == null && await _context.Cafes.AnyAsync(c => c.CafeId == id && !c.IsActive))
+                {
+                    return StatusCode(410);
+                }
             }
 
             if (cafe == null)
             {
+                // Check if cafe exists but is inactive → 410 Gone (faster Google deindex than 404)
+                var isInactive = await _context.Cafes.AnyAsync(c => c.Slug == slug && !c.IsActive);
+                if (isInactive)
+                    return StatusCode(410);
+
                 return NotFound();
             }
         }

@@ -13,7 +13,7 @@
 
     ViewData["MetaDescription"] = metaDescription;
     ViewData["Keywords"] = $"{Model.Name}, board game cafe {Model.City}, tabletop games {Model.City}, {Model.State} board game lounge, cafe with board games";
-    ViewData["CanonicalUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}/Cafe/{Model.Slug}";
+    // Canonical set by controller; view does not override it
     ViewData["OGType"] = "business.business";
 
     // Get first photo for OG image
@@ -37,7 +37,7 @@
     {
         "@@context": "https://schema.org",
         "@@type": "LocalBusiness",
-        "@@id": "@($"{Context.Request.Scheme}://{Context.Request.Host}/Cafe/{Model.Slug}")",
+        "@@id": "@($"{Context.Request.Scheme}://{Context.Request.Host}/cafe/{Model.Slug}")",
         "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Name).ToString())",
         "description": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(hasApprovedDescription ? Model.Description! : $"Board game cafe in {Model.City}").ToString())",
         @if (!string.IsNullOrEmpty(ogImageUrl))
@@ -53,8 +53,8 @@
         },
         "geo": {
             "@@type": "GeoCoordinates",
-            "latitude": @Model.Latitude,
-            "longitude": @Model.Longitude
+            "latitude": @Model.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            "longitude": @Model.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)
         },
         @if (!string.IsNullOrEmpty(Model.Phone))
         {
@@ -73,10 +73,10 @@
         {
             <text>"aggregateRating": {
             "@@type": "AggregateRating",
-            "ratingValue": "@Model.AverageRating.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)",
+            "ratingValue": @Model.AverageRating.Value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture),
             "reviewCount": @Model.TotalReviews,
-            "bestRating": "5",
-            "worstRating": "1"
+            "bestRating": 5,
+            "worstRating": 1
         },</text>
         }
         @{
@@ -100,9 +100,9 @@
                 "@@type": "Review",
                 "reviewRating": {
                     "@@type": "Rating",
-                    "ratingValue": "@rev.Rating",
-                    "bestRating": "5",
-                    "worstRating": "1"
+                    "ratingValue": @rev.Rating,
+                    "bestRating": 5,
+                    "worstRating": 1
                 },
                 "author": {
                     "@@type": "Person",
@@ -134,7 +134,7 @@
                 "@@type": "ListItem",
                 "position": 2,
                 "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Name).ToString())",
-                "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/Cafe/{Model.Slug}")"
+                "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/cafe/{Model.Slug}")"
             }
         ]
     }
@@ -682,8 +682,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize map
-            var lat = @Model.Latitude;
-            var lng = @Model.Longitude;
+            var lat = @Model.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var lng = @Model.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
             var cafeName = "@Html.Raw(Model.Name.Replace("\"", "\\\""))";
 
             var map = L.map('cafeMap').setView([lat, lng], 15);

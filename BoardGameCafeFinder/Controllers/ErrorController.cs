@@ -19,7 +19,14 @@ public class ErrorController : Controller
             case 404:
                 ViewBag.ErrorMessage = "The page you're looking for doesn't exist.";
                 ViewBag.ErrorTitle = "Page Not Found";
+                ViewData["Title"] = "404 - Page Not Found";
                 return View("NotFound");
+
+            case 410:
+                ViewBag.ErrorMessage = "This listing has been permanently removed. It may have closed or been delisted.";
+                ViewBag.ErrorTitle = "Listing No Longer Available";
+                ViewData["Title"] = "410 - Listing Removed";
+                return View("Gone");
 
             case 403:
                 ViewBag.ErrorMessage = "You don't have permission to access this page.";

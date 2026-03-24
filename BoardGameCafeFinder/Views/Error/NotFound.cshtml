@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "404 - Page Not Found";
+    if (ViewData["Title"] == null) ViewData["Title"] = "404 - Page Not Found";
     Layout = "_UserLayout";
 }
 

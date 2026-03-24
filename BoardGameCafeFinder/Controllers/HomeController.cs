@@ -334,11 +334,22 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        var cafe = await _cafeService.GetByIdAsync(id);
+        var cafe = await _context.Cafes.FirstOrDefaultAsync(c => c.CafeId == id && c.IsActive);
+
         if (cafe == null)
         {
+            // Inactive cafe → 410 Gone (faster Google deindex)
+            var isInactive = await _context.Cafes.AnyAsync(c => c.CafeId == id && !c.IsActive);
+            if (isInactive)
+                return StatusCode(410);
+
             return NotFound();
         }
+
+        // Redirect to canonical slug URL permanently
+        if (!string.IsNullOrEmpty(cafe.Slug))
+            return RedirectToActionPermanent("Details", "Cafe", new { slug = cafe.Slug });
+
         return View(cafe);
     }
 
