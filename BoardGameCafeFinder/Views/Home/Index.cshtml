@@ -176,21 +176,21 @@
     }
 }
 
-@* Hero Section - Hidden on mobile, shown on tablet and desktop *@
-<div class="hero-section py-5 mb-4 d-none d-md-block">
+@* Hero Section *@
+<div class="hero-section py-4 py-md-5 mb-4">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-12">
-                <h1 class="display-5 fw-bold mb-3">@SharedLocalizer["Home_HeroTitle"]</h1>
-                <p class="lead mb-4">
+                <h1 class="display-6 display-md-5 fw-bold mb-2 mb-md-3">@SharedLocalizer["Home_HeroTitle"]</h1>
+                <p class="lead mb-3 mb-md-4 d-none d-sm-block">
                     @SharedLocalizer["Home_HeroSubtitle"]
                 </p>
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="#cafes" class="btn btn-light btn-lg">
-                        <i class="bi bi-search me-2"></i>@SharedLocalizer["Home_BrowseCafes"]
+                    <a href="#cafes" class="btn btn-light btn-md btn-lg-lg">
+                        <i class="bi bi-search me-1 me-md-2"></i>@SharedLocalizer["Home_BrowseCafes"]
                     </a>
-                    <a asp-controller="Map" asp-action="Index" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-map me-2"></i>@SharedLocalizer["Home_ViewMap"]
+                    <a asp-controller="Map" asp-action="Index" class="btn btn-outline-light btn-md btn-lg-lg">
+                        <i class="bi bi-map me-1 me-md-2"></i>@SharedLocalizer["Home_ViewMap"]
                     </a>
                 </div>
             </div>

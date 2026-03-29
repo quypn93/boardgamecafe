@@ -92,6 +92,7 @@
   <data name="Cafe_Phone" xml:space="preserve"><value>โทรศัพท์</value></data>
   <data name="Cafe_Website" xml:space="preserve"><value>เว็บไซต์</value></data>
   <data name="Cafe_Hours" xml:space="preserve"><value>เวลาเปิด-ปิด</value></data>
+  <data name="Cafe_Photos" xml:space="preserve"><value>รูปภาพ</value></data>
   <data name="Cafe_Games" xml:space="preserve"><value>คลังเกม</value></data>
   <data name="Cafe_GamesAvailable" xml:space="preserve"><value>เกมที่มี</value></data>
   <data name="Cafe_ViewOnMap" xml:space="preserve"><value>ดูบนแผนที่</value></data>
@@ -333,4 +334,5 @@
   <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>จัดการคลังบอร์ดเกม</value></data>
   <data name="Plan_Feature_Analytics" xml:space="preserve"><value>แดชบอร์ดวิเคราะห์</value></data>
   <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>รูปภาพไม่จำกัด</value></data>
+  <data name="Cafe_MoreCafesInCity" xml:space="preserve"><value>คาเฟ่บอร์ดเกมอื่นๆ ใน {0}</value></data>
 </root>

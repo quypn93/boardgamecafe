@@ -92,6 +92,7 @@
   <data name="Cafe_Phone" xml:space="preserve"><value>Teléfono</value></data>
   <data name="Cafe_Website" xml:space="preserve"><value>Sitio Web</value></data>
   <data name="Cafe_Hours" xml:space="preserve"><value>Horario</value></data>
+  <data name="Cafe_Photos" xml:space="preserve"><value>Fotos</value></data>
   <data name="Cafe_Games" xml:space="preserve"><value>Biblioteca de Juegos</value></data>
   <data name="Cafe_GamesAvailable" xml:space="preserve"><value>juegos disponibles</value></data>
   <data name="Cafe_ViewOnMap" xml:space="preserve"><value>Ver en el Mapa</value></data>
@@ -333,4 +334,5 @@
   <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>Gestor de inventario de juegos</value></data>
   <data name="Plan_Feature_Analytics" xml:space="preserve"><value>Panel de análisis</value></data>
   <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>Fotos ilimitadas</value></data>
+  <data name="Cafe_MoreCafesInCity" xml:space="preserve"><value>Más cafeterías de juegos de mesa en {0}</value></data>
 </root>

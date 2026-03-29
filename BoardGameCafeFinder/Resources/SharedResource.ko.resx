@@ -92,6 +92,7 @@
   <data name="Cafe_Phone" xml:space="preserve"><value>전화</value></data>
   <data name="Cafe_Website" xml:space="preserve"><value>웹사이트</value></data>
   <data name="Cafe_Hours" xml:space="preserve"><value>영업시간</value></data>
+  <data name="Cafe_Photos" xml:space="preserve"><value>사진</value></data>
   <data name="Cafe_Games" xml:space="preserve"><value>게임 라이브러리</value></data>
   <data name="Cafe_GamesAvailable" xml:space="preserve"><value>개의 게임 보유</value></data>
   <data name="Cafe_ViewOnMap" xml:space="preserve"><value>지도에서 보기</value></data>
@@ -333,4 +334,5 @@
   <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>게임 재고 관리</value></data>
   <data name="Plan_Feature_Analytics" xml:space="preserve"><value>분석 대시보드</value></data>
   <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>무제한 사진</value></data>
+  <data name="Cafe_MoreCafesInCity" xml:space="preserve"><value>{0}의 다른 보드게임 카페</value></data>
 </root>

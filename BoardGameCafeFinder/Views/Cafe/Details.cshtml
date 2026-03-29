@@ -133,6 +133,12 @@
             {
                 "@@type": "ListItem",
                 "position": 2,
+                "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.City).ToString())",
+                "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/?city={Uri.EscapeDataString(Model.City)}")"
+            },
+            {
+                "@@type": "ListItem",
+                "position": 3,
                 "name": "@Html.Raw(System.Text.Json.JsonEncodedText.Encode(Model.Name).ToString())",
                 "item": "@($"{Context.Request.Scheme}://{Context.Request.Host}/cafe/{Model.Slug}")"
             }
@@ -141,94 +147,89 @@
     </script>
 }
 
-<div class="container mt-4">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
-        </ol>
-    </nav>
+@{
+    var cleanPhoneHeader = string.IsNullOrEmpty(Model.Phone) ? null :
+        System.Text.RegularExpressions.Regex.Replace(Model.Phone,
+            @"[\x00-\x1F\x7F-\x9F\u0600-\u06FF\u200B-\u200F\u2028-\u2029\u202A-\u202E\u2060-\u206F]", "").Trim();
+    var telPhoneHeader = string.IsNullOrEmpty(cleanPhoneHeader) ? null :
+        System.Text.RegularExpressions.Regex.Replace(cleanPhoneHeader, @"[^\d+]", "");
+}
 
-    <!-- Header Info -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="display-4">@Model.Name</h1>
-            <div class="mb-2">
-                @if (Model.AverageRating > 0)
-                {
-                    <span class="badge bg-warning text-dark me-2">
-                        <i class="bi bi-star-fill"></i> @Model.AverageRating.Value.ToString("0.0")
-                    </span>
-                    <span class="text-muted">(@Model.TotalReviews reviews)</span>
-                }
-                @if (!string.IsNullOrEmpty(Model.PriceRange))
-                {
-                    <span class="badge bg-secondary ms-2">@Model.PriceRange</span>
-                }
-            </div>
-            <p class="lead">
-                <i class="bi bi-geo-alt"></i> @Model.Address, @Model.City, @Model.State
-            </p>
-            @if (!string.IsNullOrEmpty(Model.Phone))
+<!-- Hero Banner -->
+<div class="cafe-hero position-relative overflow-hidden"
+     style="height:340px; background: @(!string.IsNullOrEmpty(ogImageUrl) ? $"url('{ogImageUrl}') center/cover no-repeat" : "linear-gradient(135deg,#667eea 0%,#764ba2 100%)");">
+    <div class="position-absolute inset-0 w-100 h-100"
+         style="background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.72) 100%);"></div>
+    <div class="container h-100 d-flex flex-column justify-content-end pb-4 position-relative">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0" style="--bs-breadcrumb-divider-color:rgba(255,255,255,.55);">
+                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="/?city=@Uri.EscapeDataString(Model.City)" class="text-white-50 text-decoration-none">@Model.City</a></li>
+                <li class="breadcrumb-item text-white active">@Model.Name</li>
+            </ol>
+        </nav>
+        <h1 class="text-white fw-bold mb-2" style="text-shadow:0 2px 12px rgba(0,0,0,.6); font-size:clamp(1.6rem,4vw,2.5rem);">@Model.Name</h1>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            @if (Model.AverageRating > 0)
             {
-                // Remove all non-ASCII and control characters
-                var cleanPhone = System.Text.RegularExpressions.Regex.Replace(
-                    Model.Phone,
-                    @"[\x00-\x1F\x7F-\x9F\u0600-\u06FF\u200B-\u200F\u2028-\u2029\u202A-\u202E\u2060-\u206F]",
-                    "").Trim();
-                var telPhone = System.Text.RegularExpressions.Regex.Replace(cleanPhone, @"[^\d+]", "");
-                <p>
-                    <i class="bi bi-telephone"></i>
-                    <a href="tel:@telPhone" class="text-decoration-none">@cleanPhone</a>
-                </p>
+                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                    <i class="bi bi-star-fill me-1"></i>@Model.AverageRating.Value.ToString("0.0")
+                </span>
+                <span class="text-white-50 small">(@Model.TotalReviews reviews)</span>
             }
-            @if (!string.IsNullOrEmpty(Model.Website))
+            @if (!string.IsNullOrEmpty(Model.PriceRange))
             {
-                <p>
-                    <a href="@Model.Website" target="_blank" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-globe"></i> Visit Website
-                    </a>
-                    @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
-                    {
-                        <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-outline-success btn-sm ms-2">
-                            <i class="bi bi-map"></i> View on Google Maps
-                        </a>
-                    }
-                </p>
+                <span class="badge bg-light text-dark px-3 py-2">@Model.PriceRange</span>
             }
-            @if (hasApprovedDescription)
+            @if (Model.CafeGames?.Count > 0)
             {
-                <div class="mt-4">
-                    <h5>About this place</h5>
-                    <p class="text-muted">@Model.Description</p>
-                </div>
-            }
-            @{
-                @* var attributes = Model.GetAttributes();
-                if (attributes != null && attributes.Any())
-                {
-                    <div class="mt-4">
-                        <h5>Amenities & Features</h5>
-                        <div class="row">
-                            @foreach (var category in attributes)
-                            {
-                                <div class="col-md-6 mb-3">
-                                    <h6 class="fw-bold">@category.Key</h6>
-                                    <ul class="list-unstyled">
-                                        @foreach (var item in category.Value)
-                                        {
-                                            <li><i class="bi bi-check-circle-fill text-success small"></i> @item</li>
-                                        }
-                                    </ul>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                } *@
+                <span class="badge bg-primary px-3 py-2">
+                    <i class="bi bi-dice-5 me-1"></i>@Model.CafeGames.Count games
+                </span>
             }
         </div>
     </div>
+</div>
+
+<!-- Quick Info Bar -->
+<div class="bg-white border-bottom shadow-sm mb-0">
+    <div class="container py-3">
+        <div class="d-flex flex-wrap gap-3 align-items-center">
+            <span class="text-muted small"><i class="bi bi-geo-alt-fill text-danger me-1"></i>@Model.Address, @Model.City@(!string.IsNullOrEmpty(Model.State) ? $", {Model.State}" : "")</span>
+            @if (!string.IsNullOrEmpty(cleanPhoneHeader))
+            {
+                <span class="text-muted">|</span>
+                <a href="tel:@telPhoneHeader" class="text-decoration-none small">
+                    <i class="bi bi-telephone-fill text-success me-1"></i>@cleanPhoneHeader
+                </a>
+            }
+            <span class="ms-auto d-flex gap-2">
+                @if (!string.IsNullOrEmpty(Model.Website))
+                {
+                    <a href="@Model.Website" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-globe me-1"></i>Website
+                    </a>
+                }
+                @{
+                    var mapsUrl = !string.IsNullOrEmpty(Model.GoogleMapsUrl)
+                        ? Model.GoogleMapsUrl
+                        : $"https://www.google.com/maps/search/?api=1&query={Model.Latitude},{Model.Longitude}";
+                }
+                <a href="@mapsUrl" target="_blank" class="btn btn-sm btn-success">
+                    <i class="bi bi-map-fill me-1"></i>@SharedLocalizer["Cafe_GetDirections"]
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    @if (hasApprovedDescription)
+    {
+        <div class="card border-0 bg-light mb-4 p-3 p-md-4">
+            <p class="mb-0 text-muted fst-italic"><i class="bi bi-quote fs-4 text-primary opacity-50 me-1"></i>@Model.Description</p>
+        </div>
+    }
 
     <div class="row">
         <!-- Left Column: Photos & Reviews -->
@@ -236,9 +237,11 @@
             <!-- Photos Carousel -->
             @if (Model.Photos != null && Model.Photos.Any())
             {
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-white">
-                        <h4 class="mb-0">Photos</h4>
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-header bg-white d-flex align-items-center gap-2">
+                        <i class="bi bi-images text-primary"></i>
+                        <h5 class="mb-0">@SharedLocalizer["Cafe_Photos"]</h5>
+                        <span class="badge bg-primary rounded-pill ms-auto">@Model.Photos.Count</span>
                     </div>
                     <div class="card-body p-0">
                         <div id="cafeCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -256,7 +259,7 @@
                                         var photoSrc = !string.IsNullOrEmpty(photos[i].LocalPath) ? photos[i].LocalPath : photos[i].Url;
                                         <div class="carousel-item @(i == 0 ? "active" : "")">
                                             <div class="ratio ratio-16x9">
-                                                <img src="@photoSrc" class="d-block w-100 object-fit-contain bg-dark" alt="Photo of @Model.Name">
+                                                <img src="@photoSrc" class="d-block w-100 object-fit-contain bg-dark" alt="Photo of @Model.Name" @(i > 0 ? "loading=\"lazy\"" : "")>
                                             </div>
                                             @if (!string.IsNullOrEmpty(photos[i].Caption))
                                             {
@@ -285,7 +288,7 @@
                  <div class="card mb-4 shadow-sm">
                     <div class="card-body p-0">
                          <div class="ratio ratio-16x9">
-                             <img src="@Model.LocalImagePath" class="img-fluid rounded w-100 object-fit-cover" alt="@Model.Name">
+                             <img src="@Model.LocalImagePath" class="img-fluid rounded w-100 object-fit-cover" alt="@Model.Name" loading="lazy">
                          </div>
                     </div>
                 </div>
@@ -333,7 +336,7 @@
                                             <div class="p-2">
                                                 @if (!string.IsNullOrEmpty(cafeGame.Game.ImageUrl))
                                                 {
-                                                    <img src="@cafeGame.Game.ImageUrl" class="card-img-top rounded object-fit-contain" style="height: 100px;" alt="@cafeGame.Game.Name">
+                                                    <img src="@cafeGame.Game.ImageUrl" class="card-img-top rounded object-fit-contain" style="height: 100px;" alt="@cafeGame.Game.Name" loading="lazy">
                                                 }
                                                 else
                                                 {
@@ -606,36 +609,89 @@
             <!-- Opening Hours -->
             @if (!string.IsNullOrEmpty(Model.OpeningHours))
             {
-                <div class="card mb-4">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Opening Hours</h5>
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-header bg-white d-flex align-items-center gap-2">
+                        <i class="bi bi-clock text-primary"></i>
+                        <h5 class="mb-0">@SharedLocalizer["Cafe_Hours"]</h5>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text" style="white-space: pre-line;">@Model.OpeningHours.Replace(";", "\n")</p>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            @foreach (var line in Model.OpeningHours.Split(';', StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                var parts = line.Trim().Split(':', 2);
+                                <li class="list-group-item d-flex justify-content-between px-3 py-2">
+                                    <span class="text-muted small">@parts[0].Trim()</span>
+                                    <span class="small fw-medium">@(parts.Length > 1 ? parts[1].Trim() : "")</span>
+                                </li>
+                            }
+                        </ul>
                     </div>
                 </div>
             }
-            <div class="card-body p-0">
-                <div id="cafeMap" style="height: 300px; width: 100%; border-radius: 4px 4px 0 0;"></div>
-            </div>
-            <div class="card-body">
-                @if (!string.IsNullOrEmpty(Model.GoogleMapsUrl))
-                {
-                    <a href="@Model.GoogleMapsUrl" target="_blank" class="btn btn-primary w-100">
-                        <i class="bi bi-map-fill"></i> Open in Google Maps
+            <div class="card border-0 shadow-sm mb-4 overflow-hidden">
+                <div id="cafeMap" style="height: 280px; width: 100%;"></div>
+                <div class="card-body p-2">
+                    <a href="@mapsUrl" target="_blank" class="btn btn-success w-100 btn-sm">
+                        <i class="bi bi-map-fill me-1"></i> Open in Google Maps
                     </a>
-                }
-                else
-                {
-                    <a href="https://www.google.com/maps/search/?api=1&query=@Model.Latitude,@Model.Longitude"
-                        target="_blank" class="btn btn-primary w-100">
-                        <i class="bi bi-map-fill"></i> Open in Google Maps
-                    </a>
-                }
+                </div>
             </div>
         </div>
         </div>
     </div>
+
+    <!-- More cafes in same city -->
+    @{
+        var relatedCafes = ViewBag.RelatedCafes as List<BoardGameCafeFinder.Models.DTOs.CafeListItemDto>;
+    }
+    @if (relatedCafes != null && relatedCafes.Any())
+    {
+        <div class="container mt-4 pt-4 border-top">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">@string.Format(SharedLocalizer["Cafe_MoreCafesInCity"].Value, Model.City)</h4>
+                <a href="/?city=@Uri.EscapeDataString(Model.City)" class="btn btn-outline-primary btn-sm">
+                    @string.Format(SharedLocalizer["BlogTemplate_CityGuide_ViewAllCafes"].Value, Model.City) <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 mx-0">
+                @foreach (var related in relatedCafes)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            @if (!string.IsNullOrEmpty(related.LocalImagePath))
+                            {
+                                <a href="/cafe/@related.Slug">
+                                    <img src="@related.LocalImagePath" class="card-img-top" alt="@related.Name"
+                                         loading="lazy" style="height: 140px; object-fit: cover;">
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/cafe/@related.Slug" class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-decoration-none" style="height: 140px;">
+                                    <i class="bi bi-controller text-white" style="font-size: 2.5rem;"></i>
+                                </a>
+                            }
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">
+                                    <a href="/cafe/@related.Slug" class="text-decoration-none text-dark">@related.Name</a>
+                                </h6>
+                                @if (related.AverageRating.HasValue)
+                                {
+                                    <small class="text-muted">
+                                        <i class="bi bi-star-fill text-warning"></i> @related.AverageRating.Value.ToString("0.0")
+                                        @if (related.ReviewCount > 0)
+                                        {
+                                            <span>(@related.ReviewCount)</span>
+                                        }
+                                    </small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 </div>
 
 @section Scripts {

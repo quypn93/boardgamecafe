@@ -110,6 +110,26 @@ public class CafeController : Controller
             : (int?)null;
         ViewBag.CurrentUserId = currentUserId;
 
+        // Related cafes in same city for internal linking
+        var relatedCafes = await _context.Cafes
+            .Where(c => c.City == cafe.City && c.CafeId != cafe.CafeId && c.IsActive)
+            .OrderByDescending(c => c.AverageRating)
+            .Take(4)
+            .Select(c => new BoardGameCafeFinder.Models.DTOs.CafeListItemDto
+            {
+                CafeId = c.CafeId,
+                Name = c.Name,
+                City = c.City,
+                State = c.State,
+                Slug = c.Slug,
+                LocalImagePath = c.LocalImagePath,
+                AverageRating = c.AverageRating,
+                ReviewCount = c.TotalReviews,
+                GamesCount = c.CafeGames.Count()
+            })
+            .ToListAsync();
+        ViewBag.RelatedCafes = relatedCafes;
+
         return View(cafe);
     }
 

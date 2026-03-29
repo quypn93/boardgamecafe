@@ -92,6 +92,7 @@
   <data name="Cafe_Phone" xml:space="preserve"><value>電話</value></data>
   <data name="Cafe_Website" xml:space="preserve"><value>ウェブサイト</value></data>
   <data name="Cafe_Hours" xml:space="preserve"><value>営業時間</value></data>
+  <data name="Cafe_Photos" xml:space="preserve"><value>写真</value></data>
   <data name="Cafe_Games" xml:space="preserve"><value>ゲームライブラリ</value></data>
   <data name="Cafe_GamesAvailable" xml:space="preserve"><value>ゲーム利用可能</value></data>
   <data name="Cafe_ViewOnMap" xml:space="preserve"><value>マップで見る</value></data>
@@ -333,4 +334,5 @@
   <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>ゲーム在庫管理</value></data>
   <data name="Plan_Feature_Analytics" xml:space="preserve"><value>分析ダッシュボード</value></data>
   <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>写真無制限</value></data>
+  <data name="Cafe_MoreCafesInCity" xml:space="preserve"><value>{0}のその他のボードゲームカフェ</value></data>
 </root>

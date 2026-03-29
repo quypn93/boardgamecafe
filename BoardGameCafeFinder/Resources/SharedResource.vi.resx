@@ -247,6 +247,7 @@
   <data name="Cafe_Hours" xml:space="preserve">
     <value>Giờ mở cửa</value>
   </data>
+  <data name="Cafe_Photos" xml:space="preserve"><value>Hình ảnh</value></data>
   <data name="Cafe_Games" xml:space="preserve">
     <value>Thư viện game</value>
   </data>
@@ -723,4 +724,5 @@
   <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>Quản lý kho board game</value></data>
   <data name="Plan_Feature_Analytics" xml:space="preserve"><value>Bảng thống kê phân tích</value></data>
   <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>Ảnh không giới hạn</value></data>
+  <data name="Cafe_MoreCafesInCity" xml:space="preserve"><value>Các quán board game khác tại {0}</value></data>
 </root>

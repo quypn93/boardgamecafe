@@ -92,6 +92,7 @@
   <data name="Cafe_Phone" xml:space="preserve"><value>电话</value></data>
   <data name="Cafe_Website" xml:space="preserve"><value>网站</value></data>
   <data name="Cafe_Hours" xml:space="preserve"><value>营业时间</value></data>
+  <data name="Cafe_Photos" xml:space="preserve"><value>照片</value></data>
   <data name="Cafe_Games" xml:space="preserve"><value>游戏库</value></data>
   <data name="Cafe_GamesAvailable" xml:space="preserve"><value>款游戏</value></data>
   <data name="Cafe_ViewOnMap" xml:space="preserve"><value>在地图上查看</value></data>
@@ -333,4 +334,5 @@
   <data name="Plan_Feature_GameInventory" xml:space="preserve"><value>游戏库存管理</value></data>
   <data name="Plan_Feature_Analytics" xml:space="preserve"><value>数据分析仪表板</value></data>
   <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve"><value>无限照片</value></data>
+  <data name="Cafe_MoreCafesInCity" xml:space="preserve"><value>{0}的其他桌游咖啡馆</value></data>
 </root>

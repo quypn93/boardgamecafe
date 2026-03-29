@@ -247,6 +247,9 @@
   <data name="Cafe_Hours" xml:space="preserve">
     <value>Opening Hours</value>
   </data>
+  <data name="Cafe_Photos" xml:space="preserve">
+    <value>Photos</value>
+  </data>
   <data name="Cafe_Games" xml:space="preserve">
     <value>Game Library</value>
   </data>
@@ -929,5 +932,8 @@
   </data>
   <data name="Plan_Feature_UnlimitedPhotos" xml:space="preserve">
     <value>Unlimited photos</value>
+  </data>
+  <data name="Cafe_MoreCafesInCity" xml:space="preserve">
+    <value>More Board Game Cafes in {0}</value>
   </data>
 </root>
