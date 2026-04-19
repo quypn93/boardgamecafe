@@ -27,7 +27,7 @@
     }
     else
     {
-        ViewData["Keywords"] = "board game cafe, board game lounge, tabletop gaming, board games near me, cafe finder, game cafe directory";
+        ViewData["Keywords"] = "board game cafe, board game cafe near me, boardgame cafe, board game lounge, tabletop gaming, board games near me, cafe finder, game cafe directory";
     }
 }
 
@@ -169,6 +169,22 @@
                         "@@type": "Answer",
                         "text": "Use Board Game Cafe Finder to search by city or use the 'Near Me' feature to find cafes in your area. You can filter by games available, read reviews, and get directions to plan your visit."
                     }
+                },
+                {
+                    "@@type": "Question",
+                    "name": "Where is the nearest board game cafe?",
+                    "acceptedAnswer": {
+                        "@@type": "Answer",
+                        "text": "Click the 'Near Me' button on our homepage to automatically detect your location and show the nearest board game cafes within your chosen radius (10-500 km). Our directory lists board game cafes worldwide, so you'll find options whether you're in the US, UK, Europe, Asia, or elsewhere."
+                    }
+                },
+                {
+                    "@@type": "Question",
+                    "name": "What's the difference between a boardgame cafe and a board game cafe?",
+                    "acceptedAnswer": {
+                        "@@type": "Answer",
+                        "text": "There is no difference — 'boardgame cafe' (one word) and 'board game cafe' (two words) are just two spellings of the same thing: a cafe or lounge where you can play board games from a shared library while eating and drinking. Our directory uses both spellings and lists every board game cafe we can find worldwide."
+                    }
                 }
             ]
         }
@@ -198,6 +214,27 @@
     </div>
 </div>
 
+@if (isFirstPage)
+{
+    <section class="container mb-4" aria-label="About Board Game Cafe Finder">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <p class="mb-2">
+                    Looking for a <strong>board game cafe near me</strong>? You're in the right place.
+                    Board Game Cafe Finder is a free worldwide directory of <strong>board game cafes</strong> and <strong>boardgame cafes</strong> —
+                    coffee shops, lounges, and bars where you can play hundreds of tabletop games from a shared library
+                    while enjoying food and drinks. Whether you call it a boardgame cafe or a board game cafe, we help you find
+                    the closest one, compare ratings and photos, and see exactly which games each venue stocks.
+                </p>
+                <p class="mb-0">
+                    Use the <strong>Near Me</strong> button to instantly discover every board game cafe within your chosen radius,
+                    or filter by city, country, or specific games you want to play. Every listing includes opening hours,
+                    reviews, directions, and the full game library — everything you need to plan your next game night.
+                </p>
+            </div>
+        </div>
+    </section>
+}
 
 <div class="container-fluid mt-4" id="cafes">
     <div class="row">

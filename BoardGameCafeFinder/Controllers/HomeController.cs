@@ -238,8 +238,8 @@ public class HomeController : Controller
         }
         else
         {
-            pageTitle = $"Board Game Cafe Near Me - {totalItems}+ Locations with Reviews";
-            pageDescription = $"Find the best board game cafe near you. {totalItems}+ locations with reviews, photos & game lists. Search by city or use our map!";
+            pageTitle = $"Board Game Cafe Near Me ({currentYear}) - {totalItems}+ Boardgame Cafes with Reviews & Maps";
+            pageDescription = $"Find the best board game cafe near you. Browse {totalItems}+ boardgame cafes worldwide - ratings, photos, game libraries & opening hours. Free directory, updated {currentYear}!";
         }
 
         ViewData["Title"] = pageTitle;
