@@ -73,10 +73,12 @@
     </style>
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("Head", required: false)
+    @* Tạm ẩn quảng cáo
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5694797116555514"
          crossorigin="anonymous"></script>
     <!-- Adsterra Popunder -->
     <script src="https://pl29091929.profitablecpmratenetwork.com/45/cd/fa/45cdfa8ca7b49d4adc99d70cd3be2677.js"></script>
+    *@
 </head>
 <body>
     <header>
@@ -189,6 +191,7 @@
         gtag('config', 'G-0PQD14R3H3');
     </script>
 
+    @* Tạm ẩn quảng cáo
     <!-- Adsterra Banner 728x90 (Leaderboard) -->
     <div class="text-center my-2 d-none d-lg-block">
         <script>
@@ -202,11 +205,13 @@
         </script>
         <script src="https://www.highperformanceformat.com/58aff05c846d9d1e73afc1a2434d1bf1/invoke.js"></script>
     </div>
+    *@
 
     <main role="main">
         @RenderBody()
     </main>
 
+    @* Tạm ẩn quảng cáo
     <!-- Adsterra Native Banner + 300x250 -->
     <div class="container my-3">
         <div class="row justify-content-center align-items-start g-3">
@@ -240,6 +245,7 @@
             </div>
         </div>
     </div>
+    *@
 
     <footer class="bg-dark text-light py-4 mt-5">
         <div class="container">
